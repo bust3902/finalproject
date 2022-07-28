@@ -16,7 +16,6 @@
 	insert Jaeyong!
 	insert chanseok!
 	insert chanseok!
-	insert chanseok!
 </div>
 </body>
 
