@@ -11,7 +11,7 @@
 			지정된 패키지에서 클래스를 검색해서 클래스의 이름을 소문자로 변환한 형태의 별칭으로 등록한다.
 			@Alias 어노테이션이 있으면 그 어노테이션으로 지정한 이름이 별칭으로 등록된다.
 		 -->
-		<package name="kr.co.hta.vo"/>
+		<package name="kr.co.nc.vo"/>
 	</typeAliases>
 	
 </configuration>
