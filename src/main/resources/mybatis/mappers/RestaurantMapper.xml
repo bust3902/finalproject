@@ -21,7 +21,6 @@
 			ACCO_ID is NULL and REVIEW_DELETED = 'N'
 		order by
 			REVIEW_CREATED_DATE desc
-	
 </select>
 
 </mapper>
