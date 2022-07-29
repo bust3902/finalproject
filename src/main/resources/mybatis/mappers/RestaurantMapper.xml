@@ -61,6 +61,7 @@
 		from RESTAURANT_TAG
 		where RESTAURANT_NO = #{value}
 	</select>
+	
 	<!-- List<RestaurantCategory> getRestaurantCategoriesByRestaurantNo(int restaurantNo); -->
 	<select id="getRestaurantCategoriesByRestaurantNo" parameterType="int" resultType="RestaurantCategory">
 		select A.RESTAURANT_NO as restaurantNo,
@@ -90,5 +91,7 @@
 		select distinct RESTAURANT_TAG
 		from RESTAURANT_TAG
 	</select>
+	
+	<!-- List<Review> getAllReview(); -->
 	
 </mapper>

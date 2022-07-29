@@ -20,7 +20,7 @@ public interface RestaurantMapper {
 	List<Review> getReviewByRestaurantNo(int restaurantNo);
 	Restaurant getRestaurantByNo(int restaurantNo);
 	
-	// 음식점 리뷰 mapper 인터페이스
+	// 모든 음식점 리뷰를 가져오는 mapper 인터페이스
 	List<Review> getAllReview();
 	
 	// 리스트 출력시 사용할 태그
