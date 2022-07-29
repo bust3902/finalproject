@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../common/tags.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,8 @@
 </head>
 <body>
 <!-- 
-	1. 해당 페이지를 요청한 방식에 따라 카드의 상세조건 옵션 다르게 보이게 하기 (data-search="type" 또는 "keyword")
+	요청 URL : localhost/acco/search?type= 또는 ?keyword=
+	1. 해당 페이지를 요청한 방식에 따라 카드의 상세조건 옵션 다르게 보이게 하기 : 각 태그 클래스에 EL 삼항연산자 적용함
 	* 요청 시 전달받는 Criteria를 통해 요청한 방식 판별, 숙소정보리스트와 요청한 방식에 따른 상세 옵션내용 출력(공용시설, 객실시설, 기타 태그)
 	2. 초기화 버튼을 누르면 사용자가 변경한 옵션을 모두 초기화시키기
 	3. 적용 버튼을 누르면 form에 저장된 input태그의 값들을 검색조건으로 모두 전달해 ajax로 숙소정보 요청URL보내고, 데이터 획득하기.
@@ -39,42 +41,52 @@
 </div>
 <!-- navbar include end -->
 <div class="container my-3" style="min-width:992px; max-width:992px;">
+	<c:if test="${not empty param.type }">
+		<input type="hidden" name="type" value="${param.keyword }">
+		<div class="row p-5">
+			<div>
+				<h3 class="fs-bold text-dark">숙소유형명</h3>
+				지역 선택 드롭다운
+			</div>
+		</div>
+	</c:if>
+	<c:if test="${empty param.type}">
+		<input type="hidden" name="keyword" value="${param.keyword }">
+		<div class="row p-5">
+			<div>
+				<h3 class="fs-bold text-center text-dark">'${param.keyword }'</h3>
+			</div>
+		</div>
+	</c:if>
 	<div class="row">
 		<div class="col-4">
-		<!--
-			TO DO : 검색 옵션 폼 script
-			1. 숙소 유형을 선택해 조회하는 경우 data-search="keyword"인 list태그는 d-none으로 변경한다. 
-			2. 검색으로 조회하는 경우 data-search="type"인 list태그는 d-none으로 변경한다.
-			또는 if태그 사용? 이 페이지 요청 방식에 따라 수정할 것.
-		-->
 			<div class="card p-1">
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item py-3">
 						<div class="fw-bold mb-3 fs-5">날짜</div>
-						<!-- date range picker 라이브러리 확인 필요 -->
 						<input type="text" id="datepicker" class="form-control" value="" />
+						<input type="hidden" name="startDate" value="">
+						<input type="hidden" name="endDate" value="">
 					</li>
 					<li class="list-group-item py-3">
 						<div class="fw-bold mb-3 fs-5">상세조건</div>
 						<div class="btn-toolbar row g-2" role="toolbar" aria-label="Toolbar with button groups">
 							<div class="col">
-								<button type="button" class="btn btn-outline-primary w-100">초기화</button>
+								<button type="button" id="btn-reset" class="btn btn-outline-primary w-100">초기화</button>
 							</div>
 							<div class="col">
-								<button type="button" class="btn btn-secondary w-100">적용</button>
+								<button type="button" id="btn-apply" class="btn btn-secondary w-100">적용</button>
 							</div>
 						</div>
 					</li>
-					<li class=" list-group-item py-3 border-bottom-0 text-muted" data-search="type">
+					<li class=" list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="row d-flex justify-content-center">
 							<div class="col-3 fw-bold text-muted my-auto">인원</div>
 							<!-- 인원 수 표시 input 대신 span 태그 사용, 이벤트 script에서 설정하는 것으로 변경 예정 -->
 							<div class="col-9 hstack gap-3">
 								<button class="form-control btn btn-sm btn-light fs-4"
 									onclick="this.parentNode.querySelector('input[type=number]').stepDown();">-</button>
-								<input class="form-control form-control-lg fs-6 mx-auto"
-									min="1" name="quantity" id="modal-quantity" value="1" max="20"
-									type="number">
+								<input type="number" class="form-control form-control-lg fs-6 mx-auto" min="1" name="capacity" value="1" max="20" />
 								<button class="form-control btn btn-sm btn-light fs-4"
 									onclick="this.parentNode.querySelector('input[type=number]').stepUp();">+</button>
 							</div>
@@ -82,12 +94,11 @@
 					</li>
 					<li class="list-group-item py-3 border-bottom-0 text-muted">
 						<div class="fw-bold mb-3">가격<small id="amount" class="text-secondary ms-3">1만원 이상</small></div>
-						<!-- 이상~이하로 표현하려면 jQuery range로 수정 필요 -->
-						<input type="hidden" name="min-price" value="10000" />
-						<input type="hidden" name="max-price" value="300000" />
+						<input type="hidden" name="minPrice" value="10000" />
+						<input type="hidden" name="maxPrice" value="300000" />
 						<div id="slider-range"></div>
 					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted" data-search="type">
+					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">베드 타입</div>
 						<div class="d-flex justify-content-between mx-auto p-1">
 							<div class="text-center">
@@ -108,7 +119,7 @@
 							</div>
 						</div>
 					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted" data-search="type">
+					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">공용 시설</div>
 						<div class="row">
 							<!-- 선택한 숙소 유형에 맞는 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
@@ -130,7 +141,7 @@
 							</div>
 						</div>
 					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted" data-search="type">
+					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">객실 시설</div>
 						<div class="row">
 							<!-- 모든 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
@@ -152,7 +163,7 @@
 							</div>
 						</div>
 					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted" data-search="type">
+					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">기타</div>
 						<div class="row">
 							<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
@@ -175,7 +186,7 @@
 						</div>
 					</li>
 					<!-- 2. 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. data-search="keyword" -->
-					<li class="list-group-item py-3 border-bottom-0 text-muted d-none" data-search="keyword">
+					<li class="list-group-item py-3 border-bottom-0 text-muted ${not empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">숙소 유형</div>
 						<div class="row">
 							<!-- 모든 숙소유형을 전달받아 반복문으로 출력한다. -->
@@ -213,19 +224,18 @@
 			<!-- 정렬기준 radio button, 지도 modal button (버튼 스타일 식당 조회와 통일시킬 예정) -->
 			<div class="d-flex flex-wrap mx-3 mb-3">
 				<div class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
-					<input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off">
-					<label class="btn btn-secondary" for="btnradio1">추천 순</label>
+					<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
+					<label class="btn btn-secondary" for="btnradio1">평점 순</label>
 	
-					<input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off" checked>
+					<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
 					<label class="btn btn-secondary" for="btnradio2">거리 순</label>
 					
-					<input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
+					<input type="radio" class="btn-check" id="btnradio3" name="sort" value="rowprice">
 					<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
 					
-					<input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
+					<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
 				  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
 				</div>
-				<!-- hover, click 시 css 효과 없애기 -->
 				<button class="btn btn-light" style="border-color: gray">지도</button>
 			</div>
 			<!-- 검색결과 조회 리스트 -->
@@ -324,7 +334,6 @@
 <!-- footer include end -->
 <script type="text/javascript">
 $(function () {
-	
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
 	TO DO : input태그의 value가 '날짜 ~ 날짜 . 숙박일수' 이므로 date로 전달해줄 값은 따로 저장해두어야 한다.
@@ -368,15 +377,13 @@ $(function () {
         startDayString = start.format('YYYY-MM-DD');
         endDayString = end.format('YYYY-MM-DD');
         duration = end.diff(start,'days');
+        $(":hidden[name=startDate]").val(startDayString);
+        $(":hidden[name=endDate]").val(endDayString);
     });
-    
+
 	// html이 출력될 때 input태그의 value 설정
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
-    
-    $('#datepicker').on('showCalendar.daterangepicker', function(ev, picker) {
-    	console.log('show');
-    })
-    
+	// 날짜 변경 시 input태그의 value 설정
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
     })
