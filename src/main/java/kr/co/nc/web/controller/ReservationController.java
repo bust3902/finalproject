@@ -10,4 +10,8 @@ public class ReservationController {
 	public String reservation() {
 		return "reservation/reservation";
 	}
+	@GetMapping(path = "/myreservation")
+	public String myReservation() {
+		return "reservation/myreservation";
+	}
 }
