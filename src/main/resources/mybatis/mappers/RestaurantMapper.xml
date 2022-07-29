@@ -3,24 +3,54 @@
 <mapper namespace="kr.co.nc.mapper.RestaurantMapper">
 
 
-<!-- List<Review> getAllRestaurantReview(); 음식점 리뷰 리스트를 출력하는 코드-->
-<select id="getAllRestaurantReview" resultType="kr.co.nc.vo.Review">
-	select  
-			REVIEW_NO			as no,
-			USER_NO				as "user.no",
-			RESTAURANT_NO		as "restaurant.no",
-			REVIEW_CONTENT		as content,
-			REVIEW_LIKE_COUNT	as likeCount,
-			REVIEW_CREATED_DATE as createdDate,
-			REVIEW_UPDATED_DATE as updatedDate,
-			REVIEW_IMAGE		as image,
-			REVIEW_POINT		as point
-		from
-			REVIEW
-		where
-			ACCO_ID is NULL and REVIEW_DELETED = 'N'
-		order by
-			REVIEW_CREATED_DATE desc
-</select>
+	<!-- List<Review> getAllRestaurantReview(); 음식점 리뷰 리스트를 출력하는 코드-->
+	<select id="getAllRestaurantReview" resultType="Review">
+		select  
+				REVIEW_NO			as no,
+				USER_NO				as "user.no",
+				RESTAURANT_NO		as "restaurant.no",
+				REVIEW_CONTENT		as content,
+				REVIEW_LIKE_COUNT	as likeCount,
+				REVIEW_CREATED_DATE as createdDate,
+				REVIEW_UPDATED_DATE as updatedDate,
+				REVIEW_IMAGE		as image,
+				REVIEW_POINT		as point
+			from
+				REVIEW
+			where
+				ACCO_ID is NULL and REVIEW_DELETED = 'N'
+			order by
+				REVIEW_CREATED_DATE desc
+	</select>
 
+	<resultMap type="Restaurant" id="RestaurantResultMap">
+		<id column="RESTAURANT_NO" property="no"/>
+		<result column="RESTAURANT_NAME" property="name"/>
+		<result column="RESTAURANT_LOCATION" property="location"/>
+		<result column="RESTAURANT_IMGNAME" property="imgname"/>
+		<result column="RESTAURANT_NUMBER" property="number"/>
+		<result column="RESTAURANT_LIKE_COUNT" property="likeCount"/>
+		<result column="RESTAURANT_REVIEW_COUNT" property="reviewCount"/>
+		<result column="RESTAURANT_REVIEW_POINT" property="reviewPoint"/>
+		<result column="RESTAURANT_CREATED_DATE" property="createdDate"/>
+		<result column="RESTAURANT_UPDATE_DATE" property="updateDate"/>
+		<result column="RESTAURANT_LATITUD" property="latitud"/>
+		<result column="RESTAURANT_LONGITUDE" property="longitude"/>
+		<result column="RESTAURANT_DELETE" property="delete"/>
+		<result column="CITY_ID" property="cityId"/>
+		<result column="RESTAURANT_OPENING" property="opening"/>
+		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
+		<result column="RESTAURANT_CLOSE" property="close"/>
+	</resultMap>
+
+<!-- Restaurant getRestaurantByNo(int restaurantNo); -->
+	<select id="getRestaurantByNo" parameterType="int" resultType="Restaurant">
+		select
+				*
+		from
+			RESTAURANT
+		where
+			RESTAURANT_NO = #{value}
+	</select>
+		
 </mapper>
