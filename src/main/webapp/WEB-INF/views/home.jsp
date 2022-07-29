@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+@@ -2,49 +2,24 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,7 +20,6 @@
 	insert Jaeyong!
 	insert yeseok!
 	insert hyeongjin!
-	insert push
 >>>>>>> refs/remotes/origin/yeseok
 </div>
 </body>
