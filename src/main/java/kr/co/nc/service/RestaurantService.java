@@ -30,11 +30,11 @@ public class RestaurantService {
 	@Autowired
 	private RestaurantMapper restaurantMapper;
 	
-	public List<Review> getAllRestaurantReview() {
-		return restaurantMapper.getAllRestaurantReview();
-	}
-	
 	public Restaurant getRestaurantDetail(int restaurantNo) {
 		return restaurantMapper.getRestaurantByNo(restaurantNo);
+	}
+	
+	public List<Review> getRestaurantReview(int restaurantNo) {
+		return restaurantMapper.getReviewByRestaurantNo(restaurantNo);
 	}
 }

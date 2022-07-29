@@ -28,5 +28,5 @@ public class Review {
 	private String image;		// 리뷰 사진
 	private int point;			// 리뷰 평점
 	
-	private List<ReviewRestaurantTag> ReviewRestaurantTag;		// 음식점 리뷰 태그
+	private List<ReviewRestaurantTag> reviewRestaurantTags;		// 음식점 리뷰 태그
 }

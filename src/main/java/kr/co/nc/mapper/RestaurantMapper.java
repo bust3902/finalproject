@@ -17,10 +17,11 @@ public interface RestaurantMapper {
 	List<RestaurantCategory> getRestaurantCategoriesByRestaurantNo(int restaurantNo);
 	List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo);
 	List<RestaurantTag> getRestaurantTagsByRestaurantNo(int restaurantNo);
+	List<Review> getReviewByRestaurantNo(int restaurantNo);
 	Restaurant getRestaurantByNo(int restaurantNo);
 	
 	// 음식점 리뷰 mapper 인터페이스
-	List<Review> getAllRestaurantReview();
+	List<Review> getAllReview();
 	
 	// 리스트 출력시 사용할 태그
 	List<String> getAllTags();

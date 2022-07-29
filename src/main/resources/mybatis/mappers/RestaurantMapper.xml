@@ -2,24 +2,30 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.nc.mapper.RestaurantMapper">
 
-	<!-- List<Review> getAllRestaurantReview(); 음식점 리뷰 리스트를 출력하는 코드-->
-	<select id="getAllRestaurantReview" resultType="Review">
-		select 
-				REVIEW_NO			as no,
-				USER_NO				as "user.no",
-				RESTAURANT_NO		as "restaurant.no",
-				REVIEW_CONTENT		as content,
-				REVIEW_LIKE_COUNT	as likeCount,
-				REVIEW_CREATED_DATE as createdDate,
-				REVIEW_UPDATED_DATE as updatedDate,
-				REVIEW_IMAGE		as image,
-				REVIEW_POINT		as point
-			from
-				REVIEW
-			where
-				ACCO_ID is NULL and REVIEW_DELETED = 'N'
-			order by
-				REVIEW_CREATED_DATE desc
+	<!-- userMapper가 만들어지는대로 association 등록하기-->
+	<resultMap type="Review" id="ReviewResultMap">
+		<id column="REVIEW_NO" property="no"/>
+		<result column="ACCO_ID" property="accoId"/>
+		<result column="REVIEW_TITLE" property="title"/>
+		<result column="REVIEW_CONTENT" property="content"/>
+		<result column="REVIEW_LIKE_COUNT" property="likeCount"/>
+		<result column="REVIEW_CREATED_DATE" property="createdDate"/>
+		<result column="REVIEW_UPDATED_DATE" property="updatedDate"/>
+		<result column="REVIEW_DELETED" property="deleted"/>
+		<result column="REVIEW_IMAGE" property="image"/>
+		<result column="REVIEW_POINT" property="point"/>
+		<association property="restaurant" column="RESTAURANT_NO" select="kr.co.nc.mapper.RestaurantMapper"></association>
+	</resultMap>
+	
+	<!-- List<Review> getReviewByRestaurantNo(int restaurantNo); 음식점 리뷰-->
+	<select id="getReviewByRestaurantNo" parameterType="int" resultMap="ReviewResultMap">
+		select *
+		from REVIEW
+		where
+			ACCO_ID is NULL and REVIEW_DELETED = 'N'
+			and RESTAURANT_NO = #{value}
+		order by
+			REVIEW_CREATED_DATE desc
 	</select>
 
 	<resultMap type="Restaurant" id="RestaurantResultMap">
