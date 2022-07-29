@@ -2,10 +2,9 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.nc.mapper.RestaurantMapper">
 
-
 	<!-- List<Review> getAllRestaurantReview(); 음식점 리뷰 리스트를 출력하는 코드-->
 	<select id="getAllRestaurantReview" resultType="Review">
-		select  
+		select 
 				REVIEW_NO			as no,
 				USER_NO				as "user.no",
 				RESTAURANT_NO		as "restaurant.no",
@@ -42,15 +41,48 @@
 		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
 		<result column="RESTAURANT_CLOSE" property="close"/>
 	</resultMap>
-
-<!-- Restaurant getRestaurantByNo(int restaurantNo); -->
-	<select id="getRestaurantByNo" parameterType="int" resultType="Restaurant">
-		select
-				*
-		from
-			RESTAURANT
-		where
-			RESTAURANT_NO = #{value}
+	
+	<!-- List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo); -->
+	<select id="getRestaurantMenusByRestaurantNo" parameterType="int" resultType="RestaurantMenu">
+		select RESTAURANT_NO as restaurantNo, RESTAURANT_MENU_NAME as menuName, RESTAURANT_PRICE as price
+		from RESTAURANT_MENU
+		where RESTAURANT_NO = #{value}
 	</select>
+	
+	<!-- List<RestaurantTag> getRestaurantTagsByRestaurantNo(int restaurantNo);-->
+	<select id="getRestaurantTagsByRestaurantNo" parameterType="int" resultType="RestaurantTag">
+		select RESTAURANT_NO as restaurantNo, RESTAURANT_TAG as tag
+		from RESTAURANT_TAG
+		where RESTAURANT_NO = #{value}
+	</select>
+	<!-- List<RestaurantCategory> getRestaurantCategoriesByRestaurantNo(int restaurantNo); -->
+	<select id="getRestaurantCategoriesByRestaurantNo" parameterType="int" resultType="RestaurantCategory">
+		select A.RESTAURANT_NO as restaurantNo,
+				A.RESTAURANT_CAT_ID as "category.id",
+				B.RESTAURANT_CAT_NAME as "category.name"
+		from RESTAURANT_CAT A,RESTAURANT_CAT_NAME B
+		where A.RESTAURANT_NO = #{value}
+		and A.RESTAURANT_CAT_ID = B.RESTAURANT_CAT_ID
 		
+	</select>
+	<!--Restaurant의 있는 정보 싹다 가져오는 resultMap 디테일 출력시 이용 -->
+	<resultMap type="Restaurant" id="RestaurantDetailResultMap" extends="RestaurantResultMap">
+		<collection property="menus" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantMenusByRestaurantNo"></collection>
+		<collection property="tags" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantTagsByRestaurantNo"></collection>
+		<collection property="categories" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantCategoriesByRestaurantNo"></collection>
+	</resultMap>
+	
+	<!-- Restaurant getRestaurantByNo(int restaurantNo); -->
+	<select id="getRestaurantByNo" parameterType="int" resultMap="RestaurantDetailResultMap">
+		select *
+		from RESTAURANT
+		where RESTAURANT_NO = #{value}
+	</select>
+	
+	<!-- List<String> getAllTags(); -->
+	<select id="getAllTags" resultType="string">
+		select distinct RESTAURANT_TAG
+		from RESTAURANT_TAG
+	</select>
+	
 </mapper>

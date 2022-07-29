@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.nc.mapper.RestaurantMapper;
+import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.Review;
 
 /*
@@ -31,5 +32,9 @@ public class RestaurantService {
 	
 	public List<Review> getAllRestaurantReview() {
 		return restaurantMapper.getAllRestaurantReview();
+	}
+	
+	public Restaurant getRestaurantDetail(int restaurantNo) {
+		return restaurantMapper.getRestaurantByNo(restaurantNo);
 	}
 }
