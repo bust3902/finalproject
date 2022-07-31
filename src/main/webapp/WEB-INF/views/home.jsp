@@ -7,10 +7,9 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<title>Hello world!</title>
+<title>홈 화면</title>
 </head>
 <body>
-	<div class="container my-3" style="min-width:992px; max-width:992px;">
 		<div class="row">
 			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src="/resources/images/test01.jpg"></a>
 		</div>
@@ -47,6 +46,8 @@
 					</div>
 				</div>
 			</div>
+		</div>
+		<div class="row">
 			<div class="col">
 				<div class="card text-center border-0 bg-0">
 					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
@@ -75,12 +76,13 @@
 				<div class="card text-center border-0 bg-0">
 					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
 					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">기타</a>
+				    	<a href="#" class="text-decoration-none fw-bold">맛집</a>
 					</div>
 				</div>
 			</div>
-			
+		
 		</div>
+		
 		<div class="row mt-5"> 서울어때 소식</div>
 		
 		<div class="row mt-5">
@@ -99,6 +101,7 @@
 					</div>
 				</div>
 			</div>
+		</div>
 		
 		<div class="col-6">
 			<div class="card mb-3" style="max-width: 450px;">
