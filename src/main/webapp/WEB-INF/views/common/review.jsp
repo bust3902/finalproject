@@ -34,11 +34,4 @@
 		</div>
 	</div>
 </body>
-<footer>
-	<div class="container my-3">
-		<div class="row mb-3">
-			<h3 class="fs-4 mb-3 border text-center">임시</h3>
-		</div>
-	</div>
-</footer>
 </html>
