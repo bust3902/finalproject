@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- jQuery range slider를 위해 필요한 라이브러리 -->
@@ -31,23 +30,25 @@
 	5. 정렬 옵션 클릭 시에도 3~4번과 마찬가지로 처리하기
 	6. 지도 버튼을 누르면 모달 창으로 지도 출력하기, 이 때 3번에서 획득한 데이터의 위도와 경도를 이용해 검색결과 지도에 표시하기.
  -->
-<!-- navbar include start-->
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-5 border text-center">임시헤더</h1>
-		</div>
-	</div>
-</div>
-<!-- navbar include end -->
+ <%--
+ nav.jsp에 기본 태그들에 적용된 css가 이 페이지에서도 적용되어서 디자인이 깨짐. => 확인 필요
+ <%@ include file="../common/nav.jsp" %>
+  --%>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<c:if test="${not empty param.type }">
 		<input type="hidden" name="type" value="${param.keyword }">
 		<div class="row p-5">
-			<div>
-				<h3 class="fs-bold text-dark">숙소유형명</h3>
-				지역 선택 드롭다운
-			</div>
+			<h3 class="text-dark ps-0 mb-3">숙소유형명</h3>
+			<!-- 지역 정보 받아와서 출력 -->
+			<select class="form-select w-25 p-1" name="city">
+				<option value="" selected>서울 전체</option>
+				<option value="CITY_001">홍대/신촌/마포</option>
+				<option value="CITY_002">북촌/인사동/종로/동대문</option>
+				<option value="CITY_003">명동/남산/중구</option>
+				<option value="CITY_004">강남/잠실/삼성/서초</option>
+				<option value="CITY_005">이태원/서울역/용산</option>
+				<option value="CITY_006">영등포/신림/김포공항</option>
+			</select>
 		</div>
 	</c:if>
 	<c:if test="${empty param.type}">
@@ -64,6 +65,7 @@
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item py-3">
 						<div class="fw-bold mb-3 fs-5">날짜</div>
+						<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
 						<input type="text" id="datepicker" class="form-control" value="" />
 						<input type="hidden" name="startDate" value="">
 						<input type="hidden" name="endDate" value="">
@@ -98,6 +100,8 @@
 						<input type="hidden" name="maxPrice" value="300000" />
 						<div id="slider-range"></div>
 					</li>
+					<!-- 
+						숙소 유형마다 여부가 다르기 때문에 베드 타입 옵션은 제외 (DB에서 사용하지 않는 컬럼이 될 듯)
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">베드 타입</div>
 						<div class="d-flex justify-content-between mx-auto p-1">
@@ -119,6 +123,7 @@
 							</div>
 						</div>
 					</li>
+					 -->
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">공용 시설</div>
 						<div class="row">
@@ -185,7 +190,7 @@
 							</div>
 						</div>
 					</li>
-					<!-- 2. 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. data-search="keyword" -->
+					<!-- 2. 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. -->
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${not empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">숙소 유형</div>
 						<div class="row">
@@ -236,7 +241,7 @@
 					<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
 				  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
 				</div>
-				<button class="btn btn-light" style="border-color: gray">지도</button>
+				<button class="btn btn-light" style="border-color: gray" id="btn-open-modal-map">지도</button>
 			</div>
 			<!-- 검색결과 조회 리스트 -->
 			<div class="row mx-auto">
@@ -247,8 +252,9 @@
 						<col width="20%">
 					</colgroup>
 					<tbody>
-						<!-- 숙소 조회 결과 반복문으로 출력할 것 -->
-						<tr>
+						<!-- 숙소 조회 결과 반복문으로 출력할 것 (id="row-acco-숙소번호")-->
+						<!-- 숙소조회 결과에 따라 c:choose when 으로 나눠서 출력할 것 -->
+						<tr id="row-acco-1" onclick="location.href='acco/detail?no=1';" style="cursor: pointer;"/>
 							<td class="align-middle p-3">
 								<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/logo.png" />
 							</td>
@@ -266,57 +272,13 @@
 								<p class="text-end text-dark fs-5 fw-bold">127,900원</p>
 							</td>
 						</tr>
+					<!-- 숙소 조회 결과가 없을 경우
 						<tr>
-							<td class="align-middle p-3">
-								<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/logo.png" />
-							</td>
-							<td class="p-3">
-								<h5 class="fw-bold text-dark">숙소명</h5>
-								<p class="text-warning">
-									<span class="badge bg-warning">4.8</span><strong class="ms-2">추천해요 (210)</strong>
-								</p>
-								<p>
-									<small>마포구</small>
-								</p>
-							</td>
-							<td class="align-bottom p-3">
-								<p class="text-end text-dark fs-5 fw-bold">127,900원</p>
+							<td colspan="3" class="text-center">
+								<p class="py-5">조회된 결과가 없습니다.</p>
 							</td>
 						</tr>
-						<tr>
-							<td class="align-middle p-3">
-								<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/logo.png" />
-							</td>
-							<td class="p-3">
-								<h5 class="fw-bold text-dark">숙소명</h5>
-								<p class="text-warning">
-									<span class="badge bg-warning">4.8</span><strong class="ms-2">추천해요 (210)</strong>
-								</p>
-								<p>
-									<small>마포구</small>
-								</p>
-							</td>
-							<td class="align-bottom p-3">
-								<p class="text-end text-dark fs-5 fw-bold">127,900원</p>
-							</td>
-						</tr>
-						<tr>
-							<td class="align-middle p-3">
-								<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/logo.png" />
-							</td>
-							<td class="p-3">
-								<h5 class="fw-bold text-dark">숙소명</h5>
-								<p class="text-warning">
-									<span class="badge bg-warning">4.8</span><strong class="ms-2">추천해요 (210)</strong>
-								</p>
-								<p>
-									<small>마포구</small>
-								</p>
-							</td>
-							<td class="align-bottom p-3">
-								<p class="text-end text-dark fs-5 fw-bold">127,900원</p>
-							</td>
-						</tr>
+					 -->
 					</tbody>
 				</table>
 			</div>
@@ -332,8 +294,48 @@
 	</div>
 </div>
 <!-- footer include end -->
+
+<!-- 지도 조회 모달 -->
+<div id="modal-map" class="modal" tabindex="-1">
+	<div class="modal-dialog modal-dialog-centered modal-xl">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title">지도 조회</h5>
+				<button type="button" class="btn-close" data-bs-dismiss="modal"
+					aria-label="Close"></button>
+			</div>
+			<div class="modal-body d-flex justify-content-center">
+				<!-- 지도 출력 :  -->
+				<div id="map" style="width:1200px;height:600px;"></div>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <script type="text/javascript">
 $(function () {
+	
+/*
+ * 검색 결과 카카오 openAPI로 지도에 표현하기
+ */
+	// 모달 창에 지도 정의하기
+	let container = document.getElementById('map');
+	let mapcenter = new kakao.maps.LatLng(37.564214, 127.0016985);
+	let options = { //지도를 생성할 때 필요한 기본 옵션
+			center: mapcenter, //지도의 중심좌표.
+			level: 8 //지도의 레벨(확대, 축소 정도)
+	};
+	let map = new kakao.maps.Map(container, options); // 지도 생성
+
+	// 지도 버튼에 모달 이벤트 연결하기
+	let modalMap = new bootstrap.Modal($("#modal-map"));
+	$("#btn-open-modal-map").click(function () {
+		modalMap.show();
+		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
+		map.relayout(); 
+		map.setCenter(mapcenter);
+	});
+	
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
 	TO DO : input태그의 value가 '날짜 ~ 날짜 . 숙박일수' 이므로 date로 전달해줄 값은 따로 저장해두어야 한다.
@@ -386,7 +388,7 @@ $(function () {
 	// 날짜 변경 시 input태그의 value 설정
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
-    })
+    });
     
 /*
 	jQuery UI를 이용한 금액 슬라이더 생성하기  
@@ -399,8 +401,8 @@ $(function () {
 			slide : function(event, ui) {
 				// 슬라이더 값이 바뀔 때마다 텍스트 내용을 변경하고, hidden태그의 값도 변경한다.
 				$("#amount").text(ui.values[0] + "만원 ~ " + ui.values[1] + "만원");
-				$("input[name='min-price']").val(ui.values[0]);
-				$("input[name='max-price']").val(ui.values[1]);
+				$("input[name='minPrice']").val(ui.values[0]*10000);
+				$("input[name='maxPrice']").val(ui.values[1]*10000);
 			}
 	});
 	// 처음에는 1만원 이상으로 표시한다. (hidden태그 기본 최소/최대값도 1~30으로 저장되어있음)
