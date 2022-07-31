@@ -10,21 +10,6 @@
 <title>홈 화면</title>
 </head>
 <body>
-<%@ include file="common/nav.jsp" %>
-	<div class="container" style="min-width:800px; max-width:900px;">
-		<div id="carouselExampleSlidesOnly" class="carousel slide" data-bs-ride="carousel">
-  			<div class="carousel-inner">
-    			<div class="carousel-item active">
-      				<img src="resources/images/main.png" class="d-block w-200" alt="...">
-    			</div>
-    			<div class="carousel-item">
-      				<img src="resources/images/main.png" class="d-block w-200" alt="...">
-   				</div>
-    			<div class="carousel-item">
-      				<img src="resources/images/main.png" class="d-block w-200" alt="...">
-    			</div>
-  			</div>
-		</div>
 		<div class="row">
 			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src="/resources/images/test01.jpg"></a>
 		</div>
