@@ -8,7 +8,11 @@ public class ReviewController {
 
 	@GetMapping(path = "/review")
 	public String Review() {
-		return "common/review";
+		return "reviews/review";
 	}
 	
+	@GetMapping(path = "/detail")
+	public String ReviewDetail() {
+		return "reviews/detail";
+	}
 }

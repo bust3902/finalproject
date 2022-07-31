@@ -8,6 +8,6 @@ public class QaController {
 
 	@GetMapping(path = "/qa")
 	public String Qa() {
-		return "common/qa";
+		return "qa/qa";
 	}
 }
