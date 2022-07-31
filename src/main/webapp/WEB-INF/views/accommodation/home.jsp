@@ -7,7 +7,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css" integrity="sha512-mSYUmp1HYZDFaVKK//63EcZq4iFWFjxSL+Z3T/aCt4IO9Cejm03q3NKKYN6pFQzY0SBOr8h+eCIAZHPXcpZaNw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- jQuery range slider를 위해 필요한 라이브러리 -->
@@ -389,7 +388,7 @@ $(function () {
 	// 날짜 변경 시 input태그의 value 설정
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
-    })
+    });
     
 /*
 	jQuery UI를 이용한 금액 슬라이더 생성하기  
@@ -402,8 +401,8 @@ $(function () {
 			slide : function(event, ui) {
 				// 슬라이더 값이 바뀔 때마다 텍스트 내용을 변경하고, hidden태그의 값도 변경한다.
 				$("#amount").text(ui.values[0] + "만원 ~ " + ui.values[1] + "만원");
-				$("input[name='min-price']").val(ui.values[0]);
-				$("input[name='max-price']").val(ui.values[1]);
+				$("input[name='minPrice']").val(ui.values[0]*10000);
+				$("input[name='maxPrice']").val(ui.values[1]*10000);
 			}
 	});
 	// 처음에는 1만원 이상으로 표시한다. (hidden태그 기본 최소/최대값도 1~30으로 저장되어있음)
