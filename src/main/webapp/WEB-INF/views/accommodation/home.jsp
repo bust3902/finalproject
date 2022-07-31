@@ -254,7 +254,7 @@
 					<tbody>
 						<!-- 숙소 조회 결과 반복문으로 출력할 것 (id="row-acco-숙소번호")-->
 						<!-- 숙소조회 결과에 따라 c:choose when 으로 나눠서 출력할 것 -->
-						<tr id="row-acco-1" onclick="location.href='detail?no=1';" style="cursor: pointer;"/>
+						<tr id="row-acco-1" onclick="location.href='acco/detail?no=1';" style="cursor: pointer;"/>
 							<td class="align-middle p-3">
 								<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/logo.png" />
 							</td>
