@@ -391,6 +391,7 @@
 				<div class="my-3 border-bottom">
 					<label class="fw-bold mb-3">기본정보</label>
 					<ul>
+						<!-- room_name, room_capacity -->
 						<li>객실명</li>
 						<li>정원 6명</li>
 					</ul>
@@ -398,9 +399,8 @@
 				<div class="my-3 border-bottom">
 					<label class="fw-bold mb-3">객실소개</label>
 					<ul>
-						<!-- room_name, room_capacity -->
-						<li>객실명</li>
-						<li>정원 6명</li>
+						<!-- room_description, 베드타입 정보가 있다면 베드타입도 출력 -->
+						<li>객실소개내용</li>
 					</ul>
 				</div>
 				<div class="my-3 border-bottom">
