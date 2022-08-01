@@ -105,4 +105,7 @@
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantByCategoryId(@Param("categoryId") String categoryId); -->
+	<select id="">
+	
+	</select>
 </mapper>
