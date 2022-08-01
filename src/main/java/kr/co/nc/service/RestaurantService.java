@@ -37,4 +37,8 @@ public class RestaurantService {
 	public List<Review> getRestaurantReview(int restaurantNo) {
 		return restaurantMapper.getReviewByRestaurantNo(restaurantNo);
 	}
+	
+	public List<Review> getAllRestaurantReview() {
+		return restaurantMapper.getAllReview();
+	}
 }

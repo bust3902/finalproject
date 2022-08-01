@@ -19,7 +19,7 @@ public class Restaurant {
 	private String name;
 	private String location;
 	private String imgname;
-	private String number; 		// 전화번호
+	private String tel; 		// 전화번호
 	private int likeCount;
 	private int reviewCount;
 	private int reviewPoint;
