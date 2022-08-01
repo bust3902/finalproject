@@ -104,8 +104,15 @@
 			REVIEW_CREATED_DATE desc
 	</select>
 	
-	<!-- List<Restaurant> getRestaurantByCategoryId(@Param("categoryId") String categoryId); -->
-	<select id="">
-	
+	<!-- List<Restaurant> getRestaurantsByCategoryId(@Param("categoryId") String categoryId); -->
+	<select id="getRestaurantsByCategoryId">
+		select *
+		from RESTAURANT
+		<if test="categoryId != null">
+			where RESTAURANT_NO in (select RESTAURANT_NO
+									from RESTAURANT_CAT
+									where RESTAURANT_CAT_ID = #{categoryId})
+		</if>
+		order by RESTAURANT_CREATED_DATE desc
 	</select>
 </mapper>
