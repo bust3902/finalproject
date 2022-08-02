@@ -38,3 +38,4 @@ public class Restaurant {
 	private List<RestaurantMenu> menus;				// 음식점 메뉴
 	private List<RestaurantCategory> categories;	// 음식점 카테고리
 	
+}
