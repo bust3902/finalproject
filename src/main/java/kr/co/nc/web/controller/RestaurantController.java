@@ -24,4 +24,11 @@ public class RestaurantController {
 		model.addAttribute("reviews",restaurantService.getRestaurantReview(restaurantNo));
 		return "restaurant/detail";
 	}
+	
+	@GetMapping()
+	public String home(Model model) {
+		model.addAttribute("reviews",restaurantService.getAllRestaurantReview());
+		
+		return "restaurant/home";
+	}
 }
