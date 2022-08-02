@@ -7,10 +7,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.5.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
+<div class="col-12">
+	<jsp:include page="../common/nav.jsp"></jsp:include>
+</div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="row mb-3">
 		<div class="col-8">
@@ -26,7 +30,7 @@
 					<div class="input-group">
 						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel">
 						<span class="input-group-btn">
-						<button class="btn btn-outline-secondary mx-2" type="button">인증번호 전송</button>
+						<button class="btn btn-outline-secondary mx-2" name="phoneCheck" type="button" onclick="requestTel()" disabled>인증번호 전송</button>
 						</span>
 					</div>
 				<p id="phoneCheck" class="text-danger"></p>			
@@ -92,7 +96,7 @@
 				</div>						
 			</div>
 			<div class="row">
-				<button type="button" id="modal-button" class="btn btn-danger" data-bs-target="#reservationConfirm" > 결제하기</button>
+				<button type="button" id="modal-button" class="btn btn-danger"> 결제하기</button>
 			</div>
 		</div>
 	</div>
@@ -117,29 +121,29 @@
     	<div class="modal-content">
       		<div class="modal-header">
         	<h5 class="modal-title" id="staticBackdropLabel">예약내역 확인</h5>
-      	</div>
-      	<div class="modal-body">
-      		<div class="row">
-				<div class="col-5">
-					<dt>보코 서울 강남</dt>
-					<dd>디럭스 싱글 / 1박</dd>	
-					
-					<dt class="col-3 form-text">체크인</dt>
-					<dd>07.28 목 15:00</dd>
-						
-					<dd class="form-text">체크아웃</dd>	
-					<dd>07.29 금 12:00</dd>
-				</div>
-				<div class="col">
-					<ul class="form-text mb-3"><small><strong class="text-danger">당일예약</strong>은 체크인 시간 기준 <strong class="text-danger">3시간 전</strong>까지 취소 가능합니다</small></ul>
-					<ul class="form-text"><small><strong class="text-danger">예약 후 15분</strong> 이내 고객행복센터로 취소 요청 시 100% 환불 가능합니다.</small></ul>
-				</div>
       		</div>
-      	</div>
-      	<div class="modal-footer">
-        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-        	<button type="button" class="btn btn-primary">동의후 결제</button>
-      	</div>
+	      	<div class="modal-body">
+	      		<div class="row">
+					<div class="col-5">
+						<dt>보코 서울 강남</dt>
+						<dd>디럭스 싱글 / 1박</dd>	
+						
+						<dt class="col-3 form-text">체크인</dt>
+						<dd>07.28 목 15:00</dd>
+							
+						<dd class="form-text">체크아웃</dd>	
+						<dd>07.29 금 12:00</dd>
+					</div>
+					<div class="col">
+						<ul class="form-text mb-3"><small><strong class="text-danger">당일예약</strong>은 체크인 시간 기준 <strong class="text-danger">3시간 전</strong>까지 취소 가능합니다</small></ul>
+						<ul class="form-text"><small><strong class="text-danger">예약 후 15분</strong> 이내 고객행복센터로 취소 요청 시 100% 환불 가능합니다.</small></ul>
+					</div>
+	      		</div>
+	      	</div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+	        	<button type="button" class="btn btn-primary" onclick="startPay()">동의후 결제</button>
+	      	</div>
    		</div>
  	</div>
 </div>
@@ -147,7 +151,32 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-
+let reservationConfirm = new bootstrap.Modal(document.getElementById("reservationConfirm"));
+var IMP = window.IMP;
+IMP.init("imp72261061");
+function requestTel(){console.log("돈들어가서 안만들었습니다.");}
+function startPay(){
+	IMP.request_pay({
+		pg: "kakaopay",
+	    pay_method: "kakaopay",
+		merchant_uid : 'merchant_' + new Date().getTime(),
+		name : '보코 서울 강남',
+		amount : 99000,
+		buyer_email : 'iamport@siot.do',
+		buyer_name : '구매자',
+		buyer_tel : '010-1234-5678',
+		buyer_addr : '서울특별시 강남구 삼성동',
+		buyer_postcode : '123-456'
+	}, function(rsp) {
+		if ( rsp.success ) {
+			alert("결제가 완료되었습니다.");
+			location.href="reservationList"
+		} else {
+			var msg = '결제에 실패하였습니다.';
+			msg += '에러내용 : ' + rsp.error_msg;
+		}
+	});
+}
 $(document).ready(function() {
 	$("#checkboxAll").click(function() {
 		if($("#checkboxAll").is(":checked")) $("input[name=checkbox]").prop("checked", true);
@@ -178,6 +207,7 @@ $(document).ready(function() {
 			paymentModal.show();
 			return false;
 		}
+		reservationConfirm.show();
 	});
 	
 	$(function(){
