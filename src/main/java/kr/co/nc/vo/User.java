@@ -21,15 +21,15 @@ public class User {
 		private int no;
 		
 		// 사용자 아이디 - 회원가입할 때 입력한 사용자 아이디, 카카오 로그인에서 제공하는 사용자 식별번호다.
-		private String nickname;
-		private String name;
 		private String id;
 		private String password;
-		private String tel;
-		private String address;
 		
 		// 사용자의 이름 - 회원가입할 때 입력한 사용자 이름, 카카오 로그인에서 제공하는 사용자 닉네임이다.
+		private String nickname;
+		private String name;
 		private String email;
+		private String tel;
+		private String address;
 		
 		// 로그운 구분 - 본 사이트에서 가입한 경우:normal, 카카오 로그인으로 가입한 경우: kakao다.
 		private String loginType;
