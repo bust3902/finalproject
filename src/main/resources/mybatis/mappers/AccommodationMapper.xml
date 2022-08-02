@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.AccommodationMapper">
+
+	<!-- List<AccommodationType> getAllTypes(); -->
+	<select id="getAllTypes" resultType="AccommodationType">
+		select acco_type_id as id, acco_type_name as name
+		from accommodation_types
+		order by acco_type_id
+	</select>
+	
+	<!-- List<City> getAllCities(); -->
+	<select id="getAllCities" resultType="City">
+		select city_id as id, city_name as name
+		from cities
+		order by city_id
+	</select>
+	
+	<!-- String getTypeNameById(String typeId); -->
+	<select id="getTypeNameById" parameterType="string" resultType="string">
+		select acco_type_name
+		from accommodation_types
+		where acco_type_id = #{value}
+	</select>
+	
+	<!-- List<CommonFacility> getCommonFacilitiesByAccoType(String typeId); -->
+	<select id="getCommonFacilitiesByAccoType" parameterType="string" resultType="CommonFacility">
+		select co_facility_id as id, co_facility_name as name, co_facility_icon_name as iconName
+		from common_facilities
+		where co_facility_id in (select co_facility_id from acco_type_cofa where acco_type_id = #{value})
+	</select>
+	
+	<!-- List<RoomFacility> getAllRoomFacilities(); -->	
+	<select id="getAllRoomFacilities" resultType="RoomFacility">
+		select ro_facility_id as id, ro_facility_name as name, ro_facility_icon_name as iconName
+		from room_facilities
+	</select>
+	
+	<!-- List<String> getAllAccoTags(); -->
+	<select id="getAllAccoTags" resultType="string">
+		select acco_tag
+		from acco_tags
+	</select>
+
+</mapper>

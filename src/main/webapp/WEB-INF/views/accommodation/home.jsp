@@ -38,16 +38,13 @@
 	<c:if test="${not empty param.type }">
 		<input type="hidden" name="type" value="${param.keyword }">
 		<div class="row p-5">
-			<h3 class="text-dark ps-0 mb-3">숙소유형명</h3>
-			<!-- 지역 정보 받아와서 출력 -->
+			<h3 class="text-dark ps-0 mb-3">${selectedTypeName }</h3>
 			<select class="form-select w-25 p-1" name="city">
 				<option value="" selected>서울 전체</option>
-				<option value="CITY_001">홍대/신촌/마포</option>
-				<option value="CITY_002">북촌/인사동/종로/동대문</option>
-				<option value="CITY_003">명동/남산/중구</option>
-				<option value="CITY_004">강남/잠실/삼성/서초</option>
-				<option value="CITY_005">이태원/서울역/용산</option>
-				<option value="CITY_006">영등포/신림/김포공항</option>
+				<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
+				<c:forEach var="item" items="${cities }">
+					<option value="${item.id }">${item.name }</option>
+				</c:forEach>
 			</select>
 		</div>
 	</c:if>
@@ -128,97 +125,49 @@
 						<div class="fw-bold mb-3">공용 시설</div>
 						<div class="row">
 							<!-- 선택한 숙소 유형에 맞는 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">세탁기</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">라운지</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">세탁기</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">라운지</label>
-							</div>
+							<c:forEach var="facility" items="${cofacilities }">
+								<div class="col-6 mb-3">
+									<input class="form-check-input" type="checkbox" name="commonFacilities" value="${facility.id }">
+									<label class="form-check-label">${facility.name }</label>
+								</div>
+							</c:forEach>
 						</div>
 					</li>
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">객실 시설</div>
 						<div class="row">
 							<!-- 모든 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">와이파이</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">욕실용품</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">에어컨</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">TV</label>
-							</div>
+							<c:forEach var="facility" items="${rofacilities }">
+								<div class="col-6 mb-3">
+									<input class="form-check-input" type="checkbox" name="roomFacilities" value="${facility.id }">
+									<label class="form-check-label">${facility.name }</label>
+								</div>
+							</c:forEach>
 						</div>
 					</li>
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">기타</div>
 						<div class="row">
 							<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">조식포함</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">객실내흡연</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">짐보관가능</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">프린터사용</label>
-							</div>
+							<c:forEach var="tag" items="${tags }">
+								<div class="col-6 mb-3">
+									<input class="form-check-input" type="checkbox" name="tags" value="${tag.name }">
+									<label class="form-check-label">${tag.name }</label>
+								</div>
+							</c:forEach>
 						</div>
 					</li>
-					<!-- 2. 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. -->
+					<!-- 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. -->
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${not empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">숙소 유형</div>
 						<div class="row">
-							<!-- 모든 숙소유형을 전달받아 반복문으로 출력한다. -->
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">모텔</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">호텔·리조트</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">한옥</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">펜션</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">게스트하우스</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">캠핑</label>
-							</div>
+							<!-- 모든 숙소유형을 전달받아 반복문으로 출력 -->
+							<c:forEach var="type" items="${types }">
+								<div class="col-12 mb-3">
+									<input class="form-check-input" type="checkbox" name="type" value="${type.id }">
+									<label class="form-check-label">${type.name }</label>
+								</div>
+							</c:forEach>
 						</div>
 					</li>
 				</ul>

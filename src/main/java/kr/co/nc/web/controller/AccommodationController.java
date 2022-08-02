@@ -1,33 +1,53 @@
 package kr.co.nc.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import kr.co.nc.service.AccommodationService;
 
 @Controller
 @RequestMapping("/acco")
 public class AccommodationController {
+	
+	@Autowired
+	private AccommodationService accommodationService;
 
 	@GetMapping(path = "")
-	public String home(String type, String city, String keyword, Model model) {
+	public String home(@RequestParam(defaultValue = "") String type, @RequestParam(defaultValue = "") String keyword, Model model) {
 		
-		// 숙소 유형을 선택했을 경우
-		//		선택한 숙소 유형명 전달
-		// 		해당 유형의 모든 숙소 조회 결과 전달
-		// 		지역 정보 전달
-		// 		공용시설 옵션 list 전달
-		// 		객실시설 옵션 list 전달
-		// 		기타 태그 옵션 list 전달
+		// 검색 데이터 제공은 ajax에 대해 restController가 응답하기 때문에 이 요청핸들러에서 제공하지 않는다.
+		// 그 외의 화면에서 필요한 정보를 이 요청핸들러에서 모두 전달한다. 
 		
-		// 키워드 검색했을 경우
-		//		해당 키워드의 모든 숙소 조회 결과
-		// 		숙소유형 정보 전달
+		// type, keyword를 동시에 전달받은 경우 오류화면으로 이동한다.
+		if (!type.isBlank() && !keyword.isBlank()) {
+			// TODO : 오류화면 구현해서 연결시키기 (현재는 임시로 홈화면으로 연결함)
+			return "home";
+		}
 		
-		// 위 경우 중 어디에도 해당하지 않는 요청일 경우?
+		// 	모든 숙소유형 정보 전달
+		model.addAttribute("types", accommodationService.getAllTypes());
+		// 	모든 지역 정보 전달
+		model.addAttribute("cities", accommodationService.getAllCities());
+		
+		//	type을 전달받은 경우에는 아래 정보도 전달
+		if (!type.isBlank()) {
+			// 선택한 숙소 유형명 전달
+			model.addAttribute("selectedTypeName", accommodationService.getTypeNameById(type));
+			// type에 따른 공용시설 옵션 list 전달
+			model.addAttribute("cofacilities", accommodationService.getCommonFacilityOptions(type));
+			// 객실시설 옵션 list 전달
+			model.addAttribute("rofacilities", accommodationService.getRoomFacilityOptions());
+			// 기타 태그 옵션 list 전달
+			model.addAttribute("tags", accommodationService.getAllAccoTagOptions());
+		}
+		
 		return "accommodation/home";
 	}
-
+	
 	@GetMapping(path = "/detail")
 	public String detail() {
 		return "/accommodation/detail";
