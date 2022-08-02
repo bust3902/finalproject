@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.UserMapper">
+
+	<insert id="insert" parameterType="kr.co.nc.vo.User">
+		insert into users
+		(user_no, user_id, user_password, user_nickname, user_name, user_email, user_tel, user_address)
+		values
+		(user_seq.nextval, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address})
+	</insert>
+	
+	<select id="getUserById" parameterType="string" resultType="kr.co.nc.vo.User">
+		select 
+			user_no as no,
+			user_id as id,
+			user_password password,
+			user_name name,
+			user_email email,
+			user_login_type loginType,
+			user_disabled disabled,
+			user_updated_date updatedDate,
+			user_created_date createdDate
+		from 
+			users
+		where
+			user_id = #{value}
+	</select>
+	
+	<select id="getUserByEmail" parameterType="string" resultType="kr.co.nc.vo.User">
+		select 
+			user_no as no,
+			user_id as id,
+			user_password password,
+			user_name name,
+			user_email email,
+			user_login_type loginType,
+			user_disabled disabled,
+			user_updated_date updatedDate,
+			user_created_date createdDate
+		from 
+			users
+		where
+			user_email = #{value}
+	</select>
+	
+	<update id="update" parameterType="kr.co.nc.vo.User">
+		update
+			users
+		set
+			user_password = #{password},
+			user_disabled = #{disabled},
+			user_updated_date = sysdate
+		where
+			user_no = #{no}
+	
+	</update>
+
+</mapper>
