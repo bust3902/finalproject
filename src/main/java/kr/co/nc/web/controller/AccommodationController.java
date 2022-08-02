@@ -1,13 +1,18 @@
 package kr.co.nc.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.service.AccommodationService;
+import kr.co.nc.vo.Accommodation;
 
 @Controller
 @RequestMapping("/acco")
@@ -47,6 +52,15 @@ public class AccommodationController {
 		
 		return "accommodation/home";
 	}
+	
+	@GetMapping(path = "/search")
+	@ResponseBody
+	public List<Accommodation> accommodations(AccoCriteria criteria) {
+		System.out.println(criteria);
+		System.out.println(accommodationService.searchAccommodation(criteria));
+		return accommodationService.searchAccommodation(criteria);
+	}
+
 	
 	@GetMapping(path = "/detail")
 	public String detail() {

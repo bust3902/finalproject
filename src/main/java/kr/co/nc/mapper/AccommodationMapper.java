@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
@@ -27,6 +29,7 @@ public interface AccommodationMapper {
 	List<String> getAllAccoTags();
 	
 	// 검색조건에 따른 숙소정보 조회
+	List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria);
 	
 	// 숙소번호에 따른 숙소정보 상세 조회, 모든 객실정보 조회, 객실번호에 따른 객실상세정보 조회
 	

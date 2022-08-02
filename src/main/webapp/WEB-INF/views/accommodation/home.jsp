@@ -36,7 +36,7 @@
   --%>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<c:if test="${not empty param.type }">
-		<input type="hidden" name="type" value="${param.keyword }">
+		<input type="hidden" name="types" value="${param.keyword }">
 		<div class="row p-5">
 			<h3 class="text-dark ps-0 mb-3">${selectedTypeName }</h3>
 			<select class="form-select w-25 p-1" name="city">
@@ -97,30 +97,6 @@
 						<input type="hidden" name="maxPrice" value="300000" />
 						<div id="slider-range"></div>
 					</li>
-					<!-- 
-						숙소 유형마다 여부가 다르기 때문에 베드 타입 옵션은 제외 (DB에서 사용하지 않는 컬럼이 될 듯)
-					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-						<div class="fw-bold mb-3">베드 타입</div>
-						<div class="d-flex justify-content-between mx-auto p-1">
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>싱글</small>
-							</div>
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>더블</small>
-							</div>
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>트윈</small>
-							</div>
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>온돌</small>
-							</div>
-						</div>
-					</li>
-					 -->
 					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
 						<div class="fw-bold mb-3">공용 시설</div>
 						<div class="row">
@@ -164,7 +140,7 @@
 							<!-- 모든 숙소유형을 전달받아 반복문으로 출력 -->
 							<c:forEach var="type" items="${types }">
 								<div class="col-12 mb-3">
-									<input class="form-check-input" type="checkbox" name="type" value="${type.id }">
+									<input class="form-check-input" type="checkbox" name="types" value="${type.id }">
 									<label class="form-check-label">${type.name }</label>
 								</div>
 							</c:forEach>

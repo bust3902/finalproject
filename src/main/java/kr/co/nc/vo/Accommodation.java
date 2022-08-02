@@ -31,6 +31,7 @@ public class Accommodation {
 	private Date updatedDate;
 	private String deleted;
 	private String cityId;
+	private String distance;
 	
 	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
 	private List<AccommodationRoom> rooms; // 이 숙소가 가지는 모든 객실정보
