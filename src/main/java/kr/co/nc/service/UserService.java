@@ -1,5 +1,7 @@
 package kr.co.nc.service;
 
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +24,11 @@ public class UserService {
 	 * @return 사용자 정보
 	 */
 	public User loginWithKakao(User user) {
-		User savedUser = userMapper.getUserById(user.getId());
+		User savedUser = userMapper.getUserByEmail(user.getEmail());
 		log.info("카카오 로그인 아이디로 조회한 유저 정보: " + savedUser);
 		
 		if (savedUser == null) {
+			user.setId(UUID.randomUUID().toString());
 			userMapper.insert(user);
 			log.info("카카오 로그인 신규 사용자 정보 등록 완료: " + user.getId() + ", " + user.getName());
 		}

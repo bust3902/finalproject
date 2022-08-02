@@ -10,12 +10,11 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<!-- 카카오 로그인지원 자바스크립트 라이브러리를 포함시킨다. -->
 	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-	<title>애플리케이션</title>
+	<title>로그인</title>
 </head>
 <body>
 <div class="container mt-3">  
 	<c:set var="menu" value="login"></c:set>
-	<%@ include file="common/nav.jsp" %>  
     <div class="row mb-3">
     	<div class="col-7">
     		<p>아이디 비밀번호를 입력해서 로그인하세요</p>

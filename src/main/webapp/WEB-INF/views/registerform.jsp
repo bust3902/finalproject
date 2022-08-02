@@ -11,7 +11,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<!-- 카카오 로그인지원 자바스크립트 라이브러리를 포함시킨다. -->
 	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-	<title>애플리케이션</title>
+	<title>회원가입</title>
 </head>
 <body>
 <div class="container mt-3">  
@@ -33,7 +33,7 @@
     				${error }
     			</div>
     		</c:if>
-    		<form class="border p-3 bg-light" method="post" action="register">
+    		<form class="border p-3" method="post" action="register">
     			<div class="mb-3">
     				<label class="form-label">아이디</label>
     				<input type="text" class="form-control" name="id"/>

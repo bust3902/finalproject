@@ -33,8 +33,9 @@
       				<li><a class="dropdown-item" href="">예약 취소</a></li>
       				<li><a class="dropdown-item" href="">내 리뷰 보기</a></li>
       				<li><hr class="dropdown-divider"></li>
-					<li class="dropdown-item"><a class="dropdown-item" href="/logout">로그아웃</a></li>
+					<li class="dropdown-item"><a class="dropdown-item" href="/logout">로그아웃</a></li>					
     			</ul>
+    			<li class="nav-item"><a class="nav-link ${menu eq 'logout' ? 'active' : '/' }" href="/logout">로그아웃</a></li>
 			</c:if>
 			<c:if test="${empty LOGIN_USER }">
 				<div class="container-fluid">

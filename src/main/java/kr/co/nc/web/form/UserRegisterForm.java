@@ -14,4 +14,6 @@ public class UserRegisterForm {
 	private String nickname;
 	private String name;
 	private String email;
+	private String tel;
+	private String address;
 }
