@@ -17,7 +17,7 @@
 	
 	<form class="d-flex">
         <input class="form-control me-sm-2" type="text" placeholder="Search">
-        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-secondary my-2 my-sm-0" type="submit">검색</button>
     </form>
 	
 </div>
