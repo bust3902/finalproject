@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.AccommodationMapper">
+
+	<!-- List<AccommodationType> getAllTypes(); -->
+	<select id="getAllTypes" resultType="AccommodationType">
+		select acco_type_id as id, acco_type_name as name
+		from accommodation_types
+		order by acco_type_id
+	</select>
+	
+	<!-- List<City> getAllCities(); -->
+	<select id="getAllCities" resultType="City">
+		select city_id as id, city_name as name
+		from cities
+		order by city_id
+	</select>
+	
+	<!-- String getTypeNameById(String typeId); -->
+	<select id="getTypeNameById" parameterType="string" resultType="string">
+		select acco_type_name
+		from accommodation_types
+		where acco_type_id = #{value}
+	</select>
+	
+	<!-- List<CommonFacility> getCommonFacilitiesByAccoType(String typeId); -->
+	<select id="getCommonFacilitiesByAccoType" parameterType="string" resultType="CommonFacility">
+		select co_facility_id as id, co_facility_name as name, co_facility_icon_name as iconName
+		from common_facilities
+		where co_facility_id in (select co_facility_id from acco_type_cofa where acco_type_id = #{value})
+	</select>
+	
+	<!-- List<RoomFacility> getAllRoomFacilities(); -->	
+	<select id="getAllRoomFacilities" resultType="RoomFacility">
+		select ro_facility_id as id, ro_facility_name as name, ro_facility_icon_name as iconName
+		from room_facilities
+	</select>
+	
+	<!-- List<String> getAllAccoTags(); -->
+	<select id="getAllAccoTags" resultType="string">
+		select acco_tag
+		from acco_tags
+	</select>
+	
+	<!-- AccoResultMap, AccoDetailResultMap -->
+	<resultMap type="Accommodation" id="AccoResultMap">
+		<id column="acco_id" property="id"/>
+		<result column="acco_name" property="name"/>
+		<result column="acco_district" property="district"/>
+		<result column="acco_address" property="address"/>
+		<result column="acco_latitude" property="latitude"/>
+		<result column="acco_longitude" property="longitude"/>
+		<result column="acco_introduce_comment" property="introduceComment"/>
+		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
+		<result column="acco_review_rate" property="reviewRate"/>
+		<result column="acco_review_count" property="reviewCount"/>
+		<result column="city_id" property="cityId"/>
+		<result column="distance" property="currentDistance" />
+		<result column="minPrice" property="minPrice"/>
+	</resultMap>
+	
+	<!-- List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria); -->
+	<select id="getAccommodationsByCriteria" parameterType="kr.co.nc.criteria.AccoCriteria" resultMap="AccoResultMap">
+		select distinct a.acco_id, a.acco_name, a.acco_district, a.acco_address, a.acco_latitude, a.acco_longitude,
+				a.acco_introduce_comment, a.acco_thumbnail_image, a.acco_review_rate, a.acco_review_count, a.city_id,
+				DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude) as distance,
+				m.minPrice
+		from accommodations a, acco_rooms r,
+		(select room_no, count(*) as cnt
+			from reservation
+			where reservation_check_in = #{startDate}
+			or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
+			or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate})
+			group by room_no) s,
+		(select acco_id, min(room_day_price) minPrice
+		    from acco_rooms
+		    group by acco_id) m
+		<where>
+		 	a.acco_deleted = 'N'
+		 	and a.acco_id = r.acco_id
+			and a.acco_id = m.acco_id
+			and r.room_no = s.room_no (+)
+			and (r.room_numbers - NVL(s.cnt,0)) &gt; 0
+			<if test="keyword != null">
+				and (a.acco_name like '%' || #{keyword} || '%'
+					or a.acco_district like '%' || #{keyword} || '%'
+					or a.acco_address like '%' || #{keyword} || '%')
+			</if>
+			<if test="city != null">
+				and a.city_id = #{city}
+			</if>
+			<if test="capacity >= 0">
+				and r.room_capacity &gt;= #{capacity}
+			</if>
+			<if test="minPrice >= 0 and maxPrice > 0">
+				and r.room_day_price between #{minPrice} and #{maxPrice}
+			</if>
+			<if test="types != null">
+				and a.acco_id in (select acco_id from acco_types
+								where acco_type_id in
+								<foreach item="type" collection="types" open="(" close=")" separator=",">
+									#{type}
+								</foreach>
+								)
+			</if>
+			<if test="commonFacilities != null">
+				and a.acco_id in (select acco_id from acco_common_facilities
+								where co_facility_id in
+								<foreach item="cofa" collection="commonFacilities" open="(" close=")" separator=",">
+									#{cofa}
+								</foreach>
+								)
+			</if>
+			<if test="roomFacilities != null">
+				and r.room_no in (select room_no from acco_room_facilities
+								where ro_facility_id in
+								<foreach item="rofa" collection="roomFacilities" open="(" close=")" separator=",">
+									#{rofa}
+								</foreach>
+								)
+			</if>
+		</where>
+		<choose>
+			<when test="sort == 'rate'">
+				order by a.acco_review_rate desc
+			</when>
+			<when test="sort == 'dist'">
+				order by distance asc
+			</when>
+			<when test="sort == 'highprice'">
+				order by minPrice desc
+			</when>
+			<when test="sort == 'lowprice'">
+				order by minPrice asc
+			</when>
+		</choose>
+	</select>
+
+</mapper>
