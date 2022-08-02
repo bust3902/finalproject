@@ -1,13 +1,156 @@
 package kr.co.nc.web.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.nc.service.UserService;
+import kr.co.nc.util.SessionUtils;
+import kr.co.nc.vo.User;
+import kr.co.nc.web.form.KakaoLoginForm;
+import kr.co.nc.web.form.UserRegisterForm;
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @Controller
 public class HomeController {
 	
-	@GetMapping(path = "/")
+	private static final String NORMAL_LOGIN_TYPE = "normal";
+	private static final String KAKAO_LOGIN_TYPE = "kakao";
+	
+	@Autowired
+	private UserService userService;
+	
+	/*
+	 * 홈화면 요청을 처리한다.
+	 * 요청URI : /
+	 * 요청 파라미터 : 없음
+	 * 뷰 페이지 : /WEB-INF/views/home.jsp
+	 */
+	@RequestMapping(path = "/")
 	public String home() {
 		return "home";
 	}
+	
+	
+	/*
+	 * 회원가입폼 요청을 처리한다.
+	 * 요청 URI : /register
+	 * 요청 파라미터 : 없음
+	 * 뷰 페이지 : /WEB-INF/views/registerform.jsp
+	 */
+	@GetMapping("/register")
+	public String registerform() {
+		return "registerform";
+	}
+	
+	/*
+	 * 회원가입 요청을 처리한다.
+	 * 요청 URI : /register
+	 * 폼 데이터 : username, password, email
+	 * 재요청 URI : 성공 - /completed, 실패 - /register
+	 */
+	@PostMapping("/register") 
+	public String register(UserRegisterForm form, RedirectAttributes redirectAttributes) {
+		log.info("일반 회원가입 정보: " + form);
+		User user = User.builder()
+				.id(form.getId())
+				.password(form.getPassword())
+				.nickname(form.getNickname())
+				.name(form.getName())
+				.email(form.getEmail())
+				.tel(form.getTel())
+				.address(form.getAddress())
+				.loginType(NORMAL_LOGIN_TYPE)	// 일반회원 가입은 로그인타입을 "normal"로 설정한다.
+				.build();
+		try {
+			// 서비스에 회원정보를 전달해서 회원가입을 처리하게 한다. 
+			userService.registerUser(user);
+			redirectAttributes.addFlashAttribute("user", user);
+			
+			return "redirect:/completed";
+		} catch (RuntimeException e) {
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/register";
+		}
+	}
+	
+	/*
+	 * 회원가입 완료 페이지 요청을 처리한다.
+	 * 요청 URI : /completed
+	 * 요청 파라미터 : 없음
+	 * 뷰 페이지 : /WEB-INF/views/completed.jsp
+	 */
+	@GetMapping("/completed") 
+	public String completed(){
+		return "completed";
+	}
+	
+	/*
+	 * 로그인 페이지 요청을 처리한다.
+	 * 요청 URI : /login
+	 * 요청 파라미터 : 없음
+	 * 뷰 페이지 : /WEB-INF/views/login.jsp
+	 */
+	@GetMapping("/login") 
+	public String loginform(){
+		return "login";
+	}
+	
+	/*
+	 * 일반 로그인 요청을 처리한다.
+	 * 요청 URI : /login
+	 * 요청 파라미터 : id, password
+	 */
+	@PostMapping("/login") 
+	public String login(String id, String password, RedirectAttributes redirectAttributes){
+		log.info("일반 로그인 정보: " + id);
+		try {
+			User user = userService.login(id, password);
+			SessionUtils.addAttribute("LOGIN_USER", user);
+			log.info("일반 로그인 처리 완료");
+			return "redirect:/";
+		} catch (RuntimeException e) {
+			log.warn("일반 로그인 오류: " + e.getMessage());
+			
+			redirectAttributes.addFlashAttribute("error", e.getMessage());
+			return "redirect:/login";
+		}
+				
+	}
+	
+	// 카카오 로그인 요청을 처리한다.
+	@PostMapping("/kakao-login")
+	public String loginWithKakao(KakaoLoginForm form) {
+		log.info("카카오 로그인 인증정보: " + form);
+			
+		User user = User.builder()
+						.id(form.getId())
+						.name(form.getNickname())
+						.email(form.getEmail())
+						.loginType(KAKAO_LOGIN_TYPE)
+						.build();
+			
+		User savedUser = userService.loginWithKakao(user);
+			
+		if (savedUser != null) {
+			SessionUtils.addAttribute("LOGIN_USER", savedUser);
+		} else {
+			SessionUtils.addAttribute("LOGIN_USER", user);
+		}
+		log.info("카카오 로그인 완료");
+			
+		return "redirect:/";
+		
+		}
+		
+		// 로그아웃 요청을 처리한다.
+		@GetMapping("/logout")
+		public String logout() {
+			SessionUtils.sessionInvlidate();
+			return "redirect:/";
+		}
 }
