@@ -31,7 +31,9 @@ public class Accommodation {
 	private Date updatedDate;
 	private String deleted;
 	private String cityId;
-	private String distance;
+	
+	private String currentDistance; // 현재 조회한 위치로부터의 거리 (데이터 조회시에만 사용하는 필드)
+	private int minPrice; // 현재 조회한 날짜에서 가장 저렴한 객실의 1박 금액 (데이터 조회시에만 사용하는 필드)
 	
 	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
 	private List<AccommodationRoom> rooms; // 이 숙소가 가지는 모든 객실정보
