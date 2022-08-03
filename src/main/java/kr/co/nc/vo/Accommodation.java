@@ -21,9 +21,6 @@ public class Accommodation {
 	private String introduceComment;
 	private String thumbnailImageName;
 	private String detailDescription;
-	private String detailImageName1;
-	private String detailImageName2;
-	private String detailImageName3;
 	private double reviewRate; // (모든 사용자의 평점 합/리뷰 수)를 계산한 평점
 	private int reviewCount;
 	private int likeCount;
