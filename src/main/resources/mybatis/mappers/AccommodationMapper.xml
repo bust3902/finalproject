@@ -11,7 +11,7 @@
 	
 	<!-- List<City> getAllCities(); -->
 	<select id="getAllCities" resultType="City">
-		select city_id as id, city_name as name
+		select city_id as id, city_name as name, city_latitude as latitude, city_longitude as longitude
 		from cities
 		order by city_id
 	</select>
@@ -60,27 +60,44 @@
 	</resultMap>
 	
 	<!-- List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria); -->
+	<!-- 
+		1. 서브쿼리에서 조건을 만족하는 객실을 가지는 숙소아이디와, 그 숙소의 조건을 만족하는 객실 중 가장 저렴한 금액을 조회한다.
+		2. 서브쿼리에서 획득한 조회결과(r)와 숙소 테이블을 조인하여 객실, 숙소에 대한 모든 조건을 만족하는 숙소정보를 조회한다.-->
 	<select id="getAccommodationsByCriteria" parameterType="kr.co.nc.criteria.AccoCriteria" resultMap="AccoResultMap">
 		select distinct a.acco_id, a.acco_name, a.acco_district, a.acco_address, a.acco_latitude, a.acco_longitude,
 				a.acco_introduce_comment, a.acco_thumbnail_image, a.acco_review_rate, a.acco_review_count, a.city_id,
 				DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude) as distance,
-				m.minPrice
-		from accommodations a, acco_rooms r,
-		(select room_no, count(*) as cnt
-			from reservation
-			where reservation_check_in = #{startDate}
-			or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
-			or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate})
-			group by room_no) s,
-		(select acco_id, min(room_day_price) minPrice
-		    from acco_rooms
-		    group by acco_id) m
+				r.minPrice
+		from accommodations a,
+		(select fr.acco_id, min(fr.room_day_price) minPrice
+		from acco_rooms fr, (select room_no, count(*) as cnt
+							from reservation
+							where reservation_check_in = #{startDate}
+							or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
+							or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate})
+							group by room_no) nr
+		<where>
+			fr.room_no = nr.room_no (+)
+			and (fr.room_numbers - NVL(nr.cnt,0)) > 0
+			<if test="capacity >= 0">
+				and fr.room_capacity &gt;= #{capacity}
+			</if>
+			<if test="minPrice >= 0 and maxPrice > 0">
+				and fr.room_day_price between #{minPrice} and #{maxPrice}
+			</if>
+			<if test="roomFacilities != null">
+				and fr.room_no in (select room_no from acco_room_facilities
+								where ro_facility_id in
+								<foreach item="rofa" collection="roomFacilities" open="(" close=")" separator=",">
+									#{rofa}
+								</foreach>
+								)
+			</if>
+		</where>
+		group by fr.acco_id) r
 		<where>
 		 	a.acco_deleted = 'N'
 		 	and a.acco_id = r.acco_id
-			and a.acco_id = m.acco_id
-			and r.room_no = s.room_no (+)
-			and (r.room_numbers - NVL(s.cnt,0)) &gt; 0
 			<if test="keyword != null">
 				and (a.acco_name like '%' || #{keyword} || '%'
 					or a.acco_district like '%' || #{keyword} || '%'
@@ -88,12 +105,6 @@
 			</if>
 			<if test='city != null and city != ""'>
 				and a.city_id = #{city}
-			</if>
-			<if test="capacity >= 0">
-				and r.room_capacity &gt;= #{capacity}
-			</if>
-			<if test="minPrice >= 0 and maxPrice > 0">
-				and r.room_day_price between #{minPrice} and #{maxPrice}
 			</if>
 			<if test="types != null">
 				and a.acco_id in (select acco_id from acco_types
@@ -108,14 +119,6 @@
 								where co_facility_id in
 								<foreach item="cofa" collection="commonFacilities" open="(" close=")" separator=",">
 									#{cofa}
-								</foreach>
-								)
-			</if>
-			<if test="roomFacilities != null">
-				and r.room_no in (select room_no from acco_room_facilities
-								where ro_facility_id in
-								<foreach item="rofa" collection="roomFacilities" open="(" close=")" separator=",">
-									#{rofa}
 								</foreach>
 								)
 			</if>
@@ -135,5 +138,4 @@
 			</when>
 		</choose>
 	</select>
-
 </mapper>

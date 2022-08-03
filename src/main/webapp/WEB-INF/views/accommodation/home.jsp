@@ -26,47 +26,49 @@
 	2. 초기화 버튼을 누르면 사용자가 변경한 옵션을 모두 초기화시키기
 	3. 적용 버튼을 누르면 form에 저장된 input태그의 값들을 검색조건으로 모두 전달해 ajax로 숙소정보 요청URL보내고, 데이터 획득하기.
 	4. 획득한 데이터를 출력하기. (처음 화면 로드될 때는 아무 조건 없이 조회할 것)
-	* 적용한 검색조건이 화면에서 계속 유지되게 하기
 	5. 정렬 옵션 클릭 시에도 3~4번과 마찬가지로 처리하기
 	6. 지도 버튼을 누르면 모달 창으로 지도 출력하기, 이 때 3번에서 획득한 데이터의 위도와 경도를 이용해 검색결과 지도에 표시하기.
  -->
- <%--
- nav.jsp에 기본 태그들에 적용된 css가 이 페이지에서도 적용되어서 디자인이 깨짐. => 확인 필요
- <%@ include file="../common/nav.jsp" %>
-  --%>
+<%@ include file="../common/nav.jsp" %>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<form id="form-search-accos">
-		<c:if test="${not empty param.type }">
-			<input type="hidden" name="types" value="${param.type }">
-			<div class="row p-5">
-				<h3 class="text-dark ps-0 mb-3">${selectedTypeName }</h3>
-				<select class="form-select w-25 p-1" name="city">
-					<option value="" selected>서울 전체</option>
-					<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
-					<c:forEach var="item" items="${cities }">
-						<option value="${item.id }">${item.name }</option>
-					</c:forEach>
-				</select>
-			</div>
-		</c:if>
-		<c:if test="${empty param.type}">
-			<input type="hidden" name="keyword" value="${param.keyword }">
-			<div class="row p-5">
-				<div>
-					<h3 class="fs-bold text-center text-dark">'${param.keyword }'</h3>
-				</div>
-			</div>
-		</c:if>
+		<input type="hidden" name="currentLat" value="" />
+		<input type="hidden" name="currentLong" value="" />
+		<div class="row px-3 pt-5 pb-3">
+			<c:choose>
+				<c:when test="${not empty param.type }">
+					<input type="hidden" name="types" value="${param.type }" />
+					<h3 class="text-dark ps-0 mb-3">${selectedTypeName }</h3>
+				</c:when>
+				<c:otherwise>
+		 			<input type="hidden" name="keyword" value="${param.keyword }">
+		 			<!-- keyword 검색값이 빈 문자열이거나 null이면 키워드를 출력하지 않는다. -->
+		 			<c:if test='${param.keyword != "" and param.keyword != null }'>
+						<h3 class="fs-bold text-center text-dark">'${param.keyword }'</h3>
+		 			</c:if>
+				</c:otherwise>
+			</c:choose>
+		</div>
+		<div class="row p-3">
+			<select class="form-select w-25 p-1" name="city">
+				<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
+				<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
+				<c:forEach var="city" items="${cities }">
+					<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
+				</c:forEach>
+			</select>
+		</div>
 		<div class="row">
 			<div class="col-4">
 				<div class="card p-1">
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item py-3">
-							<div class="fw-bold mb-3 fs-5">날짜</div>
+							<div class="fw-bold mt-3 mb-1 fs-5">날짜</div>
+							<div class="text-small mt-1 mb-3 text-muted">7박까지 조회 가능</div>
 							<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
 							<input type="text" id="datepicker" class="form-control" value="" />
-							<input type="hidden" name="startDate" value="">
-							<input type="hidden" name="endDate" value="">
+							<input type="hidden" name="startDate" value="" />
+							<input type="hidden" name="endDate" value="" />
 						</li>
 						<li class="list-group-item py-3">
 							<div class="fw-bold mb-3 fs-5">상세조건</div>
@@ -217,16 +219,60 @@
 $(function () {
 	
 /*
+ * 화면 요청할 때 현재 위치 위경도 받아오기
+ */
+	let currentLat = '';
+	let currentLong = '';
+ 	getLocation();
+	function getLocation() {
+		// 받아온 위경도는 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
+		// 		비동기로 실행되어서 if문 밖에서 값 저장하면 안되는듯?
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+	    	currentLat = position.coords.latitude;
+	    	currentLong = position.coords.longitude;
+			$(":hidden[name=currentLat]").val(currentLat);
+			$(":hidden[name=currentLong]").val(currentLong);
+	    });
+		} else {
+		  // 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
+	    	currentLat = 37.564214;
+	    	currentLong = 127.0016985;
+			$(":hidden[name=currentLat]").val(currentLat);
+			$(":hidden[name=currentLong]").val(currentLong);
+	  	}
+	}
+	
+/*
+ * 선택한 지역에 따라 지도의 중심좌표 변경하기
+ */
+	function changeMapCenter(map) {
+	// 지도의 중심 좌표는 지역 선택에 따라 달라진다.
+	let cityLat = $("select[name=city] :selected").attr("data-city-lat");
+	let cityLong = $("select[name=city] :selected").attr("data-city-long");
+	map.setCenter(new kakao.maps.LatLng(cityLat, cityLong));
+	// 전체 조회 / 지역 조회에 따라 확대 레벨이 달라진다. '서울전체' 항목은 value 값이 ""이다.
+	if ($("select[name=city] :selected").val() == "") {
+		map.setLevel(8);
+	} else {
+		map.setLevel(7);
+	}
+}
+	
+/*
  * 검색 결과 카카오 openAPI로 지도에 표현하기
  */
 	// 모달 창에 지도 정의하기
 	let container = document.getElementById('map');
-	let mapcenter = new kakao.maps.LatLng(37.564214, 127.0016985);
+	// mapcenter 값 설정
 	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: mapcenter, //지도의 중심좌표.
-			level: 8 //지도의 레벨(확대, 축소 정도)
+			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
+			level: 7 //지도의 레벨(확대, 축소 정도)
 	};
-	let map = new kakao.maps.Map(container, options); // 지도 생성
+	// 지도 생성
+	let map = new kakao.maps.Map(container, options);
+	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
+	changeMapCenter(map);
 
 	// 지도 버튼에 모달 이벤트 연결하기
 	let modalMap = new bootstrap.Modal($("#modal-map"));
@@ -234,13 +280,12 @@ $(function () {
 		modalMap.show();
 		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
 		map.relayout(); 
-		map.setCenter(mapcenter);
+		changeMapCenter(map);
 	});
 	
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : input태그의 value가 '날짜 ~ 날짜 . 숙박일수' 이므로 date로 전달해줄 값은 따로 저장해두어야 한다.
-	TO DO : 로컬스토리지에 값을 저장해 화면 리로딩 또는 상세 조회페이지나, 마이페이지로 이동해도 선택한 일정을 이용할 수 있게 하기.
+	TO DO : 로컬스토리지에 값을 저장해 상세 조회페이지로 이동하거나 다시 돌아와도 선택한 일정을 이용할 수 있게 하기.
 	TO DO : 가능하면 확인 버튼 위치 등 수정
 */
 	// 화면 로드 시 날짜 및 기간 초기화 : 이 값이 input태그의 val에 저장된다.
@@ -372,6 +417,8 @@ $(function () {
 		});
 	}
 	
+	
+	
 	// 처음 화면 로딩될 때 숙소 검색 결과 화면에 출력하기 (다른 input태그 값 초기화 설정보다 늦게 실행돼야 함)
 	searchAccos();
 	
@@ -384,16 +431,18 @@ $(function () {
 	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
 	$("input[name=sort]").click(function() {
+		console.log('test');
 		searchAccos();
 	});
 	// 지역을 변경했을 때 숙소 재검색 후 화면 갱신, 지도 center 변경
 	$("select[name=city]").change(function() {
 		searchAccos();
+		changeMapCenter(map);
 	});
 	// 초기화 버튼을 눌렀을 때 상세조건을 모두 초기화
 	$("#btn-reset").click(function() {
 		// 인원
-		$("input[name=capcity]").val("1");
+		$("input[name=capacity]").val("1");
 		// 가격
 		$("#slider-range").slider("option", "values", [1,30]);
 		$(":hidden[name=minPrice]").val(10000);
