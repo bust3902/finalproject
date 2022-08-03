@@ -20,7 +20,7 @@
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">검색</button>
 	    </form>
 	</div>
-	<button onclick="getLocation()">현재위치 확인</button>
+	<button id="locationButton" onclick="getLocation()">현재위치 확인</button>
 	<p id="demo"></p>
 </div>
 <script type="text/javascript">
@@ -37,15 +37,16 @@
 		        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
 		        		  {sensor:false, 
 		        	       language:"ko",
-		        	       latlng: "37.5881728,126.992384", 
+		        	       latlng: latitude+","+longitude, 
 		        	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
 		        .done(function(data) {
 		        	console.log(data);
 		        	let location = data.results[0];
-		        	let address = location.formatted_address.replace("대한민국 ", " ");
+		        	//let address = location.formatted_address.replace("대한민국 ", " ");
 		        	let address2 = location.formatted_address.split(' ');
-		        	alert(address2[2]+' '+address2[3]);
+		        	//alert(address2[2]+' '+address2[3]);
 		        	//alert(address);
+		        	$("#locationButton").text(address2[2]+' '+address2[3]);
 		        })
 		    });
 		  } else { 
