@@ -30,7 +30,7 @@
 					<div class="input-group">
 						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel">
 						<span class="input-group-btn">
-						<button class="btn btn-outline-secondary mx-2" name="phoneCheck" type="button" onclick="requestTel()" disabled>인증번호 전송</button>
+						<button class="btn btn-outline-secondary mx-2" name="phoneCheck" type="button" onclick="phoneCheck()">인증번호 전송</button>
 						</span>
 					</div>
 				<p id="phoneCheck" class="text-danger"></p>			
@@ -38,7 +38,7 @@
 				<hr>
 				<div class="my-5">
 					<p><strong>결제수단 선택</strong></p>
-					<select class="form-select">
+					<select class="form-select" name="payType">
 						<option value="kakaopay" selected >카카오페이</option>
 						<option value="toss" >토스</option>
 					</select>	
@@ -51,7 +51,7 @@
 				</div>
 				<div class="form-check mb-2">
 					<input class="form-check-input" type="checkbox" value="" id="checkbox_refund" name="checkbox">
-					<label class="form-text" for="checkbox_refund" ><a  href="#" style="text-decoration: underline; color: gray">
+					<label class="form-text" for="checkbox_refund" ><a  onclick="#checkbox_refund" style="text-decoration: underline; color: gray">
 					  숙소이용규칙 및 취소/환불규정 동의</a><strong class="text-danger">(필수)</strong>
 					</label>
 				</div>
@@ -125,14 +125,14 @@
 	      	<div class="modal-body">
 	      		<div class="row">
 					<div class="col-5">
-						<dt>보코 서울 강남</dt>
-						<dd>디럭스 싱글 / 1박</dd>	
+						<dt id="accoName">보코 서울 강남</dt>
+						<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>	
 						
 						<dt class="col-3 form-text">체크인</dt>
-						<dd>07.28 목 15:00</dd>
+						<dd id="checkIn">07.28 목 15:00</dd>
 							
 						<dd class="form-text">체크아웃</dd>	
-						<dd>07.29 금 12:00</dd>
+						<dd id="checkOut">07.29 금 12:00</dd>
 					</div>
 					<div class="col">
 						<ul class="form-text mb-3"><small><strong class="text-danger">당일예약</strong>은 체크인 시간 기준 <strong class="text-danger">3시간 전</strong>까지 취소 가능합니다</small></ul>
@@ -147,6 +147,111 @@
    		</div>
  	</div>
 </div>
+<!-- 환불규정 modal창 -->
+<div class="modal fade" id="checkbox_refund" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"  aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		<div class="modal-header">
+        	<h5 class="modal-title" id="staticBackdropLabel"><strong>숙소 이용규칙 및 취소/ 환불 규정 (필수)</strong></h5>
+      		</div> 
+			<div class="modal-body my-3">
+			<ol>
+			<p><strong>이용 규칙</strong></p>
+			<li>최대 인원 초과 시 입실 불가합니다</li>
+			<li>정원 기준 요금 외 인원 추가 요금은 현장결제입니다.</li>
+			<li>제공 이미지는 배정된 객실과 다를 수 있습니다.</li>
+			<li>제공 정보는 숙소의 사정에 따라 변경될 수 있습니다.</li>
+			<li>미성년자는 보호자 동반 시 투숙이 가능합니다.</li>
+			<li>체크인 시 배정의 경우, 객실과 베드타입을 보장하지 않습니다.</li>
+			<li>객실 타입에 시간이 별도 기재된 경우, 체크인/아웃 시간이 상이할 수 있습니다.</li>
+			<li>조식, 인원, 침구, 침대 등 추가는 예약하신 <strong class="text-danger">숙소로 요청 및 결제</strong>가 가능합니다.</li>
+			<li>업체 현장에서 객실 컨디션 및 서비스로 인해 발생된 분쟁은 서울어때에서 책임지지 않습니다.</li>
+			</ol>
+			<ol>
+			<p><strong>취소/환불규정</strong></p>
+			<li>숙소 사정에 의해 취소 발생 시 100% 환불이가능합니다.</li>
+			<li>예약 상품 별 숙소 정보에 기재된 취소, 환불규정을 반드시 확인 후 이용해주시기 바랍니다.</li>
+			<li>예약 이후의 취소는 취소/환불 규정에 의거하여적용됩니다.</li>
+			<li>취소, 변경 불가 상품은 규정과 상관없이 취소,변경이 불가합니다.</li>
+			<li>당일 결제를 포함한 체크인 당일 취소는 취소,변경이 불가합니다.</li>
+			<li>체크인 시 배정의 경우, 객실과 베드타입을 보장하지 않습니다.</li>
+			<li>예약 취소가 불가능한 시간에 고객 사정에 의한 취소 시, 여기어때가 제공하는 모든 혜택에서 제외될 수 있으며 (혜택받기 포인트 미지급, 할인쿠폰 미제공, 이벤트 대상자 제외), 본 예약 시 사용한 쿠폰은 소멸됩니다.</li>
+			<li>단! 숙소의 객실 정보가 수시로 변경될 수 있으며 이로 인한 불이익은 여기어때가 책임지지 않습니다.</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 개인정보 수집동의 modal창 -->
+<div class="modal fade" id="checkbox_info1" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		<div class="modal-header">
+        	<h5 class="modal-title" id="staticBackdropLabel"><strong>숙소 이용규칙 및 취소/ 환불 규정 (필수)</strong></h5>
+      		</div> 
+			<div class="modal-body my-3">
+			<ol>
+			<p><strong>이용 규칙</strong></p>
+			<li>최대 인원 초과 시 입실 불가합니다</li>
+			<li>정원 기준 요금 외 인원 추가 요금은 현장결제입니다.</li>
+			<li>제공 이미지는 배정된 객실과 다를 수 있습니다.</li>
+			<li>제공 정보는 숙소의 사정에 따라 변경될 수 있습니다.</li>
+			<li>미성년자는 보호자 동반 시 투숙이 가능합니다.</li>
+			<li>체크인 시 배정의 경우, 객실과 베드타입을 보장하지 않습니다.</li>
+			<li>객실 타입에 시간이 별도 기재된 경우, 체크인/아웃 시간이 상이할 수 있습니다.</li>
+			<li>조식, 인원, 침구, 침대 등 추가는 예약하신 <strong class="text-danger">숙소로 요청 및 결제</strong>가 가능합니다.</li>
+			<li>업체 현장에서 객실 컨디션 및 서비스로 인해 발생된 분쟁은 서울어때에서 책임지지 않습니다.</li>
+			</ol>
+			<ol>
+			<p><strong>취소/환불규정</strong></p>
+			<li>숙소 사정에 의해 취소 발생 시 100% 환불이가능합니다.</li>
+			<li>예약 상품 별 숙소 정보에 기재된 취소, 환불규정을 반드시 확인 후 이용해주시기 바랍니다.</li>
+			<li>예약 이후의 취소는 취소/환불 규정에 의거하여적용됩니다.</li>
+			<li>취소, 변경 불가 상품은 규정과 상관없이 취소,변경이 불가합니다.</li>
+			<li>당일 결제를 포함한 체크인 당일 취소는 취소,변경이 불가합니다.</li>
+			<li>체크인 시 배정의 경우, 객실과 베드타입을 보장하지 않습니다.</li>
+			<li>예약 취소가 불가능한 시간에 고객 사정에 의한 취소 시, 여기어때가 제공하는 모든 혜택에서 제외될 수 있으며 (혜택받기 포인트 미지급, 할인쿠폰 미제공, 이벤트 대상자 제외), 본 예약 시 사용한 쿠폰은 소멸됩니다.</li>
+			<li>단! 숙소의 객실 정보가 수시로 변경될 수 있으며 이로 인한 불이익은 여기어때가 책임지지 않습니다.</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 개인정보 제공동의 modal창 -->
+<div class="modal fade" id="checkbox_info2" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-hidden="true">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+		<div class="modal-header">
+        	<h5 class="modal-title" id="staticBackdropLabel"><strong>숙소 이용규칙 및 취소/ 환불 규정 (필수)</strong></h5>
+      		</div> 
+			<div class="modal-body my-3">
+			<ol>
+			<p><strong>이용 규칙</strong></p>
+			<li>최대 인원 초과 시 입실 불가합니다</li>
+			<li>정원 기준 요금 외 인원 추가 요금은 현장결제입니다.</li>
+			<li>제공 이미지는 배정된 객실과 다를 수 있습니다.</li>
+			<li>제공 정보는 숙소의 사정에 따라 변경될 수 있습니다.</li>
+			<li>미성년자는 보호자 동반 시 투숙이 가능합니다.</li>
+			<li>체크인 시 배정의 경우, 객실과 베드타입을 보장하지 않습니다.</li>
+			<li>객실 타입에 시간이 별도 기재된 경우, 체크인/아웃 시간이 상이할 수 있습니다.</li>
+			<li>조식, 인원, 침구, 침대 등 추가는 예약하신 <strong class="text-danger">숙소로 요청 및 결제</strong>가 가능합니다.</li>
+			<li>업체 현장에서 객실 컨디션 및 서비스로 인해 발생된 분쟁은 서울어때에서 책임지지 않습니다.</li>
+			</ol>
+			<ol>
+			<p><strong>취소/환불규정</strong></p>
+			<li>숙소 사정에 의해 취소 발생 시 100% 환불이가능합니다.</li>
+			<li>예약 상품 별 숙소 정보에 기재된 취소, 환불규정을 반드시 확인 후 이용해주시기 바랍니다.</li>
+			<li>예약 이후의 취소는 취소/환불 규정에 의거하여적용됩니다.</li>
+			<li>취소, 변경 불가 상품은 규정과 상관없이 취소,변경이 불가합니다.</li>
+			<li>당일 결제를 포함한 체크인 당일 취소는 취소,변경이 불가합니다.</li>
+			<li>체크인 시 배정의 경우, 객실과 베드타입을 보장하지 않습니다.</li>
+			<li>예약 취소가 불가능한 시간에 고객 사정에 의한 취소 시, 여기어때가 제공하는 모든 혜택에서 제외될 수 있으며 (혜택받기 포인트 미지급, 할인쿠폰 미제공, 이벤트 대상자 제외), 본 예약 시 사용한 쿠폰은 소멸됩니다.</li>
+			<li>단! 숙소의 객실 정보가 수시로 변경될 수 있으며 이로 인한 불이익은 여기어때가 책임지지 않습니다.</li>
+			</ol>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
@@ -154,27 +259,81 @@
 let reservationConfirm = new bootstrap.Modal(document.getElementById("reservationConfirm"));
 var IMP = window.IMP;
 IMP.init("imp72261061");
-function requestTel(){console.log("돈들어가서 안만들었습니다.");}
+
+function phoneCheck(){
+	IMP.certification({
+	    merchant_uid : 'merchant_' + new Date().getTime() //본인인증과 연관된 가맹점 내부 주문번호가 있다면 넘겨주세요
+	}, function(rsp) {
+	    if ( rsp.success ) {
+	    	 // 인증성공
+	        console.log(rsp.imp_uid);
+	        console.log(rsp.merchant_uid);
+	        
+	        $.ajax({
+					type : 'POST',
+					url : '/certifications/confirm',
+					dataType : 'json',
+					data : {
+						imp_uid : rsp.imp_uid
+					}
+			 }).done(function(rsp) {
+				 
+			 });
+	        	
+	    } else {
+	    	 // 인증취소 또는 인증실패
+	        var msg = '인증에 실패하였습니다.';
+	        msg += '에러내용 : ' + rsp.error_msg;
+
+	        alert(msg);
+	    }
+	});
+}
+
+
 function startPay(){
 	IMP.request_pay({
 		pg: "kakaopay",
-	    pay_method: "kakaopay",
-		merchant_uid : 'merchant_' + new Date().getTime(),
+	    pay_method: "kakaopay", 
+	    // $(:input:select[name=payType]:checked").val(),
+		merchant_uid : 00001,
 		name : '보코 서울 강남',
+		// 숙소명 : ${acco.name}
 		amount : 99000,
-		buyer_email : 'iamport@siot.do',
-		buyer_name : '구매자',
+		// 가격 : ${acco.price}
 		buyer_tel : '010-1234-5678',
 		buyer_addr : '서울특별시 강남구 삼성동',
 		buyer_postcode : '123-456'
 	}, function(rsp) {
 		if ( rsp.success ) {
-			alert("결제가 완료되었습니다.");
-			location.href="reservationList"
-		} else {
+			var msg = '결제가 완료되었습니다';
+			var result = {
+			"imp_uid" : rsp.imp_uid,
+			"merchant_uid" : rsp.merchant_uid,
+			"biz_email" : '',
+			"pay_date" : new Date().getTime(),
+			"amount" : rsp.paid_amount,
+			"card_no" : rsp.apply_num,
+			"refund" : 'payed'
+			}	console.log("결제성공 " + msg);
+			$.ajax({
+				url : 'myreservation', 
+		        type :'POST',
+		        data : JSON.stringify(result,
+		        		['imp_uid', 'merchant_uid', 'biz_email', 
+		        			'pay_date', 'amount', 'card_no', 'refund']),
+		        contentType:'application/json;charset=utf-8',
+		        dataType: 'json', //서버에서 보내줄 데이터 타입
+		        success: function(res){},
+		        error:function(){
+		        	console.log("ajax 통신실패")
+		        }
+		    })
+			}else {
 			var msg = '결제에 실패하였습니다.';
 			msg += '에러내용 : ' + rsp.error_msg;
 		}
+		console.log(msg);
 	});
 }
 $(document).ready(function() {
@@ -190,6 +349,8 @@ $(document).ready(function() {
 		else $("#checkboxAll").prop("checked", true); 
 	});
 	
+	
+
 	var paymentModal = new bootstrap.Modal(document.getElementById('agreement'))
 	$("#modal-button").click(function(){
 		if ($("input[name='reserName']").val() === ""){

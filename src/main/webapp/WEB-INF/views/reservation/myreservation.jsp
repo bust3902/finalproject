@@ -166,7 +166,7 @@
 			</div>
       		<div class="modal-footer">
   				<!-- 환불창으로 정보전달. -->
-	        	<a class="btn btn-danger" data-bs-toggle="modal" href="#" role="button">확인</a>
+	        	<a class="btn btn-danger" data-bs-toggle="modal" onclick="cancelPay()" role="button">확인</a>
       		</div>
    		</div>
  	</div>
@@ -175,6 +175,11 @@
     
 
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<script
+  src="https://code.jquery.com/jquery-3.3.1.min.js"
+  integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+  crossorigin="anonymous">
+</script>
 <script type="text/javascript">
 
 let reservationConfirmModal = new bootstrap.Modal(document.getElementById("reservationConfirm"));
@@ -187,10 +192,26 @@ function openReservationConfirm() {
 
 function openCancelModal() {
 	reservationConfirmModal.hide();
+	cancelPay();
 	cancelModal.show();
 }
 
-
+function cancelPay() {
+    jQuery.ajax({
+      "url": "http://localhost/myreservation",
+      "type": "POST",
+      "contentType": "application/json",
+      "data": JSON.stringify({
+        "merchant_uid": "000001", // 예: ORD20180131-0000011
+        "cancel_request_amount": 99000, // 환불금액
+        "reason": "테스트 결제 환불", // 환불사유
+        "refund_holder": "홍길동", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
+        "refund_bank": "88", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
+        "refund_account": "56211105948400" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
+      }),
+      "dataType": "json"
+    });
+  }
 
 
 // 툴팁
