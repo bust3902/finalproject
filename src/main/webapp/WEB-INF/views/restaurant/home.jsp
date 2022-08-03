@@ -4,123 +4,176 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <title>홈</title>
 </head>
 <body>
-<%@ include file="common/nav.jsp" %>
-<div class="container my-3">
-		<div class="row">
-			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src=""></a>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">모텔</a>
-				  	</div>
-				</div>
+
+<div class="container">
+	<div class="position-relative">
+		<form class="d-flex" role="search" action="searchList" onsubmit="savedKeyword();">
+	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
+	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+				</svg>
+			</button>
+			<input type="hidden" name="lat" value="" />
+			<input type="hidden" name="lng" value="" />
+			<div id="box-keywords" class="position-absolute w-100" style="top:48px; left:0; z-index: 10000;">
+				<ul class="list-group" id="list-group-keywords">
+		  			<li class="list-group-item list-group-flush border">
+						<a href="" class="border-bottom">내주변 검색</a>
+							<hr style="display: block;">
+						<div class="d-flex justify-content-between">
+							<span>최근검색어</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
+						</div>
+					</li>
+					<li class="list-group-item list-group-flush ">
+						<div class="d-flex justify-content-between">
+							<span>
+								<i class="bi bi-clock"></i>
+								<span class="ms-4">맛있는 맛집</span>
+							</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
+						</div>
+					</li>
+					<li class="list-group-item list-group-flush ">
+						<div class="d-flex justify-content-between">
+							<span>
+								<i class="bi bi-clock"></i>
+								<span class="ms-4">맛있는 맛집</span>
+							</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
+						</div>
+					</li>
+					<li class="list-group-item list-group-flush ">
+						<div class="d-flex justify-content-between">
+							<span>
+								<i class="bi bi-clock"></i>
+								<span class="ms-4">맛있는 맛집</span>
+							</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
+						</div>
+					</li>
+				</ul>
 			</div>
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">호텔 리조트</a>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">펜션</a>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">게스트하우스</a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="row">
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">캠핑 글램핑</a>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">한옥</a>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">내주변</a>
-					</div>
-				</div>
-			</div>
-			<div class="col">
-				<div class="card text-center border-0 bg-0">
-					<a href="#"><img src="/resources/images/logo.png" style="width:100px;height:auto;" class="card-img-top" alt="..."></a>
-					<div class="card-body p-0 mt-3">
-				    	<a href="#" class="text-decoration-none fw-bold">맛집</a>
-					</div>
-				</div>
-			</div>
-		
-		</div>
-		
-		<div class="row mt-5"> 서울어때 소식</div>
-		
-		<div class="row mt-5">
-			<div class="col-6">
-				<div class="card mb-3" style="max-width: 450px;">
-					<div class="row g-0">
-			  			<div class="col-md-4">
-			    			<img src="/resources/images/logo.png" style="width:170px;height:170px;" class="img-fluid rounded-start" alt="...">
-			  			</div>
-			  			<div class="col-md-8">
-			    			<div class="card-body">
-			      				<h5 class="card-title">서울어때 비즈니스</h5>
-			      				<p class="card-text">출장부터 복지까지<br>서울어때 비즈니스로 서마터하게</p>
-			    			</div>
-			  			</div>
-					</div>
-				</div>
-			</div>
-		</div>
-		
-		<div class="col-6">
-			<div class="card mb-3" style="max-width: 450px;">
-				<div class="row g-0">
-					<div class="col-md-4">
-			    		<img src="/resources/images/logo.png" style="width:170px;height:170px;" class="img-fluid rounded-start" alt="...">
-			  		</div>
-			  		<div class="col-md-8">
-			    		<div class="card-body">
-			      			<h5 class="card-title">여기어때 서체 출시</h5>
-			      			<p class="card-text">젊고 당당한 여기어때 잘난체<br>지금 다운로드 받으세요!</p>
-			    		</div>
-			  		</div>
-				</div>
-			</div>
-		</div>
+			
+	    </form>
 	</div>
+	
+	<!-- <div class="position-absolute top-20 end-30">
+		<button id="locationButton">현재위치 확인</button>
+		<p id="demo"></p>
+	</div> -->
+	
 </div>
+<script type="text/javascript">
+$(function() {
+	$("#locationButton").click(function() {
+		let x = document.getElementById("demo");
+		if (navigator.geolocation) {
+		    navigator.geolocation.getCurrentPosition(function(position) {
+		    	let latitude = position.coords.latitude;
+		        let longitude = position.coords.longitude;
+		        //alert(latitude + ", " + longitude);
+		        
+		        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+		        		  {sensor:false, 
+		        	       language:"ko",
+		        	       latlng: latitude+","+longitude, 
+		        	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+		        .done(function(data) {
+		        	console.log(data);
+		        	let location = data.results[0];
+		        	//let address = location.formatted_address.replace("대한민국 ", " ");
+		        	let address2 = location.formatted_address.split(' ');
+		        	//alert(address2[2]+' '+address2[3]);
+		        	//alert(address);
+		        	$("#locationButton").text(address2[2]+' '+address2[3]);
+		        })
+		    });
+		  } else { 
+		    x.innerHTML = "Geolocation is not supported by this browser.";
+		  }
+	});
+	
+	/* function getLocation() {
+		  if (navigator.geolocation) {
+		    navigator.geolocation.getCurrentPosition(function(position) {
+		    	let latitude = position.coords.latitude;
+		        let longitude = position.coords.longitude;
+		        //alert(latitude + ", " + longitude);
+		        
+		        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+		        		  {sensor:false, 
+		        	       language:"ko",
+		        	       latlng: latitude+","+longitude, 
+		        	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+		        .done(function(data) {
+		        	console.log(data);
+		        	let location = data.results[0];
+		        	//let address = location.formatted_address.replace("대한민국 ", " ");
+		        	let address2 = location.formatted_address.split(' ');
+		        	//alert(address2[2]+' '+address2[3]);
+		        	//alert(address);
+		        	$("#locationButton").text(address2[2]+' '+address2[3]);
+		        })
+		    });
+		  } else { 
+		    x.innerHTML = "Geolocation is not supported by this browser.";
+		  }
+	} */
+	
+	$("#search").click(function() {
+		// 저장된 키워드를 가져오는 코드입니다.
+		let text = localStorage.getItem("keywords") || '[]';
+		let array = JSON.parse(text);
+		
+		/*
+			<div id="box-keywords">
+				<ul id="list-group-keywords" class="list-group"></ul>
+			</div>
+		*/
+		let $listGroup = $("#list-group-keywords");
+		$.each(array, function(index, keyword) {
+			
+			let content = '<li class="list-group-item list-group-flush border"> <i class="bi bi-clock"> '+keyword+' <button>X</button> </li>';
+			//$listGroup.append(content);
+		})
+	});
+	
+});
+	
+	// 최근 검색어를 저장하는 기능
+	function savedKeyword() {
+		let keyword = $(":input[name=keyword]").value;
+		let text = localStorage.getItem("keywords") || '[]';
+		let array = JSON.parse(text);
+		
+		if (keywords === "") {
+			return;
+		} else {
+			array.unshift(keywords);
+		}
+		
+		text = JSON.stringify(array);
+		localStorage.setItem("keywords", text);
+	}
+	
+	// 최근 검색어를 하나씩 삭제하는 기능
+	
+	// 최근 검색어 클릭시 search 페이지로 이동하는 기능
+	
+	// 최근 검색어 전체 삭제하는 기능
+
+</script>
 </body>
 </html>
