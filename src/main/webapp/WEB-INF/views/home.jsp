@@ -13,7 +13,7 @@
 <%@ include file="common/nav.jsp" %>
 <div class="container my-3">
 		<div class="row">
-			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src="/resources/images/test01.jpg"></a>
+			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src=""></a>
 		</div>
 		<div class="row">
 			<div class="col">
