@@ -10,4 +10,9 @@ public class QaController {
 	public String Qa() {
 		return "qa/qa";
 	}
+	
+	@GetMapping(path = "/qaform")
+	public String QaForm() {
+		return "qa/qaform";
+	}
 }

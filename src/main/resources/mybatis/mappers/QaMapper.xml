@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.QaMapper">
+
+	<!-- void insertQa(Qa qa); -->
+	<insert id="insertQa" parameterType="Qa">
+		insert into qa
+		(qa_no, user_no, qa_content, qa_title, qa_image)
+		values
+		(qa_seq.nextval, #{user.id}, #{content}, #{title}, #{image})
+	</insert>
+	
+	<!-- List<Qa> getAllQas(); -->
+	<select id="getAllQas" resultType="Qa">
+		select
+			qa_no as no, 
+			qa_content as content, 
+			qa_title as title, 
+			qa_image as image
+		from qa
+		order by qa_no = #{no}
+	</select>
+</mapper>

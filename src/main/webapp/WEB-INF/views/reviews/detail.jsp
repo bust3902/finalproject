@@ -11,63 +11,123 @@
 <title>리뷰작성</title>
 </head>
 <body>
-	<div class="container my-3">
-		<div class="row mb-3">
-			<div class="col-8">
-				<form action="">
-					<div class="my-3">
-						<p><strong>리뷰 작성하기</strong></p>
-						<label type="title-field" class="form-label">제목</label>
-						<input type="text" class="form-control" name="title" id="title-field">
+<%@ include file="../common/nav.jsp" %>
+<div id="review" class="container my-3">
+	<div class="row mb-6">
+		<div class="col-8">
+			<form action="">
+				<div class="my-3">
+					<p><strong>리뷰 작성하기</strong></p>
+					<label type="title-field" class="form-label">제목</label>
+					<input type="text" class="form-control" name="title" id="title-field">
+				</div>
+				<div class="my-3">
+					<p><strong>카테고리</strong></p>
+					<div class="form-check form-check-inline">
+						<select class="form-select" name="category" id="category">
+							<option value="selectCategory">카테고리를 선택해주세요.</option>
+							<option value="rooms">객실</option>
+							<option value="accommodations">숙소</option>
+							<option value="restaurant">음식점</option>
+						</select>
 					</div>
-					<div class="my-3">
-						<label type="category-field" class="form-label">카테고리</label>
-						<div class="form-check form-check-inline">
-							<select name="category" style="width:800px;height:30px;">
-								<option value="rooms">객실</option>
-								<option value="accommodations">숙소</option>
-								<option value="restaurant">음식점</option>
-							</select>
-						</div>
+				</div>
+				<div class="my-3">
+					<p><strong>평점</strong></p>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="point" value="point1">
+						<label class="form-check-label">1점</label>
 					</div>
-					<div class="my-3">
-						<p>평점</p>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="1점" value="point">
-							<label class="form-check-label">1점</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="2점" value="point">
-							<label class="form-check-label">2점</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="3점" value="point">
-							<label class="form-check-label">3점</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="4점" value="point">
-							<label class="form-check-label">4점</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="radio" name="5점" value="point">
-							<label class="form-check-label">5점</label>
-						</div>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="point" value="point2">
+						<label class="form-check-label">2점</label>
 					</div>
-					<div class="my-3">
-						<label type="image-field" class="form-label">사진첨부</label>
-						<input type="file" class="form-control" name="imageFile" id="image-field">
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="point" value="point3">
+						<label class="form-check-label">3점</label>
 					</div>
-					<div class="my-3">
-						<label type="text-field" class="form-label">리뷰</label>
-						<textarea class="form-control" rows="13" name="content"></textarea>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="point" value="point4">
+						<label class="form-check-label">4점</label>
 					</div>
-					<div class="text-end">
-						<a href="#" class="btn btn-secondary px-3">취소</a>
-						<button type="submit" class="btn btn-primary px-3">등록</button>
+					<div class="form-check form-check-inline">
+						<input class="form-check-input" type="radio" name="point" value="point5">
+						<label class="form-check-label">5점</label>
 					</div>
-				</form>
+				</div>
+				<div class="my-3">
+					<label type="image-field" class="form-label">사진첨부</label>
+					<input type="file" class="form-control" name="imageFile" id="image-field">
+				</div>
+				<div class="my-3">
+					<label type="text-field" class="form-label">내용</label>
+					<textarea class="form-control" rows="13" name="content"></textarea>
+				</div>
+				<div class="text-end">
+					<a href="#" class="btn btn-secondary px-3">취소</a>
+					<button type="submit" class="btn btn-primary px-3" id="modal-button" data-bs-target="reviewConfirm">등록</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+<!-- 리뷰 제목/카테고리/평점/내용을 입력 및 선택하지 않을 시 경고창을 출력하는 모달창 -->
+<div id="modal-danger" class="modal fade">
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="text-center" id="modal-message-box">미입력</p>
 			</div>
 		</div>
 	</div>
+</div>
+<!-- 리뷰 등록 시 확인하는 모달창 -->
+<div id="reviewConfirm" class="modal fade" >
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3 class="text-center">리뷰 등록</h3>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>작성하신 리뷰를 등록하시겠습니까?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				<button type="button" class="btn btn-primary">등록</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function() {
+	var reviewModal = new bootstrap.Modal(document.getElementById("modal-danger"))
+	$("#modal-button").click(function() {
+		if($("input[name=title]").val() === "") {
+			$("#modal-message-box").text("제목을 입력해주세요.");
+			reviewModal.show();
+			return false;
+		}
+		if($("select[name=category]").val() === "selectCategory") {
+			$("#modal-message-box").text("카테고리를 선택해주세요.");
+			reviewModal.show();
+			return false;
+		}
+		if($("input[name=point]").is(":checked") === false) {
+			$("#modal-message-box").text("평점을 입력해주세요.");
+			reviewModal.show();
+			return false;
+		}
+		if($("#textarea[name=content]").val() === "") {
+			$("#modal-message-box").text("내용을 입력해주세요");
+			reviewModal.show();
+			return false;
+		} 
+	})
+})
+</script>
 </body>
 </html>
