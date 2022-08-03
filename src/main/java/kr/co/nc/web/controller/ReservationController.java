@@ -18,5 +18,6 @@ public class ReservationController {
 	public String myReservationList() {
 		return "reservation/reservationList";
 	}
+
 	
 }
