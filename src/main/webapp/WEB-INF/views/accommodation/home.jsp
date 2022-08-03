@@ -26,264 +26,167 @@
 	2. 초기화 버튼을 누르면 사용자가 변경한 옵션을 모두 초기화시키기
 	3. 적용 버튼을 누르면 form에 저장된 input태그의 값들을 검색조건으로 모두 전달해 ajax로 숙소정보 요청URL보내고, 데이터 획득하기.
 	4. 획득한 데이터를 출력하기. (처음 화면 로드될 때는 아무 조건 없이 조회할 것)
-	* 적용한 검색조건이 화면에서 계속 유지되게 하기
 	5. 정렬 옵션 클릭 시에도 3~4번과 마찬가지로 처리하기
 	6. 지도 버튼을 누르면 모달 창으로 지도 출력하기, 이 때 3번에서 획득한 데이터의 위도와 경도를 이용해 검색결과 지도에 표시하기.
  -->
- <%--
- nav.jsp에 기본 태그들에 적용된 css가 이 페이지에서도 적용되어서 디자인이 깨짐. => 확인 필요
- <%@ include file="../common/nav.jsp" %>
-  --%>
+<%@ include file="../common/nav.jsp" %>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
-	<c:if test="${not empty param.type }">
-		<input type="hidden" name="type" value="${param.keyword }">
-		<div class="row p-5">
-			<h3 class="text-dark ps-0 mb-3">숙소유형명</h3>
-			<!-- 지역 정보 받아와서 출력 -->
+	<form id="form-search-accos">
+		<input type="hidden" name="currentLat" value="" />
+		<input type="hidden" name="currentLong" value="" />
+		<div class="row px-3 pt-5 pb-3">
+			<c:choose>
+				<c:when test="${not empty param.type }">
+					<input type="hidden" name="types" value="${param.type }" />
+					<h3 class="text-dark ps-0 mb-3">${selectedTypeName }</h3>
+				</c:when>
+				<c:otherwise>
+		 			<input type="hidden" name="keyword" value="${param.keyword }">
+		 			<!-- keyword 검색값이 빈 문자열이거나 null이면 키워드를 출력하지 않는다. -->
+		 			<c:if test='${param.keyword != "" and param.keyword != null }'>
+						<h3 class="fs-bold text-center text-dark">'${param.keyword }'</h3>
+		 			</c:if>
+				</c:otherwise>
+			</c:choose>
+		</div>
+		<div class="row p-3">
 			<select class="form-select w-25 p-1" name="city">
-				<option value="" selected>서울 전체</option>
-				<option value="CITY_001">홍대/신촌/마포</option>
-				<option value="CITY_002">북촌/인사동/종로/동대문</option>
-				<option value="CITY_003">명동/남산/중구</option>
-				<option value="CITY_004">강남/잠실/삼성/서초</option>
-				<option value="CITY_005">이태원/서울역/용산</option>
-				<option value="CITY_006">영등포/신림/김포공항</option>
+				<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
+				<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
+				<c:forEach var="city" items="${cities }">
+					<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
+				</c:forEach>
 			</select>
 		</div>
-	</c:if>
-	<c:if test="${empty param.type}">
-		<input type="hidden" name="keyword" value="${param.keyword }">
-		<div class="row p-5">
-			<div>
-				<h3 class="fs-bold text-center text-dark">'${param.keyword }'</h3>
-			</div>
-		</div>
-	</c:if>
-	<div class="row">
-		<div class="col-4">
-			<div class="card p-1">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item py-3">
-						<div class="fw-bold mb-3 fs-5">날짜</div>
-						<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
-						<input type="text" id="datepicker" class="form-control" value="" />
-						<input type="hidden" name="startDate" value="">
-						<input type="hidden" name="endDate" value="">
-					</li>
-					<li class="list-group-item py-3">
-						<div class="fw-bold mb-3 fs-5">상세조건</div>
-						<div class="btn-toolbar row g-2" role="toolbar" aria-label="Toolbar with button groups">
-							<div class="col">
-								<button type="button" id="btn-reset" class="btn btn-outline-primary w-100">초기화</button>
+		<div class="row">
+			<div class="col-4">
+				<div class="card p-1">
+					<ul class="list-group list-group-flush">
+						<li class="list-group-item py-3">
+							<div class="fw-bold mt-3 mb-1 fs-5">날짜</div>
+							<div class="text-small mt-1 mb-3 text-muted">7박까지 조회 가능</div>
+							<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
+							<input type="text" id="datepicker" class="form-control" value="" />
+							<input type="hidden" name="startDate" value="" />
+							<input type="hidden" name="endDate" value="" />
+						</li>
+						<li class="list-group-item py-3">
+							<div class="fw-bold mb-3 fs-5">상세조건</div>
+							<div class="btn-toolbar row g-2" role="toolbar" aria-label="Toolbar with button groups">
+								<div class="col">
+									<button type="button" id="btn-reset" class="btn btn-outline-primary w-100">초기화</button>
+								</div>
+								<div class="col">
+									<button type="button" id="btn-apply" class="btn btn-secondary w-100">적용</button>
+								</div>
 							</div>
-							<div class="col">
-								<button type="button" id="btn-apply" class="btn btn-secondary w-100">적용</button>
+						</li>
+						<li class=" list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<div class="row d-flex justify-content-center">
+								<div class="col-3 fw-bold text-muted my-auto">인원</div>
+								<!-- 인원 수 표시 input 대신 span 태그 사용, 이벤트 script에서 설정하는 것으로 변경 예정 -->
+								<div class="col-9 hstack gap-3">
+									<button type="button" class="form-control btn btn-sm btn-light fs-4"
+										onclick="this.parentNode.querySelector('input[type=number]').stepDown();">-</button>
+									<input type="number" class="form-control form-control-lg fs-6 mx-auto" min="1" name="capacity" value="1" max="20" />
+									<button type="button" class="form-control btn btn-sm btn-light fs-4"
+										onclick="this.parentNode.querySelector('input[type=number]').stepUp();">+</button>
+								</div>
 							</div>
-						</div>
-					</li>
-					<li class=" list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-						<div class="row d-flex justify-content-center">
-							<div class="col-3 fw-bold text-muted my-auto">인원</div>
-							<!-- 인원 수 표시 input 대신 span 태그 사용, 이벤트 script에서 설정하는 것으로 변경 예정 -->
-							<div class="col-9 hstack gap-3">
-								<button class="form-control btn btn-sm btn-light fs-4"
-									onclick="this.parentNode.querySelector('input[type=number]').stepDown();">-</button>
-								<input type="number" class="form-control form-control-lg fs-6 mx-auto" min="1" name="capacity" value="1" max="20" />
-								<button class="form-control btn btn-sm btn-light fs-4"
-									onclick="this.parentNode.querySelector('input[type=number]').stepUp();">+</button>
+						</li>
+						<li class="list-group-item py-3 border-bottom-0 text-muted">
+							<div class="fw-bold mb-3">가격<small id="amount" class="text-secondary ms-3">1만원 이상</small></div>
+							<input type="hidden" name="minPrice" value="10000" />
+							<input type="hidden" name="maxPrice" value="300000" />
+							<div id="slider-range"></div>
+						</li>
+						<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<div class="fw-bold mb-3">공용 시설</div>
+							<div class="row">
+								<!-- 선택한 숙소 유형에 맞는 공용시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
+								<c:forEach var="facility" items="${cofacilities }">
+									<div class="col-6 mb-3">
+										<input class="form-check-input" type="checkbox" name="commonFacilities" value="${facility.id }">
+										<label class="form-check-label">${facility.name }</label>
+									</div>
+								</c:forEach>
 							</div>
-						</div>
-					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted">
-						<div class="fw-bold mb-3">가격<small id="amount" class="text-secondary ms-3">1만원 이상</small></div>
-						<input type="hidden" name="minPrice" value="10000" />
-						<input type="hidden" name="maxPrice" value="300000" />
-						<div id="slider-range"></div>
-					</li>
-					<!-- 
-						숙소 유형마다 여부가 다르기 때문에 베드 타입 옵션은 제외 (DB에서 사용하지 않는 컬럼이 될 듯)
-					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-						<div class="fw-bold mb-3">베드 타입</div>
-						<div class="d-flex justify-content-between mx-auto p-1">
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>싱글</small>
+						</li>
+						<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<div class="fw-bold mb-3">객실 시설</div>
+							<div class="row">
+								<!-- 모든 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
+								<c:forEach var="facility" items="${rofacilities }">
+									<div class="col-6 mb-3">
+										<input class="form-check-input" type="checkbox" name="roomFacilities" value="${facility.id }">
+										<label class="form-check-label">${facility.name }</label>
+									</div>
+								</c:forEach>
 							</div>
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>더블</small>
+						</li>
+						<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<div class="fw-bold mb-3">기타</div>
+							<div class="row">
+								<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
+								<c:forEach var="tag" items="${tags }">
+									<div class="col-6 mb-3">
+										<input class="form-check-input" type="checkbox" name="tags" value="${tag.name }">
+										<label class="form-check-label">${tag.name }</label>
+									</div>
+								</c:forEach>
 							</div>
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>트윈</small>
+						</li>
+						<!-- 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. -->
+						<li class="list-group-item py-3 border-bottom-0 text-muted ${not empty param.type ? 'd-none' : '' }">
+							<div class="fw-bold mb-3">숙소 유형</div>
+							<div class="row">
+								<!-- 모든 숙소유형을 전달받아 반복문으로 출력 -->
+								<c:forEach var="type" items="${types }">
+									<div class="col-12 mb-3">
+										<input class="form-check-input" type="checkbox" name="types" value="${type.id }">
+										<label class="form-check-label">${type.name }</label>
+									</div>
+								</c:forEach>
 							</div>
-							<div class="text-center">
-								<a>침대아이콘</a><br/>
-								<small>온돌</small>
-							</div>
-						</div>
-					</li>
-					 -->
-					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-						<div class="fw-bold mb-3">공용 시설</div>
-						<div class="row">
-							<!-- 선택한 숙소 유형에 맞는 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">세탁기</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">라운지</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">세탁기</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">라운지</label>
-							</div>
-						</div>
-					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-						<div class="fw-bold mb-3">객실 시설</div>
-						<div class="row">
-							<!-- 모든 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">와이파이</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">욕실용품</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">에어컨</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">TV</label>
-							</div>
-						</div>
-					</li>
-					<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-						<div class="fw-bold mb-3">기타</div>
-						<div class="row">
-							<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">조식포함</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">객실내흡연</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">짐보관가능</label>
-							</div>
-							<div class="col-6 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">프린터사용</label>
-							</div>
-						</div>
-					</li>
-					<!-- 2. 검색창으로 조회하는 경우 아래 옵션들이 카드에 표시된다. -->
-					<li class="list-group-item py-3 border-bottom-0 text-muted ${not empty param.type ? 'd-none' : '' }">
-						<div class="fw-bold mb-3">숙소 유형</div>
-						<div class="row">
-							<!-- 모든 숙소유형을 전달받아 반복문으로 출력한다. -->
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">모텔</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">호텔·리조트</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">한옥</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">펜션</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">게스트하우스</label>
-							</div>
-							<div class="col-12 mb-3">
-								<input class="form-check-input" type="checkbox" value="" id="">
-								<label class="form-check-label" for="">캠핑</label>
-							</div>
-						</div>
-					</li>
-				</ul>
-			</div>
-		</div>
-		<!-- 정렬기준, 지도버튼, 숙소 리스트 -->
-		<div class="col-8">
-			<!-- 정렬기준 radio button, 지도 modal button (버튼 스타일 식당 조회와 통일시킬 예정) -->
-			<div class="d-flex flex-wrap mx-3 mb-3">
-				<div class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
-					<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
-					<label class="btn btn-secondary" for="btnradio1">평점 순</label>
-	
-					<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
-					<label class="btn btn-secondary" for="btnradio2">거리 순</label>
-					
-					<input type="radio" class="btn-check" id="btnradio3" name="sort" value="rowprice">
-					<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
-					
-					<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
-				  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
+						</li>
+					</ul>
 				</div>
-				<button class="btn btn-light" style="border-color: gray" id="btn-open-modal-map">지도</button>
 			</div>
-			<!-- 검색결과 조회 리스트 -->
-			<div class="row mx-auto">
-				<table class="table">
-					<colgroup>
-						<col width="30%">
-						<col width="*">
-						<col width="20%">
-					</colgroup>
-					<tbody>
-						<!-- 숙소 조회 결과 반복문으로 출력할 것 (id="row-acco-숙소번호")-->
-						<!-- 숙소조회 결과에 따라 c:choose when 으로 나눠서 출력할 것 -->
-						<tr id="row-acco-1" onclick="location.href='acco/detail?no=1';" style="cursor: pointer;"/>
-							<td class="align-middle p-3">
-								<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/logo.png" />
-							</td>
-							<td class="p-3">
-								<h5 class="fw-bold text-dark">숙소명</h5>
-								<p class="text-warning">
-									<!-- 리뷰 평점 범위에 따라 최고에요/추천해요/만족해요/좋아요 다르게 출력 -->
-									<span class="badge bg-warning">4.8</span><strong class="ms-2">추천해요 (210)</strong>
-								</p>
-								<p>
-									<small>마포구</small>
-								</p>
-							</td>
-							<td class="align-bottom p-3">
-								<p class="text-end text-dark fs-5 fw-bold">127,900원</p>
-							</td>
-						</tr>
-					<!-- 숙소 조회 결과가 없을 경우
-						<tr>
-							<td colspan="3" class="text-center">
-								<p class="py-5">조회된 결과가 없습니다.</p>
-							</td>
-						</tr>
-					 -->
-					</tbody>
-				</table>
+			<!-- 정렬기준, 지도버튼, 숙소 리스트 -->
+			<div class="col-8">
+				<!-- 정렬기준 radio button, 지도 modal button (버튼 스타일 식당 조회와 통일시킬 예정) -->
+				<div class="d-flex flex-wrap mx-3 mb-3">
+					<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
+						<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
+						<label class="btn btn-secondary" for="btnradio1">평점 순</label>
+		
+						<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
+						<label class="btn btn-secondary" for="btnradio2">거리 순</label>
+						
+						<input type="radio" class="btn-check" id="btnradio3" name="sort" value="rowprice">
+						<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
+						
+						<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
+					  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
+					</div>
+					<button type="button" class="btn btn-light" style="border-color: gray" id="btn-open-modal-map">지도</button>
+				</div>
+				<!-- 검색결과 조회 리스트 -->
+				<div class="row mx-auto">
+					<table class="table">
+						<colgroup>
+							<col width="30%">
+							<col width="*">
+							<col width="20%">
+						</colgroup>
+						<tbody id="tbody-accos">
+							<!-- 숙소 검색결과가 script를 통해 출력됨-->
+						</tbody>
+					</table>
+				</div>
 			</div>
 		</div>
-	</div>
+	</form>
 </div>
 <!-- footer include start -->
 <div class="contatiner">
@@ -316,16 +219,60 @@
 $(function () {
 	
 /*
+ * 화면 요청할 때 현재 위치 위경도 받아오기
+ */
+	let currentLat = '';
+	let currentLong = '';
+ 	getLocation();
+	function getLocation() {
+		// 받아온 위경도는 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
+		// 		비동기로 실행되어서 if문 밖에서 값 저장하면 안되는듯?
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+	    	currentLat = position.coords.latitude;
+	    	currentLong = position.coords.longitude;
+			$(":hidden[name=currentLat]").val(currentLat);
+			$(":hidden[name=currentLong]").val(currentLong);
+	    });
+		} else {
+		  // 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
+	    	currentLat = 37.564214;
+	    	currentLong = 127.0016985;
+			$(":hidden[name=currentLat]").val(currentLat);
+			$(":hidden[name=currentLong]").val(currentLong);
+	  	}
+	}
+	
+/*
+ * 선택한 지역에 따라 지도의 중심좌표 변경하기
+ */
+	function changeMapCenter(map) {
+	// 지도의 중심 좌표는 지역 선택에 따라 달라진다.
+	let cityLat = $("select[name=city] :selected").attr("data-city-lat");
+	let cityLong = $("select[name=city] :selected").attr("data-city-long");
+	map.setCenter(new kakao.maps.LatLng(cityLat, cityLong));
+	// 전체 조회 / 지역 조회에 따라 확대 레벨이 달라진다. '서울전체' 항목은 value 값이 ""이다.
+	if ($("select[name=city] :selected").val() == "") {
+		map.setLevel(8);
+	} else {
+		map.setLevel(7);
+	}
+}
+	
+/*
  * 검색 결과 카카오 openAPI로 지도에 표현하기
  */
 	// 모달 창에 지도 정의하기
 	let container = document.getElementById('map');
-	let mapcenter = new kakao.maps.LatLng(37.564214, 127.0016985);
+	// mapcenter 값 설정
 	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: mapcenter, //지도의 중심좌표.
-			level: 8 //지도의 레벨(확대, 축소 정도)
+			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
+			level: 7 //지도의 레벨(확대, 축소 정도)
 	};
-	let map = new kakao.maps.Map(container, options); // 지도 생성
+	// 지도 생성
+	let map = new kakao.maps.Map(container, options);
+	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
+	changeMapCenter(map);
 
 	// 지도 버튼에 모달 이벤트 연결하기
 	let modalMap = new bootstrap.Modal($("#modal-map"));
@@ -333,13 +280,12 @@ $(function () {
 		modalMap.show();
 		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
 		map.relayout(); 
-		map.setCenter(mapcenter);
+		changeMapCenter(map);
 	});
 	
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : input태그의 value가 '날짜 ~ 날짜 . 숙박일수' 이므로 date로 전달해줄 값은 따로 저장해두어야 한다.
-	TO DO : 로컬스토리지에 값을 저장해 화면 리로딩 또는 상세 조회페이지나, 마이페이지로 이동해도 선택한 일정을 이용할 수 있게 하기.
+	TO DO : 로컬스토리지에 값을 저장해 상세 조회페이지로 이동하거나 다시 돌아와도 선택한 일정을 이용할 수 있게 하기.
 	TO DO : 가능하면 확인 버튼 위치 등 수정
 */
 	// 화면 로드 시 날짜 및 기간 초기화 : 이 값이 input태그의 val에 저장된다.
@@ -381,34 +327,135 @@ $(function () {
         duration = end.diff(start,'days');
         $(":hidden[name=startDate]").val(startDayString);
         $(":hidden[name=endDate]").val(endDayString);
+        searchAccos();
     });
 
-	// html이 출력될 때 input태그의 value 설정
+	// html이 출력될 때 datepicker의 input태그의 value 설정
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
 	// 날짜 변경 시 input태그의 value 설정
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
     });
+	// html이 출력될 때 폼에서 사용할 hidden태그의 value 설정
+    $(":hidden[name=startDate]").val(startDayString);
+    $(":hidden[name=endDate]").val(endDayString);
     
 /*
 	jQuery UI를 이용한 금액 슬라이더 생성하기  
 */  
 	$("#slider-range").slider({
-			range : true,
-			min : 1,
-			max : 30,
-			values : [1, 30],
-			slide : function(event, ui) {
-				// 슬라이더 값이 바뀔 때마다 텍스트 내용을 변경하고, hidden태그의 값도 변경한다.
-				$("#amount").text(ui.values[0] + "만원 ~ " + ui.values[1] + "만원");
-				$("input[name='minPrice']").val(ui.values[0]*10000);
-				$("input[name='maxPrice']").val(ui.values[1]*10000);
-			}
+		range : true,
+		min : 1,
+		max : 30,
+		values : [1, 30],
+		slide : function(event, ui) {
+			// 슬라이더 값이 바뀔 때마다 텍스트 내용을 변경하고, hidden태그의 값도 변경한다.
+			$("#amount").text(ui.values[0] + "만원 ~ " + ui.values[1] + "만원");
+			$("input[name='minPrice']").val(ui.values[0]*10000);
+			$("input[name='maxPrice']").val(ui.values[1]*10000);
+		}
 	});
 	// 처음에는 1만원 이상으로 표시한다. (hidden태그 기본 최소/최대값도 1~30으로 저장되어있음)
 	$("#amount").text($("#slider-range").slider("values", 0) + "만원 이상");
 
+	
+/*
+ * ajax로 검색 조건에 따른 숙소정보 조회하기
+ */
+ 	function searchAccos() {
+		let queryString = $("#form-search-accos").serialize();
+		let $tbody = $("#tbody-accos").empty();
+		$.getJSON("/acco/search", queryString).done(function(accos) {
+			if (accos.length === 0) {
+				let content = `
+					<tr>
+						<td colspan="3" class="text-center">
+							<p class="py-5">조회된 결과가 없습니다.</p>
+						</td>
+					</tr>
+				`;
+				$tbody.append(content);
+			} else {
+				$.each(accos, function(index, acco) {
+					let reviewRateText = '';
+					if (acco.reviewRate <= 1) {
+						reviewRateText = '아쉬워요';
+					} else if (acco.reviewRate <= 2) {
+						reviewRateText = '부족해요';
+					} else if (acco.reviewRate <= 3) {
+						reviewRateText = '만족해요';
+					} else if (acco.reviewRate <= 4) {
+						reviewRateText = '추천해요';
+					} else if (acco.reviewRate <= 5) {
+						reviewRateText = '최고에요';
+					}
+					
+					let content = '';
+					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
+					content += '	<td class="align-middle p-3">';
+					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/' + acco.thumbnailImageName + '" />';
+					content += '	</td>';
+					content += '	<td class="p-3">';
+					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';
+					content += '		<p class="text-warning">';
+					content += '			<span class="badge bg-warning">' + acco.reviewRate + '</span><strong class="ms-2">' + reviewRateText +' (' + acco.reviewCount  +')</strong>';
+					content += '		</p>';
+					content += '		<p>'
+					content += '			<small>' + acco.district + '</small>'
+					content += '		</p>'
+					content += '	</td>';
+					content += '	<td class="align-bottom p-3">';
+					content += '		<p class="text-end text-dark fs-5 fw-bold">' + acco.minPrice.toLocaleString() + '원</p>';
+					content += '	</td>';
+					
+					$tbody.append(content);
+					$("#row-acco-"+acco.id).click(function() {
+						location.href = "acco/detail?no=" + acco.id;
+					});
+				});
+			}
+		});
+	}
+	
+	
+	
+	// 처음 화면 로딩될 때 숙소 검색 결과 화면에 출력하기 (다른 input태그 값 초기화 설정보다 늦게 실행돼야 함)
+	searchAccos();
+	
+	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
+	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
+	//		TO DO: 적용 버튼의 필요 유무? 다른 거 눌러도 다 현 상태로 폼 제출되는데
+	$("#btn-apply").click(function() {
+		searchAccos();
 	});
+	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
+	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
+	$("input[name=sort]").click(function() {
+		console.log('test');
+		searchAccos();
+	});
+	// 지역을 변경했을 때 숙소 재검색 후 화면 갱신, 지도 center 변경
+	$("select[name=city]").change(function() {
+		searchAccos();
+		changeMapCenter(map);
+	});
+	// 초기화 버튼을 눌렀을 때 상세조건을 모두 초기화
+	$("#btn-reset").click(function() {
+		// 인원
+		$("input[name=capacity]").val("1");
+		// 가격
+		$("#slider-range").slider("option", "values", [1,30]);
+		$(":hidden[name=minPrice]").val(10000);
+		$(":hidden[name=maxPrice]").val(300000);
+		$("#amount").text("1만원 이상");
+		// 공용시설
+		$(":checkbox[name=commonFacilities]").prop("checked", false);
+		// 객실시설
+		$(":checkbox[name=roomFacilities]").prop("checked", false);
+		// 기타
+		$(":checkbox[name=tags]").prop("checked", false);
+	});
+});
 </script>
 </body>
 </html>

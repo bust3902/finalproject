@@ -30,11 +30,23 @@ public class RestaurantService {
 	@Autowired
 	private RestaurantMapper restaurantMapper;
 	
+	// 음식점 디테일 service
 	public Restaurant getRestaurantDetail(int restaurantNo) {
 		return restaurantMapper.getRestaurantByNo(restaurantNo);
 	}
 	
+	// 음식점 리뷰 service
 	public List<Review> getRestaurantReview(int restaurantNo) {
 		return restaurantMapper.getReviewByRestaurantNo(restaurantNo);
+	}
+	
+	// 음식점 모든 리뷰 service
+	public List<Review> getAllRestaurantReview() {
+		return restaurantMapper.getAllReview();
+	}
+	
+	// 카테고리 아이디를 받아 음식점 검색
+	public List<Restaurant> getRestaurantsByCategoryId(String categoryId) {
+		return restaurantMapper.getRestaurantsByCategoryId(categoryId);
 	}
 }

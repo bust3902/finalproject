@@ -15,6 +15,7 @@
 		<result column="REVIEW_IMAGE" property="image"/>
 		<result column="REVIEW_POINT" property="point"/>
 		<association property="restaurant" column="RESTAURANT_NO" select="kr.co.nc.mapper.RestaurantMapper"></association>
+		<!-- <association property="user" column="user_no"></association> -->
 	</resultMap>
 	
 	<!-- List<Review> getReviewByRestaurantNo(int restaurantNo); 음식점 리뷰-->
@@ -33,7 +34,7 @@
 		<result column="RESTAURANT_NAME" property="name"/>
 		<result column="RESTAURANT_LOCATION" property="location"/>
 		<result column="RESTAURANT_IMGNAME" property="imgname"/>
-		<result column="RESTAURANT_NUMBER" property="number"/>
+		<result column="RESTAURANT_TEL" property="tel"/>
 		<result column="RESTAURANT_LIKE_COUNT" property="likeCount"/>
 		<result column="RESTAURANT_REVIEW_COUNT" property="reviewCount"/>
 		<result column="RESTAURANT_REVIEW_POINT" property="reviewPoint"/>
@@ -93,5 +94,25 @@
 	</select>
 	
 	<!-- List<Review> getAllReview(); -->
+	<select id="getAllReview" resultMap="ReviewResultMap">
+		select *
+		from REVIEW
+		where
+			ACCO_ID is NULL and REVIEW_DELETED = 'N'
+			and RESTAURANT_NO = #{value}
+		order by
+			REVIEW_CREATED_DATE desc
+	</select>
 	
+	<!-- List<Restaurant> getRestaurantsByCategoryId(@Param("categoryId") String categoryId); -->
+	<select id="getRestaurantsByCategoryId">
+		select *
+		from RESTAURANT
+		<if test="categoryId != null">
+			where RESTAURANT_NO in (select RESTAURANT_NO
+									from RESTAURANT_CAT
+									where RESTAURANT_CAT_ID = #{categoryId})
+		</if>
+		order by RESTAURANT_CREATED_DATE desc
+	</select>
 </mapper>
