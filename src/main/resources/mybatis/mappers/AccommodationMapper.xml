@@ -86,7 +86,7 @@
 					or a.acco_district like '%' || #{keyword} || '%'
 					or a.acco_address like '%' || #{keyword} || '%')
 			</if>
-			<if test="city != null">
+			<if test='city != null and city != ""'>
 				and a.city_id = #{city}
 			</if>
 			<if test="capacity >= 0">
