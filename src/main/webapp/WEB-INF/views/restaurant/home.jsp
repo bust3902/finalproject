@@ -25,10 +25,15 @@
 			</button>
 			<input type="hidden" name="lat" value="" />
 			<input type="hidden" name="lng" value="" />
-			<div id="box-keywords" class="position-absolute w-100" style="top:48px; left:0;">
+			<div id="box-keywords" class="position-absolute w-100" style="top:48px; left:0; z-index: 10000;">
 				<ul class="list-group" id="list-group-keywords">
 		  			<li class="list-group-item list-group-flush border">
 						<a href="" class="border-bottom">내주변 검색</a>
+							<hr style="display: block;">
+						<div class="d-flex justify-content-between">
+							<span>최근검색어</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
+						</div>
 					</li>
 					<li class="list-group-item list-group-flush ">
 						<div class="d-flex justify-content-between">
@@ -160,8 +165,13 @@ $(function() {
 		
 		text = JSON.stringify(array);
 		localStorage.setItem("keywords", text);
-		
 	}
+	
+	// 최근 검색어를 하나씩 삭제하는 기능
+	
+	// 최근 검색어 클릭시 search 페이지로 이동하는 기능
+	
+	// 최근 검색어 전체 삭제하는 기능
 
 </script>
 </body>
