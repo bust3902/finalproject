@@ -6,6 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
@@ -14,8 +15,8 @@
 </head>
 <body>
 <div class="container">
-	<div>
-		<form class="d-flex" role="search" onsubmit="savedKeyword();">
+	<div class="position-relative">
+		<form class="d-flex" role="search" action="searchList" onsubmit="savedKeyword();">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
 	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -24,29 +25,48 @@
 			</button>
 			<input type="hidden" name="lat" value="" />
 			<input type="hidden" name="lng" value="" />
+			<div id="box-keywords" class="position-absolute w-100" style="top:48px; left:0;">
+				<ul class="list-group" id="list-group-keywords">
+		  			<li class="list-group-item list-group-flush border">
+						<a href="" class="border-bottom">내주변 검색</a>
+					</li>
+					<li class="list-group-item list-group-flush ">
+						<div class="d-flex justify-content-between">
+							<span>
+								<i class="bi bi-clock"></i>
+								<span class="ms-4">맛있는 맛집</span>
+							</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
+						</div>
+					</li>
+					<li class="list-group-item list-group-flush ">
+						<div class="d-flex justify-content-between">
+							<span>
+								<i class="bi bi-clock"></i>
+								<span class="ms-4">맛있는 맛집</span>
+							</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
+						</div>
+					</li>
+					<li class="list-group-item list-group-flush ">
+						<div class="d-flex justify-content-between">
+							<span>
+								<i class="bi bi-clock"></i>
+								<span class="ms-4">맛있는 맛집</span>
+							</span>
+							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
+						</div>
+					</li>
+				</ul>
+			</div>
+			
 	    </form>
 	</div>
 	
-	<div class="position-absolute top-20 end-30">
+	<!-- <div class="position-absolute top-20 end-30">
 		<button id="locationButton">현재위치 확인</button>
 		<p id="demo"></p>
-	</div>
-	
-	<div id="box-keywords" class="position-absolute top-10 start-50">
-		<ul class="list-group">
-  			<li class="list-group-item list-group-flush border border-white">
-	  			<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-clock" viewBox="0 0 16 16">
-	  				<path d="M8 3.5a.5.5 0 0 0-1 0V9a.5.5 0 0 0 .252.434l3.5 2a.5.5 0 0 0 .496-.868L8 8.71V3.5z"/>
-	  				<path d="M8 16A8 8 0 1 0 8 0a8 8 0 0 0 0 16zm7-8A7 7 0 1 1 1 8a7 7 0 0 1 14 0z"/>
-				</svg>
-			An item
-			</li>
-  			<li class="list-group-item list-group-flush border border-white">A second item</li>
-  			<li class="list-group-item list-group-flush border border-white">A third item</li>
- 			<li class="list-group-item list-group-flush border border-white">A fourth item</li>
-  			<li class="list-group-item list-group-flush border border-white">And a fifth one</li>
-		</ul>
-	</div>
+	</div> -->
 	
 </div>
 <script type="text/javascript">
@@ -119,8 +139,8 @@ $(function() {
 		let $listGroup = $("#list-group-keywords");
 		$.each(array, function(index, keyword) {
 			
-			let content = '<li class="list-group-item">'+keyword+'</li>';
-			$listGroup.append(content);
+			let content = '<li class="list-group-item list-group-flush border"> <i class="bi bi-clock"> '+keyword+' <button>X</button> </li>';
+			//$listGroup.append(content);
 		})
 	});
 	
