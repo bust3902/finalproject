@@ -20,7 +20,7 @@
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">검색</button>
 	    </form>
 	</div>
-	<button onclick="getLocation()">Try It</button>
+	<button onclick="getLocation()">현재위치 확인</button>
 	<p id="demo"></p>
 </div>
 <script type="text/javascript">
@@ -43,7 +43,9 @@
 		        	console.log(data);
 		        	let location = data.results[0];
 		        	let address = location.formatted_address.replace("대한민국 ", " ");
-		        	alert(address);
+		        	let address2 = location.formatted_address.split(' ');
+		        	alert(address2[2]+' '+address2[3]);
+		        	//alert(address);
 		        })
 		    });
 		  } else { 
