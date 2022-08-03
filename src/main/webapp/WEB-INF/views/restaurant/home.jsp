@@ -15,9 +15,13 @@
 <body>
 <div class="container">
 	<div>
-		<form class="d-flex">
+		<form class="d-flex" role="search" onsubmit="savedKeyword();">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
-	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">검색</button>
+	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+  					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+				</svg>
+			</button>
 	    </form>
 	</div>
 	<button id="locationButton" onclick="getLocation()">현재위치 확인</button>
@@ -52,6 +56,26 @@
 		  } else { 
 		    x.innerHTML = "Geolocation is not supported by this browser.";
 		  }
+	}
+	
+	$("#search").click(function() {
+		
+	});
+	
+	// 검색어를 저장하는 기능
+	function savedKeyword() {
+		let keywords = $(":input[name=keyword]").value;
+		let text = localStorage.getItem("keyword") || '[]';
+		let array = JSON.parse(text);
+		
+		if (keywords === "") {
+			return;
+		} else {
+			array.unshift(keywords);
+		}
+		
+		text = JSON.stringify(array);
+		localStorage.setItem("keywords", text);
 	}
 
 </script>
