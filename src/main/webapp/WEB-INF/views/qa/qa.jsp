@@ -14,7 +14,7 @@
 <body>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="container">
-		<div>
+		<div class="">
 			<h3>서울어때</h3>
 			<button type="button"><span>더보기</span></button>
 			<div>

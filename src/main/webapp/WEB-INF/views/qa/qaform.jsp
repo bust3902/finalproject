@@ -37,7 +37,7 @@
 					<p>서울어때 이용 중 불편하신 점을 문의해주시면 빠른 시일내에 답변 드리겠습니다.</p>
 				</div>
 				<p><strong>카테고리 유형</strong></p>
-				<select class="form-select" name="categoryType" style="width:800px;" id="">
+				<select class="form-select" name="categoryType" id="categoryType" style="width:800px;">
 					<option value="1">카테고리 유형을 선택해주세요.</option>
 					<option value="rooms">객실</option>
 					<option value="accommodations">숙소</option>
@@ -45,7 +45,7 @@
 				</select>
 				<div class="my-3">
 					<p><strong>문의 유형</strong></p>
-					<select class="form-select" name="qaType" style="width:800px;" id="">
+					<select class="form-select" name="qaType" id="qaType" style="width:800px;">
 						<option value="1">문의 유형을 선택해주세요.</option>
 						<option value="cancle/refund">취소/환불</option>
 						<option value="reserve/payment">예약/결제</option>
@@ -61,7 +61,7 @@
 					<p><strong>이메일</strong></p>
 					<input class="form-control" type="text" placeholder="선택사항 입니다." style="width:800px;height:40px;">
 				</div>
-				<div class="account-block" name="account" data-account-select style="display:none;">
+				<div class="account-block" name="account" data-account-select id="account">
 					<p><strong>환불받을 계좌정보 입력</strong></p>
 					<select class="form-select" data-account-bank name="accountBank" style="width:130px;">
 						<option value="1">은행 선택</option>
@@ -75,8 +75,16 @@
 						<option value="9">부산은행</option>
 						<option value="10">신협은행</option>
 					</select>
-					<textarea class="form-control" placeholder="계좌번호를 입력하세요." style="width:200px;height:40px;"></textarea>
-					<textarea class="form-control" placeholder="예금주를 입력하세요." style="width:200px;height:40px;"></textarea>
+					<div class="row">
+						<div class="col">
+							<input type="text" class="form-control" placeholder="계좌번호를 입력하세요." style="width:200px">
+						</div>
+					</div>
+					<div class="row">
+						<div class="col">
+							<input type="text" class="form-control" placeholder="예금주를 입력하세요." style="width:200px">
+						</div>
+					</div>
 				</div>
 				<div class="my-3">
 					<p><strong>문의 내용</strong></p>
@@ -89,11 +97,64 @@
 					<input type="file" class="form-control" name="image" style="width:800px;">
 				</div>
 				<div class="btn-button">
-					<button id="modal-button" class="btn btn-primary" type="button">작성 완료</button>
+					<button id="modal-button" class="btn btn-primary" type="button" data-bs-target="#completeQa">작성 완료</button>
 				</div>
 			</form>
 		</div>
 	</div>
 </div>
+<!-- 카테고리 미선택 경고창 출력 팝업 -->
+<div id="modal-danger" class="modal fade" >
+	<div class="modal-dialog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p class="text-center" id="modal-message-box">카테고리/문의 유형 선택은 필수입니다.</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- 문의사항 작성 완료 후 메세지 -->
+<div id="completeQa" class="modal fade">
+	<div class="modal-diolog modal-dialog-centered">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h3>문의사항 작성</h3>
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+			</div>
+			<div class="modal-body">
+				<p>작성하신 내용을 문의하시겠습니까?</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+				<button type="button" class="btn btn-primary">확인</button>
+			</div>
+		</div>
+	</div>
+</div>
 </body>
+<script type="text/javascript">
+$(document).ready(function() {
+	// 카테고리/문의 유형을 선택하지 않을 시
+	var unselectedTypeModal = new bootstrap.Modal(document.getElementById('modal-danger'))
+	$("#modal-button").click(function() {
+		if($("select[name=categoryType]").val() === "1") {
+			$("#modal-message-box").text("카테고리 선택은 필수입니다.");
+			unselectedTypeModal.show();
+			return false;
+		}
+		if($("select[name=qaType]").val() === "1") {
+			$("#modal-message-box").text("문의유형 선택은 필수입니다.");
+			unselectedTypeModal.show();
+			return false;
+		}
+	});
+	
+})
+</script>
 </html>

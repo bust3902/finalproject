@@ -57,4 +57,3 @@ public class SessionUtils {
 	public static void sessionInvlidate() {
 		((HttpSession)RequestContextHolder.getRequestAttributes().getSessionMutex()).invalidate();
 	}
-}
