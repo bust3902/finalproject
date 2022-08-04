@@ -64,7 +64,7 @@
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item py-3">
 							<div class="fw-bold mt-3 mb-1 fs-5">날짜</div>
-							<div class="text-small mt-1 mb-3 text-muted">7박까지 조회 가능</div>
+							<div class="text-small mt-1 mb-3 text-muted">최대 7박까지 조회 가능</div>
 							<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
 							<input type="text" id="datepicker" class="form-control" value="" />
 							<input type="hidden" name="startDate" value="" />
@@ -163,7 +163,7 @@
 						<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
 						<label class="btn btn-secondary" for="btnradio2">거리 순</label>
 						
-						<input type="radio" class="btn-check" id="btnradio3" name="sort" value="rowprice">
+						<input type="radio" class="btn-check" id="btnradio3" name="sort" value="lowprice">
 						<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
 						
 						<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
@@ -316,6 +316,7 @@ $(function () {
             "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
             "firstDay": 1
         },
+        "minDate": moment().format('YYYY-MM-DD'),
         "startDate": startDayString,
         "endDate": endDayString,
         "drops": "down"
@@ -332,13 +333,13 @@ $(function () {
 
 	// html이 출력될 때 datepicker의 input태그의 value 설정
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
+	// html이 출력될 때 폼에서 사용할 hidden태그의 value 설정
+    $(":hidden[name=startDate]").val(startDayString);
+    $(":hidden[name=endDate]").val(endDayString);
 	// 날짜 변경 시 input태그의 value 설정
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
     });
-	// html이 출력될 때 폼에서 사용할 hidden태그의 value 설정
-    $(":hidden[name=startDate]").val(startDayString);
-    $(":hidden[name=endDate]").val(endDayString);
     
 /*
 	jQuery UI를 이용한 금액 슬라이더 생성하기  
@@ -362,9 +363,17 @@ $(function () {
 /*
  * ajax로 검색 조건에 따른 숙소정보 조회하기
  */
+ 	// 현재 지도에 표시된 마커를 관리하기 위한 배열을 정의한다.
+ 	let markers = [];
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
+		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
 		let $tbody = $("#tbody-accos").empty();
+		// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
+		setMarker(null);
+		markers = [];
+		
+		// ajax로 검색조건에 따른 숙소정보를 요청해 응답데이터로 받는다.
 		$.getJSON("/acco/search", queryString).done(function(accos) {
 			if (accos.length === 0) {
 				let content = `
@@ -390,6 +399,7 @@ $(function () {
 						reviewRateText = '최고에요';
 					}
 					
+					// 숙소 정보 html컨텐츠 생성
 					let content = '';
 					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
 					content += '	<td class="align-middle p-3">';
@@ -408,17 +418,35 @@ $(function () {
 					content += '		<p class="text-end text-dark fs-5 fw-bold">' + acco.minPrice.toLocaleString() + '원</p>';
 					content += '	</td>';
 					
+					// 숙소 정보 html컨텐츠를 tbody에 추가
 					$tbody.append(content);
 					$("#row-acco-"+acco.id).click(function() {
 						location.href = "acco/detail?no=" + acco.id;
 					});
+					
+					// 지도에 표시할 마커 객체 생성
+					let markerPosition = new kakao.maps.LatLng(acco.latitude, acco.longitude);
+					let marker = new kakao.maps.Marker({
+					    position: markerPosition
+					});
+					// 배열에 마커 객체를 저장
+					markers.push(marker);
 				});
+				// 배열에 새로 담긴 마커 객체를 모두 지도에 표시한다.
+				setMarker(map);
+				// TO DO : 마커에 hover되면 미리보기 뜨고, 클릭하면 상세조회 페이지로 이동하기
 			}
 		});
 	}
-	
-	
-	
+ 	
+ 	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수.
+ 	// 인자값이 null이면 마커를 삭제하고, 지도 객체이면 그 지도에 마커를 표시한다.
+ 	function setMarker(map) {
+ 		for (let i = 0; i < markers.length; i++) {
+ 			markers[i].setMap(map);
+ 		}
+ 	}
+ 	
 	// 처음 화면 로딩될 때 숙소 검색 결과 화면에 출력하기 (다른 input태그 값 초기화 설정보다 늦게 실행돼야 함)
 	searchAccos();
 	

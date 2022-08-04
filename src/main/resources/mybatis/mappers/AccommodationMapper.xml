@@ -67,7 +67,7 @@
 		select distinct a.acco_id, a.acco_name, a.acco_district, a.acco_address, a.acco_latitude, a.acco_longitude,
 				a.acco_introduce_comment, a.acco_thumbnail_image, a.acco_review_rate, a.acco_review_count, a.city_id,
 				DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude) as distance,
-				r.minPrice
+				r.minPrice as minPrice
 		from accommodations a,
 		(select fr.acco_id, min(fr.room_day_price) minPrice
 		from acco_rooms fr, (select room_no, count(*) as cnt
