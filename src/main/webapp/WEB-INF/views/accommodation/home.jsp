@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- jQuery range slider를 위해 필요한 라이브러리 -->
@@ -50,13 +51,21 @@
 			</c:choose>
 		</div>
 		<div class="row p-3">
-			<select class="form-select w-25 p-1" name="city">
-				<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
-				<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
-				<c:forEach var="city" items="${cities }">
-					<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
-				</c:forEach>
-			</select>
+			<div class="col d-flex justify-content-start align-items-center my-auto px-0">
+				<select class="form-select w-50 p-1" name="city">
+					<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
+					<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
+					<c:forEach var="city" items="${cities }">
+						<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
+					</c:forEach>
+				</select>
+			</div>
+			<div class="col d-flex justify-content-end align-items-center my-auto">
+				<small>
+					현재 내 위치는 <strong id="home-current-location-address"></strong>
+				</small>
+				<i id="icon-refresh-location" class="bi bi-compass fs-4 text-primary ps-2" style="cursor: pointer;"></i>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-4">
@@ -107,7 +116,7 @@
 								<c:forEach var="facility" items="${cofacilities }">
 									<div class="col-6 mb-3">
 										<input class="form-check-input" type="checkbox" name="commonFacilities" value="${facility.id }">
-										<label class="form-check-label">${facility.name }</label>
+										<label class="form-check-label small">${facility.name }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -119,7 +128,7 @@
 								<c:forEach var="facility" items="${rofacilities }">
 									<div class="col-6 mb-3">
 										<input class="form-check-input" type="checkbox" name="roomFacilities" value="${facility.id }">
-										<label class="form-check-label">${facility.name }</label>
+										<label class="form-check-label small">${facility.name }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -131,7 +140,7 @@
 								<c:forEach var="tag" items="${tags }">
 									<div class="col-6 mb-3">
 										<input class="form-check-input" type="checkbox" name="tags" value="${tag.name }">
-										<label class="form-check-label">${tag.name }</label>
+										<label class="form-check-label small">${tag.name }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -156,7 +165,7 @@
 			<div class="col-8">
 				<!-- 정렬기준 radio button, 지도 modal button (버튼 스타일 식당 조회와 통일시킬 예정) -->
 				<div class="d-flex flex-wrap mx-3 mb-3">
-					<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
+					<div id="btn-group-sort" class="btn-group flex-fill pe-2 my-auto" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
 						<label class="btn btn-secondary" for="btnradio1">평점 순</label>
 		
@@ -169,7 +178,7 @@
 						<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
 					  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
 					</div>
-					<button type="button" class="btn btn-light" style="border-color: gray" id="btn-open-modal-map">지도</button>
+					<button type="button" class="btn btn-light my-auto" id="btn-open-modal-map"><i class="bi bi-map"></i></button>
 				</div>
 				<!-- 검색결과 조회 리스트 -->
 				<div class="row mx-auto">
@@ -203,7 +212,7 @@
 	<div class="modal-dialog modal-dialog-centered modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">지도 조회</h5>
+				<small class="modal-title text-center">내 위치 : <strong id="modal-current-location-address"></strong></small>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
@@ -219,30 +228,92 @@
 $(function () {
 	
 /*
- * 화면 요청할 때 현재 위치 위경도 받아오기
+ * 현재 위치 좌표 갱신하고, 숙소 검색 결과 갱신하기 : 최초 화면 출력시에 실행하고, 사용자가 내 위치 버튼 클릭 시에도 실행한다.
  */
+	// 현재 위치 좌표를 저장하는 변수
 	let currentLat = '';
 	let currentLong = '';
- 	getLocation();
-	function getLocation() {
-		// 받아온 위경도는 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
-		// 		비동기로 실행되어서 if문 밖에서 값 저장하면 안되는듯?
+	refreshLocation();
+	
+	// geolocation.getCurrentPosition은 비동기 통신으로 이루어지므로 반드시 이 통신이 완료되고 숙소 검색 요청을 보내야 한다.
+	// 아래 함수를 실행하면 현재 위치 좌표를 새로 조회하고, 전역변수 currentLat, currentLong와 hidden 태그에 값이 저장된다.
+	// 현재 위치 좌표를 새로 조회하지 못하면 서울 중심 좌표를 대신 저장한다.
+	// 위 수행을 완료하면 숙소 검색 결과를 새로 요청해 화면에 출력한다.
+	function refreshLocation() {
+		// navigator.geolocation에서 지원하는 메소드를 사용해 사용자의 현재 위치 좌표값을 획득한다.
+		// 받아온 좌표값은 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
 	    	currentLat = position.coords.latitude;
 	    	currentLong = position.coords.longitude;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
+			// TO DO : 모달 창에 현재 위치 주소 출력
+			getLocationAddress();
+			searchAccos();
 	    });
 		} else {
-		  // 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
+		  // 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
 	    	currentLat = 37.564214;
 	    	currentLong = 127.0016985;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
+			// TO DO : 모달 창에 현재 위치 정보가 없습니다. 출력
+	      	$("#modal-current-location-address").text('(정보 없음)');
+    	  	$("#home-current-location-address").text('(정보 없음)');
+			searchAccos();
 	  	}
 	}
 	
+	// 현재 위치 좌표값으로 주소 정보를 조회해 모달 창 화면에 출력하는 함수
+	function getLocationAddress() {
+        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+      		  {sensor:false, 
+      	       language:"ko",
+      	       latlng: currentLat+","+currentLong, 
+      	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+      .done(function(data) {
+      	let location = data.results[0];
+      	let address = location.formatted_address.split(' ');
+      	$("#modal-current-location-address").text(address[2]+' '+address[3]);
+      	$("#home-current-location-address").text(address[2]+' '+address[3]);
+      })
+	}
+	
+/*
+ * 모달 창에 카카오 openAPI로 지도 가져오기
+ */
+	// 모달 창에 지도 정의하기
+	let container = document.getElementById('map');
+	// mapcenter 값 설정
+	let options = { //지도를 생성할 때 필요한 기본 옵션
+			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
+			level: 7 //지도의 레벨(확대, 축소 정도)
+	};
+	// 지도 생성
+	let map = new kakao.maps.Map(container, options);
+	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
+	changeMapCenter(map);
+	// 내 위치 마커 생성하기
+	// 내 위치 마커 이미지 만들기
+	let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
+	let myLocationMarker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(currentLat, currentLong),
+	    image: myLocaMarkerImage
+	});
+	// 내 위치 마커 지도에 표시하기
+	myLocationMarker.setMap(map);
+
+	// 지도 버튼에 모달 이벤트 연결하기
+	let modalMap = new bootstrap.Modal($("#modal-map"));
+	$("#btn-open-modal-map").click(function () {
+		modalMap.show();
+		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
+		map.relayout(); 
+		changeMapCenter(map);
+		myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+	});
+
 /*
  * 선택한 지역에 따라 지도의 중심좌표 변경하기
  */
@@ -258,31 +329,7 @@ $(function () {
 		map.setLevel(7);
 	}
 }
-	
-/*
- * 검색 결과 카카오 openAPI로 지도에 표현하기
- */
-	// 모달 창에 지도 정의하기
-	let container = document.getElementById('map');
-	// mapcenter 값 설정
-	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
-			level: 7 //지도의 레벨(확대, 축소 정도)
-	};
-	// 지도 생성
-	let map = new kakao.maps.Map(container, options);
-	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
-	changeMapCenter(map);
 
-	// 지도 버튼에 모달 이벤트 연결하기
-	let modalMap = new bootstrap.Modal($("#modal-map"));
-	$("#btn-open-modal-map").click(function () {
-		modalMap.show();
-		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
-		map.relayout(); 
-		changeMapCenter(map);
-	});
-	
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
 	TO DO : 로컬스토리지에 값을 저장해 상세 조회페이지로 이동하거나 다시 돌아와도 선택한 일정을 이용할 수 있게 하기.
@@ -316,7 +363,7 @@ $(function () {
             "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
             "firstDay": 1
         },
-        "minDate": moment().format('YYYY-MM-DD'),
+        "minDate": moment().format('YYYY-MM-DD'), // 오늘 이전의 날짜는 조회 불가능하다.
         "startDate": startDayString,
         "endDate": endDayString,
         "drops": "down"
@@ -364,14 +411,24 @@ $(function () {
  * ajax로 검색 조건에 따른 숙소정보 조회하기
  */
  	// 현재 지도에 표시된 마커를 관리하기 위한 배열을 정의한다.
- 	let markers = [];
+ 	let accoMarkers = [];
+ 	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수.
+ 	// * 인자값이 null이면 마커를 삭제하고, 지도 객체이면 그 지도에 마커를 표시한다.
+ 	function setMarker(map) {
+ 		for (let i = 0; i < accoMarkers.length; i++) {
+ 			accoMarkers[i].setMap(map);
+ 		}
+ 	}
+ 	
+ 	// 마커에서 사용할 이미지 객체를 만든다.
+ 	let accoMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
 		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
 		let $tbody = $("#tbody-accos").empty();
 		// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
 		setMarker(null);
-		markers = [];
+		accoMarkers = [];
 		
 		// ajax로 검색조건에 따른 숙소정보를 요청해 응답데이터로 받는다.
 		$.getJSON("/acco/search", queryString).done(function(accos) {
@@ -408,7 +465,7 @@ $(function () {
 					content += '	<td class="p-3">';
 					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';
 					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + acco.reviewRate + '</span><strong class="ms-2">' + reviewRateText +' (' + acco.reviewCount  +')</strong>';
+					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + reviewRateText +' (' + acco.reviewCount  +')</strong>';
 					content += '		</p>';
 					content += '		<p>'
 					content += '			<small>' + acco.district + '</small>'
@@ -421,34 +478,56 @@ $(function () {
 					// 숙소 정보 html컨텐츠를 tbody에 추가
 					$tbody.append(content);
 					$("#row-acco-"+acco.id).click(function() {
-						location.href = "acco/detail?no=" + acco.id;
+						location.href = "acco/detail?id=" + acco.id;
 					});
 					
 					// 지도에 표시할 마커 객체 생성
 					let markerPosition = new kakao.maps.LatLng(acco.latitude, acco.longitude);
 					let marker = new kakao.maps.Marker({
-					    position: markerPosition
+					    position: markerPosition,
+					    image: accoMarkerImage
 					});
+					
+					// 마커에 click 이벤트를 등록
+	 				kakao.maps.event.addListener(marker, 'click', function() {
+	 					// 상세조회 페이지로 이동
+	 					location.href= "acco/detail?id=" + acco.id;
+	 				});
+					
+					// 마커에 mouseover, mouseout 이벤트를 등록
+					// * mouseover 시 보여줄 커스텀오버레이를 생성 (숙소 정보 요약)
+					let overlaycontent = '';
+					overlaycontent += `<div class="position-relative">
+											<div class="position-absolute" style="top: -130px; left: -95px;">
+												<button type="button" class="btn btn-dark position-relative" style="background-color: rgba( 0, 0, 0, 0.5 );">
+													<div>`;
+					overlaycontent += acco.name + '<br/>';
+					overlaycontent += '<small>평점 : </small><span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><br/>';
+					overlaycontent += '<small>내 위치까지 거리 : <strong>' + acco.currentDistance + 'km</strong></small>';
+					overlaycontent += `				</div>
+												<svg width="1em" height="1em" viewBox="0 0 16 16" class="position-absolute top-100 start-50 translate-middle mt-1 opacity-50" fill="#212529" xmlns="http://www.w3.org/2000/svg"><path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+											</button>
+										</div>
+									</div>`;
+					let overlay = new kakao.maps.CustomOverlay({
+						content: overlaycontent,
+						position: markerPosition
+					});
+					kakao.maps.event.addListener(marker, 'mouseover', function() {
+						overlay.setMap(map);
+					});
+					kakao.maps.event.addListener(marker, 'mouseout', function() {
+						overlay.setMap(null);
+					});
+					
 					// 배열에 마커 객체를 저장
-					markers.push(marker);
+					accoMarkers.push(marker);
 				});
 				// 배열에 새로 담긴 마커 객체를 모두 지도에 표시한다.
 				setMarker(map);
-				// TO DO : 마커에 hover되면 미리보기 뜨고, 클릭하면 상세조회 페이지로 이동하기
 			}
 		});
 	}
- 	
- 	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수.
- 	// 인자값이 null이면 마커를 삭제하고, 지도 객체이면 그 지도에 마커를 표시한다.
- 	function setMarker(map) {
- 		for (let i = 0; i < markers.length; i++) {
- 			markers[i].setMap(map);
- 		}
- 	}
- 	
-	// 처음 화면 로딩될 때 숙소 검색 결과 화면에 출력하기 (다른 input태그 값 초기화 설정보다 늦게 실행돼야 함)
-	searchAccos();
 	
 	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
 	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
@@ -459,7 +538,6 @@ $(function () {
 	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
 	$("input[name=sort]").click(function() {
-		console.log('test');
 		searchAccos();
 	});
 	// 지역을 변경했을 때 숙소 재검색 후 화면 갱신, 지도 center 변경
@@ -483,6 +561,12 @@ $(function () {
 		// 기타
 		$(":checkbox[name=tags]").prop("checked", false);
 	});
+	
+	// 나침반 아이콘을 눌렀을 때 내 위치 정보를 다시 조회하고, 검색결과도 갱신
+	$("#icon-refresh-location").click(function(){
+		refreshLocation();
+	});
+	
 });
 </script>
 </body>
