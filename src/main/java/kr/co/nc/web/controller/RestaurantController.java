@@ -17,6 +17,12 @@ public class RestaurantController {
 	@Autowired
 	private RestaurantService restaurantService;
 	
+	@GetMapping(path="/searchlist")
+	public String searchList() {
+		
+		return "restaurant/searchlist";
+	}
+	
 	@GetMapping(path = "/detail")
 	public String detail(@RequestParam("no") int restaurantNo, Model model) {
 		// 변수 따로 만들지 않고 reviews안에 넣었습니다.

@@ -1,4 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ include file="../common/tags.jsp" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -17,7 +18,7 @@
 
 <div class="container">
 	<div class="position-relative">
-		<form class="d-flex" role="search" action="searchList" onsubmit="savedKeyword();">
+		<form id="form-search" class="d-flex" role="search" action="searchList">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
 	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -26,7 +27,17 @@
 			</button>
 			<input type="hidden" name="lat" value="" />
 			<input type="hidden" name="lng" value="" />
-			<div id="box-keywords" class="position-absolute w-100" style="top:48px; left:0; z-index: 10000;">
+			<div id="box-keywords" class="position-absolute w-100 d-none" style="top:44px; left:0; z-index: 10000;">
+				<ul class="list-group" id="fix-grop-keywords">
+					<li class="list-group-item list-group-flush border">
+						<a href="" class="border-bottom" >내주변 검색</a>
+							<hr style="display: block;">
+						<div class="d-flex justify-content-between">
+							<span>최근검색어</span>
+							<button id="delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
+						</div>
+					</li>
+				</ul>
 				<ul class="list-group" id="list-group-keywords">
 		  			<li class="list-group-item list-group-flush border">
 						<a href="" class="border-bottom">내주변 검색</a>
@@ -38,41 +49,23 @@
 					</li>
 					<li class="list-group-item list-group-flush ">
 						<div class="d-flex justify-content-between">
-							<span>
+							<button type="button" class="float-end btn text-dark border-0 btn-sm">
 								<i class="bi bi-clock"></i>
 								<span class="ms-4">맛있는 맛집</span>
-							</span>
-							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
-						</div>
-					</li>
-					<li class="list-group-item list-group-flush ">
-						<div class="d-flex justify-content-between">
-							<span>
-								<i class="bi bi-clock"></i>
-								<span class="ms-4">맛있는 맛집</span>
-							</span>
-							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
-						</div>
-					</li>
-					<li class="list-group-item list-group-flush ">
-						<div class="d-flex justify-content-between">
-							<span>
-								<i class="bi bi-clock"></i>
-								<span class="ms-4">맛있는 맛집</span>
-							</span>
+							</button>
 							<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
 						</div>
 					</li>
 				</ul>
 			</div>
-			
 	    </form>
+	    
+		<div class="position-absolute" style="top:60px; left:1000px;" >
+			<button id="locationButton">현재위치 확인</button>
+			<p id="demo"></p>
+		</div> 
 	</div>
 	
-	<!-- <div class="position-absolute top-20 end-30">
-		<button id="locationButton">현재위치 확인</button>
-		<p id="demo"></p>
-	</div> -->
 	
 </div>
 <script type="text/javascript">
@@ -132,47 +125,81 @@ $(function() {
 		  }
 	} */
 	
+	// 최근검색어 저장된 곳
+	let $boxKeywords = $("#box-keywords");
+	
 	$("#search").click(function() {
 		// 저장된 키워드를 가져오는 코드입니다.
 		let text = localStorage.getItem("keywords") || '[]';
 		let array = JSON.parse(text);
 		
+		// 최근 검색어 토굴을 이용. 체크박스를
+		$boxKeywords.toggleClass("d-none");
 		/*
 			<div id="box-keywords">
 				<ul id="list-group-keywords" class="list-group"></ul>
 			</div>
 		*/
-		let $listGroup = $("#list-group-keywords");
+		
+		//	empty를 사용해서 기존의 검색했던 최근 검색어를 지웁니다.
+		let $listGroup = $("#list-group-keywords").empty();
+		
 		$.each(array, function(index, keyword) {
-			
-			let content = '<li class="list-group-item list-group-flush border"> <i class="bi bi-clock"> '+keyword+' <button>X</button> </li>';
-			//$listGroup.append(content);
+			let content = '';
+			content += '<li class="list-group-item list-group-flush ">'
+			content += '	<div class="d-flex justify-content-between">'
+			content += '		<button type="button" class="float-end btn text-dark border-0 btn-sm">'
+			content += '			<i class="bi bi-clock"></i>'
+			content += '			<span class="ms-4">'+keyword+'</span>'
+			content += '		</button>'
+			content += '		<button id="delete-keyword" type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>'
+			content += '	</div>'
+			content += '</li>'
+			// let content = '<li class="list-group-item list-group-flush border"> <i class="bi bi-clock"> '+keyword+' <button>X</button> </li>';
+			$listGroup.append(content);
 		})
 	});
 	
-});
-	
 	// 최근 검색어를 저장하는 기능
-	function savedKeyword() {
-		let keyword = $(":input[name=keyword]").value;
+	$("#form-search").submit(function() {
+		let keyword = $(":input[name=keyword]").val();
 		let text = localStorage.getItem("keywords") || '[]';
 		let array = JSON.parse(text);
 		
-		if (keywords === "") {
-			return;
+		if (keyword != "") {
+			// 여기서 변수명 입력 조심하기
+			array.unshift(keyword);
+			text = JSON.stringify(array);
+			localStorage.setItem("keywords", text);
+			
+			return ture;
 		} else {
-			array.unshift(keywords);
+			alert("검색어를 입력하세요");
+			return false;
 		}
 		
-		text = JSON.stringify(array);
-		localStorage.setItem("keywords", text);
-	}
+	});
 	
 	// 최근 검색어를 하나씩 삭제하는 기능
-	
-	// 최근 검색어 클릭시 search 페이지로 이동하는 기능
-	
+	$("#delete-keyword").click(function() {
+		
+		refreshKeywordList();
+	});
 	// 최근 검색어 전체 삭제하는 기능
+	$("#delete-all-keyword").click(function() {
+		localStorage.setItem("keywords",[]);
+		
+		refreshKeywordList();
+	});
+	
+	// 최근 검색어를 최신화 하는 기능
+	function refreshKeywordList() {
+		
+	}
+	// 최근 검색어 클릭시 search 페이지로 이동하는 기능
+});
+
+
 
 </script>
 </body>
