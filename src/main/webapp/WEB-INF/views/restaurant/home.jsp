@@ -59,11 +59,10 @@
 				</ul>
 			</div>
 	    </form>
-	    
 		<div class="position-absolute" style="top:60px; left:1000px;" >
 			<button id="locationButton">현재위치 확인</button>
 			<p id="demo"></p>
-		</div> 
+		</div>
 	</div>
 </div>
 
@@ -178,7 +177,7 @@
 			content += '	<div class="d-flex justify-content-between">'
 			content += '		<button type="button" class="float-end btn text-dark border-0 btn-sm">'
 			content += '			<i class="bi bi-clock"></i>'
-			content += '			<span class="ms-4">'+keyword+'</span>'
+			content += '			<span class="ms-4" onclick="searchKeyword(\''+keyword+'\')">'+keyword+'</span>'
 			content += '		</button>'
 			content += '		<button type="button" class="float-end btn text-danger border-0 btn-sm" onclick="deleteKeyword('+index+')"><i class="bi bi-trash"></i></button>'
 			content += '	</div>'
@@ -200,7 +199,14 @@
 		refreshKeywordList();
 		// alert(index);
 	};
-
+	
+	// 최근 검색어 클릭시 검색되게 하는 기능
+	// index를 주고 받지 말고 쉽게 keyword를 주고 받기
+	function searchKeyword(keyword) {
+		//alert(keyword);
+		
+		location.href="/searchlist.jsp?keyword=" + keyword;
+	};
 
 
 </script>
