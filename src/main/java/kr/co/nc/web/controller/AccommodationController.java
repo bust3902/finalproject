@@ -56,8 +56,6 @@ public class AccommodationController {
 	@GetMapping(path = "/search")
 	@ResponseBody
 	public List<Accommodation> accommodations(AccoCriteria criteria) {
-		System.out.println(criteria);
-		System.out.println(accommodationService.searchAccommodation(criteria));
 		return accommodationService.searchAccommodation(criteria);
 	}
 
