@@ -12,11 +12,11 @@
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<title>홈</title>
+<title>서울 맛어때</title>
 </head>
 <body>
 
-<div class="container">
+<div class="container my-3">
 	<div class="position-relative">
 		<form id="form-search" class="d-flex" role="search" action="searchList">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
@@ -27,7 +27,7 @@
 			</button>
 			<input type="hidden" name="lat" value="" />
 			<input type="hidden" name="lng" value="" />
-			<div id="box-keywords" class="position-absolute w-100 d-none" style="top:44px; left:0; z-index: 10000;">
+			<div id="box-keywords" class="position-absolute w-100 d-none" style="top:44px; left:0; z-index: 1000;">
 				<ul class="list-group" id="fix-grop-keywords">
 					<li class="list-group-item list-group-flush border">
 						<a href="" class="border-bottom" >내주변 검색</a>
@@ -65,19 +65,20 @@
 			<p id="demo"></p>
 		</div> 
 	</div>
-	
-	
 </div>
+
 <script type="text/javascript">
-$(function() {
+
 	$("#locationButton").click(function() {
 		let x = document.getElementById("demo");
+		// 위도와 경도 값을 가져오는 코드입니다.
 		if (navigator.geolocation) {
 		    navigator.geolocation.getCurrentPosition(function(position) {
 		    	let latitude = position.coords.latitude;
 		        let longitude = position.coords.longitude;
 		        //alert(latitude + ", " + longitude);
 		        
+		        // 구글 map api를 이용해서 위도 경도 값을 통해 해당하는 주소값 가져오기
 		        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
 		        		  {sensor:false, 
 		        	       language:"ko",
@@ -129,35 +130,11 @@ $(function() {
 	let $boxKeywords = $("#box-keywords");
 	
 	$("#search").click(function() {
-		// 저장된 키워드를 가져오는 코드입니다.
-		let text = localStorage.getItem("keywords") || '[]';
-		let array = JSON.parse(text);
-		
+	
 		// 최근 검색어 토굴을 이용. 체크박스를
 		$boxKeywords.toggleClass("d-none");
-		/*
-			<div id="box-keywords">
-				<ul id="list-group-keywords" class="list-group"></ul>
-			</div>
-		*/
-		
-		//	empty를 사용해서 기존의 검색했던 최근 검색어를 지웁니다.
-		let $listGroup = $("#list-group-keywords").empty();
-		
-		$.each(array, function(index, keyword) {
-			let content = '';
-			content += '<li class="list-group-item list-group-flush ">'
-			content += '	<div class="d-flex justify-content-between">'
-			content += '		<button type="button" class="float-end btn text-dark border-0 btn-sm">'
-			content += '			<i class="bi bi-clock"></i>'
-			content += '			<span class="ms-4">'+keyword+'</span>'
-			content += '		</button>'
-			content += '		<button id="delete-keyword" type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>'
-			content += '	</div>'
-			content += '</li>'
-			// let content = '<li class="list-group-item list-group-flush border"> <i class="bi bi-clock"> '+keyword+' <button>X</button> </li>';
-			$listGroup.append(content);
-		})
+	
+		refreshKeywordList() 
 	});
 	
 	// 최근 검색어를 저장하는 기능
@@ -180,11 +157,6 @@ $(function() {
 		
 	});
 	
-	// 최근 검색어를 하나씩 삭제하는 기능
-	$("#delete-keyword").click(function() {
-		
-		refreshKeywordList();
-	});
 	// 최근 검색어 전체 삭제하는 기능
 	$("#delete-all-keyword").click(function() {
 		localStorage.setItem("keywords",[]);
@@ -192,12 +164,42 @@ $(function() {
 		refreshKeywordList();
 	});
 	
-	// 최근 검색어를 최신화 하는 기능
+	// 최근 검색어를 최신화 하는 기능()
 	function refreshKeywordList() {
+		let text = localStorage.getItem("keywords") || '[]';
+		let array = JSON.parse(text);
 		
+		// empty를 사용해서 기존의 검색했던 최근 검색어를 지웁니다.
+		let $listGroup = $("#list-group-keywords").empty();
+		
+		$.each(array, function(index, keyword) {
+			let content = '';
+			content += '<li class="list-group-item list-group-flush ">'
+			content += '	<div class="d-flex justify-content-between">'
+			content += '		<button type="button" class="float-end btn text-dark border-0 btn-sm">'
+			content += '			<i class="bi bi-clock"></i>'
+			content += '			<span class="ms-4">'+keyword+'</span>'
+			content += '		</button>'
+			content += '		<button type="button" class="float-end btn text-danger border-0 btn-sm" onclick="deleteKeyword('+index+')"><i class="bi bi-trash"></i></button>'
+			content += '	</div>'
+			content += '</li>'
+			// let content = '<li class="list-group-item list-group-flush border"> <i class="bi bi-clock"> '+keyword+' <button>X</button> </li>';
+			$listGroup.append(content);
+		})
 	}
-	// 최근 검색어 클릭시 search 페이지로 이동하는 기능
-});
+	
+	// 최근 검색어를 하나씩 삭제하는 기능
+	function deleteKeyword(index) {
+		let text = localStorage.getItem("keywords") || '[]';
+		let array = JSON.parse(text);
+		
+		array.splice(index, 1);
+		text = JSON.stringify(array);
+		localStorage.setItem("keywords", text);
+		
+		refreshKeywordList();
+		// alert(index);
+	};
 
 
 
