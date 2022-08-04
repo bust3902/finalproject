@@ -60,7 +60,7 @@
 			</div>
 	    </form>
 		<div class="position-absolute" style="top:60px; left:1000px;" >
-			<button id="locationButton">현재위치 확인</button>
+			<button id="locationButton" class="float-end border-0"><i class="bi bi-geo"></i>현재위치 확인</button>
 			<p id="demo"></p>
 		</div>
 	</div>
