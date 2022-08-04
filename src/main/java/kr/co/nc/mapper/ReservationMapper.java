@@ -40,7 +40,11 @@ public interface ReservationMapper {
 	
 	// 결제번호로 환불하기
 	String refundByPaymentId(int paymentId);
-	
+	/*
+	 * update payment 
+	 * set payment_status ='예약취소'
+	 * where payment_id = #{paymentId}
+	 */
 	
 	
 	// 예약 상태변경하기 (예약가능 / 만실)
@@ -55,4 +59,6 @@ public interface ReservationMapper {
 	 * where
 	 * 		reservation_id = #{id}
 	 */
+	
+	
 }
