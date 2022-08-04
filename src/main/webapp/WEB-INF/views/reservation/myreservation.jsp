@@ -26,22 +26,23 @@
 			<p class="badge rounded-pill bg-danger">예약확정</p>
 			<h5>천안 호텔 소설 스미스</h5>
 			<h6>비즈니스 (공기청정기, 스타일러) / 1박</h6>
-			<p class="form-text col-3">체크인</p>
-			<dd class="form-text col-7">2022.07.29 금 15:00</dd>
-			<dt class="form-text col-3">체크아웃</dt>
-			<dd class="form-text col-7">2022.07.29 금 15:00</dd>
-			<dt class="form-text col-3 mt-2">예약번호</dt>
-			<dd class="form-text col-7">100198</dd> <!-- 난수생성 -->
-			<dt class="form-text col-3">예약자이름</dt>
-			<dd class="form-text col-7">안재용</dd>
-			<dt class="form-text col-3">안심번호</dt>
-			<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
-			
-			<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 01050577576은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+			<dl>
+				<dt class="form-text col-3">체크인</dt>
+				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
+				<dt class="form-text col-3">체크아웃</dt>
+				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
+				<dt class="form-text col-3 mt-2">예약번호</dt>
+				<dd class="form-text col-7">100198</dd> <!-- 난수생성 -->
+				<dt class="form-text col-3">예약자이름</dt>
+				<dd class="form-text col-7">안재용</dd>
+				<dt class="form-text col-3">안심번호</dt>
+				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
+				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 01050577576은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+			</dl>
 	
 			<hr>
 			<div class="row">
-				<h6>결제정보</h6>
+				<h6 class="mb-3">결제정보</h6>
 				<dl>
 					<dt>총 결제금액</dt>
 					<dd class="text-danger"><strong>60,000원</strong></dd>
@@ -196,6 +197,7 @@ function openCancelModal() {
 	cancelModal.show();
 }
 
+
 function cancelPay() {
     jQuery.ajax({
       "url": "http://localhost/myreservation",
@@ -205,9 +207,9 @@ function cancelPay() {
         "merchant_uid": "000001", // 예: ORD20180131-0000011
         "cancel_request_amount": 99000, // 환불금액
         "reason": "테스트 결제 환불", // 환불사유
-        "refund_holder": "홍길동", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
-        "refund_bank": "88", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
-        "refund_account": "56211105948400" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
+        "refund_holder": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
+        "refund_bank": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
+        "refund_account": "" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
       }),
       "dataType": "json"
     });
