@@ -13,11 +13,9 @@ import lombok.ToString;
 public class Reservation {
 
 	private int reservationId;
-	private String reservationMemo;
 	private String status;
 	private Date checkIn;
 	private Date checkOut;
-	private int HeadCount;
 	
 	private List<User> users;
 	private List<Accommodation> accomoAccommodations;

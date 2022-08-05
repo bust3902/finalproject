@@ -1,17 +1,16 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="tags.jsp" %>
-<head>
 <style>
 	.sticky {
- 				position: sticky;
-  				top: 0;
-			}
+ 		position: sticky;
+  		top: 0;
+	}
 </style>
-</head>
+
 <nav class="navbar navbar-expand-md sticky-top bg-secondary navbar-dark">
 	<div class="container">
 		<!-- 홈버튼 -->
-		<a class="navbar-brand" href="#">
+		<a class="navbar-brand" href="/">
       		<img src="/resources/images/logo.png" alt="" width="80" height="auto">
     	</a>
     			
@@ -37,10 +36,9 @@
 				<li class="nav-item dropdown" style="width:80px;height:auto">
 				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">내정보</a>
     			<ul class="dropdown-menu">
-     				<li><a class="dropdown-item" href="">내 정보</a></li>
-      				<li><a class="dropdown-item" href="">내가 찜한 목록</a></li>
+      				<li><a class="dropdown-item" href="/user/imformation">내 정보</a></li>
       				<li><a class="dropdown-item" href="">예약 내역</a></li>
-      				<li><a class="dropdown-item" href="">예약 취소</a></li>
+      				<li><a class="dropdown-item" href="">내가 찜한 목록</a></li>
       				<li><a class="dropdown-item" href="">내 리뷰 보기</a></li>
       				<li><hr class="dropdown-divider"></li>
 					<li><a class="dropdown-item" href="/logout">로그아웃</a></li>					
@@ -71,4 +69,5 @@
 	</div>
 </nav>
 
-<script></script>
+<script>
+</script>
