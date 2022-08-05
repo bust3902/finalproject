@@ -16,7 +16,7 @@
 </head>
 <body>
 
-<div class="container my-3">
+<div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="position-relative">
 		<form id="form-search" class="d-flex" role="search" action="searchList">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
@@ -59,11 +59,11 @@
 				</ul>
 			</div>
 	    </form>
+	</div>
 		<div class="position-absolute" style="top:60px; left:1000px;" >
 			<button id="locationButton" class="float-end border-0"><i class="bi bi-geo"></i>현재위치 확인</button>
 			<p id="demo"></p>
 		</div>
-	</div>
 	
 	<div class="row my-5">
 		<h4>주변 한식집 추천</h4>
