@@ -60,7 +60,7 @@
 			</div>
 	    </form>
 	</div>
-		<div class="position-absolute" style="top:60px; left:1000px;" >
+		<div class="position-absolute" style="top:70px; left:1000px;" >
 			<button id="locationButton" class="float-end border-0"><i class="bi bi-geo"></i>현재위치 확인</button>
 			<p id="demo"></p>
 		</div>
@@ -383,7 +383,11 @@
 		        })
 		    });
 		  } else { 
-		    x.innerHTML = "Geolocation is not supported by this browser.";
+			// 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
+		    	currentLat = 37.564214;
+		    	currentLong = 127.0016985;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
 		  }
 	});
 	
