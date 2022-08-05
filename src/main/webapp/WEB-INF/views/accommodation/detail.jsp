@@ -58,19 +58,19 @@
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<div class="swiper-wrapper">
 						<div class="swiper-slide">
-							<img alt="expanded image" src="/resources/images/sampleacco1.jpg">
+							<img alt="accommodation expanded image" src="/resources/images/sampleacco1.jpg">
 						</div>
 						<div class="swiper-slide">
-							<img alt="expanded image" src="/resources/images/sampleacco2.jpg">
+							<img alt="accommodation expanded image" src="/resources/images/sampleacco2.jpg">
 						</div>
 						<div class="swiper-slide">
-							<img alt="expanded image" src="/resources/images/sampleacco3.jpg">
+							<img alt="accommodation expanded image" src="/resources/images/sampleacco3.jpg">
 						</div>
 						<div class="swiper-slide">
-							<img alt="expanded image" src="/resources/images/logo.png">
+							<img alt="accommodation expanded image" src="/resources/images/logo.png">
 						</div>
 						<div class="swiper-slide">
-							<img alt="expanded image" src="/resources/images/logo.png">
+							<img alt="accommodation expanded image" src="/resources/images/logo.png">
 						</div>
 					</div>
 					<div class="swiper-button-next"></div>
@@ -146,10 +146,15 @@
 				</div>
 				<div class="list-wraper mx-0">
 					<!-- TO DO: 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
-					<div class="card mb-3">
+					<div class="card-room-info card mb-3">
 						<div class="card-body row">
 							<div class="col-5">
-								<img class="room-thumbnail-img img-fluid" alt="room image" src="/resources/images/sampleacco2.jpg">
+								<div class="position-relative">
+									<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/sampleacco2.jpg">
+									<div class="card-img-overlay overlay-room-thumbnail">
+										<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
+									</div>
+								</div>
 							</div>
 							<div class="col-7 d-flex flex-column justify-content-between">
 								<h5 class="fw-bold text-dark">6인 여성 도미토리</h5>
@@ -172,19 +177,19 @@
 								<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 									<div class="swiper-wrapper">
 										<div class="swiper-slide">
-											<img alt="expanded image" src="/resources/images/sampleacco1.jpg">
+											<img alt="room expanded image" src="/resources/images/sampleacco1.jpg">
 										</div>
 										<div class="swiper-slide">
-											<img alt="expanded image" src="/resources/images/sampleacco2.jpg">
+											<img alt="room expanded image" src="/resources/images/sampleacco2.jpg">
 										</div>
 										<div class="swiper-slide">
-											<img alt="expanded image" src="/resources/images/sampleacco3.jpg">
+											<img alt="room expanded image" src="/resources/images/sampleacco3.jpg">
 										</div>
 										<div class="swiper-slide">
-											<img alt="expanded image" src="/resources/images/logo.png">
+											<img alt="room expanded image" src="/resources/images/logo.png">
 										</div>
 										<div class="swiper-slide">
-											<img alt="expanded image" src="/resources/images/logo.png">
+											<img alt="room expanded image" src="/resources/images/logo.png">
 										</div>
 									</div>
 									<div class="swiper-button-next"></div>
@@ -525,7 +530,7 @@ $(function () {
 
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : 가능하면 확인 버튼 위치 등 수정
+	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
 */
 	// 화면 로드 시 날짜 및 기간 초기화
 	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
@@ -626,8 +631,8 @@ $(function () {
  * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
  */
  	// 객실 이미지 썸네일을 클릭하면 상세이미지 swiper가 출력되고, swiper의 닫기 아이콘을 클릭하면 지워진다. 
-	$(".room-thumbnail-img").click(function() {
-		$(this).parents(".card").find(".box-room-detail-img").removeClass("d-none");
+	$(".overlay-room-thumbnail").click(function() {
+		$(this).parents(".card-room-info").find(".box-room-detail-img").removeClass("d-none");
 	});
 	$(".icon-close-room-detail-img").click(function() {
 		$(this).parents(".box-room-detail-img").addClass("d-none");
