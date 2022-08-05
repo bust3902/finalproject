@@ -19,7 +19,7 @@
 				<div class="my-3">
 					<p><strong>리뷰 작성하기</strong></p>
 					<label type="title-field" class="form-label">제목</label>
-					<input type="text" class="form-control" name="title" id="title-field">
+					<input type="text" class="form-control" name="title" id="title-field" placeholder="제목을 작성해주세요.">
 				</div>
 				<div class="my-3">
 					<p><strong>카테고리</strong></p>
@@ -61,7 +61,7 @@
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
-					<textarea class="form-control" rows="13" name="content"></textarea>
+					<textarea class="form-control" rows="13" name="content" placeholder="내용을 10자 이상 작성해주세요."></textarea>
 				</div>
 				<div class="text-end">
 					<a href="#" class="btn btn-secondary px-3">취소</a>
@@ -76,7 +76,7 @@
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal" aria-label="Close"></button>
+				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
 				<p class="text-center" id="modal-message-box">미입력</p>
@@ -117,16 +117,16 @@ $(document).ready(function() {
 			return false;
 		}
 		if($("input[name=point]").is(":checked") === false) {
-			$("#modal-message-box").text("평점을 입력해주세요.");
+			$("#modal-message-box").text("평점을 선택해주세요.");
 			reviewModal.show();
 			return false;
 		}
-		if($("#textarea[name=content]").val() === "") {
-			$("#modal-message-box").text("내용을 입력해주세요");
+		if($("#textarea[name=content]").val().length <= 10) {
+			$("#modal-message-box").text("내용 10자 이상 입력해주세요");
 			reviewModal.show();
 			return false;
-		} 
-	})
+		}
+	});
 })
 </script>
 </body>
