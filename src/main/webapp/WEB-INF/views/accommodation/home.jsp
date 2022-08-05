@@ -197,15 +197,7 @@
 		</div>
 	</form>
 </div>
-<!-- footer include start -->
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시푸터</h1>
-		</div>
-	</div>
-</div>
-<!-- footer include end -->
+<%@ include file="../common/footer.jsp" %>
 
 <!-- 지도 조회 모달 -->
 <div id="modal-map" class="modal" tabindex="-1">
@@ -248,7 +240,7 @@ $(function () {
 	    	currentLong = position.coords.longitude;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
-			// TO DO : 모달 창에 현재 위치 주소 출력
+			// 화면, 모달창에 현재 위치 주소를 출력한다.
 			getLocationAddress();
 			searchAccos();
 	    });
@@ -258,7 +250,7 @@ $(function () {
 	    	currentLong = 127.0016985;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
-			// TO DO : 모달 창에 현재 위치 정보가 없습니다. 출력
+			// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
 	      	$("#modal-current-location-address").text('(정보 없음)');
     	  	$("#home-current-location-address").text('(정보 없음)');
 			searchAccos();
@@ -332,16 +324,14 @@ $(function () {
 
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : 로컬스토리지에 값을 저장해 상세 조회페이지로 이동하거나 다시 돌아와도 선택한 일정을 이용할 수 있게 하기.
-	TO DO : 가능하면 확인 버튼 위치 등 수정
+	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
 */
-	// 화면 로드 시 날짜 및 기간 초기화 : 이 값이 input태그의 val에 저장된다.
-	// 기본설정은 오늘날짜, 내일날짜이다.
-	// TO DO : 저장한 값이 있는 경우 그 값을 가져오기.
-	let startDayString = moment().format('YYYY-MM-DD');
-	let endDayString = moment().add(+1, 'd').format('YYYY-MM-DD');
+	// 화면 로드 시 날짜 및 기간 초기화
+	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
+	// * 이 변수의 값이 hidden태그, 로컬스토리지, daterangepicker 에서 관리된다.
+	let startDayString = getDateValues().start
+	let endDayString = getDateValues().end;
 	let duration = 1;
-
 	// daterangepicker 생성 설정
     $('#datepicker').daterangepicker({
     	// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
@@ -368,25 +358,49 @@ $(function () {
         "endDate": endDayString,
         "drops": "down"
     }, function (start, end, label) {
-    	// 날짜가 변경된 뒤 실행되는 함수
-    	// 시작일, 종료일, 기간의 값을 초기화한다.
+    	// 생성 시, 날짜를 변경한 뒤 적용시키면 실행되는 함수
+    	// 화면에 출력할 시작일, 종료일, 기간에 대한 문자열을 값을 변경하고, 변경된 날짜를 hidden태그, localStorage에도 저장한다.
         startDayString = start.format('YYYY-MM-DD');
         endDayString = end.format('YYYY-MM-DD');
         duration = end.diff(start,'days');
-        $(":hidden[name=startDate]").val(startDayString);
-        $(":hidden[name=endDate]").val(endDayString);
-        searchAccos();
+        setDateValues(startDayString, endDayString);
     });
 
-	// html이 출력될 때 datepicker의 input태그의 value 설정
+	// html이 출력될 때 datepicker의 input태그의 value 저장
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
-	// html이 출력될 때 폼에서 사용할 hidden태그의 value 설정
-    $(":hidden[name=startDate]").val(startDayString);
-    $(":hidden[name=endDate]").val(endDayString);
-	// 날짜 변경 시 input태그의 value 설정
+	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
+	setDateValues(startDayString, endDayString);
+	
+	// 날짜 변경 여부와 무관하게 적용을 누르면 발생하는 이벤트에 함수 등록
+	// * input태그의 value 설정 (생성 설정의 날짜변경 이벤트와 다름)
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
+    	setDateValues(startDayString, endDayString);
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
+    	// 검색 조건이 바뀌었으므로 숙소 검색 함수를 실행한다.
+        searchAccos();
     });
+    
+    // 날짜 정보를 hidden 태그와 localStorage에 저장하는 함수
+	// * hidden태그 저장 : 검색조건으로 날짜포맷의 값을 전달하기 위함
+    // * localStorage 저장 : 이 페이지를 다시 요청하거나 상세조회 페이지를 요청해도 설정한 날짜가 유지되도록 한다.
+    function setDateValues(start, end) {
+        $(":hidden[name=startDate]").val(start);
+        $(":hidden[name=endDate]").val(end);
+        localStorage.setItem("startDate", start);
+        localStorage.setItem("endDate", end);
+    }
+    
+    // 초기화할 날짜 정보를 가져오는 함수.
+    // localStorage에 값이 있으면 그 값을, 없으면 현재 날짜, 현재 날짜 + 1을 가져온다.
+    function getDateValues() {
+    	let startvalue = localStorage.getItem("startDate");
+    	let endvalue = localStorage.getItem("endDate")
+    	let selectedDate = {
+   			start : ((typeof startvalue == "undefined" || startvalue == null || startvalue == "") ? moment().format('YYYY-MM-DD') : startvalue),
+   			end : ((typeof endvalue == "undefined" || endvalue == null || endvalue == "") ? moment().add(+1, 'd').format('YYYY-MM-DD') : endvalue)
+    	};
+    	return selectedDate;
+    }
     
 /*
 	jQuery UI를 이용한 금액 슬라이더 생성하기  
@@ -431,7 +445,7 @@ $(function () {
 		accoMarkers = [];
 		
 		// ajax로 검색조건에 따른 숙소정보를 요청해 응답데이터로 받는다.
-		$.getJSON("/acco/search", queryString).done(function(accos) {
+		$.getJSON("/accommodations", queryString).done(function(accos) {
 			if (accos.length === 0) {
 				let content = `
 					<tr>
@@ -529,6 +543,9 @@ $(function () {
 		});
 	}
 	
+/*
+ * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+ */
 	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
 	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	//		TO DO: 적용 버튼의 필요 유무? 다른 거 눌러도 다 현 상태로 폼 제출되는데
@@ -561,7 +578,6 @@ $(function () {
 		// 기타
 		$(":checkbox[name=tags]").prop("checked", false);
 	});
-	
 	// 나침반 아이콘을 눌렀을 때 내 위치 정보를 다시 조회하고, 검색결과도 갱신
 	$("#icon-refresh-location").click(function(){
 		refreshLocation();

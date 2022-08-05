@@ -13,8 +13,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<!-- swiper css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
 <style type="text/css">
-	.image-wrapper {
+	.profile-image-wrapper {
 		width: 70px;
 		height: 70px;
 		overflow: hidden;
@@ -22,7 +24,7 @@
 		background: rgba(0, 0, 0, 0.5);
 	}
 	
-	.image-wrapper img {
+	.profile-image-wrapper img {
 		width: 100%;
 		position: absolute;
 		left: 0;
@@ -30,48 +32,74 @@
 		transform: translateY(-50%);
 	}
 	
-	#expanded-img {
+ 	#acco-swiper-wrapper .mySwiper2 img {
 		width: 100%;
 		height: 330px;
 		object-fit: cover;
 	}
 
-	#preview-img-wrapper div img {
-		width: 90px;
-		height: 64px;
+ 	.room-swiper-wrapper .mySwiper2 img {
+		width: 100%;
+		height: 400px;
 		object-fit: cover;
 	}
+
 </style>
 <title>서울어때</title>
 </head>
 <body>
-<div class="container my-3" style="min-width:992px; max-width:992px;">
+<%@ include file="../common/nav.jsp" %>
+<div class="container my-5" style="min-width:992px; max-width:992px;">
 	<!-- 숙소 소개 -->
 	<div class="row">
-		<!-- 숙소 이미지 : 이미지 비율, 사이즈 고정하기
-			TO DO: 이미지 개수 유동적으로 변경할지? -->
-		<div class="col me-3 mb-3">
-			<div class="row">
-				<img id="expanded-img" alt="expanded image" src="/resources/images/sampleacco1.jpg">
-			</div>
-			<div id="preview-img-wrapper" class="row justify-content-between p-3">
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco1.jpg" style="cursor: pointer;">
+		<!-- 숙소 이미지 swiper -->
+		<div class="col-6 mb-3 pe-3">
+			<div id="acco-swiper-wrapper">
+				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/sampleacco1.jpg">
+						</div>
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/sampleacco2.jpg">
+						</div>
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/sampleacco3.jpg">
+						</div>
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/logo.png">
+						</div>
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/logo.png">
+						</div>
+					</div>
+					<div class="swiper-button-next"></div>
+					<div class="swiper-button-prev"></div>
 				</div>
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco2.jpg" style="cursor: pointer;">
-				</div>
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco3.jpg" style="cursor: pointer;">
-				</div>
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+				<div class="swiper mySwiper">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco1.jpg" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco2.jpg" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco3.jpg" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
-		<div class="col">
+		<div class="col-6">
 			<h5 class="fw-bold text-dark">
 				숙소명 <a href=""><i class="bi bi-heart float-end"></i></a>
 			</h5>
@@ -91,7 +119,6 @@
 	<!-- 상세 정보 탭 -->
 	<div class="row">
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
-			<!-- 스크립트에서 active 여부에 따라 버튼 스타일 변경 구현함-->
 			<li class="nav-item" role="presentation">
 				<button class="nav-link active text-secondary fw-bold" id="room-tab" data-bs-toggle="tab"
 					data-bs-target="#room-tab-pane" type="button" role="tab"
@@ -112,18 +139,22 @@
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
 				<div class="py-3">
-					<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
+					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
 					<input type="text" id="datepicker" class="form-control w-50" value="" />
 					<input type="hidden" name="startDate" value="">
 					<input type="hidden" name="endDate" value="">
 				</div>
 				<div class="list-wraper mx-0">
 					<!-- TO DO: 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
-					<div class="card mb-3">
+					<div class="card-room-info card mb-3">
 						<div class="card-body row">
 							<div class="col-5">
-								<!-- TO DO : 이미지 클릭 시 상세 이미지 더 조회 가능하게 할지? (DB관련 수정 필요함) -->
-								<img class="img-fluid" alt="room image" src="/resources/images/sampleacco2.jpg">
+								<div class="position-relative">
+									<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/sampleacco2.jpg">
+									<div class="card-img-overlay overlay-room-thumbnail">
+										<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
+									</div>
+								</div>
 							</div>
 							<div class="col-7 d-flex flex-column justify-content-between">
 								<h5 class="fw-bold text-dark">6인 여성 도미토리</h5>
@@ -135,6 +166,35 @@
 									<i class="bi bi-chevron-right float-end"></i>
 								</a>
 								<button type="button" class="btn btn-secondary w-100">예약</button>
+							</div>
+						</div>
+						<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
+							<span>
+								<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
+							</span>
+							<!-- 객실 이미지 wrapper -->
+							<div class="room-swiper-wrapper w-75 mx-auto">
+								<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide">
+											<img alt="room expanded image" src="/resources/images/sampleacco1.jpg">
+										</div>
+										<div class="swiper-slide">
+											<img alt="room expanded image" src="/resources/images/sampleacco2.jpg">
+										</div>
+										<div class="swiper-slide">
+											<img alt="room expanded image" src="/resources/images/sampleacco3.jpg">
+										</div>
+										<div class="swiper-slide">
+											<img alt="room expanded image" src="/resources/images/logo.png">
+										</div>
+										<div class="swiper-slide">
+											<img alt="room expanded image" src="/resources/images/logo.png">
+										</div>
+									</div>
+									<div class="swiper-button-next"></div>
+									<div class="swiper-button-prev"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -151,7 +211,7 @@
 						</h2>
 						<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3 small">
-								<!-- TO DO : HTML컨텐츠 그대로 DB에서 관리할지? -->
+								<!-- DB에 저장되어 있는 HTML컨텐츠 그대로 출력하기 -->
 								<strong>오시는 길</strong>
 								<ul>
 									<li>[홍대입구역에서 오시는 방법]</li>
@@ -285,7 +345,7 @@
 				<!-- TO DO : 리뷰 리스트 출력, 페이징 처리 (제목, 작성자, 내용, 좋아요 수, 예약정보, n일전(작성일 이용해서 표시), 사진) 
 							추후 여유가 되면 리뷰 태그 기능 추가 ? -->
 				<div class="row p-5 border-bottom">
-					<div class="col-2 image-wrapper rounded-circle">
+					<div class="col-2 profile-image-wrapper rounded-circle">
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
@@ -315,7 +375,7 @@
 					</div>
 				</div>
 				<div class="row p-5 border-bottom">
-					<div class="col-2 image-wrapper rounded-circle">
+					<div class="col-2 profile-image-wrapper rounded-circle">
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
@@ -345,7 +405,7 @@
 					</div>
 				</div>
 				<div class="row p-5 border-bottom">
-					<div class="col-2 image-wrapper rounded-circle">
+					<div class="col-2 profile-image-wrapper rounded-circle">
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
@@ -378,6 +438,7 @@
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 
 <!-- 객실 정보 모달 -->
 <div class="modal fade" id="link-room-info" tabindex="-1" aria-labelledby="roomInfoModalLabel" aria-hidden="true">
@@ -421,16 +482,34 @@
 		</div>
 	</div>
 </div>
+<!-- kakao map js -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
+<!-- swiper js -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
 $(function () {
-	
+
 /*
-	이미지 선택 시 해당 이미지를 expanded Image 로 변경하는 이벤트핸들러 등록
-*/
-	let $previewImages = $('#preview-img-wrapper img');
-	$previewImages.click(function() {
-		$('#expanded-img').attr('src', $(this).attr('src'));
+ * 숙소 이미지 swiper 생성
+ * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
+ */
+	let swiper = new Swiper(".mySwiper", {
+		loop : true,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+	});
+	let swiper2 = new Swiper(".mySwiper2", {
+		loop : true,
+		spaceBetween : 10,
+		navigation : {
+			nextEl : ".swiper-button-next",
+			prevEl : ".swiper-button-prev",
+		},
+		thumbs : {
+			swiper : swiper,
+		},
 	});
 
 /*
@@ -451,58 +530,83 @@ $(function () {
 
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-		TO DO : input태그의 value가 '날짜 ~ 날짜 . 숙박일수' 이므로 date로 전달해줄 값은 따로 저장해두어야 한다.
-		TO DO : 로컬스토리지에 값을 저장해 화면 리로딩 또는 상세 조회페이지나, 마이페이지로 이동해도 선택한 일정을 이용할 수 있게 하기.
-		TO DO : 가능하면 확인 버튼 위치 등 수정
+	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
 */
-	// 화면 로드 시 날짜 및 기간 초기화 : 이 값이 input태그의 val에 저장된다.
-	// 기본설정은 오늘날짜, 내일날짜이다.
-	// TO DO : 저장한 값이 있는 경우 그 값을 가져오기.
-	let startDayString = moment().format('YYYY-MM-DD');
-	let endDayString = moment().add(+1, 'd').format('YYYY-MM-DD');
+	// 화면 로드 시 날짜 및 기간 초기화
+	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
+	// * 이 변수의 값이 hidden태그, 로컬스토리지, daterangepicker 에서 관리된다.
+	let startDayString = getDateValues().start
+	let endDayString = getDateValues().end;
 	let duration = 1;
 	
 	// daterangepicker 생성 설정
-	$('#datepicker').daterangepicker({
-		// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
-		"autoUpdateInput": false,
-		// 최대 7박까지 예약 가능
+    $('#datepicker').daterangepicker({
+    	// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
+    	"autoUpdateInput": false,
+    	// 최대 7박까지 예약 가능
 		"maxSpan": {
 		    "days": 7
 		},
-	    "locale": {
-	        "format": "YYYY-MM-DD",
-	        "separator": " ~ ",
-	        "applyLabel": "확인",
-	        "cancelLabel": "취소",
-	        "fromLabel": "From",
-	        "toLabel": "To",
-	        "customRangeLabel": "Custom",
-	        "weekLabel": "W",
-	        "daysOfWeek": ["월", "화", "수", "목", "금", "토", "일"],
-	        "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-	        "firstDay": 1
-	    },
-	    "startDate": startDayString,
-	    "endDate": endDayString,
-	    "drops": "down"
-	}, function (start, end, label) {
-		// 날짜가 변경된 뒤 실행되는 함수
-		// 시작일, 종료일, 기간의 값을 초기화한다.
-	    startDayString = start.format('YYYY-MM-DD');
-	    endDayString = end.format('YYYY-MM-DD');
-	    duration = end.diff(start,'days');
-	    $(":hidden[name=startDate]").val(startDayString);
-	    $(":hidden[name=endDate]").val(endDayString);
-	});
-	
-	// html이 출력될 때 input태그의 value 설정
+        "locale": {
+            "format": "YYYY-MM-DD",
+            "separator": " ~ ",
+            "applyLabel": "확인",
+            "cancelLabel": "취소",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "weekLabel": "W",
+            "daysOfWeek": ["월", "화", "수", "목", "금", "토", "일"],
+            "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            "firstDay": 1
+        },
+        "minDate": moment().format('YYYY-MM-DD'), // 오늘 이전의 날짜는 조회 불가능하다.
+        "startDate": startDayString,
+        "endDate": endDayString,
+        "drops": "down"
+    }, function (start, end, label) {
+    	// 날짜를 변경한 뒤 적용시키면 실행되는 함수
+    	// 화면에 출력할 시작일, 종료일, 기간에 대한 문자열을 값을 변경하고, 변경된 날짜를 hidden태그, localStorage에도 저장한다.
+        startDayString = start.format('YYYY-MM-DD');
+        endDayString = end.format('YYYY-MM-DD');
+        duration = end.diff(start,'days');
+        setDateValues(startDayString, endDayString);
+        // TO DO : 객실 예약가능 여부 갱신하기
+    });
+
+	// html이 출력될 때 datepicker의 input태그의 value 저장
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
-	// 날짜 변경 시 input태그의 value 설정
-	$('#datepicker').on('apply.daterangepicker', function(ev, picker) {
-		$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
-	});
+	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
+	setDateValues(startDayString, endDayString);
 	
+	// 날짜 변경 여부와 무관하게 적용을 누르면 발생하는 이벤트에 함수 등록
+	// * input태그의 value 설정 (생성 설정의 날짜변경 이벤트와 다름)
+    $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
+    	setDateValues(startDayString, endDayString);
+    	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
+    });
+    
+    // 날짜 정보를 hidden 태그와 localStorage에 저장하는 함수
+	// * hidden태그 저장 : 검색조건으로 날짜포맷의 값을 전달하기 위함
+    // * localStorage 저장 : 이 페이지를 다시 요청하거나 상세조회 페이지를 요청해도 설정한 날짜가 유지되도록 한다.
+    function setDateValues(start, end) {
+        $(":hidden[name=startDate]").val(start);
+        $(":hidden[name=endDate]").val(end);
+        localStorage.setItem("startDate", start);
+        localStorage.setItem("endDate", end);
+    }
+    
+    // 초기화할 날짜 정보를 가져오는 함수.
+    // localStorage에 값이 있으면 그 값을, 없으면 현재 날짜, 현재 날짜 + 1을 가져온다.
+    function getDateValues() {
+    	let startvalue = localStorage.getItem("startDate");
+    	let endvalue = localStorage.getItem("endDate")
+    	let selectedDate = {
+   			start : ((typeof startvalue == "undefined" || startvalue == null || startvalue == "") ? moment().format('YYYY-MM-DD') : startvalue),
+   			end : ((typeof endvalue == "undefined" || endvalue == null || endvalue == "") ? moment().add(+1, 'd').format('YYYY-MM-DD') : endvalue)
+    	};
+    	return selectedDate;
+    }
 	
 /*
  * 검색 결과 카카오 openAPI로 지도에 표현하기
@@ -521,6 +625,17 @@ $(function () {
 	$("#flush-collapseOne").on('shown.bs.collapse', function () {
 		map.relayout(); 
 		map.setCenter(mapcenter);
+	});
+	
+/*
+ * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+ */
+ 	// 객실 이미지 썸네일을 클릭하면 상세이미지 swiper가 출력되고, swiper의 닫기 아이콘을 클릭하면 지워진다. 
+	$(".overlay-room-thumbnail").click(function() {
+		$(this).parents(".card-room-info").find(".box-room-detail-img").removeClass("d-none");
+	});
+	$(".icon-close-room-detail-img").click(function() {
+		$(this).parents(".box-room-detail-img").addClass("d-none");
 	});
 })
 </script>

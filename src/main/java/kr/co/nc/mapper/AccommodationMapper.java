@@ -31,6 +31,14 @@ public interface AccommodationMapper {
 	// 검색조건에 따른 숙소정보 조회
 	List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria);
 	
-	// 숙소번호에 따른 숙소정보 상세 조회, 모든 객실정보 조회, 객실번호에 따른 객실상세정보 조회
+	// 숙소번호에 따른 숙소정보 상세 조회
+	Accommodation getAccommodationdDetailById(int accoId);
+	// 숙소번호에 따른 공용시설 조회
+	List<CommonFacility> getCommonFacilitiesByAccoId(int accoId);
+	// 숙소번호에 따른 태그 조회
+	List<String> getAccoTagsByAccoId(int accoId);
+	// 숙소번호에 따른 모든 객실정보 조회 (+ 예약 가능 여부)
+	
+	// 객실번호에 따른 객실상세정보 조회
 	
 }
