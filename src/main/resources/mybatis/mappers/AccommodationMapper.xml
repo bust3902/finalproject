@@ -59,6 +59,16 @@
 		<result column="minPrice" property="minPrice"/>
 	</resultMap>
 	
+	<resultMap type="Accommodation" id="AccoDetailResultMap" extends="AccoResultMap">
+		<result column="acco_detail_description" property="detailDescription"/>
+		<result column="acco_like_count" property="likeCount"/>
+		<result column="acco_created_date" property="createdDate"/>
+		<result column="acco_updated_date" property="updatedDate"/>
+		<result column="acco_deleted" property="deleted"/>
+		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
+		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
+	</resultMap>
+	
 	<!-- List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria); -->
 	<!-- 
 		1. 서브쿼리에서 조건을 만족하는 객실을 가지는 숙소아이디와, 그 숙소의 조건을 만족하는 객실 중 가장 저렴한 금액을 조회한다.
@@ -138,4 +148,27 @@
 			</when>
 		</choose>
 	</select>
+	
+	<!-- Accommodation getAccommodationdDetailById(int accoId); -->
+	<select id="getAccommodationdDetailById" parameterType="int" resultMap="AccoDetailResultMap">
+		select *
+		from accommodations
+		where acco_id = #{value}
+	</select>
+	
+	<!-- List<CommonFacility> getCommonFacilitiesByAccoId(int accoId); -->
+	<select id="getCommonFacilitiesByAccoId" parameterType="int" resultType="CommonFacility">
+		select c.co_facility_id as id, c.co_facility_name as name, c.co_facility_icon_name as iconName
+		from acco_common_facilities a, common_facilities c
+		where a.co_facility_id = c.co_facility_id
+		and a.acco_id = #{value}
+	</select>
+	
+	<!-- List<String> getAccoTagsByAccoId(int accoId); -->
+	<select id="getAccoTagsByAccoId" parameterType="int" resultType="string">
+		select acco_tag
+		from acco_tags
+		where acco_id = #{value}
+	</select>
+	
 </mapper>

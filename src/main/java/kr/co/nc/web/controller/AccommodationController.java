@@ -55,6 +55,7 @@ public class AccommodationController {
 	public String detail(@RequestParam("id") int accoId) {
 		// 해당 id를 가진 숙소 상세정보를 전달한다.
 		// 숙소의 객실 정보, 리뷰 정보는 restController에서 제공한다.
+		System.out.println(accommodationService.getAccommodationDetailById(accoId));
 		return "/accommodation/detail";
 	}
 	
