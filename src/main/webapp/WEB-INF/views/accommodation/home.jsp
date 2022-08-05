@@ -358,14 +358,12 @@ $(function () {
         "endDate": endDayString,
         "drops": "down"
     }, function (start, end, label) {
-    	// 날짜를 변경한 뒤 적용시키면 실행되는 함수
+    	// 생성 시, 날짜를 변경한 뒤 적용시키면 실행되는 함수
     	// 화면에 출력할 시작일, 종료일, 기간에 대한 문자열을 값을 변경하고, 변경된 날짜를 hidden태그, localStorage에도 저장한다.
         startDayString = start.format('YYYY-MM-DD');
         endDayString = end.format('YYYY-MM-DD');
         duration = end.diff(start,'days');
         setDateValues(startDayString, endDayString);
-    	// 검색 조건이 바뀌었으므로 숙소 검색 함수를 실행한다.
-        searchAccos();
     });
 
 	// html이 출력될 때 datepicker의 input태그의 value 저장
@@ -378,6 +376,8 @@ $(function () {
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	setDateValues(startDayString, endDayString);
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
+    	// 검색 조건이 바뀌었으므로 숙소 검색 함수를 실행한다.
+        searchAccos();
     });
     
     // 날짜 정보를 hidden 태그와 localStorage에 저장하는 함수
