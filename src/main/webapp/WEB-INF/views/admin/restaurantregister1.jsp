@@ -18,20 +18,23 @@
 </div>
 <div class="container mt-5" style="min-width:992px; max-width:992px;">
 	<div class="row mb-3 px-3">
-		<div class="col-3">
-			<!-- 사이드바 -->
-			<aside>
-				<jsp:include page="../common/adminsidebar.jsp" />
-			</aside>
+	
+		<!-- 사이드바 -->
+		<div class="col-3 border rounded">
+			<div class="mt-3">
+				<aside>
+					<jsp:include page="../common/adminsidebar.jsp" />
+				</aside>
+			</div>
 		</div>
-		<div class="col-9 border bg-white">
+		
+		<div class="col-9 bg-white">
 			<form id="form-restaurant" class="col p-3" method="post" action="restaurant2" enctype="multipart/form-data">
 			
 				<!-- DB에서 지역 꺼내와서 c:forEach로 출력 -->
 				<div class="mb-3">
 					<label class="form-label">지역</label>
 					<div>
-					<c:forEach var="" items="">
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="checkbox" name="cityId" value="서울">
 							<label class="form-check-label" >지역</label>
@@ -44,7 +47,6 @@
 							<input class="form-check-input" type="checkbox" name="cityId" value="서울">
 							<label class="form-check-label" >지역</label>
 						</div>					
-					</c:forEach>
 					</div>
 				</div>
 				
@@ -52,7 +54,6 @@
 				<div class="mb-5">
 					<label class="form-label">카테고리</label>
 					<div>
-					<c:forEach var="" items="">
 						<div class="form-check form-check-inline">
 							<input class="form-check-input" type="checkbox" name="RestaurantCategory" value="categories">
 							<label class="form-check-label" >카테고리</label>
@@ -65,7 +66,6 @@
 							<input class="form-check-input" type="checkbox" name="RestaurantCategory" value="categories">
 							<label class="form-check-label" >카테고리</label>
 						</div>					
-					</c:forEach>
 					</div>
 				</div>
 				
