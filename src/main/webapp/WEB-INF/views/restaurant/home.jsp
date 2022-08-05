@@ -67,39 +67,55 @@
 	
 	<div class="row my-5">
 		<h4>주변 한식집 추천</h4>
-		<div class="col-3 mb-3">
-			<div class="card mb-3" style="max-width: 20rem;">
+		<div class="col-3">
+			<div class="card mb-3 border-0" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>명륜 손칼국수</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>명륜 손칼국수</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">587m</p>
 			    <p class="card-text m-0">칼국수, 수육</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>명륜 손칼국수</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>명륜 손칼국수</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">587m</p>
 			    <p class="card-text m-0">칼국수, 수육</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>명륜 손칼국수</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>명륜 손칼국수</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">587m</p>
 			    <p class="card-text m-0">칼국수, 수육</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>명륜 손칼국수</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>명륜 손칼국수</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">587m</p>
 			    <p class="card-text m-0">칼국수, 수육</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
@@ -111,36 +127,52 @@
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>기꾸스시</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>기꾸스시</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">772m</p>
 			    <p class="card-text m-0">초밥, 스시</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>기꾸스시</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>기꾸스시</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">772m</p>
 			    <p class="card-text m-0">초밥, 스시</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>기꾸스시</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>기꾸스시</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">772m</p>
 			    <p class="card-text m-0">초밥, 스시</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
 		<div class="col-3 mb-3">
 			<div class="card mb-3" style="max-width: 20rem;">
 			  <div class="card-body">
-			    <p class="card-title"><strong>기꾸스시</strong></p>
+			  <!-- <img src="/resources/images/"> -->
+			    <p class="card-title"><strong>기꾸스시</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
 			    <p class="card-text m-0">772m</p>
 			    <p class="card-text m-0">초밥, 스시</p>
+			    <div class="row mt-3">
+			    	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+			  	</div>
 			  </div>
 			</div>
 		</div>
@@ -209,29 +241,37 @@
 		<div class="mb-3 col-6">
 			<div class="card mb-3">
 			  <div class="card-body">
-			    <p class="card-title"><strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주</p>
-			    <p class="card-text m-0">
-			    <i class="bi-star-fill"></i>
-			    <i class="bi-star-fill"></i>
-			    <i class="bi-star-fill"></i>
-			    <i class="bi-star"></i>
-			    <i class="bi-star"></i>
-			    방금전
-			    </p>
-			    <p class="card-text m-0">카페가 예쁘고 좋은데 생각보다 작음 쿠키 하나씩 다 샀더니 원하는쿠키 하나 더 주셨음 !!^^
-			    		부드러운 쿠키(티라미수, 레몬, 레드벨벳) 같은건 너무 달아서 내취향
-			    		아닌듯..... 말차랑 초코칩 대박맛있음 초코칩은 진짜 또먹고싶음 .. 초코마니박혀있어서 좋았음
-			    </p>
-			    <div class="mt-3">
-			   		<span class="badge rounded-pill bg-light">데이트</span>
-			   		<span class="badge rounded-pill bg-light">간식</span>
-			   		<span class="badge rounded-pill bg-light">숨은맛집</span>
-			   		<span class="badge rounded-pill bg-light">조용한</span>
-			   		<span class="badge rounded-pill bg-light">예쁜</span>
-			    </div>
+				  <div>
+					  <p class="card-text m-0">냥냥(89곳 평가,199개 공감받음)</p>
+					    <p class="card-text m-0">
+					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주
+					    </p>
+					    <p class="card-text m-0">
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star"></i>
+					    <i class="bi-star"></i>
+					    방금전
+					    </p>
+				  </div>
+			  
+				    <p></p>
+				    <p class="card-text">카페가 예쁘고 좋은데 생각보다 작음 쿠키 하나씩 다 샀더니 원하는쿠키 하나 더 주셨음 !!^^
+				    		부드러운 쿠키(티라미수, 레몬, 레드벨벳) 같은건 너무 달아서 내취향
+				    		아닌듯..... 말차랑 초코칩 대박맛있음 초코칩은 진짜 또먹고싶음 .. 초코마니박혀있어서 좋았음
+				    </p>
+			    
+				    <div class="mt-3">
+				   		<span class="badge rounded-pill bg-light">데이트</span>
+				   		<span class="badge rounded-pill bg-light">간식</span>
+				   		<span class="badge rounded-pill bg-light">숨은맛집</span>
+				   		<span class="badge rounded-pill bg-light">조용한</span>
+				   		<span class="badge rounded-pill bg-light">예쁜</span>
+				    </div>
 			  </div>
 			  <div class="mb-3 mt-3">
-			  	<button type="button" class="btn btn-outline-secondary">공감(0)</button>
+			  	<button type="button" class="btn btn-outline-secondary">공감(1)</button>
 			  	<button type="button" class="btn btn-outline-secondary float-end">나도평가하기</button>
 			  </div>
 			</div>
@@ -239,27 +279,76 @@
 		<div class="mb-3 col-6">
 			<div class="card mb-3">
 			  <div class="card-body">
-			    <p class="card-title"><strong>리춘시장</strong></p>
-			    <p class="card-text m-0">912m</p>
-			    <p class="card-text m-0">중식포차, 중화요리</p>
+				  <div>
+					  <p class="card-text m-0">냥냥(89곳 평가,199개 공감받음)</p>
+					    <p class="card-text m-0">
+					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주
+					    </p>
+					    <p class="card-text m-0">
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star"></i>
+					    <i class="bi-star"></i>
+					    방금전
+					    </p>
+				  </div>
+			  
+				    <p></p>
+				    <p class="card-text">카페가 예쁘고 좋은데 생각보다 작음 쿠키 하나씩 다 샀더니 원하는쿠키 하나 더 주셨음 !!^^
+				    		부드러운 쿠키(티라미수, 레몬, 레드벨벳) 같은건 너무 달아서 내취향
+				    		아닌듯..... 말차랑 초코칩 대박맛있음 초코칩은 진짜 또먹고싶음 .. 초코마니박혀있어서 좋았음
+				    </p>
+			    
+				    <div class="mt-3">
+				   		<span class="badge rounded-pill bg-light">데이트</span>
+				   		<span class="badge rounded-pill bg-light">간식</span>
+				   		<span class="badge rounded-pill bg-light">숨은맛집</span>
+				   		<span class="badge rounded-pill bg-light">조용한</span>
+				   		<span class="badge rounded-pill bg-light">예쁜</span>
+				    </div>
+			  </div>
+			  <div class="mb-3 mt-3">
+			  	<button type="button" class="btn btn-outline-secondary">공감(1)</button>
+			  	<button type="button" class="btn btn-outline-secondary float-end">나도평가하기</button>
 			  </div>
 			</div>
 		</div>
 		<div class="mb-3 col-6">
 			<div class="card mb-3">
 			  <div class="card-body">
-			    <p class="card-title"><strong>리춘시장</strong></p>
-			    <p class="card-text m-0">912m</p>
-			    <p class="card-text m-0">중식포차, 중화요리</p>
+				  <div>
+					  <p class="card-text m-0">냥냥(89곳 평가,199개 공감받음)</p>
+					    <p class="card-text m-0">
+					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주
+					    </p>
+					    <p class="card-text m-0">
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star-fill"></i>
+					    <i class="bi-star"></i>
+					    <i class="bi-star"></i>
+					    방금전
+					    </p>
+				  </div>
+			  
+				    <p></p>
+				    <p class="card-text">카페가 예쁘고 좋은데 생각보다 작음 쿠키 하나씩 다 샀더니 원하는쿠키 하나 더 주셨음 !!^^
+				    		부드러운 쿠키(티라미수, 레몬, 레드벨벳) 같은건 너무 달아서 내취향
+				    		아닌듯..... 말차랑 초코칩 대박맛있음 초코칩은 진짜 또먹고싶음 .. 초코마니박혀있어서 좋았음
+				    </p>
+			    
+				    <div class="mt-3">
+				   		<span class="badge rounded-pill bg-light">데이트</span>
+				   		<span class="badge rounded-pill bg-light">간식</span>
+				   		<span class="badge rounded-pill bg-light">숨은맛집</span>
+				   		<span class="badge rounded-pill bg-light">조용한</span>
+				   		<span class="badge rounded-pill bg-light">예쁜</span>
+				    </div>
 			  </div>
-			</div>
-		</div>
-		<div class="mb-3 col-6">
-			<div class="card mb-3">
-			  <div class="card-body">
-			    <p class="card-title"><strong>리춘시장</strong></p>
-			    <p class="card-text m-0">912m</p>
-			    <p class="card-text m-0">중식포차, 중화요리</p>
+			  <div class="mb-3 mt-3">
+			  	<button type="button" class="btn btn-outline-secondary">공감(1)</button>
+			  	<button type="button" class="btn btn-outline-secondary float-end">나도평가하기</button>
 			  </div>
 			</div>
 		</div>
