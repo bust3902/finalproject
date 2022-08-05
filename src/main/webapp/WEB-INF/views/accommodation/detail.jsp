@@ -119,7 +119,6 @@
 	<!-- 상세 정보 탭 -->
 	<div class="row">
 		<ul class="nav nav-tabs" id="myTab" role="tablist">
-			<!-- 스크립트에서 active 여부에 따라 버튼 스타일 변경 구현함-->
 			<li class="nav-item" role="presentation">
 				<button class="nav-link active text-secondary fw-bold" id="room-tab" data-bs-toggle="tab"
 					data-bs-target="#room-tab-pane" type="button" role="tab"
@@ -140,7 +139,7 @@
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
 				<div class="py-3">
-					<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
+					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
 					<input type="text" id="datepicker" class="form-control w-50" value="" />
 					<input type="hidden" name="startDate" value="">
 					<input type="hidden" name="endDate" value="">
@@ -207,7 +206,7 @@
 						</h2>
 						<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3 small">
-								<!-- TO DO : HTML컨텐츠 그대로 DB에서 관리할지? -->
+								<!-- DB에 저장되어 있는 HTML컨텐츠 그대로 출력하기 -->
 								<strong>오시는 길</strong>
 								<ul>
 									<li>[홍대입구역에서 오시는 방법]</li>
@@ -526,58 +525,83 @@ $(function () {
 
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-		TO DO : input태그의 value가 '날짜 ~ 날짜 . 숙박일수' 이므로 date로 전달해줄 값은 따로 저장해두어야 한다.
-		TO DO : 로컬스토리지에 값을 저장해 화면 리로딩 또는 상세 조회페이지나, 마이페이지로 이동해도 선택한 일정을 이용할 수 있게 하기.
-		TO DO : 가능하면 확인 버튼 위치 등 수정
+	TO DO : 가능하면 확인 버튼 위치 등 수정
 */
-	// 화면 로드 시 날짜 및 기간 초기화 : 이 값이 input태그의 val에 저장된다.
-	// 기본설정은 오늘날짜, 내일날짜이다.
-	// TO DO : 저장한 값이 있는 경우 그 값을 가져오기.
-	let startDayString = moment().format('YYYY-MM-DD');
-	let endDayString = moment().add(+1, 'd').format('YYYY-MM-DD');
+	// 화면 로드 시 날짜 및 기간 초기화
+	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
+	// * 이 변수의 값이 hidden태그, 로컬스토리지, daterangepicker 에서 관리된다.
+	let startDayString = getDateValues().start
+	let endDayString = getDateValues().end;
 	let duration = 1;
 	
 	// daterangepicker 생성 설정
-	$('#datepicker').daterangepicker({
-		// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
-		"autoUpdateInput": false,
-		// 최대 7박까지 예약 가능
+    $('#datepicker').daterangepicker({
+    	// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
+    	"autoUpdateInput": false,
+    	// 최대 7박까지 예약 가능
 		"maxSpan": {
 		    "days": 7
 		},
-	    "locale": {
-	        "format": "YYYY-MM-DD",
-	        "separator": " ~ ",
-	        "applyLabel": "확인",
-	        "cancelLabel": "취소",
-	        "fromLabel": "From",
-	        "toLabel": "To",
-	        "customRangeLabel": "Custom",
-	        "weekLabel": "W",
-	        "daysOfWeek": ["월", "화", "수", "목", "금", "토", "일"],
-	        "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
-	        "firstDay": 1
-	    },
-	    "startDate": startDayString,
-	    "endDate": endDayString,
-	    "drops": "down"
-	}, function (start, end, label) {
-		// 날짜가 변경된 뒤 실행되는 함수
-		// 시작일, 종료일, 기간의 값을 초기화한다.
-	    startDayString = start.format('YYYY-MM-DD');
-	    endDayString = end.format('YYYY-MM-DD');
-	    duration = end.diff(start,'days');
-	    $(":hidden[name=startDate]").val(startDayString);
-	    $(":hidden[name=endDate]").val(endDayString);
-	});
-	
-	// html이 출력될 때 input태그의 value 설정
+        "locale": {
+            "format": "YYYY-MM-DD",
+            "separator": " ~ ",
+            "applyLabel": "확인",
+            "cancelLabel": "취소",
+            "fromLabel": "From",
+            "toLabel": "To",
+            "customRangeLabel": "Custom",
+            "weekLabel": "W",
+            "daysOfWeek": ["월", "화", "수", "목", "금", "토", "일"],
+            "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
+            "firstDay": 1
+        },
+        "minDate": moment().format('YYYY-MM-DD'), // 오늘 이전의 날짜는 조회 불가능하다.
+        "startDate": startDayString,
+        "endDate": endDayString,
+        "drops": "down"
+    }, function (start, end, label) {
+    	// 날짜를 변경한 뒤 적용시키면 실행되는 함수
+    	// 화면에 출력할 시작일, 종료일, 기간에 대한 문자열을 값을 변경하고, 변경된 날짜를 hidden태그, localStorage에도 저장한다.
+        startDayString = start.format('YYYY-MM-DD');
+        endDayString = end.format('YYYY-MM-DD');
+        duration = end.diff(start,'days');
+        setDateValues(startDayString, endDayString);
+        // TO DO : 객실 예약가능 여부 갱신하기
+    });
+
+	// html이 출력될 때 datepicker의 input태그의 value 저장
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
-	// 날짜 변경 시 input태그의 value 설정
-	$('#datepicker').on('apply.daterangepicker', function(ev, picker) {
-		$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
-	});
+	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
+	setDateValues(startDayString, endDayString);
 	
+	// 날짜 변경 여부와 무관하게 적용을 누르면 발생하는 이벤트에 함수 등록
+	// * input태그의 value 설정 (생성 설정의 날짜변경 이벤트와 다름)
+    $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
+    	setDateValues(startDayString, endDayString);
+    	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
+    });
+    
+    // 날짜 정보를 hidden 태그와 localStorage에 저장하는 함수
+	// * hidden태그 저장 : 검색조건으로 날짜포맷의 값을 전달하기 위함
+    // * localStorage 저장 : 이 페이지를 다시 요청하거나 상세조회 페이지를 요청해도 설정한 날짜가 유지되도록 한다.
+    function setDateValues(start, end) {
+        $(":hidden[name=startDate]").val(start);
+        $(":hidden[name=endDate]").val(end);
+        localStorage.setItem("startDate", start);
+        localStorage.setItem("endDate", end);
+    }
+    
+    // 초기화할 날짜 정보를 가져오는 함수.
+    // localStorage에 값이 있으면 그 값을, 없으면 현재 날짜, 현재 날짜 + 1을 가져온다.
+    function getDateValues() {
+    	let startvalue = localStorage.getItem("startDate");
+    	let endvalue = localStorage.getItem("endDate")
+    	let selectedDate = {
+   			start : ((typeof startvalue == "undefined" || startvalue == null || startvalue == "") ? moment().format('YYYY-MM-DD') : startvalue),
+   			end : ((typeof endvalue == "undefined" || endvalue == null || endvalue == "") ? moment().add(+1, 'd').format('YYYY-MM-DD') : endvalue)
+    	};
+    	return selectedDate;
+    }
 	
 /*
  * 검색 결과 카카오 openAPI로 지도에 표현하기
