@@ -324,7 +324,7 @@ $(function () {
 
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : 가능하면 확인 버튼 위치 등 수정
+	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
 */
 	// 화면 로드 시 날짜 및 기간 초기화
 	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
@@ -445,7 +445,7 @@ $(function () {
 		accoMarkers = [];
 		
 		// ajax로 검색조건에 따른 숙소정보를 요청해 응답데이터로 받는다.
-		$.getJSON("/acco/search", queryString).done(function(accos) {
+		$.getJSON("/accommodations", queryString).done(function(accos) {
 			if (accos.length === 0) {
 				let content = `
 					<tr>
