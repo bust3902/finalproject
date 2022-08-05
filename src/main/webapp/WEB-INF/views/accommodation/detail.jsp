@@ -13,8 +13,10 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<!-- swiper css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
 <style type="text/css">
-	.image-wrapper {
+	.profile-image-wrapper {
 		width: 70px;
 		height: 70px;
 		overflow: hidden;
@@ -22,7 +24,7 @@
 		background: rgba(0, 0, 0, 0.5);
 	}
 	
-	.image-wrapper img {
+	.profile-image-wrapper img {
 		width: 100%;
 		position: absolute;
 		left: 0;
@@ -30,48 +32,74 @@
 		transform: translateY(-50%);
 	}
 	
-	#expanded-img {
+ 	#acco-swiper-wrapper .mySwiper2 img {
 		width: 100%;
 		height: 330px;
 		object-fit: cover;
 	}
 
-	#preview-img-wrapper div img {
-		width: 90px;
-		height: 64px;
+ 	.room-swiper-wrapper .mySwiper2 img {
+		width: 100%;
+		height: 400px;
 		object-fit: cover;
 	}
+
 </style>
 <title>서울어때</title>
 </head>
 <body>
-<div class="container my-3" style="min-width:992px; max-width:992px;">
+<%@ include file="../common/nav.jsp" %>
+<div class="container my-5" style="min-width:992px; max-width:992px;">
 	<!-- 숙소 소개 -->
 	<div class="row">
-		<!-- 숙소 이미지 : 이미지 비율, 사이즈 고정하기
-			TO DO: 이미지 개수 유동적으로 변경할지? -->
-		<div class="col me-3 mb-3">
-			<div class="row">
-				<img id="expanded-img" alt="expanded image" src="/resources/images/sampleacco1.jpg">
-			</div>
-			<div id="preview-img-wrapper" class="row justify-content-between p-3">
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco1.jpg" style="cursor: pointer;">
+		<!-- 숙소 이미지 swiper -->
+		<div class="col-6 mb-3 pe-3">
+			<div id="acco-swiper-wrapper">
+				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<img alt="expanded image" src="/resources/images/sampleacco1.jpg">
+						</div>
+						<div class="swiper-slide">
+							<img alt="expanded image" src="/resources/images/sampleacco2.jpg">
+						</div>
+						<div class="swiper-slide">
+							<img alt="expanded image" src="/resources/images/sampleacco3.jpg">
+						</div>
+						<div class="swiper-slide">
+							<img alt="expanded image" src="/resources/images/logo.png">
+						</div>
+						<div class="swiper-slide">
+							<img alt="expanded image" src="/resources/images/logo.png">
+						</div>
+					</div>
+					<div class="swiper-button-next"></div>
+					<div class="swiper-button-prev"></div>
 				</div>
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco2.jpg" style="cursor: pointer;">
-				</div>
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco3.jpg" style="cursor: pointer;">
-				</div>
-				<div class="col-3">
-					<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+				<div class="swiper mySwiper">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco1.jpg" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco2.jpg" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco3.jpg" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+						</div>
+						<div class="swiper-slide">
+							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
-		<div class="col">
+		<div class="col-6">
 			<h5 class="fw-bold text-dark">
 				숙소명 <a href=""><i class="bi bi-heart float-end"></i></a>
 			</h5>
@@ -122,8 +150,7 @@
 					<div class="card mb-3">
 						<div class="card-body row">
 							<div class="col-5">
-								<!-- TO DO : 이미지 클릭 시 상세 이미지 더 조회 가능하게 할지? (DB관련 수정 필요함) -->
-								<img class="img-fluid" alt="room image" src="/resources/images/sampleacco2.jpg">
+								<img class="room-thumbnail-img img-fluid" alt="room image" src="/resources/images/sampleacco2.jpg">
 							</div>
 							<div class="col-7 d-flex flex-column justify-content-between">
 								<h5 class="fw-bold text-dark">6인 여성 도미토리</h5>
@@ -135,6 +162,35 @@
 									<i class="bi bi-chevron-right float-end"></i>
 								</a>
 								<button type="button" class="btn btn-secondary w-100">예약</button>
+							</div>
+						</div>
+						<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
+							<span>
+								<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
+							</span>
+							<!-- 객실 이미지 wrapper -->
+							<div class="room-swiper-wrapper w-75 mx-auto">
+								<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+									<div class="swiper-wrapper">
+										<div class="swiper-slide">
+											<img alt="expanded image" src="/resources/images/sampleacco1.jpg">
+										</div>
+										<div class="swiper-slide">
+											<img alt="expanded image" src="/resources/images/sampleacco2.jpg">
+										</div>
+										<div class="swiper-slide">
+											<img alt="expanded image" src="/resources/images/sampleacco3.jpg">
+										</div>
+										<div class="swiper-slide">
+											<img alt="expanded image" src="/resources/images/logo.png">
+										</div>
+										<div class="swiper-slide">
+											<img alt="expanded image" src="/resources/images/logo.png">
+										</div>
+									</div>
+									<div class="swiper-button-next"></div>
+									<div class="swiper-button-prev"></div>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -285,7 +341,7 @@
 				<!-- TO DO : 리뷰 리스트 출력, 페이징 처리 (제목, 작성자, 내용, 좋아요 수, 예약정보, n일전(작성일 이용해서 표시), 사진) 
 							추후 여유가 되면 리뷰 태그 기능 추가 ? -->
 				<div class="row p-5 border-bottom">
-					<div class="col-2 image-wrapper rounded-circle">
+					<div class="col-2 profile-image-wrapper rounded-circle">
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
@@ -315,7 +371,7 @@
 					</div>
 				</div>
 				<div class="row p-5 border-bottom">
-					<div class="col-2 image-wrapper rounded-circle">
+					<div class="col-2 profile-image-wrapper rounded-circle">
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
@@ -345,7 +401,7 @@
 					</div>
 				</div>
 				<div class="row p-5 border-bottom">
-					<div class="col-2 image-wrapper rounded-circle">
+					<div class="col-2 profile-image-wrapper rounded-circle">
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
@@ -378,6 +434,7 @@
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 
 <!-- 객실 정보 모달 -->
 <div class="modal fade" id="link-room-info" tabindex="-1" aria-labelledby="roomInfoModalLabel" aria-hidden="true">
@@ -421,16 +478,34 @@
 		</div>
 	</div>
 </div>
+<!-- kakao map js -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
+<!-- swiper js -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
 $(function () {
-	
+
 /*
-	이미지 선택 시 해당 이미지를 expanded Image 로 변경하는 이벤트핸들러 등록
-*/
-	let $previewImages = $('#preview-img-wrapper img');
-	$previewImages.click(function() {
-		$('#expanded-img').attr('src', $(this).attr('src'));
+ * 숙소 이미지 swiper 생성
+ * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
+ */
+	let swiper = new Swiper(".mySwiper", {
+		loop : true,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+	});
+	let swiper2 = new Swiper(".mySwiper2", {
+		loop : true,
+		spaceBetween : 10,
+		navigation : {
+			nextEl : ".swiper-button-next",
+			prevEl : ".swiper-button-prev",
+		},
+		thumbs : {
+			swiper : swiper,
+		},
 	});
 
 /*
@@ -521,6 +596,17 @@ $(function () {
 	$("#flush-collapseOne").on('shown.bs.collapse', function () {
 		map.relayout(); 
 		map.setCenter(mapcenter);
+	});
+	
+/*
+ * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+ */
+ 	// 객실 이미지 썸네일을 클릭하면 상세이미지 swiper가 출력되고, swiper의 닫기 아이콘을 클릭하면 지워진다. 
+	$(".room-thumbnail-img").click(function() {
+		$(this).parents(".card").find(".box-room-detail-img").removeClass("d-none");
+	});
+	$(".icon-close-room-detail-img").click(function() {
+		$(this).parents(".box-room-detail-img").addClass("d-none");
 	});
 })
 </script>
