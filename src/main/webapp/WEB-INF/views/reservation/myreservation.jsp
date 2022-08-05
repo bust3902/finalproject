@@ -112,10 +112,10 @@
 						</div>
 		     		</div>
 				</div>
-				<div class="row" name="reason">
+				<div class="row m-4" name="reason">
 					<h6 class="my-3"><strong>취소사유</strong></h6>
 					<!-- 환불이유란 DB에 추가하기 -->
-					<select class="form-select" aria-label="Default select example">
+					<select id="reason" class="form-select" aria-label="Default select example">
 						<option selected>[필수] 취소 사유를 선택해주세요</option>
 						<option value="1">방문불가/여행취소</option>
 						<option value="2">타 서비스에서 더 싼 상품발견</option>
@@ -197,18 +197,20 @@ function openCancelModal() {
 	cancelModal.show();
 }
 
+var IMP = window.IMP;
+IMP.init("imp72261061");
 
 function cancelPay() {
     jQuery.ajax({
-      "url": "http://localhost/myreservation",
+      "url": "/reservation/refund/"+imp_uid,
       "type": "POST",
       "contentType": "application/json",
       "data": JSON.stringify({
-        "merchant_uid": "000001", // 예: ORD20180131-0000011
-        "cancel_request_amount": 99000, // 환불금액
-        "reason": "테스트 결제 환불", // 환불사유
+        "merchant_uid": "1659664324976", // 예: ORD20180131-0000011
+        "cancel_request_amount": 100, // 환불금액
+        "reason": $("#payType option:selected").val(), // 환불사유
         "refund_holder": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
-        "refund_bank": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
+        "refund_bank": "56", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
         "refund_account": "" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
       }),
       "dataType": "json"

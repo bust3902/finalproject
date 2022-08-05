@@ -1,15 +1,17 @@
 package kr.co.nc.mapper;
 
-import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.nc.vo.Payment;
 import kr.co.nc.vo.Reservation;
 
 @Mapper
 public interface ReservationMapper {
 
+	// 숙소 예약
+	void insertReservation(Reservation reservation);
 	
 	// 숙소 예약 / 체크인-아웃에 따른 날짜 예약
 	void ReservateRoom(Reservation reservation);
@@ -25,7 +27,7 @@ public interface ReservationMapper {
 	
 	
 	
-	// 예약번호로 예약정보 가져오기.
+	// 예약번호로 모든 예약정보 가져오기.
 	List<Reservation> getReserveInfoByReserveNo(int reservationId);
 	/*
 		SELECT R.reservation_id
@@ -38,15 +40,9 @@ public interface ReservationMapper {
 		   and R.reservation_id = #{value}
 	 */
 	
-	// 결제번호로 환불하기
-	String refundByPaymentId(int paymentId);
-	/*
-	 * update payment 
-	 * set payment_status ='예약취소'
-	 * where payment_id = #{paymentId}
-	 */
 	
 	
+	void updateReservationStatus(Reservation reservation);
 	// 예약 상태변경하기 (예약가능 / 만실)
 	/*
 	 * update reservation
@@ -60,5 +56,13 @@ public interface ReservationMapper {
 	 * 		reservation_id = #{id}
 	 */
 	
-	
+	void updatePaymentStatuts(Payment payment);
+	// 결제 상태변경하기 (결제대기 / 결제완료)
+	/*
+	 * update payment
+	 * set
+	 * 		
+	 */
+
+
 }
