@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.ReviewMapper">
+	
+	<!-- void insertReview(Review review); -->
+	<insert id="insertReview" parameterType="Review">
+		insert into review
+		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_like_count, review_image)
+		values
+		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{likeCount}, #{image})
+	</insert>
+	<!-- void updateReview(Review review); -->
+		<update id="updateReview" parameterType="Review">
+			update
+				review
+			set
+				review_title = #{title},
+				review_content = #{content},
+				review_like_count = #{likeCount},
+				review_image = #{image},
+				review_updated_date = sysdate
+			where
+				review_no = #{no}
+		</update>
+	<!-- void deleteReview(Review reivew); -->
+		<delete id="deleteReview" parameterType="Review">
+			delete from review
+			where review_no = #{no}
+		</delete>
+</mapper>

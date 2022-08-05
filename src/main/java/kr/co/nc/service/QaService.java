@@ -3,10 +3,12 @@ package kr.co.nc.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import kr.co.nc.mapper.QaMapper;
 import kr.co.nc.vo.Qa;
 
+@Service
 public class QaService {
 
 	@Autowired

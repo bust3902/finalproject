@@ -12,27 +12,47 @@
 <title>문의사항</title>
 </head>
 <body>
-<div class="container my-3" style="min-width:992px; max-width:992px;">
-	<div class="container">
-		<div class="">
-			<h3>서울어때</h3>
-			<button type="button"><span>더보기</span></button>
-			<div>
-				<ul class="list-group">
-					<li>공지사항</li>
-					<li>이벤트</li>
-					<li>혁신 프로젝트</li>
-					<li>자주 묻는 질문</li>
-					<li>1:1 문의</li>
-					<li>약관 및 정책</li>
+<%@ include file="../common/nav.jsp" %>
+<div class="container my-3">
+	<div class="row mb-3">
+		<div class="col-3">
+			<div class="p-5">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><a href="#">공지사항</a></li>
+					<li class="list-group-item"><a href="#">이벤트</a></li>
+					<li class="list-group-item"><a href="#">혁신 프로젝트</a></li>
+					<li class="list-group-item"><a href="#">자주 묻는 질문</a></li>
+					<li class="list-group-item"><a href="#">1:1 문의</a></li>
+					<li class="list-group-item"><a href="#">약관 및 정책</a></li>
 				</ul>
 			</div>
 		</div>
 		<div class="col">
-			<colgroup>
-				
-			</colgroup>
+			<p class="text-center"><strong>등록된 1:1 문의가 없습니다.</strong></p>
+		</div>
+		<div class="col">
+			<table class="table text-center">
+				<thead>
+					<tr>
+						<th>카테고리</th>
+						<th>문의 유형</th>
+						<th>이미지</th>
+						<th>내용</th>
+						<th>등록일</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>카테고리</td>
+						<td>문의 유형</td>
+						<td>이미지</td>
+						<td>내용</td>
+						<td>등록일</td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
+</div>
 </body>
 </html>
