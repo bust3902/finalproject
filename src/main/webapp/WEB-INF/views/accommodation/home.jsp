@@ -197,15 +197,7 @@
 		</div>
 	</form>
 </div>
-<!-- footer include start -->
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시푸터</h1>
-		</div>
-	</div>
-</div>
-<!-- footer include end -->
+<%@ include file="../common/footer.jsp" %>
 
 <!-- 지도 조회 모달 -->
 <div id="modal-map" class="modal" tabindex="-1">
@@ -248,7 +240,7 @@ $(function () {
 	    	currentLong = position.coords.longitude;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
-			// TO DO : 모달 창에 현재 위치 주소 출력
+			// 화면, 모달창에 현재 위치 주소를 출력한다.
 			getLocationAddress();
 			searchAccos();
 	    });
@@ -258,7 +250,7 @@ $(function () {
 	    	currentLong = 127.0016985;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
-			// TO DO : 모달 창에 현재 위치 정보가 없습니다. 출력
+			// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
 	      	$("#modal-current-location-address").text('(정보 없음)');
     	  	$("#home-current-location-address").text('(정보 없음)');
 			searchAccos();
@@ -529,6 +521,9 @@ $(function () {
 		});
 	}
 	
+/*
+ * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+ */
 	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
 	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	//		TO DO: 적용 버튼의 필요 유무? 다른 거 눌러도 다 현 상태로 폼 제출되는데
@@ -561,7 +556,6 @@ $(function () {
 		// 기타
 		$(":checkbox[name=tags]").prop("checked", false);
 	});
-	
 	// 나침반 아이콘을 눌렀을 때 내 위치 정보를 다시 조회하고, 검색결과도 갱신
 	$("#icon-refresh-location").click(function(){
 		refreshLocation();
