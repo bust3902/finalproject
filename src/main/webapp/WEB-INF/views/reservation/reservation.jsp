@@ -22,13 +22,13 @@
 				<div class="my-3">
 					<p><strong>예약자 정보</strong></p>
 					<label class="form-label" name="reserName">예약자 이름</label>
-					<input class="form-control" type="text" placeholder="체크인시 필요한 정보입니다." name="reserName" >
+					<input class="form-control" type="text" placeholder="체크인시 필요한 정보입니다." name="reserName" id="reserName">
 				</div>
 				<div class="my-3">
 					<p class="form-label">휴대폰 번호</p>
 					<p class="form-text">개인 정보 보호를 위해 안심번호로 숙소에 전송됩니다.</p>
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel">
+						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel" id="reserTel">
 						<span class="input-group-btn">
 						<button class="btn btn-outline-secondary mx-2" name="phoneCheck" type="button" onclick="phoneCheck()" disabled>인증번호 전송</button>
 						</span>
@@ -270,6 +270,9 @@ let refundModal = new bootstrap.Modal(document.getElementById("checkboxRefund"))
 let info1Modal = new bootstrap.Modal(document.getElementById("checkboxInfo1"));
 let info2Modal = new bootstrap.Modal(document.getElementById("checkboxInfo2"));
 
+let reserName = document.getElementById("reserName");
+let reserTel = document.getElementById("reserTel");
+
 function openRefundModal() {
 	refundModal.show();
 }
@@ -283,18 +286,18 @@ function openinfo2Modal() {
 var IMP = window.IMP;
 IMP.init("imp72261061");
 
-var payments = document.getElementById("payType");
-
 function startPay(){
 	IMP.request_pay({
 		pg: $("#payType option:selected").val(),
 	    pay_method: "card", 
 	    // $(:input:select[name=payType]:checked").val(),
-		merchant_uid : 000011+new Date().getTime(),
+		merchant_uid : 'acco_'+new Date().getTime(),
 		name : '보코 서울 강남',
-		// 숙소명 : ${acco.name}
+		// 숙소명 : accoName.value
 		amount : 100,
-		// 가격 : ${acco.price}
+		// 가격 : accoPrice.value
+		buyer_name : reserName.value,
+		buyer_tel : reserTel.value
 	}, function(rsp) {
 		if ( rsp.success ) {
 			let msg = '결제가 완료되었습니다';
@@ -303,8 +306,8 @@ function startPay(){
         	msg += '결제 금액 : ' + rsp.paid_amount;                
 			console.log("결제성공 " + msg);
 			jQuery.ajax({
-	            url: "http://localhost/myreservation", // 서버의결제정보를 받는 url
-	            method: 'get',
+	            url: "/reservation/complete/"+rsp.imp_uid, // 서버의결제정보를 받는 url
+	            type: 'post',
 	            headers: { "Content-Type": "application/json" },
 	            data: {
 	                imp_uid: rsp.imp_uid,
@@ -314,7 +317,7 @@ function startPay(){
 	        }).done(function (data) {
 	          // 가맹점 서버 결제 API 성공시 로직
 	        })
-	            //location.href="myreservation";
+	            location.href="/reservation/complete/"+rsp.imp_uid;
 	      } else {
 	        alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
 	      }

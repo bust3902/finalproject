@@ -23,6 +23,7 @@ public class ReservationController {
 	 */
 	@GetMapping(path = "/myreservation")
 	public String myReservation() {
+		
 		return "reservation/myreservation";
 	}
 	/*

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="kr.co.nc.mapper.ReservationMapper">
+
+<!--void insertReservation(Reservation reservation); -->
+<insert id="insertReservation" parameterType="kr.co.nc.vo.Reservation">
+	insert 	into reservation
+		(reservation_id, reservation_status, reservation_check_in, reservation_check_out)
+	values
+		(reservation_seq.nextval,#{status},#{checkIn},#{checkOut})		
+</insert>
+
+<select id="getReserveInfoByReserveNo" parameterType="int" resultType="Reservation" >
+	SELECT 
+		R.reservation_id, 
+		U.user_tel, 
+		U.user_name
+	FROM 
+		reservation R	
+	INNER JOIN users U
+	ON R.user_no = U.user_no
+	WHERE R.reservation_status = '예약'
+	and R.reservation_id = #{value}
+	order by R.reservation_check_out
+</select>
+
+
+<!-- void updateReservationStatus(Reservation reservation);  예약 상태변경하기 (예약가능 / 만실)-->
+<update id="updateReservationStatus" parameterType="kr.co.nc.vo.Reservation">
+	update
+		reservation
+	set
+		reservation_status = #{status},
+		reservation_check_in =#{checkIn},
+		reservation_check_out = #{checkOut}
+	where
+		reservation_id = #{reservationId}
+</update>
+
+<!-- void updatePaymentStatuts(Payment payment); 결제 상태변경하기 (결제대기 / 결제완료)-->
+<update id="updatePaymentStatuts" parameterType="kr.co.nc.vo.Payment">
+
+	update
+		payment
+	set
+		payment_type = #{paymentType},
+		payment_date = #{paymentDate},
+		payment_total_price = #{paymentTotalPrice}
+	where 
+		payment_id = #{paymentId}
+</update>
+
+
+</mapper>
