@@ -244,7 +244,7 @@
 				  <div>
 					  <p class="card-text m-0">냥냥(89곳 평가,199개 공감받음)</p>
 					    <p class="card-text m-0">
-					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주
+					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i>광주
 					    </p>
 					    <p class="card-text m-0">
 					    <i class="bi-star-fill"></i>
@@ -282,7 +282,7 @@
 				  <div>
 					  <p class="card-text m-0">냥냥(89곳 평가,199개 공감받음)</p>
 					    <p class="card-text m-0">
-					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주
+					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i>광주
 					    </p>
 					    <p class="card-text m-0">
 					    <i class="bi-star-fill"></i>
@@ -320,7 +320,7 @@
 				  <div>
 					  <p class="card-text m-0">냥냥(89곳 평가,199개 공감받음)</p>
 					    <p class="card-text m-0">
-					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i></i>광주
+					    	<strong>아따커피</strong><i class="bi bi-geo-alt"></i>광주
 					    </p>
 					    <p class="card-text m-0">
 					    <i class="bi-star-fill"></i>
