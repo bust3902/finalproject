@@ -139,8 +139,8 @@
 								<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 								<c:forEach var="tag" items="${tags }">
 									<div class="col-6 mb-3">
-										<input class="form-check-input" type="checkbox" name="tags" value="${tag.name }">
-										<label class="form-check-label small">${tag.name }</label>
+										<input class="form-check-input" type="checkbox" name="tags" value="${tag }">
+										<label class="form-check-label small">${tag }</label>
 									</div>
 								</c:forEach>
 							</div>
