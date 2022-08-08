@@ -86,6 +86,7 @@
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 <!-- 다음 주소 검색 API 스크립트 -->
 <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 <!-- 카카오맵 API -->

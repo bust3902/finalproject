@@ -19,7 +19,7 @@ div.fixed {
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
-<div class="container" style="min-width:992px; max-width:992px; height:90vh;">
+<div class="container" style="min-width:992px; max-width:992px;">
 	<div class="row mt-5">
 		<div class="col-3">
 			<!-- 사이드바 -->
@@ -68,11 +68,11 @@ div.fixed {
 					</div>
 				</div>
 				
-				<div class="row mt-4">
+				<div class="row mt-2 pe-0">
 					<!-- 미답변 문의 요약출력 -->
-					<div class="col-5 border rounded border-secondary bg-secondary d-flex justify-content-center me-3" style="width:40%; height:25vh;">
+					<div class="col-5 border rounded border-secondary bg-secondary d-flex justify-content-center me-2" style="height:25vh;">
 						<div class="row d-flex flex-column text-center bd-highlight position-relative">
-							<div class="d-flex text-light fs-5">미답변 문의</div>
+							<div class="text-light fs-5">미답변 문의</div>
 							<div class="bd-highlight">문의 제목</div>
 							<div class="bd-highlight">문의 제목</div>
 							<div class="bd-highlight">문의 제목</div>
@@ -81,7 +81,7 @@ div.fixed {
 					</div>
 					
 					<!-- 월간 매출 그래프 -->
-					<div class="col-6 border rounded border-secondary bg-secondary" style="width:54%; height:25vh;">
+					<div class="col border rounded border-secondary bg-secondary" style="height:25vh;">
 						<a href="#" class="mb-3 text-decoration-none text-light fs-5">그래프</a>
 					</div>
 				</div>
@@ -197,8 +197,8 @@ div.fixed {
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 </body>
-
 <script type="text/javascript">
 // 입점 신청 상세보기 모달 클릭시 모달창 내 입점 버튼 액티브 시키는 스크립트
 function hostClick() {
