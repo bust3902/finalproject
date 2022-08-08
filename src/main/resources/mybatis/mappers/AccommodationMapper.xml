@@ -67,6 +67,7 @@
 		<result column="acco_deleted" property="deleted"/>
 		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
+		<collection column="acco_id" property="images" select="getImagesByAccoId"></collection>
 	</resultMap>
 	
 	<!-- List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria); -->
@@ -169,6 +170,42 @@
 		select acco_tag
 		from acco_tags
 		where acco_id = #{value}
+	</select>
+	
+	<!-- List<String> getImagesByAccoId(int accoId); -->
+	<select id="getImagesByAccoId" parameterType="int" resultType="string">
+		select image_file_name
+		from acco_detail_images
+		where acco_id = #{value}
+	</select>
+	
+	<!-- RoomResultMap -->
+	<resultMap type="AccommodationRoom" id="RoomResultMap">
+		<id column="room_no" property="no" />
+		<result column="room_name" property="name" />
+		<result column="room_numbers" property="numbers" />
+		<result column="room_capacity" property="capacity" />
+		<result column="room_day_price" property="dayPrice" />
+		<result column="room_description" property="description" />
+		<result column="room_thumbnail_image" property="thumbnailImageName" />
+		<result column="acco_id" property="accoId" />
+		<collection column="room_no" property="roomFacilities" select="getRoomFacilitiesByRoomNo"></collection>
+		<collection column="room_no" property="images" select="getImagesByRoomNo"></collection>
+	</resultMap>
+	
+	<!-- List<AccommodationRoom> getAllRoomsByAccoId(RoomCriteria criteria); -->
+	<select id="getAllRoomsByAccoId" parameterType="int" resultMap="RoomResultMap">
+	</select>
+	
+	<!-- List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo); -->
+	<select id="getRoomFacilitiesByRoomNo" parameterType="int" resultType="RoomFacility">
+	</select>
+	<!-- List<String> getImagesByRoomNo(int roomNo); -->
+	<select id="getImagesByRoomNo" parameterType="int" resultType="string">
+	</select>
+	
+	<!-- boolean getIsAvailableRoom(RoomCriteria criteria); -->
+	<select id="getIsAvailableRoom" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="boolean">
 	</select>
 	
 </mapper>

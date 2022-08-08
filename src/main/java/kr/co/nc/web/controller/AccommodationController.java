@@ -29,6 +29,8 @@ public class AccommodationController {
 			return "home";
 		}
 		
+		// TODO URL에 잘못된 type명을 적은 경우?
+		
 		// 	모든 숙소유형 정보 전달.
 		// type은 최초 화면 요청할 때 쓰는 이름이고 types는 정보 전달하고, 조건검색으로 선택할 때 쓰는 이름
 		model.addAttribute("types", accommodationService.getAllTypes());
@@ -52,9 +54,10 @@ public class AccommodationController {
 
 	// 숙소 상세 페이지 뷰 반환
 	@GetMapping(path = "/detail")
-	public String detail(@RequestParam("id") int accoId) {
+	public String detail(@RequestParam("id") int accoId, Model model) {
 		// 해당 id를 가진 숙소 상세정보를 전달한다.
 		// 숙소의 객실 정보, 리뷰 정보는 restController에서 제공한다.
+		model.addAttribute("detail", accommodationService.getAccommodationDetailById(accoId));
 		System.out.println(accommodationService.getAccommodationDetailById(accoId));
 		return "/accommodation/detail";
 	}
