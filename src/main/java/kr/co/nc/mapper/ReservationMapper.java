@@ -28,41 +28,15 @@ public interface ReservationMapper {
 	
 	
 	// 예약번호로 모든 예약정보 가져오기.
-	List<Reservation> getReserveInfoByReserveNo(int reservationId);
-	/*
-		SELECT R.reservation_id
-		     , U.user.tel
-		     , U.user.name
-		  FROM reservation R
-		 INNER JOIN users U
-		    ON R.user_no = U.user_no
-		 WHERE R.reservation_status = '예약'
-		   and R.reservation_id = #{value}
-	 */
+	List<Reservation> getAllReserveInfoByReserveId(int reservationId);
 	
-	
-	
-	void updateReservationStatus(Reservation reservation);
 	// 예약 상태변경하기 (예약가능 / 만실)
-	/*
-	 * update reservation
-	 * set 
-	 * 		reservation_memo = #{memo}
-	 * 		reservation_status = #{status}
-	 * 		reservation_check_in = #{checkIn}
-	 * 		reservation_check_out = #{checkOut}
-	 * 		reservation_headCount = #{headCount}
-	 * where
-	 * 		reservation_id = #{id}
-	 */
+	void updateReservationStatus(Reservation reservation);
 	
-	void updatePaymentStatuts(Payment payment);
 	// 결제 상태변경하기 (결제대기 / 결제완료)
-	/*
-	 * update payment
-	 * set
-	 * 		
-	 */
+	void updatePaymentStatuts(Payment payment);
 
+	// 예약번호로 예약정보 가져오기
+	String getReserveInfoByReserveId(String reservationId);
 
 }
