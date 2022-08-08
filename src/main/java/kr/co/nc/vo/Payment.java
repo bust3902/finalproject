@@ -12,9 +12,10 @@ import lombok.ToString;
 @ToString
 public class Payment {
 
-	private int paymentId;
+	private String paymentId;
 	private Date paymentDate;
 	private String paymentType;
+	private String paymentStatus;
 	private int paymentTotalPrice;
 	
 	private List<Reservation> reservation;
