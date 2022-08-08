@@ -1,11 +1,18 @@
 package kr.co.nc.web.controller;
 
+
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import kr.co.nc.service.ReservationService;
 
 @Controller
 public class ReservationController {
 
+	@Autowired
+	ReservationService reservationService;
 	/*
 	 * 예약페이지 요청처리 / 상세예약페이지에서 요청처리 옴과 동시의 데이터베이스에서 예약상태를 '결제대기'상태로 변경할것
 	 * 요청URI : /reservation
@@ -21,9 +28,9 @@ public class ReservationController {
 	 * 뷰 페이지 : /WEB-INF/views/myreservation.jsp
 	 * 마이페이지의 나의 상세예약정보페이지 요청 추후 마이페이지에 보낼예정
 	 */
-	@GetMapping(path = "/myreservation")
-	public String myReservation() {
-		
+	@GetMapping(path = "/myreservation/{imp_uid}")
+	public String myReservation(String uid_imp) {
+		reservationService.getReserveInfoByReserveId(uid_imp);
 		return "reservation/myreservation";
 	}
 	/*

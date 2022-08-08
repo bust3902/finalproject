@@ -129,10 +129,8 @@
 					<div class="col-5">
 						<dt id="accoName">보코 서울 강남</dt>
 						<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>	
-						
 						<dt class="col-3 form-text">체크인</dt>
 						<dd id="checkIn">07.28 목 15:00</dd>
-							
 						<dd class="form-text">체크아웃</dd>	
 						<dd id="checkOut">07.29 금 12:00</dd>
 					</div>
@@ -272,7 +270,10 @@ let info2Modal = new bootstrap.Modal(document.getElementById("checkboxInfo2"));
 
 let reserName = document.getElementById("reserName");
 let reserTel = document.getElementById("reserTel");
+let checkIn = document.getElementById("checkIn");
+let checkOut = document.getElementById("checkOut");
 
+// 필수 규정 모달
 function openRefundModal() {
 	refundModal.show();
 }
@@ -283,53 +284,66 @@ function openinfo2Modal() {
 	info2Modal.show();
 }
 
+// api 포트번호
 var IMP = window.IMP;
 IMP.init("imp72261061");
 
+// 아임포트 결제API 사용하기
 function startPay(){
 	IMP.request_pay({
-		pg: $("#payType option:selected").val(),
+		pg: $("#payType option:selected").val(), // 셀렉트창에서 pg사를 선택 
 	    pay_method: "card", 
 	    // $(:input:select[name=payType]:checked").val(),
-		merchant_uid : 'acco_'+new Date().getTime(),
+		merchant_uid : new Date().getTime(),
 		name : '보코 서울 강남',
 		// 숙소명 : accoName.value
-		amount : 100,
+		amount : 99000,
 		// 가격 : accoPrice.value
 		buyer_name : reserName.value,
-		buyer_tel : reserTel.value
+		buyer_tel : reserTel.value,
+		
 	}, function(rsp) {
 		if ( rsp.success ) {
 			let msg = '결제가 완료되었습니다';
 			msg += '고유ID : ' + rsp.imp_uid;               
-        	msg += '상점 거래ID : ' + rsp.merchant_uid;               
+        	msg += '상품ID : ' + rsp.merchant_uid;               
+        	msg += '결제자 : ' + reserName.value;                
         	msg += '결제 금액 : ' + rsp.paid_amount;                
+        	msg += '결제자 전화번호 : ' + reserTel.value;                
+        	msg += '체크인 : ' + checkIn.value;                
+        	msg += '체크아웃 : ' + checkOut.value;                
 			console.log("결제성공 " + msg);
 			jQuery.ajax({
 	            url: "/reservation/complete/"+rsp.imp_uid, // 서버의결제정보를 받는 url
-	            type: 'post',
+	            type: 'POST',
 	            headers: { "Content-Type": "application/json" },
-	            data: {
+	            data: JSON.stringify({
 	                imp_uid: rsp.imp_uid,
-	                merchant_uid: rsp.merchant_uid,
-	            }
+	                merchantUid: rsp.merchant_uid,
+	        		reserName : reserName.value,
+	        		reserTel : reserTel.value,
+	        		amount : rsp.paid_amount,
+	                checkIn : checkIn.value,
+	        		checkOut : checkOut.value
+	            })
 	            
 	        }).done(function (data) {
 	          // 가맹점 서버 결제 API 성공시 로직
+	        //  location.href="http://localhost/reservation/complete/"+rsp.imp_uid;
 	        })
-	            location.href="/reservation/complete/"+rsp.imp_uid;
+	           
 	      } else {
 	        alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
 	      }
 	});
 }
 
+// 체크박스 전체 선택
 $(document).ready(function() {
 	$("#checkboxAll").click(function() {
 		if($("#checkboxAll").is(":checked")) $("input[name=checkbox]").prop("checked", true);
 		else $("input[name=checkbox]").prop("checked", false);
 	});
-	
 	$("input[name=checkbox]").click(function() {
 		var total = $("input[name=checkbox]").length;
 		var checked = $("input[name=checkbox]:checked").length;
@@ -338,7 +352,7 @@ $(document).ready(function() {
 	});
 	
 	
-
+// 필수기입항목 미입력시 오류 모달
 	var paymentModal = new bootstrap.Modal(document.getElementById('agreement'))
 	$("#modal-button").click(function(){
 		if ($("input[name='reserName']").val() === ""){
@@ -358,7 +372,7 @@ $(document).ready(function() {
 		}
 		reservationConfirm.show();
 	});
-	
+// 전화번호 유효성체크
 	$(function(){
     	$("input[name=reserTel]").on('keydown', function(e){
 	       // 숫자만 입력받기
