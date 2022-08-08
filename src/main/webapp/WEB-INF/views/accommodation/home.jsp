@@ -457,19 +457,6 @@ $(function () {
 				$tbody.append(content);
 			} else {
 				$.each(accos, function(index, acco) {
-					let reviewRateText = '';
-					if (acco.reviewRate <= 1) {
-						reviewRateText = '아쉬워요';
-					} else if (acco.reviewRate <= 2) {
-						reviewRateText = '부족해요';
-					} else if (acco.reviewRate <= 3) {
-						reviewRateText = '만족해요';
-					} else if (acco.reviewRate <= 4) {
-						reviewRateText = '추천해요';
-					} else if (acco.reviewRate <= 5) {
-						reviewRateText = '최고에요';
-					}
-					
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
 					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
@@ -479,7 +466,7 @@ $(function () {
 					content += '	<td class="p-3">';
 					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';
 					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + reviewRateText +' (' + acco.reviewCount  +')</strong>';
+					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
 					content += '		</p>';
 					content += '		<p>'
 					content += '			<small>' + acco.district + '</small>'

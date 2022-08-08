@@ -245,15 +245,7 @@
 			<!-- 리뷰 -->
 			<div class="tab-pane fade" id="review-tab-pane" role="tabpanel" aria-labelledby="review-tab" tabindex="0">
 				<div class="row p-5 text-center border-bottom">
-					<h5>
-						<c:choose>
-							<c:when test="${detail.reviewRate le 1  }">아쉬워요</c:when>
-							<c:when test="${detail.reviewRate le 2  }">부족해요</c:when>
-							<c:when test="${detail.reviewRate le 3  }">만족해요</c:when>
-							<c:when test="${detail.reviewRate le 4  }">추천해요</c:when>
-							<c:otherwise>최고에요</c:otherwise>
-						</c:choose>
-					</h5>
+					<h5>${detail.reviewRateKeyword }</h5>
 					<!-- 숙소 객체의 별점아이콘 객체를 활용해서 평점에 따른 별표 출력 (*.5 미만은 빈 별, *.5 초과는 채운 별) -->
 					<div id="review-rate-wrapper" class="text-warning fs-3 mb-3">
 						<i class="bi ${detail.reviewRateIcon.star1 }"></i>
