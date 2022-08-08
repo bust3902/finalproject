@@ -37,4 +37,6 @@ public class Accommodation {
 	private List<CommonFacility> commonFacilities; // 이 숙소가 가지는 모든 공용시설 정보
 	private List<String> tags; // 이 숙소가 가지는 모든 부가사항 태그
 	
+	private List<String> images; // 숙소 이미지 파일명
+	
 }

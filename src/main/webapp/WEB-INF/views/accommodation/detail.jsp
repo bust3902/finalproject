@@ -57,42 +57,41 @@
 			<div id="acco-swiper-wrapper">
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/sampleacco1.jpg">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/sampleacco2.jpg">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/sampleacco3.jpg">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/logo.png">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/logo.png">
-						</div>
+						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력하기. 이미지 정보가 없을 경우 로고 하나 출력 -->
+						<c:choose>
+							<c:when test="${empty detail.images }">
+								<div class="swiper-slide">
+									<img alt="accommodation expanded image" src="/resources/images/logo.png">
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="image" items="${detail.images }">
+									<div class="swiper-slide">
+										<img alt="accommodation expanded image" src="/resources/images/acco/${image }">
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<div class="swiper-button-next"></div>
 					<div class="swiper-button-prev"></div>
 				</div>
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco1.jpg" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco2.jpg" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco3.jpg" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
-						</div>
+						<c:choose>
+							<c:when test="${empty detail.images }">
+								<div class="swiper-slide">
+									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="image" items="${detail.images }">
+									<div class="swiper-slide">
+										<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/${image }" style="cursor: pointer;">
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>
@@ -146,7 +145,7 @@
 						<div class="card-body row">
 							<div class="col-5">
 								<div class="position-relative">
-									<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/sampleacco2.jpg">
+									<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/logo-bg.png">
 									<div class="card-img-overlay overlay-room-thumbnail">
 										<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
 									</div>
@@ -173,19 +172,16 @@
 								<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 									<div class="swiper-wrapper">
 										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/sampleacco1.jpg">
+											<img alt="room expanded image" src="/resources/images/logo-bg.png">
 										</div>
 										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/sampleacco2.jpg">
+											<img alt="room expanded image" src="/resources/images/logo-bg.png">
 										</div>
 										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/sampleacco3.jpg">
+											<img alt="room expanded image" src="/resources/images/logo-bg.png">
 										</div>
 										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/logo.png">
-										</div>
-										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/logo.png">
+											<img alt="room expanded image" src="/resources/images/logo-bg.png">
 										</div>
 									</div>
 									<div class="swiper-button-next"></div>
@@ -331,7 +327,7 @@
 						</p>
 						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
 						<div class="my-3">
-							<img alt="review image" src="/resources/images/sampleacco1.jpg">
+							<img alt="review image" src="/resources/images/acco/sampleacco1.jpg">
 						</div>
 						<small>18일 전</small>
 					</div>
@@ -361,7 +357,7 @@
 						</p>
 						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
 						<div class="my-3">
-							<img alt="review image" src="/resources/images/sampleacco1.jpg">
+							<img alt="review image" src="/resources/images/acco/sampleacco1.jpg">
 						</div>
 						<small>18일 전</small>
 					</div>
@@ -391,7 +387,7 @@
 						</p>
 						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
 						<div class="my-3">
-							<img alt="review image" src="/resources/images/sampleacco1.jpg">
+							<img alt="review image" src="/resources/images/acco/sampleacco1.jpg">
 						</div>
 						<small>18일 전</small>
 					</div>

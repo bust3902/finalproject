@@ -37,6 +37,9 @@ public interface AccommodationMapper {
 	List<CommonFacility> getCommonFacilitiesByAccoId(int accoId);
 	// 숙소번호에 따른 태그 조회
 	List<String> getAccoTagsByAccoId(int accoId);
+	// 숙소번호에 따른 이미지(파일명) 조회
+	List<String> getImagesByAccoId(int accoId);
+	
 	// 숙소번호에 따른 모든 객실정보 조회 (+ 예약 가능 여부)
 	
 	// 객실번호에 따른 객실상세정보 조회
