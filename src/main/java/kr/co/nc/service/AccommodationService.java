@@ -6,9 +6,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.dto.StarIconForRate;
 import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.vo.Accommodation;
+import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
@@ -72,7 +74,14 @@ public class AccommodationService {
 		return accommodation;
 	}
 	
-	//// 서비스 공통기능 메소드
+	// 숙소번호에 따른 모든 객실정보 조회 (예약 가능 여부 포함)
+	public List<AccommodationRoom> getAllRoomDetailsByAccoId(int accoId, RoomCriteria criteria) {
+		// TODO getAllRoomsByAccoId로 리스트 획득 후
+		// TODO for문 돌려서 예약가능 여부 조회 후 boolean 값 저장
+		return null;
+	}
+	
+	//////// 서비스 공통기능 메소드
 	// 리뷰점수에 따라 화면에서 표현할 리뷰 관련 값들을 저장한다.
 	public void initReviewRateKeyword(Accommodation accommodation) {
 		double reviewRate = accommodation.getReviewRate();
