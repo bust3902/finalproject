@@ -254,48 +254,13 @@
 							<c:otherwise>최고에요</c:otherwise>
 						</c:choose>
 					</h5>
-					<!-- 평점 별표 아이콘 출력 (*.5 미만은 빈 별, *.5 초과는 채운 별) -->
+					<!-- 숙소 객체의 별점아이콘 객체를 활용해서 평점에 따른 별표 출력 (*.5 미만은 빈 별, *.5 초과는 채운 별) -->
 					<div id="review-rate-wrapper" class="text-warning fs-3 mb-3">
-						<c:choose>
-							<c:when test="${detail.reviewRate ge 0.5 }">
-								<i class="bi ${detail.reviewRate eq 0.5 ? 'bi-star-half' : 'bi-star-fill' }"></i>
-							</c:when>
-							<c:otherwise>
-								<i class="bi bi-star"></i>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${detail.reviewRate ge 1.5 }">
-								<i class="bi ${detail.reviewRate eq 1.5 ? 'bi-star-half' : 'bi-star-fill' }"></i>
-							</c:when>
-							<c:otherwise>
-								<i class="bi bi-star"></i>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${detail.reviewRate ge 2.5 }">
-								<i class="bi ${detail.reviewRate eq 2.5 ? 'bi-star-half' : 'bi-star-fill' }"></i>
-							</c:when>
-							<c:otherwise>
-								<i class="bi bi-star"></i>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${detail.reviewRate ge 3.5 }">
-								<i class="bi ${detail.reviewRate eq 3.5 ? 'bi-star-half' : 'bi-star-fill' }"></i>
-							</c:when>
-							<c:otherwise>
-								<i class="bi bi-star"></i>
-							</c:otherwise>
-						</c:choose>
-						<c:choose>
-							<c:when test="${detail.reviewRate ge 4.5 }">
-								<i class="bi ${detail.reviewRate eq 4.5 ? 'bi-star-half' : 'bi-star-fill' }"></i>
-							</c:when>
-							<c:otherwise>
-								<i class="bi bi-star"></i>
-							</c:otherwise>
-						</c:choose>
+						<i class="bi ${detail.reviewRateIcon.star1 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star2 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star3 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star4 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star5 }"></i>
 						<span class="text-muted mx-1">${detail.reviewRate }</span>
 					</div>
 					<p>전체 리뷰 ${detail.reviewCount }</p>

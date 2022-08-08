@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.dto.StarIconForRate;
 import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationType;
@@ -57,6 +58,12 @@ public class AccommodationService {
 	
 	// 해당 고유번호(아이디)를 가진 숙소의 상세정보를 반환 (숙소가 가지는 공용시설, 태그 포함)
 	public Accommodation getAccommodationDetailById(int accoId) {
-		return accommodationMapper.getAccommodationdDetailById(accoId);
+		Accommodation accommodation = accommodationMapper.getAccommodationdDetailById(accoId);
+		
+		// 점수를 별점아이콘 5개에 대한 html 클래스 정보로 표현하는 객체를 생성해 숙소객체에 저장한다.
+		double reviewRate = accommodation.getReviewRate();
+		accommodation.setReviewRateIcon(new StarIconForRate(reviewRate));
+		
+		return accommodation;
 	}
 }

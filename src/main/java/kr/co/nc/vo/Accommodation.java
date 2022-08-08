@@ -3,6 +3,7 @@ package kr.co.nc.vo;
 import java.util.Date;
 import java.util.List;
 
+import kr.co.nc.dto.StarIconForRate;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -31,6 +32,7 @@ public class Accommodation {
 	
 	private String currentDistance; // 현재 조회한 위치로부터의 거리 (데이터 조회시에만 사용하는 필드)
 	private int minPrice; // 현재 조회한 날짜에서 가장 저렴한 객실의 1박 금액 (데이터 조회시에만 사용하는 필드)
+	private StarIconForRate reviewRateIcon; // 리뷰 별점 아이콘을 표현하는 hashMap을 상속받는 객체
 	
 //	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
 //	private List<AccommodationRoom> rooms; // 이 숙소가 가지는 모든 객실정보
