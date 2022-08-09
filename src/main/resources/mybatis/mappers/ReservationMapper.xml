@@ -36,8 +36,7 @@
 		reservation R	
 	INNER JOIN users U
 	ON R.user_no = U.user_no
-	WHERE R.reservation_status = '예약'
-	and R.reservation_id = #{value}
+	WHERE R.reservation_id = #{value}
 	order by R.reservation_check_out
 </select>
 

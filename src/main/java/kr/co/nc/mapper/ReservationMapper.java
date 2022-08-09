@@ -5,13 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.nc.vo.Payment;
+import kr.co.nc.vo.PaymentRequest;
 import kr.co.nc.vo.Reservation;
 
 @Mapper
 public interface ReservationMapper {
 
 	// 숙소 예약
-	void insertReservation(Reservation reservation);
+	void insertReservation(PaymentRequest paymentRequest);
 	
 	// 숙소 예약 / 체크인-아웃에 따른 날짜 예약
 	void ReservateRoom(Reservation reservation);

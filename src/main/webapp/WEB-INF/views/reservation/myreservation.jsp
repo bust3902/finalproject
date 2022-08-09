@@ -202,7 +202,7 @@ IMP.init("imp72261061");
 
 function cancelPay() {
     jQuery.ajax({
-      "url": "/reservation/refund/"+imp_uid,
+      "url": "/reservation/refund/"+//IMP_UID로 받을것
       "type": "POST",
       "contentType": "application/json",
       "data": JSON.stringify({
@@ -223,6 +223,15 @@ var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
 var collapseList = collapseElementList.map(function (collapseEl) {
   return new bootstrap.Collapse(collapseEl)
 })
+
+
+let params = new URLSearchParams(documnet.location.search);
+let impUid = params.get("impUid");
+alert(impUid);
+
+
+
+
 </script>
 </body>
 </html>
