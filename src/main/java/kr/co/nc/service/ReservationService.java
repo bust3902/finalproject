@@ -1,6 +1,5 @@
 package kr.co.nc.service;
 
-import java.util.Date;
 import java.util.List;
 
 
@@ -10,10 +9,9 @@ import org.springframework.stereotype.Service;
 
 import kr.co.nc.mapper.ReservationMapper;
 import kr.co.nc.vo.Payment;
+import kr.co.nc.vo.PaymentRequest;
 import kr.co.nc.vo.Reservation;
-import lombok.extern.log4j.Log4j2;
 
-@Log4j2
 @Service
 public class ReservationService {
 
@@ -53,32 +51,9 @@ public class ReservationService {
 	/*
 	 * 예약정보 저장
 	 */
-	public void insertReservate(String buyerName, String buyerTel, String impUid, String merchantUid, String paidAmount, Date checkIn, Date checkOut, String reservationStatus ,String paymentStatus, String pgProvider ) {
+	public void insertReservate(PaymentRequest paymentRequest) {
 		
-		log.info("예약자이름 : " + buyerName);
-		log.info("예약자번호 : " + buyerTel);
-		log.info("결제번호 : " + impUid);
-		log.info("주문번호 : " + merchantUid);
-		log.info("결제금액 : " + paidAmount);
-		log.info("체크인 : " + checkIn);
-		log.info("체크아웃 : " + checkOut);
-		log.info("예약상태 : " + reservationStatus);
-		log.info("결제상태 : " + paymentStatus);
-		log.info("결제타입 : " + pgProvider);
-		
-		Reservation reservation = new Reservation();
-		reservation.setReservationId(merchantUid);
-		reservation.setReserName(buyerName);
-		reservation.setReserTel(buyerTel);
-		reservation.setCheckIn(checkIn);
-		reservation.setCheckOut(checkOut);
-		
-		Payment payment = new Payment();
-		payment.setPaymentId(impUid);
-		payment.setPaymentStatus(paymentStatus);
-		payment.setPaymentType(pgProvider);
-		
-		reservationMapper.insertReservation(reservation);
+		reservationMapper.insertReservation(paymentRequest);
 		
 		
 	}

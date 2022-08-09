@@ -103,6 +103,9 @@
 		</div>
 	</div>
 </div>
+<div class="col-12">
+	<jsp:include page="../common/footer.jsp"></jsp:include>
+</div>
 	<!-- Modal / 필수항목 미입력 / 미입력 -->
 <div class="modal fade" id="agreement" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="agreement" aria-hidden="true">
 	<div class="modal-dialog modal-dialog-centered">
@@ -305,8 +308,8 @@ function startPay(){
 	}, function(rsp) {
 		if ( rsp.success ) {
 			let msg = '결제가 완료되었습니다';
-			msg += '고유ID : ' + rsp.imp_uid;               
-        	msg += '상품ID : ' + rsp.merchant_uid;               
+			msg += '상품ID : ' + rsp.imp_uid;               
+        	msg += '결제ID : ' + rsp.merchant_uid;               
         	msg += '결제자 : ' + reserName.value;                
         	msg += '결제 금액 : ' + rsp.paid_amount;                
         	msg += '결제자 전화번호 : ' + reserTel.value;                

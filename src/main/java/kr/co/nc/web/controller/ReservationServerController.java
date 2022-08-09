@@ -2,7 +2,6 @@ package kr.co.nc.web.controller;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpSession;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,7 +14,9 @@ import com.siot.IamportRestClient.exception.IamportResponseException;
 import com.siot.IamportRestClient.response.IamportResponse;
 import com.siot.IamportRestClient.response.Payment;
 
+import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.vo.PaymentRequest;
+import kr.co.nc.vo.User;
 
 
 @Controller
@@ -33,22 +34,12 @@ public class ReservationServerController {
 	@ResponseBody
 	@RequestMapping(value="/reservation/complete/{imp_uid}")
 	public IamportResponse<Payment> paymentByImpUid(
+		@LoginUser User user,
 		@RequestBody(required=false) PaymentRequest paymentRequest,
-			
-		HttpSession session, 
 		@PathVariable(value= "imp_uid") String imp_uid) throws IamportResponseException, IOException{
-			paymentRequest.getAmount();
-			paymentRequest.getCheckIn();
-			paymentRequest.getCheckOut();
-			paymentRequest.getImpUid();
-			paymentRequest.getMerchantUid();
-			paymentRequest.getReserName();
-			paymentRequest.getPaymentStatus();
-			paymentRequest.getReservationStatus();
-			paymentRequest.getPgProvider();
 			
 			return api.paymentByImpUid(imp_uid);
-	}
-	
+		}
+		
 	
 }
