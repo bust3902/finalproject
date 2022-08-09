@@ -58,7 +58,6 @@ public class AccommodationController {
 		// 해당 id를 가진 숙소 상세정보를 전달한다.
 		// 숙소의 객실 정보, 리뷰 정보는 restController에서 제공한다.
 		model.addAttribute("detail", accommodationService.getAccommodationDetailById(accoId));
-		System.out.println(accommodationService.getAccommodationDetailById(accoId));
 		return "/accommodation/detail";
 	}
 	

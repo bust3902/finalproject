@@ -75,10 +75,20 @@ public class AccommodationService {
 	}
 	
 	// 숙소번호에 따른 모든 객실정보 조회 (예약 가능 여부 포함)
-	public List<AccommodationRoom> getAllRoomDetailsByAccoId(int accoId, RoomCriteria criteria) {
-		// TODO getAllRoomsByAccoId로 리스트 획득 후
-		// TODO for문 돌려서 예약가능 여부 조회 후 boolean 값 저장
-		return null;
+	public List<AccommodationRoom> getAllRoomDetailsByAccoId(RoomCriteria criteria) {
+		// 요청파라미터로 획득하는 값: 숙소아이디, 검색기간(시작날짜, 종료날짜)
+		int accoId = criteria.getAccoId();
+		// getAllRoomsByAccoId로 리스트 획득
+		List<AccommodationRoom> rooms = accommodationMapper.getAllRoomsByAccoId(accoId);
+		// 각 객실 별로 예약 가능 재고 조회해서 객실 객체에 저장
+		for (AccommodationRoom room : rooms) {
+			// 객실 별 조회를 위해 기준 객체에 객실 번호를 저장해서 전달 (roomNo가 0이어도 조회결과가 없음으로 나와서 0 반환되므로 문제 x)
+			// jsp에서는 stock이 양의 정수인 객실만 예약버튼을 활성화시킨다.
+			criteria.setRoomNo(room.getNo());
+			int stock = accommodationMapper.getAvailableRoomStock(criteria);
+			room.setStock(stock);
+		}
+		return rooms;
 	}
 	
 	//////// 서비스 공통기능 메소드

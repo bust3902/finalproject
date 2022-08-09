@@ -82,11 +82,13 @@
 		from accommodations a,
 		(select fr.acco_id, min(fr.room_day_price) minPrice
 		from acco_rooms fr, (select room_no, count(*) as cnt
-							from reservation
-							where reservation_check_in = #{startDate}
-							or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
-							or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate})
-							group by room_no) nr
+							from reservation r, payment p
+							where (reservation_check_in = #{startDate}
+								or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
+								or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate}))
+								and r.reservation_id = p.reservation_id
+								and p.payment_status = '예약완료'
+							group by room_no) nr 
 		<where>
 			fr.room_no = nr.room_no (+)
 			and (fr.room_numbers - NVL(nr.cnt,0)) > 0
@@ -162,7 +164,7 @@
 		select c.co_facility_id as id, c.co_facility_name as name, c.co_facility_icon_name as iconName
 		from acco_common_facilities a, common_facilities c
 		where a.co_facility_id = c.co_facility_id
-		and a.acco_id = #{value}
+			and a.acco_id = #{value}
 	</select>
 	
 	<!-- List<String> getAccoTagsByAccoId(int accoId); -->
@@ -195,17 +197,39 @@
 	
 	<!-- List<AccommodationRoom> getAllRoomsByAccoId(RoomCriteria criteria); -->
 	<select id="getAllRoomsByAccoId" parameterType="int" resultMap="RoomResultMap">
+		select *
+		from acco_rooms
+		where acco_id = #{value}
 	</select>
 	
 	<!-- List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo); -->
 	<select id="getRoomFacilitiesByRoomNo" parameterType="int" resultType="RoomFacility">
-	</select>
-	<!-- List<String> getImagesByRoomNo(int roomNo); -->
-	<select id="getImagesByRoomNo" parameterType="int" resultType="string">
+		select r.ro_facility_id as id, r.ro_facility_name as name, r.ro_facility_icon_name as iconName 
+		from acco_room_facilities a, room_facilities r
+		where a.room_no = #{value}
+			and a.ro_facility_id = r.ro_facility_id
 	</select>
 	
-	<!-- boolean getIsAvailableRoom(RoomCriteria criteria); -->
-	<select id="getIsAvailableRoom" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="boolean">
+	<!-- List<String> getImagesByRoomNo(int roomNo); -->
+	<select id="getImagesByRoomNo" parameterType="int" resultType="string">
+		select room_image_file_name
+		from acco_room_detail_images
+		where room_no = #{value}
+	</select>
+	
+	<!-- int getAvailableRoomStock(RoomCriteria criteria); -->
+	<select id="getAvailableRoomStock" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="int">
+		select (fr.room_numbers - NVL(nr.cnt,0)) as stock
+		from acco_rooms fr, (select room_no, count(*) as cnt
+							from reservation r, payment p
+							where (reservation_check_in = #{startDate}
+								or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
+								or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate}))
+								and r.reservation_id = p.reservation_id
+								and p.payment_status = '예약완료'
+							group by room_no) nr 
+		where fr.room_no = nr.room_no (+)
+		and fr.room_no = #{roomNo}
 	</select>
 	
 </mapper>

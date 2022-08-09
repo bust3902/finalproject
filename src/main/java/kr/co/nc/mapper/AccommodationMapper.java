@@ -48,6 +48,6 @@ public interface AccommodationMapper {
 	List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo);
 	// 객실번호에 따른 이미지(파일명) 조회
 	List<String> getImagesByRoomNo(int roomNo);
-	// 검색 기간에 따른 특정 객실의 예약 가능 여부 조회
-	boolean getIsAvailableRoom(RoomCriteria criteria);
+	// 검색 기간에 따른 특정 객실의 예약 가능 여부 조회 (가능하면 1, 불가능하면 0을 반환)
+	Integer getAvailableRoomStock(RoomCriteria criteria);
 }
