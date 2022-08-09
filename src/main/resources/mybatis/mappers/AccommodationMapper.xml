@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.nc.mapper.AccommodationMapper">
+	<!-- 반복되는 서브쿼리(예약불가 객실 수 조회) 묶기-->
+	<sql id="getReservedCountByRoomNo">
+		select room_no, count(*) as cnt
+			from reservation r, payment p
+			where (reservation_check_in = #{startDate}
+				or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
+				or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate}))
+				and r.reservation_id = p.reservation_id
+				and p.payment_status = '예약완료'
+			group by room_no
+	</sql>
 
 	<!-- List<AccommodationType> getAllTypes(); -->
 	<select id="getAllTypes" resultType="AccommodationType">
@@ -81,14 +92,7 @@
 				r.minPrice as minPrice
 		from accommodations a,
 		(select fr.acco_id, min(fr.room_day_price) minPrice
-		from acco_rooms fr, (select room_no, count(*) as cnt
-							from reservation r, payment p
-							where (reservation_check_in = #{startDate}
-								or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
-								or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate}))
-								and r.reservation_id = p.reservation_id
-								and p.payment_status = '예약완료'
-							group by room_no) nr 
+		from acco_rooms fr, (<include refid="getReservedCountByRoomNo" />) nr
 		<where>
 			fr.room_no = nr.room_no (+)
 			and (fr.room_numbers - NVL(nr.cnt,0)) > 0
@@ -200,6 +204,7 @@
 		select *
 		from acco_rooms
 		where acco_id = #{value}
+		order by room_no
 	</select>
 	
 	<!-- List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo); -->
@@ -220,16 +225,8 @@
 	<!-- int getAvailableRoomStock(RoomCriteria criteria); -->
 	<select id="getAvailableRoomStock" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="int">
 		select (fr.room_numbers - NVL(nr.cnt,0)) as stock
-		from acco_rooms fr, (select room_no, count(*) as cnt
-							from reservation r, payment p
-							where (reservation_check_in = #{startDate}
-								or (reservation_check_in &lt; #{startDate} and reservation_check_out &gt; #{startDate})
-								or (reservation_check_in &gt; #{startDate} and reservation_check_in &lt; #{endDate}))
-								and r.reservation_id = p.reservation_id
-								and p.payment_status = '예약완료'
-							group by room_no) nr 
+		from acco_rooms fr, (<include refid="getReservedCountByRoomNo" />) nr
 		where fr.room_no = nr.room_no (+)
 		and fr.room_no = #{roomNo}
 	</select>
-	
 </mapper>
