@@ -50,7 +50,6 @@
 		<result column="acco_address" property="address"/>
 		<result column="acco_latitude" property="latitude"/>
 		<result column="acco_longitude" property="longitude"/>
-		<result column="acco_introduce_comment" property="introduceComment"/>
 		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
 		<result column="acco_review_rate" property="reviewRate"/>
 		<result column="acco_review_count" property="reviewCount"/>
@@ -60,6 +59,7 @@
 	</resultMap>
 	
 	<resultMap type="Accommodation" id="AccoDetailResultMap" extends="AccoResultMap">
+		<result column="acco_introduce_comment" property="introduceComment"/>
 		<result column="acco_detail_description" property="detailDescription"/>
 		<result column="acco_like_count" property="likeCount"/>
 		<result column="acco_created_date" property="createdDate"/>
@@ -76,7 +76,7 @@
 		2. 서브쿼리에서 획득한 조회결과(r)와 숙소 테이블을 조인하여 객실, 숙소에 대한 모든 조건을 만족하는 숙소정보를 조회한다.-->
 	<select id="getAccommodationsByCriteria" parameterType="kr.co.nc.criteria.AccoCriteria" resultMap="AccoResultMap">
 		select distinct a.acco_id, a.acco_name, a.acco_district, a.acco_address, a.acco_latitude, a.acco_longitude,
-				a.acco_introduce_comment, a.acco_thumbnail_image, a.acco_review_rate, a.acco_review_count, a.city_id,
+				a.acco_thumbnail_image, a.acco_review_rate, a.acco_review_count, a.city_id,
 				ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude),2) as distance,
 				r.minPrice as minPrice
 		from accommodations a,
