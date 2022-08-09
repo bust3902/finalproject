@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.CategoryMapper">
+
+   <!-- List<Category> getAllCategories(); -->
+   <select id="getAllCategories" resultType="Category">
+      select category_id as id, 
+            category_name as name
+      from user_categories
+      order by category_id asc
+   </select>
+   
+   <!-- Category getCategoryById(String category); -->
+   <select id="getCategoryById" parameterType="string" resultType="Category">
+      select category_id as id, 
+            category_name as name
+      from user_categories
+      where category_id = #{value}
+   </select>
+</mapper>

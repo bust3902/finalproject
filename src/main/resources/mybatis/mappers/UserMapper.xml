@@ -14,8 +14,10 @@
 			user_no as no,
 			user_id as id,
 			user_password password,
+			user_nickname nickname,
 			user_name name,
 			user_email email,
+			user_tel tel,
 			user_login_type loginType,
 			user_disabled disabled,
 			user_updated_date updatedDate,
@@ -31,8 +33,10 @@
 			user_no as no,
 			user_id as id,
 			user_password password,
+			user_nickname nickname,
 			user_name name,
 			user_email email,
+			user_tel tel,
 			user_login_type loginType,
 			user_disabled disabled,
 			user_updated_date updatedDate,
@@ -47,7 +51,9 @@
 		update
 			users
 		set
-			user_password = #{password},
+			user_nickname = #{nickname},
+			user_name = #{name},
+			user_tel = #{tel},
 			user_disabled = #{disabled},
 			user_updated_date = sysdate
 		where
