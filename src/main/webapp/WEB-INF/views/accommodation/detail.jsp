@@ -43,6 +43,22 @@
 		height: 400px;
 		object-fit: cover;
 	}
+	
+	.accordion-body h3 {
+		font-size: 1rem !important;
+		font-weight: bold !important;
+	}
+	
+	/* 크롤링 데이터 잘못 저장된 내용 안보이게 처리 (추후 가능하면 DB 데이터 수정) */
+	#acco-info-detail .comment_mobile,#google_maps {
+		display: none;
+	}
+	
+	@media (min-width: 1200px)
+	#acco-info-detail h3 {
+	    font-size: 1rem !important;
+	    font-weight: bold !important;
+	}
 
 </style>
 <title>서울어때</title>
@@ -204,9 +220,9 @@
 						<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3 small">
 								<!-- DB에 저장되어 있는 HTML컨텐츠 그대로 출력하기 -->
-								<p>
+								<div id="acco-info-detail">
 									${detail.detailDescription }
-								</p>
+								</div>
 								<!-- TO DO : 숙소 정보 중 위도, 경도를 이용하여 해당 숙소의 위치를 지도에 표시하기 -->
 								<div id="map-acco-info" class="mx-auto" style="width:800px;height:200px;"></div>
 							</div>
@@ -284,7 +300,7 @@
 						</p>
 						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
 						<div class="my-3">
-							<img alt="review image" src="/resources/images/acco/sampleacco1.jpg">
+							<img alt="review image" src="/resources/images/acco/logo.png">
 						</div>
 						<small>18일 전</small>
 					</div>
@@ -337,6 +353,9 @@
 		</div>
 	</div>
 </div>
+<style type="text/css">
+
+</style>
 <!-- kakao map js -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <!-- swiper js -->
