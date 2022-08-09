@@ -35,7 +35,6 @@ public class StarIconForRate extends HashMap<String, String> {
 		
 		// 점수를 소수점 첫째 자리까지 반올림하기
 		double reviewRate = Math.round(rawReviewRate*10)/10.0;
-		// 점수가 정수로 변환이 가능한 경우(1,2,3,4)와 불가능한 경우(1.2, 2.5, 4.6, ..)로 나눈다.
 		for (int i = 1; i <= 5; i++) {
 			if (i - 0.5 == reviewRate) {
 			// ex) 평점이 1.5이면 2번째 별은 절반 채운 별이다.

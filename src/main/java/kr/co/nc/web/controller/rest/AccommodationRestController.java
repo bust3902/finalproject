@@ -1,14 +1,13 @@
 package kr.co.nc.web.controller.rest;
 
-import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
@@ -32,7 +31,8 @@ public class AccommodationRestController {
 	
 	// 검색 조건(날짜)에 맞는 객실 리스트 반환
 	@GetMapping(path = "/rooms")
-	public List<AccommodationRoom> rooms(int accoId, Date startDate, Date endDate) {
-		return null;
+	public List<AccommodationRoom> rooms(RoomCriteria roomCriteria) {
+		System.out.println(accommodationService.getAllRoomDetailsByAccoId(roomCriteria));
+		return accommodationService.getAllRoomDetailsByAccoId(roomCriteria);
 	}
 }
