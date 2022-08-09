@@ -44,7 +44,7 @@
 		object-fit: cover;
 	}
 	
-	.accordion-body h3 {
+	#acco-info-detail h3 {
 		font-size: 1rem !important;
 		font-weight: bold !important;
 	}
