@@ -2,12 +2,11 @@
 <style>
 	
 	#footer {
-		width: 100%;
 		overflow: hidden;
     	clear: both;
     	position: relative;
-    	margin-top: 120px;
-    	padding: 63px 31px 40px 31px !important;
+    	margin: 120px 0px 0px 0px;
+    	padding: 63px 355px 40px 355px !important;
     	border-top: 1px solid rgba(0,0,0,0.08);
     	background: rgb(245,245,245);
     	font-size: 13px;
@@ -17,7 +16,7 @@
 	
 	#footer .align {
 		width: 1024px;
-		margin: 0 auto;
+		padding: 0 auto;
 	}
 	
 	#footer ul{
