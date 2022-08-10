@@ -78,6 +78,7 @@ public class AccommodationService {
 	public List<AccommodationRoom> getAllRoomDetailsByAccoId(RoomCriteria criteria) {
 		// 요청파라미터로 획득하는 값: 숙소아이디, 검색기간(시작날짜, 종료날짜)
 		int accoId = criteria.getAccoId();
+		System.out.println(criteria.toString());
 		// getAllRoomsByAccoId로 리스트 획득
 		List<AccommodationRoom> rooms = accommodationMapper.getAllRoomsByAccoId(accoId);
 		// 각 객실 별로 예약 가능 재고 조회해서 객실 객체에 저장

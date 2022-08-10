@@ -34,7 +34,7 @@
 	
  	#acco-swiper-wrapper .mySwiper2 img {
 		width: 100%;
-		height: 330px;
+		height: 300px;
 		object-fit: cover;
 	}
 
@@ -73,17 +73,17 @@
 			<div id="acco-swiper-wrapper">
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<div class="swiper-wrapper">
-						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력하기. 이미지 정보가 없을 경우 로고 하나 출력 -->
+						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력. 이미지 정보가 없을 경우 로고 하나 출력 -->
 						<c:choose>
 							<c:when test="${empty detail.images }">
 								<div class="swiper-slide">
-									<img alt="accommodation expanded image" src="/resources/images/logo.png">
+									<img alt="accommodation expanded image" src="/resources/images/acco/logo.png">
 								</div>
 							</c:when>
 							<c:otherwise>
 								<c:forEach var="image" items="${detail.images }">
 									<div class="swiper-slide">
-										<img alt="accommodation expanded image" src="/resources/images/acco/${image }">
+										<img alt="accommodation expanded image" src="/resources/images/acco/detail/${image }">
 									</div>
 								</c:forEach>
 							</c:otherwise>
@@ -103,7 +103,7 @@
 							<c:otherwise>
 								<c:forEach var="image" items="${detail.images }">
 									<div class="swiper-slide">
-										<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/${image }" style="cursor: pointer;">
+										<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
 									</div>
 								</c:forEach>
 							</c:otherwise>
@@ -115,9 +115,9 @@
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
 		<div class="col-6">
-			<h5 class="fw-bold text-dark">
-				${detail.name } <a href=""><i class="bi bi-heart float-end"></i></a>
-			</h5>
+			<h4 id="acco-name" class="fw-semibold text-dark">
+				${detail.name } <a href="" data-acco-id="${detail.id }"><i class="bi bi-heart float-end"></i></a>
+			</h4>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
 				<div class="fw-bold text-dark mb-3">한마디 소개</div>
@@ -149,7 +149,7 @@
 		<div class="tab-content" id="myTabContent">
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
-				<div class="py-3">
+				<div class="my-3">
 					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
 					<form id="form-search-rooms">
 						<input type="text" id="datepicker" class="form-control w-50" value="" />
@@ -159,7 +159,7 @@
 					</form>
 				</div>
 				<div id="room-list-wraper" class="mx-0">
-					<!-- TO DO: 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
+					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
 				</div>
 			</div>
 			<!-- 숙소정보 -->
@@ -173,12 +173,11 @@
 						</h2>
 						<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3 small">
-								<!-- DB에 저장되어 있는 HTML컨텐츠 그대로 출력하기 -->
 								<div id="acco-info-detail">
 									${detail.detailDescription }
 								</div>
-								<!-- TO DO : 숙소 정보 중 위도, 경도를 이용하여 해당 숙소의 위치를 지도에 표시하기 -->
-								<div id="map-acco-info" class="mx-auto" style="width:800px;height:200px;"></div>
+								<!-- 숙소 정보 중 위도, 경도를 이용하여 해당 숙소의 위치 지도에 표시 -->
+								<div id="map-acco-info" class="mx-auto mt-5" style="width:800px;height:200px;"></div>
 							</div>
 						</div>
 					</div>
@@ -189,7 +188,7 @@
 						</h2>
 						<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3">
-							<!-- TO DO : DB에서 조회한 공용시설, 객실시설 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
+							<!-- DB에서 조회한 공용시설, 태그 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
 								<div id="cofas-wrapper" class="d-flex flex-wrap mb-3">
 									<c:forEach var="fac" items="${detail.commonFacilities }">
 										<div id="icon-wrapper-${fac.id }" class="text-center">
@@ -202,10 +201,6 @@
 									<c:forEach var="tag" items="${detail.tags }">
 										<span class="mx-1 badge bg-primary">${tag }</span>
 									</c:forEach>
-										<span class="mx-1 badge bg-primary">dd</span>
-										<span class="mx-1 badge bg-primary">dd</span>
-										<span class="mx-1 badge bg-primary">dd</span>
-										<span class="mx-1 badge bg-primary">dd</span>
 								</div>
 							</div>
 						</div>
@@ -278,38 +273,34 @@
 					<label class="fw-bold mb-3">기본정보</label>
 					<ul>
 						<!-- room_name, room_capacity -->
-						<li>객실명</li>
-						<li>정원 6명</li>
+						<li>객실명 <span id="modal-content-name"></span></li>
+						<li>정원 <span id="modal-content-capacity"></span>명</li>
 					</ul>
 				</div>
 				<div class="my-3 border-bottom">
 					<label class="fw-bold mb-3">객실소개</label>
 					<ul>
-						<!-- room_description, 베드타입 정보가 있다면 베드타입도 출력 -->
-						<li>객실소개내용</li>
+						<li id="modal-content-description"></li>
 					</ul>
 				</div>
 				<div class="my-3 border-bottom">
 					<label class="fw-bold mb-3">편의시설</label>
 					<ul>
 						<!-- 현재 객실의 room facilities 모두 조회해서 출력 -->
-						<li>전용화장실, 에어컨, 헤어드라이기, 타월, 책상, 화장대, 거울, 옷걸이</li>
+						<li id="modal-content-rofas">전용화장실, 에어컨, 헤어드라이기, 타월, 책상, 화장대, 거울, 옷걸이</li>
 					</ul>
 				</div>
 				<div class="my-3">
 					<label class="fw-bold mb-3">선택날짜</label>
 					<ul>
 						<!-- 현재 사용자가 선택한 날짜를 출력 -->
-						<li>08월 01일 ~ 08월 02일</li>
+						<li><span id="modal-content-startdate"></span> ~ <span id="modal-content-enddate"></span></li>
 					</ul>
 				</div>
 			</div>
 		</div>
 	</div>
 </div>
-<style type="text/css">
-
-</style>
 <!-- kakao map js -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <!-- swiper js -->
@@ -317,9 +308,6 @@
 <script type="text/javascript">
 $(function () {
 	
-	// 최초 화면 출력 시 객실정보 조회 함수 실행
-	searchRooms();
-
 /*
  * 숙소 이미지 swiper 생성
  * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
@@ -387,7 +375,7 @@ $(function () {
         duration = end.diff(start,'days');
         setDateValues(startDayString, endDayString);
         // 객실 정보 갱신하기
-        searchRooms()
+        searchRooms();
     });
 
 	// html이 출력될 때 datepicker의 input태그의 value 저장
@@ -435,7 +423,7 @@ $(function () {
  	let mapcenter = new kakao.maps.LatLng(accoLatitude, accoLongitude);
 	let options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng(accoLatitude, accoLongitude), //지도의 중심좌표.
-			level: 5 //지도의 레벨(확대, 축소 정도)
+			level: 3 //지도의 레벨(확대, 축소 정도)
 	};
 	// 지도 생성
 	let map = new kakao.maps.Map(container, options);
@@ -457,102 +445,127 @@ $(function () {
  * 현재 화면에서 선택한 기간에 따른 객실 정보 조회하기
  */
 	function searchRooms() {
-	let queryString = $("#form-search-rooms").serialize();
-	// 객실정보 카드가 출력되는 wrapper의 컨텐츠를 모두 비운다.
-	let $wrapper = $("#room-list-wraper").empty();
-	$.getJSON("/rooms", queryString).done(function(rooms) {
-		if (rooms.length === 0) {
-			let content = '<p class="py-5">조회된 결과가 없습니다.</p>'
-			$wrapper.append(content);
-		} else {
-			// 객실별 이미지 박스 콘텐츠 생성 시 사용할 html 태그를 미리 생성
-			let imageBoxHTML =	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
-									<span>
-										<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
-									</span>
-									<div class="room-swiper-wrapper w-75 mx-auto">
-										<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
-											<div class="swiper-wrapper">
-											</div>
-											<div class="swiper-button-next"></div>
-											<div class="swiper-button-prev"></div>
-										</div>
-									</div>
-								</div>
-							</div>`;
-			
-			// 반복 처리로 객실 별 정보를 보여주는 카드 html콘텐츠 생성
-			$.each(rooms, function(index, room) {
-				// 1. 기본 카드 본문 콘텐츠
-				// TODO: room 객체에서 예약 가능 여부 조회해서 그에 따라 버튼 다르게 출력하기, 예약 가능 객실 수 출력하기
-				let cardBody = '';
-				cardBody +=	`<div class="card-body row">
-								<div class="col-5">
-									<div class="position-relative">`;
-				cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/' + room.thumbnailImageName + '">';
-				cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
-											<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
-										</div>
-									</div>
-								</div>
-								<div class="col-7 d-flex flex-column justify-content-between">`;
-				cardBody +=			'<h5 class="fw-bold text-dark">' + room.name + '</h5>';
-				cardBody +=			'<div class="pb-3 border-bottom text-dark">';
-				cardBody +=				'가격<span class="float-end fw-bold">' + room.dayPrice.toLocaleString() + '원</span>';
-				cardBody +=			`</div>
-									<a href="#link-room-info" class="text-decoration-none text-muted" data-bs-toggle="modal">
-										객실 이용 안내
-										<i class="bi bi-chevron-right float-end"></i>
-									</a>`;
-				cardBody +=			'<button type="button" class="btn btn-secondary w-100">예약</button>';
-				cardBody +=		`</div>
-							</div>`;
-							
-				// 2-1. 이미지 swiper에 들어갈 복수개의 이미지를 htmlContent로 생성
-				let images = room.images;
-				let imageSlides = '';
-				$.each(images, function(index, imagename){
-					imageSlides += '<div class="swiper-slide">';
-					imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/' + imagename +'">';
-					imageSlides +=	'</div>';
-				}) 
-				
-				// 2-2. 카드 썸네일 클릭시 보이는, 이미지 swiper를 포함하는 이미지 박스 콘텐츠
-				let imageBox = '';
-				imageBox += 	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
-									<span>
-										<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
-									</span>
-									<div class="room-swiper-wrapper w-75 mx-auto">
-										<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
-											<div class="swiper-wrapper">`;
-				imageBox += imageSlides;
-				imageBox +=				`</div>
-											<div class="swiper-button-next"></div>
-											<div class="swiper-button-prev"></div>
-										</div>
-									</div>
-								</div>
-							</div>`;
-				
-				// 하나의 객실에 대한 콘텐츠 생성
-				let content ='';
-				content += '<div class="card-room-info card mb-3">';
-				content += cardBody;
-				content += imageBox;
-				content += '</div>'
-				// 화면에 추가
+		let queryString = $("#form-search-rooms").serialize();
+		// 객실정보 카드가 출력되는 wrapper의 컨텐츠를 모두 비운다.
+		let $wrapper = $("#room-list-wraper").empty();
+		$.getJSON("/rooms", queryString).done(function(rooms) {
+			if (rooms.length === 0) {
+				let content = '<p class="py-5">조회된 결과가 없습니다.</p>'
 				$wrapper.append(content);
+			} else {
+				// 객실별 이미지 박스 콘텐츠 생성 시 사용할 html 태그를 미리 생성
+				let imageBoxHTML =	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
+										<span>
+											<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
+										</span>
+										<div class="room-swiper-wrapper w-75 mx-auto">
+											<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+												<div class="swiper-wrapper">
+												</div>
+												<div class="swiper-button-next"></div>
+												<div class="swiper-button-prev"></div>
+											</div>
+										</div>
+									</div>
+								</div>`;
 				
-			});
-			
-			// TODO: 모달 열 때마다 해당 번호의 객실 정보를 모달에 출력하기
-			
-			// 화면에 추가한 모든 객실카드에 대하여 이벤트핸들러 등록
-			addRoomCardEventListener();
-		}
-	});
-}
+				// 반복 처리로 객실 별 정보를 보여주는 카드 html콘텐츠 생성, 모달에 정보를 전달하는 이벤트핸들러 등록
+				$.each(rooms, function(index, room) {
+					// 1. 기본 카드 본문 콘텐츠
+					let cardBody = '';
+					cardBody +=	`<div class="card-body row">
+									<div class="col-4">
+										<div class="position-relative">`;
+					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/' + room.thumbnailImageName + '">';
+					cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
+												<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-8 p-3 d-flex flex-column justify-content-between">`;
+					cardBody +=			'<h5 class="text-dark fw-lighter">' + room.name + '</h5>';
+					cardBody +=			'<div class="pb-3 border-bottom text-dark fw-lighter">';
+					cardBody +=				'가격<span class="float-end">1박 <span class="fw-bold text-dark">' + room.dayPrice.toLocaleString() + '원</span></span>';
+					cardBody +=			'</div>';
+					cardBody +=			'<a id="link-modal-' + room.no +'" href="#link-room-info" class="link-modal text-decoration-none text-muted" data-bs-toggle="modal">';
+					cardBody +=				`객실 이용 안내
+											<i class="bi bi-chevron-right float-end"></i>
+										</a>`;
+					cardBody +=			'<div class="small fw-bold"><i class="bi bi-exclamation-circle fs-6"></i> 예약 가능한 객실 수 (' + room.stock +'/' + room.numbers + ')</div>';
+					if (room.stock > 0) {
+						cardBody +=		'<button type="button" class="btn-room-reserve btn btn-danger w-100" data-room-no="' + room.no +'">예약</button>';
+					} else {
+						cardBody +=		'<button type="button" class="btn btn-dark w-100 disabled">만실</button>';
+					}
+					cardBody +=		`</div>
+								</div>`;
+								
+					// 2-1. 이미지 swiper에 들어갈 복수개의 이미지를 htmlContent로 생성
+					let imageSlides = '';
+					$.each(room.images, function(index, imagename){
+						imageSlides += '<div class="swiper-slide">';
+						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/' + imagename +'">';
+						imageSlides +=	'</div>';
+					}) 
+					
+					// 2-2. 카드 썸네일 클릭시 보이는, 이미지 swiper를 포함하는 이미지 박스 콘텐츠
+					let imageBox = '';
+					imageBox += 	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
+										<span>
+											<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
+										</span>
+										<div class="room-swiper-wrapper w-75 mx-auto">
+											<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+												<div class="swiper-wrapper">`;
+					imageBox += imageSlides;
+					imageBox +=				`</div>
+												<div class="swiper-button-next"></div>
+												<div class="swiper-button-prev"></div>
+											</div>
+										</div>
+									</div>
+								</div>`;
+					
+					// 하나의 객실에 대한 콘텐츠 생성
+					let content ='';
+					content += '<div class="card-room-info card mb-3">';
+					content += cardBody;
+					content += imageBox;
+					content += '</div>'
+					// 생성한 컨텐츠 화면에 추가
+					$wrapper.append(content);
+					
+					// '객실 이용안내' 링크를 눌러서 모달을 열때마다 해당 객실의 정보를 모달에 저장하도록 한다.
+					// * 클릭한 링크에 대한 익명함수 등록 : content를 append하기 전에는 a태그가 아직 DOM객체가 아니어서 할 수가 없으므로, 그 이후에 등록한다.
+					$("#link-modal-" + room.no).click(function() {
+						$("#modal-content-name").text(room.name);
+						$("#modal-content-capacity").text(room.capacity);
+						$("#modal-content-description").text(room.description);
+						let rofas = room.roomFacilities;
+						let rofasContent = '';
+						if (rofas.length === 0) {
+							rofasContent += '등록된 정보가 없습니다. 업소에 문의 바랍니다.'
+						} else {
+							$.each(rofas, function (index, rofa) {
+								rofasContent += (rofa.name + (index === rofas.length-1 ? "" : ", " ));
+							});
+						}
+						$("#modal-content-rofas").text(rofasContent);
+						$("#modal-content-startdate").text(startDayString);
+						$("#modal-content-enddate").text(endDayString);
+					});
+				});
+				
+				// 화면에 추가한 모든 객실카드에 대하여 이벤트핸들러 등록
+				addRoomCardEventListener();
+				// 화면에 추가한 모든 예약버튼에 대하여 이벤트핸들러 등록
+				addReserveBtnEventListener();
+			}
+		});
+	}
+	// 최초 화면 출력 시 객실정보 조회 함수 실행
+	// * daterangepicker 값 모두 초기화된 뒤 실행할 것
+	searchRooms();
  
 /*
  * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
@@ -565,6 +578,15 @@ $(function () {
 		});
 		$(".icon-close-room-detail-img").click(function() {
 			$(this).parents(".box-room-detail-img").addClass("d-none");
+		});
+	}
+	
+	// 객실 예약 버튼을 누르면 숙소아이디, 객실번호, 체크인/체크아웃 날짜를 파라미터로 하는 예약페이지 GET 요청을 보낸다.
+	function addReserveBtnEventListener() {
+		let accoId = $("#acco-name a").attr("data-acco-id");
+		$(".btn-room-reserve").click(function() {
+			let roomNo = $(this).attr("data-room-no");
+			location.href="../reservation?id=" + accoId + "&roomno=" + roomNo + "&checkin=" + startDayString + "&checkout=" +endDayString;
 		});
 	}
 	
@@ -581,6 +603,7 @@ $(function () {
 			}
 		});
 	});
+
 })
 </script>
 </body>
