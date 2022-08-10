@@ -74,18 +74,18 @@
 		
 		<div class="col-9">
 			<div class="card p-1 mb-3">
-				<h1>성북동 누릉지백숙</h1>
+				<h1>${restaurant.name }</h1>
 				<p class="lead">성복동</p>
-				<p>1명의 평가
-					<i class="bi-star-fill"></i>
-					<i class="bi-star-fill"></i>
-					<i class="bi-star-fill"></i>
-					<i class="bi-star"></i>
-					<i class="bi-star"></i>
+				<p class="m-0">${restaurant.reviewCount }명의 평가
+					<i class="bi ${restaurant.reviewPoint gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
+					<i class="bi ${restaurant.reviewPoint gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
+					<i class="bi ${restaurant.reviewPoint gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
+					<i class="bi ${restaurant.reviewPoint gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
+					<i class="bi ${restaurant.reviewPoint gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
 				</p>
 				<hr style="display: block;">
 				<div class="mb-3">
-					<button type="button" class="btn btn-outline-secondary">좋아요</button>
+					<button type="button" class="btn btn-outline-secondary">좋아요(${restaurant.likeCount })</button>
 					<button type="button" class="btn btn-outline-secondary">공유</button>
 			  		<button type="button" class="btn btn-outline-secondary float-end">리뷰쓰기</button>
 				</div>
@@ -94,16 +94,19 @@
 			<div class="mb-3 card p-1">
 				<ul class="list-group">
 					<li class="list-group-item list-group-flush border-0">
-						<i class="bi bi-geo-alt"></i><span>서울특별시 종로구 가희동 30-2</span>
+						<i class="bi bi-geo-alt"></i><span>${restaurant.location }</span>
 					</li>
 					<li class="list-group-item list-group-flush border-0">
-						<span>02-763-0015</span>
+						<span>${restaurant.tel }</span>
 					</li>
+					<!-- 카테고리 -->
 					<li class="list-group-item list-group-flush border-0">
-						<span class="badge rounded-pill bg-light">데이트</span>
+						<span class="badge bg-secondary">데이트</span>
 					</li>
+					<!-- 방문목적 : 태그 -->
 					<li class="list-group-item list-group-flush border-0">
-						<span>예쁜,야외자리</span>
+						<span class="badge rounded-pill bg-light">야외자리</span>
+						<span class="badge rounded-pill bg-light">예쁜</span>
 					</li>
 				</ul>
 			</div>
@@ -113,7 +116,13 @@
 					<h3>영업시간</h3>
 					<ul class="list-group">
 						<li class="list-group-item list-group-flush border-0">
-							<span>매일</span><span class="float-end">오전 11시-오후11시</span>
+							<span>매일</span><span class="float-end">${restaurant.opening }</span>
+						</li>
+						<li class="list-group-item list-group-flush border-0">
+							<span>휴게시간</span><span class="float-end">${restaurant.breakTime }</span>
+						</li>
+						<li class="list-group-item list-group-flush border-0">
+							<span>영업종료시간</span><span class="float-end">${restaurant.close }</span>
 						</li>
 					</ul>
 				</div>
