@@ -34,7 +34,7 @@
 	
  	#acco-swiper-wrapper .mySwiper2 img {
 		width: 100%;
-		height: 330px;
+		height: 300px;
 		object-fit: cover;
 	}
 
@@ -73,7 +73,7 @@
 			<div id="acco-swiper-wrapper">
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<div class="swiper-wrapper">
-						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력하기. 이미지 정보가 없을 경우 로고 하나 출력 -->
+						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력. 이미지 정보가 없을 경우 로고 하나 출력 -->
 						<c:choose>
 							<c:when test="${empty detail.images }">
 								<div class="swiper-slide">
@@ -115,9 +115,9 @@
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
 		<div class="col-6">
-			<h5 id="acco-name" class="fw-bold text-dark">
+			<h4 id="acco-name" class="fw-semibold text-dark">
 				${detail.name } <a href="" data-acco-id="${detail.id }"><i class="bi bi-heart float-end"></i></a>
-			</h5>
+			</h4>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
 				<div class="fw-bold text-dark mb-3">한마디 소개</div>
@@ -149,7 +149,7 @@
 		<div class="tab-content" id="myTabContent">
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
-				<div class="py-3">
+				<div class="my-3">
 					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
 					<form id="form-search-rooms">
 						<input type="text" id="datepicker" class="form-control w-50" value="" />
@@ -159,7 +159,7 @@
 					</form>
 				</div>
 				<div id="room-list-wraper" class="mx-0">
-					<!-- 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
+					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
 				</div>
 			</div>
 			<!-- 숙소정보 -->
@@ -173,7 +173,6 @@
 						</h2>
 						<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3 small">
-								<!-- DB에 저장되어 있는 HTML컨텐츠 그대로 출력하기 -->
 								<div id="acco-info-detail">
 									${detail.detailDescription }
 								</div>
@@ -475,7 +474,7 @@ $(function () {
 					// 1. 기본 카드 본문 콘텐츠
 					let cardBody = '';
 					cardBody +=	`<div class="card-body row">
-									<div class="col-5">
+									<div class="col-4">
 										<div class="position-relative">`;
 					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/' + room.thumbnailImageName + '">';
 					cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
@@ -483,10 +482,10 @@ $(function () {
 											</div>
 										</div>
 									</div>
-									<div class="col-7 d-flex flex-column justify-content-between">`;
-					cardBody +=			'<h5 class="fw-bold text-dark">' + room.name + '</h5>';
-					cardBody +=			'<div class="pb-3 border-bottom text-dark">';
-					cardBody +=				'가격<span class="float-end fw-bold">' + room.dayPrice.toLocaleString() + '원</span>';
+									<div class="col-8 p-3 d-flex flex-column justify-content-between">`;
+					cardBody +=			'<h5 class="text-dark fw-lighter">' + room.name + '</h5>';
+					cardBody +=			'<div class="pb-3 border-bottom text-dark fw-lighter">';
+					cardBody +=				'가격<span class="float-end">1박 <span class="fw-bold text-dark">' + room.dayPrice.toLocaleString() + '원</span></span>';
 					cardBody +=			'</div>';
 					cardBody +=			'<a id="link-modal-' + room.no +'" href="#link-room-info" class="link-modal text-decoration-none text-muted" data-bs-toggle="modal">';
 					cardBody +=				`객실 이용 안내
