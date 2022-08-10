@@ -49,7 +49,6 @@
 	}	
 	
 	#content {
-		color: #000000;
     	padding-top: 20px;
     	display: block;
     	position: relative;
@@ -58,10 +57,20 @@
     	margin: auto;
 	}
 	
-	
-	
 	#content #nickname, #name, #tel {
+		color: #000000;
 		width: 150px;
+	}
+	
+	#box-tel-btn {
+		padding-bottom: 50px;
+		border-bottom: 1px solid rgba(0,0,0,0.08);
+	}
+	
+	#user {
+		width: 824px;		
+		margin: 50px -12px 48px -12px;
+		border-top: 1px solid rgba(0,0,0,0.08);
 	}
 </style>
 <title>내 정보</title>
@@ -93,9 +102,9 @@
 				</div>
 				<div class="row mb-3 d-none" id="box-nickname-update">
 					<div class="col-6">
-						<form action="updateNickname">
+						<form id="form-nickname" action="updateNickname">
 							<input type="text" name="nickname" class="form-control" />
-							<button type="submit" class="btn btn-primary">수정완료 </button>
+							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
 							<button type="button" class="btn btn-secondary" id="btn-hide-nickname-form">수정취소 </button> 
 						</form>
 					</div>
@@ -107,9 +116,9 @@
 				</div>
 				<div class="row mb-3 d-none" id="box-name-update">
 					<div class="col-6">
-						<form action="updateName">
+						<form id="form-name" action="updateName">
 							<input type="text" name="name" class="form-control" />
-							<button type="submit" class="btn btn-primary">수정완료 </button>
+							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
 							<button type="button" class="btn btn-secondary" id="btn-hide-name-form">수정취소 </button> 
 						</form>
 					</div>
@@ -121,12 +130,17 @@
 				</div>
 				<div class="row mb-3 d-none" id="box-tel-update">
 					<div class="col-6">
-						<form action="updateTel">
+						<form id="form-tel" action="updateTel">
 							<input type="text" name="tel" class="form-control" />
-							<button type="submit" class="btn btn-primary">수정완료 </button>
+							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
 							<button type="button" class="btn btn-secondary" id="btn-hide-tel-form">수정취소 </button> 
 						</form>
 					</div>
+				</div>
+				<div class="col mb-5" id="user">
+					<div class="col mt-5"<p>서울어때를 이용하고 싶지 않으신가요?</p></div>
+					<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
+					<button type="button" class="btn btn-link"><a href="">회원탈퇴</a></button>
 				</div>
 			</div>						
 		</div>
@@ -138,7 +152,35 @@ dddd
 </c:otherwise>
 </c:choose>
 <%@ include file="../common/footer.jsp" %>
-<script>
+<script type="text/javascript">
+
+$("#form-nickname").submit(function() {
+	let inputValue = $("#form-nickname input[name='nickname']").val();
+	if (inputValue.length < 2) {
+		alert("2자 이상 입력하세요.");
+		return false;
+	}
+	return true;
+});
+
+$("#form-name").submit(function() {
+	let inputValue = $("#form-name input[name='name']").val();
+	if (inputValue.length < 2) {
+		alert("2자 이상 입력하세요.");
+		return false;
+	}
+	return true;
+});
+
+$("#form-tel").submit(function() {
+	let inputValue = $("#form-tel input[name='tel']").val();
+	if (inputValue.length < 2) {
+		alert("2자 이상 입력하세요.");
+		return false;
+	}
+	return true;
+});
+
 $("#btn-show-nickname-form").click(function() {
 	$("#box-nickname-update").removeClass('d-none');
 	$("#box-nickname-btn").addClass('d-none');
@@ -151,7 +193,7 @@ $("#btn-hide-nickname-form").click(function() {
 
 $("#btn-show-name-form").click(function() {
 	$("#box-name-update").removeClass('d-none');
-	$("#box-name-btn").addClass('d-none');
+	$("#box-name-btn").addClass('d-none')
 })
 
 $("#btn-hide-name-form").click(function() {
@@ -168,6 +210,8 @@ $("#btn-hide-tel-form").click(function() {
 	$("#box-tel-update").addClass('d-none');
 	$("#box-tel-btn").removeClass('d-none');
 })
+
+
 </script>
 </body>
 </html>
