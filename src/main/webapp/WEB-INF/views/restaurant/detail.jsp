@@ -99,11 +99,14 @@
 					<li class="list-group-item list-group-flush border-0">
 						<span>${restaurant.tel }</span>
 					</li>
+					<!-- 카테고리 -->
 					<li class="list-group-item list-group-flush border-0">
-						<span class="badge rounded-pill bg-light">데이트</span>
+						<span class="badge bg-secondary">데이트</span>
 					</li>
+					<!-- 방문목적 : 태그 -->
 					<li class="list-group-item list-group-flush border-0">
-						<span>예쁜,야외자리</span>
+						<span class="badge rounded-pill bg-light">야외자리</span>
+						<span class="badge rounded-pill bg-light">예쁜</span>
 					</li>
 				</ul>
 			</div>
