@@ -16,7 +16,7 @@
 <body>
 <div class="container mt-3">  
 	<c:set var="menu" value="register"></c:set>
-	<%@ include file="common/nav.jsp" %> 
+	<%@ include file="/common/nav.jsp" %> 
 	<div class="row">
 		<div class="col">
 		</div>
@@ -67,9 +67,9 @@
     				<button class="btn btn-primary">등록</button>
     			</div>
     		</form>
-    	</div>
-    	
+    	</div>   	
     </div>
 </div>
+<%@ include file="/common/footer.jsp" %>
 </body>
 </html>
