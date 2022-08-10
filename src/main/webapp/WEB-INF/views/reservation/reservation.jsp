@@ -18,7 +18,7 @@
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="row mb-3">
 		<div class="col-8">
-			<form action="" method="post">
+			<form action="/complete" method="post">
 				<div class="my-3">
 					<p><strong>예약자 정보</strong></p>
 					<label class="form-label" name="reserName">예약자 이름</label>
@@ -69,38 +69,36 @@
 					  개인정보 제 3자 제공 동의</a> <strong class="text-danger">(필수)</strong>
 					</label>
 				</div>
-			</form>
-		</div>
-		<div class="col-4 my-3 ">
-			<div class="row bg-light">
-				<div class="col mx-2">
-					<div class="my-5 mx-3">
-						<dl>
-							<dt class="form-text mt-3">숙소이름</dt>
-							<dd>보코 서울 강남</dd>
-							<dt class="form-text mt-3">객실 타입/기간</dt>
-							<dd>디럭스 싱글 / 1박</dd>
-							<dt class="form-text mt-3">체크인</dt>
-							<dd >07.28 목 15:00</dd>
-							<dt class="form-text mt-3">체크아웃</dt>
-							<dd>07.29 금 12:00</dd>
-						</dl>
+			</div>
+			<div class="col-4 my-3 ">
+				<div class="row bg-light">
+					<div class="col mx-2">
+						<div class="my-5 mx-3">
+							<dl>
+								<dt id="accoName">보코 서울 강남</dt>
+								<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>	
+								<dt class="col-3 form-text">체크인</dt>
+								<dd id="checkIn">22.07.28 15:00</dd>
+								<dd class="form-text">체크아웃</dd>	
+								<dd id="checkOut">22.07.29 12:00</dd>
+							</dl>
+						</div>
+					<hr>
 					</div>
-				<hr>
+					<div class="my-3 mx-3">
+						<p><strong>총 결제 금액</strong><small>(VAT포함)</small></p>
+						<h4><strong class="text-danger">99000원</strong></h4>
+						<label><small>
+							<li class="mx-2">해당 객실가는세금, 봉사료가 포함된 금액입니다.</li>
+							<li class="mx-2">결제완료 후 <span class="text-danger">예약자</span> 이름으로 바로 <span class="text-danger">체크인</span> 하시면 됩니다.</li>
+						</smail></label>
+					</div>						
 				</div>
-				<div class="my-3 mx-3">
-					<p><strong>총 결제 금액</strong><small>(VAT포함)</small></p>
-					<h4><strong class="text-danger">99000원</strong></h4>
-					<label><small>
-						<li class="mx-2">해당 객실가는세금, 봉사료가 포함된 금액입니다.</li>
-						<li class="mx-2">결제완료 후 <span class="text-danger">예약자</span> 이름으로 바로 <span class="text-danger">체크인</span> 하시면 됩니다.</li>
-					</smail></label>
-				</div>						
+				<div class="row">
+					<button type="button" id="modal-button" class="btn btn-danger"> 결제하기</button>
+				</div>
 			</div>
-			<div class="row">
-				<button type="button" id="modal-button" class="btn btn-danger"> 결제하기</button>
-			</div>
-		</div>
+		</form>
 	</div>
 </div>
 <div class="col-12">
@@ -130,12 +128,14 @@
 	      	<div class="modal-body">
 	      		<div class="row">
 					<div class="col-5">
-						<dt id="accoName">보코 서울 강남</dt>
-						<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>	
-						<dt class="col-3 form-text">체크인</dt>
-						<dd id="checkIn">07.28 목 15:00</dd>
-						<dd class="form-text">체크아웃</dd>	
-						<dd id="checkOut">07.29 금 12:00</dd>
+						<dt class="form-text mt-3">숙소이름</dt>
+						<dd>보코 서울 강남</dd>
+						<dt class="form-text mt-3">객실 타입/기간</dt>
+						<dd>디럭스 싱글 / 1박</dd>
+						<dt class="form-text mt-3">체크인</dt>
+						<dd >07.28 목 15:00</dd>
+						<dt class="form-text mt-3">체크아웃</dt>
+						<dd>07.29 금 12:00</dd>
 					</div>
 					<div class="col">
 						<ul class="form-text mb-3"><small><strong class="text-danger">당일예약</strong>은 체크인 시간 기준 <strong class="text-danger">3시간 전</strong>까지 취소 가능합니다</small></ul>
@@ -304,6 +304,8 @@ function startPay(){
 		// 가격 : accoPrice.value
 		buyer_name : reserName.value,
 		buyer_tel : reserTel.value,
+		checkIn : checkIn.value,
+		checkOut : checkOut.value
 		
 	}, function(rsp) {
 		if ( rsp.success ) {
@@ -332,7 +334,7 @@ function startPay(){
 	            
 	        }).done(function (data) {
 	          // 가맹점 서버 결제 API 성공시 로직
-	        //  location.href="http://localhost/reservation/complete/"+rsp.imp_uid;
+	          location.href="http://localhost/reservation/complete/"+rsp.imp_uid;
 	        })
 	           
 	      } else {

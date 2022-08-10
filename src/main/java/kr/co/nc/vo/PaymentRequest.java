@@ -2,6 +2,9 @@ package kr.co.nc.vo;
 
 
 
+
+import org.springframework.beans.BeanUtils;
+
 import lombok.Getter;
 import lombok.ToString;
 
@@ -13,11 +16,10 @@ public class PaymentRequest {
 	private String merchantUid;
 	private String reserName;
 	private String reserTel;
-	private String amount;
+	private int amount;
 	private String checkIn;
 	private String checkOut;
 	private String pgProvider;
 	private String paymentStatus;
 	private String reservationStatus;
-	
 }

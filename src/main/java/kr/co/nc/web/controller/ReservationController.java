@@ -26,9 +26,10 @@ public class ReservationController {
 	 * 뷰 페이지 : /WEB-INF/views/home.jsp
 	 */
 	@GetMapping(path = "/reservation")
-	public String reservation(@RequestParam("id") int accoId, Model model) {
-		model.addAttribute("detail",accommodationService.getAccommodationDetailById(accoId));
-
+	public String reservation(@RequestParam(value ="id", required =false) Integer accoId, int roomNo, String checkIn, String checkOut ,Model model) {
+		//상세페이지에서 온 해당 id를 가지고 숙소예약을한다.
+//		model.addAttribute("detail",accommodationService.getAccommodationDetailById(accoId));
+		
 		return "reservation/reservation";
 	}
 	
