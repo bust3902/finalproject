@@ -115,8 +115,8 @@
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
 		<div class="col-6">
-			<h5 class="fw-bold text-dark">
-				${detail.name } <a href=""><i class="bi bi-heart float-end"></i></a>
+			<h5 id="acco-name" class="fw-bold text-dark">
+				${detail.name } <a href="" data-acco-id="${detail.id }"><i class="bi bi-heart float-end"></i></a>
 			</h5>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
@@ -202,10 +202,6 @@
 									<c:forEach var="tag" items="${detail.tags }">
 										<span class="mx-1 badge bg-primary">${tag }</span>
 									</c:forEach>
-										<span class="mx-1 badge bg-primary">dd</span>
-										<span class="mx-1 badge bg-primary">dd</span>
-										<span class="mx-1 badge bg-primary">dd</span>
-										<span class="mx-1 badge bg-primary">dd</span>
 								</div>
 							</div>
 						</div>
@@ -498,7 +494,7 @@ $(function () {
 										</a>`;
 					cardBody +=			'<div class="small fw-bold"><i class="bi bi-exclamation-circle fs-6"></i> 예약 가능한 객실 수 (' + room.stock +'/' + room.numbers + ')</div>';
 					if (room.stock > 0) {
-						cardBody +=		'<button type="button" class="btn btn-secondary w-100">예약</button>';
+						cardBody +=		'<button type="button" class="btn-room-reserve btn btn-danger w-100" data-room-no="' + room.no +'">예약</button>';
 					} else {
 						cardBody +=		'<button type="button" class="btn btn-dark w-100 disabled">만실</button>';
 					}
@@ -540,7 +536,7 @@ $(function () {
 					// 생성한 컨텐츠 화면에 추가
 					$wrapper.append(content);
 					
-					// '객실 이용안내' 링크를 눌러서 모달을 열때마다 해당 객실의 정보를 모달에 저장한다.
+					// '객실 이용안내' 링크를 눌러서 모달을 열때마다 해당 객실의 정보를 모달에 저장하도록 한다.
 					// * 클릭한 링크에 대한 익명함수 등록 : content를 append하기 전에는 a태그가 아직 DOM객체가 아니어서 할 수가 없으므로, 그 이후에 등록한다.
 					$("#link-modal-" + room.no).click(function() {
 						$("#modal-content-name").text(room.name);
@@ -563,6 +559,8 @@ $(function () {
 				
 				// 화면에 추가한 모든 객실카드에 대하여 이벤트핸들러 등록
 				addRoomCardEventListener();
+				// 화면에 추가한 모든 예약버튼에 대하여 이벤트핸들러 등록
+				addReserveBtnEventListener();
 			}
 		});
 	}
@@ -581,6 +579,15 @@ $(function () {
 		});
 		$(".icon-close-room-detail-img").click(function() {
 			$(this).parents(".box-room-detail-img").addClass("d-none");
+		});
+	}
+	
+	// 객실 예약 버튼을 누르면 숙소아이디, 객실번호, 체크인/체크아웃 날짜를 파라미터로 하는 예약페이지 GET 요청을 보낸다.
+	function addReserveBtnEventListener() {
+		let accoId = $("#acco-name a").attr("data-acco-id");
+		$(".btn-room-reserve").click(function() {
+			let roomNo = $(this).attr("data-room-no");
+			location.href="../reservation?id=" + accoId + "&roomno=" + roomNo + "&checkin=" + startDayString + "&checkout=" +endDayString;
 		});
 	}
 	
