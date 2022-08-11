@@ -35,8 +35,10 @@ public class Review {
 	// 화면 표현 시 사용하는 필드
 	private StarIconForRate pointIcon; // 리뷰 별점 아이콘을 표현하는 hashMap을 상속받는 객체
 	
-	public Review() {
-		// Review 객체 생성 시 리뷰 평점에 따른 별점 아이콘을 생성해 멤버변수에 저장한다.
-		this.pointIcon = new StarIconForRate(this.point);
+	// setter메소드를 다시 정의함: 리뷰 조회 시 point를 가져올 때 아이콘 객체를 함께 생성해 저장한다.
+	public void setPoint(int point) {
+		this.point = point;
+		this.pointIcon = new StarIconForRate(point);
 	}
+	
 }
