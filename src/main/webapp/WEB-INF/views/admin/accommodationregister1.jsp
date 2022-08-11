@@ -146,7 +146,11 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1e9adb3077789558d707162df08956e7&libraries=services"></script>
 <script>
 	// CKEditor5 텍스트 에디터
-	ClassicEditor.create(document.querySelector('#editor'));
+	let ckEditor;
+	ClassicEditor.create(document.querySelector('#editor'))
+		.then(function(editor) {
+			ckEditor = editor;
+		});
 	
 	// 다음 주소 검색 API
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
@@ -224,7 +228,7 @@
 		
 		// 숙소 상세 정보가 입력되었는지 확인하기
 		// let detailDescriptionValue = $("textarea[name=detailDescription]").val();
-		let detailDescriptionValue = $("#editor").val();
+		let detailDescriptionValue = ckEditor.getData();
 		if (detailDescriptionValue === "") {
 			alert("숙소 상세 정보를 입력해주세요.");
 			return false;

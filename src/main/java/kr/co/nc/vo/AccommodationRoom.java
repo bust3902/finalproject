@@ -2,6 +2,8 @@ package kr.co.nc.vo;
 
 import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -26,5 +28,6 @@ public class AccommodationRoom {
 	private String accoId; // 이 객실이 포함된 숙소 아이디
 	
 	private List<RoomFacility> roomFacilities; // 이 객실이 가지는 모든 객실시설 정보
+	private List<MultipartFile> detailImageFiles; // 객실 상세 이미지
 	
 }

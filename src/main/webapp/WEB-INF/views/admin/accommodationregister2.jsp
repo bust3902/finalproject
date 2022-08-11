@@ -97,7 +97,7 @@
 				<!-- 숙소 상세 이미지 업로드 폼 -->
 				<div class="mb-5">
 					<label class="form-label">상세 이미지</label>
-					<input class="form-control w-50" type="file" name="detailImageFile" >
+					<input class="form-control w-50" multiple="multiple" type="file" name="detailImageFiles" >
 				</div>
 				
 
@@ -122,7 +122,7 @@ $("#select-common-facility").change(function() {
 			let content = '';
 			
 			content += '	<div class="form-check form-check-inline">';
-			content += '		<input class="form-check-input" type="checkbox" name="commonFacilities" value="${"'+cofacility.id+'"}">';
+			content += '		<input class="form-check-input" type="checkbox" name="stringCommonFacilities" value="${"'+cofacility.id+'"}">';
 			content += '		<label class="form-check-label" >${"'+cofacility.name+'"}</label>';
 			content += '	</div>';
 
@@ -175,7 +175,7 @@ $(function() {
 
 		// 공용시설 체크박스가 체크되어있는지 확인하기
 		
-		let targetFieldLength = $(":input[name=commonFacilities]:checked").length;
+		let targetFieldLength = $(":input[name=stringCommonFacilities]:checked").length;
 		if (targetFieldLength < 1) {
 			alert("공용시설을 선택해주세요.");
 			return false;
@@ -201,6 +201,14 @@ $(function() {
 			alert("숙소 메인 이미지를 첨부해주세요");
 			return false;
 		}
+		
+		// 숙소 상세 이미지가 설정되어있는지 체크하기
+		let thumbnailImageNameValue = $.trim( $(":file[name=detailImageFiles]").val() );
+		if (thumbnailImageNameValue === "") {
+			alert("숙소 상세 이미지를 첨부해주세요");
+			return false;
+		}
+		
 		return true;
 	});
 })
