@@ -222,45 +222,54 @@
 					</div>
 					<p>전체 리뷰 ${detail.reviewCount }</p>
 				</div>
-				<!-- 리뷰 리스트 출력 -->
-				<!-- TODO: 페이징 처리 -->
-				<c:forEach var="review" items="${reviews }">
-					<div class="row p-5 border-bottom">
-						<!-- TODO: 추후 프로필이미지 등록 구현한다면 맞는 이미지 파일명 출력하기 -->
-						<div class="col-2 profile-image-wrapper rounded-circle">
-							<img class="" alt="user profile" src="/resources/images/logo.png">
+				<c:choose>
+					<c:when test="${empty reviews}">
+						<div class="p-5 border-bottom">
+							등록된 리뷰가 없습니다.
 						</div>
-						<div class="col">
-							<strong class="text-dark">${review.title }</strong>
-							<div class="text-warning">
-								<i class="bi ${review.pointIcon.star1 }"></i>
-								<i class="bi ${review.pointIcon.star2 }"></i>
-								<i class="bi ${review.pointIcon.star3 }"></i>
-								<i class="bi ${review.pointIcon.star4 }"></i>
-								<i class="bi ${review.pointIcon.star5 }"></i>
-								<span class="text-muted mx-1">${review.point }</span>
-							</div>
-							<p class="my-1">
-								<small>${review.user.nickname }</small> /
-								<small>${review.room.name } 이용</small><br/>
-							</p>
-							<p class="text-dark my-3 small">
-								${review.content }
-							</p>
-							<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-							<c:if test="${not empty review.image }">
-								<div class="my-3">
-									<!-- TO DO : 리뷰 이미지 저장경로 확인 필요, 이미지 작게 보여주고 클릭하면 키울건지? -->
-									<img class="img-fluid" alt="review image" src="/resources/images/review/${review.image }">
+					</c:when>
+					<c:otherwise>
+						<!-- 리뷰 리스트 출력 -->
+						<!-- TODO: 페이징 처리 -->
+						<c:forEach var="review" items="${reviews }">
+							<div class="row p-5 border-bottom">
+								<!-- TODO: 추후 프로필이미지 등록 구현한다면 맞는 이미지 파일명 출력하기 -->
+								<div class="col-2 profile-image-wrapper rounded-circle">
+									<img class="" alt="user profile" src="/resources/images/logo.png">
 								</div>
-							</c:if>
-							<!-- js에서 moment.js 라이브러리 이용하여 경과시간을 계산한 후 이 태그의 컨텐츠로 전달한다. -->
-							<!-- review.createdDate은 Date객체이므로 패턴을 맞추어 저장한다. -->
-							<fmt:formatDate value="${review.createdDate }" var="formattedDate" type="date" pattern="YYYY-MM-dd HH:mm:ss"/>
-							<small class="elapsedTime" data-created-date="${formattedDate }"></small>
-						</div>
-					</div>
-				</c:forEach>
+								<div class="col">
+									<strong class="text-dark">${review.title }</strong>
+									<div class="text-warning">
+										<i class="bi ${review.pointIcon.star1 }"></i>
+										<i class="bi ${review.pointIcon.star2 }"></i>
+										<i class="bi ${review.pointIcon.star3 }"></i>
+										<i class="bi ${review.pointIcon.star4 }"></i>
+										<i class="bi ${review.pointIcon.star5 }"></i>
+										<span class="text-muted mx-1">${review.point }</span>
+									</div>
+									<p class="my-1">
+										<small>${review.user.nickname }</small> /
+										<small>${review.room.name } 이용</small><br/>
+									</p>
+									<p class="text-dark my-3 small">
+										${review.content }
+									</p>
+									<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
+									<c:if test="${not empty review.image }">
+										<div class="my-3">
+											<!-- TO DO : 리뷰 이미지 저장경로 확인 필요, 이미지 작게 보여주고 클릭하면 키울건지? -->
+											<img class="img-fluid" alt="review image" src="/resources/images/review/${review.image }">
+										</div>
+									</c:if>
+									<!-- js에서 moment.js 라이브러리 이용하여 경과시간을 계산한 후 이 태그의 컨텐츠로 전달한다. -->
+									<!-- review.createdDate은 Date객체이므로 패턴을 맞추어 저장한다. -->
+									<fmt:formatDate value="${review.createdDate }" var="formattedDate" type="date" pattern="YYYY-MM-dd HH:mm:ss"/>
+									<small class="elapsedTime" data-created-date="${formattedDate }"></small>
+								</div>
+							</div>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 	</div>
