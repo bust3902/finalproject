@@ -19,6 +19,7 @@ public class Review {
 	private User user;				// userNo대신 썼습니다
 	private Restaurant restaurant;	// restaurantNo 대신 썼습니다.
 	private int accoId;				// 숙소 번호
+	private AccommodationRoom room;	// 객실 정보(등록 시 no 저장, 조회 시 name 저장)
 	private String title;
 	private String content;
 	private int likeCount;

@@ -229,6 +229,7 @@
 						<img class="" alt="user profile" src="/resources/images/logo.png">
 					</div>
 					<div class="col">
+						${reviews }
 						<strong class="text-dark">조금 아쉬웠지만 이용할만해요.</strong>
 						<div class="text-warning">
 							<i class="bi bi-star-fill"></i>

@@ -9,22 +9,56 @@
 		values
 		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{likeCount}, #{image})
 	</insert>
+	
 	<!-- void updateReview(Review review); -->
-		<update id="updateReview" parameterType="Review">
-			update
-				review
-			set
-				review_title = #{title},
-				review_content = #{content},
-				review_like_count = #{likeCount},
-				review_image = #{image},
-				review_updated_date = sysdate
-			where
-				review_no = #{no}
-		</update>
+	<update id="updateReview" parameterType="Review">
+		update
+			review
+		set
+			review_title = #{title},
+			review_content = #{content},
+			review_like_count = #{likeCount},
+			review_image = #{image},
+			review_updated_date = sysdate
+		where
+			review_no = #{no}
+	</update>
+		
 	<!-- void deleteReview(Review reivew); -->
-		<delete id="deleteReview" parameterType="Review">
-			delete from review
-			where review_no = #{no}
-		</delete>
+	<delete id="deleteReview" parameterType="Review">
+		delete from review
+		where review_no = #{no}
+	</delete>
+	
+	<!-- List<Review> getAllReviewsById(ReviewCriteria criteria); -->
+	<!-- 식당 태그 조회는 별도의 메소드로 지정할 것 -->
+	<select id="getReviewsByCriteria" parameterType="kr.co.nc.criteria.ReviewCriteria" resultType="Review">
+		select rv.review_no as no, rv.review_title as title, rv.review_content as content, rv.review_like_count as likeCount,
+			rv.review_created_date as createdDate, rv.review_updated_date as updatedDate,
+			rv.review_image as image, rv.review_point as point,
+			u.user_nickname as nickname
+			<if test="accoId != 0">
+				, ar.room_name as roomName
+			</if>
+		from review rv, users u, restaurant rs
+			<if test="accoId != 0">
+				, acco_rooms ar
+			</if>
+		<where>
+			rv.review_deleted = 'N'
+			and rv.user_no = u.user_no
+			<choose>
+				<when test="accoId != 0">
+					and rv.acco_id = #{accoId}
+					and rv.room_no = ar.room_no
+				</when>
+				<when test="restaurantNo != 0">
+					and rv.restaurant_no = #{restaurantNo}
+					and rv.restaurant_no = rs.restaurant_no
+				</when>
+			</choose>
+		</where>
+		order by rv.review_no desc
+	</select>
+	
 </mapper>
