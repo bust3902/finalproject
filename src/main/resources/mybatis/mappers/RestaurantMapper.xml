@@ -115,4 +115,54 @@
 		</if>
 		order by RESTAURANT_CREATED_DATE desc
 	</select>
+	
+	<!-- List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria); -->
+	<select id="getRestaurantByCriteria" parameterType="kr.co.nc.criteria.RestaurantCriteria" resultMap="RestaurantResultMap">
+		select *
+		from RESTAURANT
+		<where>
+			<if test="categoryId != null">
+				RESTAURANT_NO in (select RESTAURANT_NO
+									from RESTAURANT_CAT
+									where RESTAURANT_CAT_ID = #{categoryId})
+				
+			</if>
+			<if test="tags != null">
+				and RESTAURANT_NO in (select RESTAURANT_NO
+										from RESTAURANT_TAG
+										where RESTAURANT_TAG in
+										<foreach collection="tags" item="tag" open="(" close=")" separator=",">
+											#{tag}
+										</foreach> )		
+			</if>
+		</where>
+		<choose>
+			<when test="sort == 'point'">
+				order by RESTAURANT_REVIEW_POINT desc
+			</when>
+			<when test="sort == 'count'">
+				order by RESTAURANT_REVIEW_COUNT desc
+			</when>
+			<when test="sort == 'like'">
+				order by RESTAURANT_LIKE_COUNT desc
+			</when>
+			<when test="sort == 'distance'">
+				order by RESTAURANT_NO desc
+			</when>
+		</choose>
+	</select>
+	
+	<!-- List<RestaurantCategory> getAllCategories();-->
+	<select id="getAllCategories" resultType="RestaurantCategory">
+		select RESTAURANT_CAT_ID as id , RESTAURANT_CAT_NAME as name
+		from RESTAURANT_CAT_NAME
+		order by RESTAURANT_CAT_ID asc
+	</select>
+	<!-- RestaurantCategory getCategoryById(String categoryId); -->
+	<select id="getCategoryById" parameterType="string" resultType="RestaurantCategory">
+		select RESTAURANT_CAT_ID as id , RESTAURANT_CAT_NAME as name
+		from RESTAURANT_CAT_NAME
+		where RESTAURANT_CAT_ID = #{value}
+	</select>
+	
 </mapper>

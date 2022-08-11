@@ -72,10 +72,10 @@
 							<!-- 음식 카테고리만큼 내용이 출력되게 하기 -->
 							<div class="row p-3">
 								<div class="form-check">
-							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-							        <label class="form-check-label" for="optionsRadios1">
-							          배달
-							        </label>
+								        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
+								        <label class="form-check-label" for="optionsRadios1">
+								        배달
+								        </label>
 						      	</div>
 						     	<div class="form-check">
 							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
@@ -94,7 +94,7 @@
 						<li class="list-group-item py-3">
 							<div class="fw-bold mb-3">음식점 태그</div>
 							<!-- 음식 태그만큼 내용이 출력되게 하기 -->
-							 <div class="form-check">
+							 <div class="form-check" id="box-buttons">
 							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
 							     <label class="form-check-label" for="flexCheckDefault">
 							          데이트

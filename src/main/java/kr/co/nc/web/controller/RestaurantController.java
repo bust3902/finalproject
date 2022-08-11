@@ -1,6 +1,8 @@
 package kr.co.nc.web.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.co.nc.service.RestaurantService;
+import kr.co.nc.vo.RestaurantCategory;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -18,7 +21,11 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 	
 	@GetMapping(path="/searchlist")
-	public String searchList() {
+	public String searchList(@RequestParam(name = "cat",required = false) String categoryId,Model model ) {
+		List<RestaurantCategory> categories = restaurantService.getAllCategories();
+		model.addAttribute("categories",categories);
+		
+		model.addAttribute("tags",restaurantService.getAlltags());
 		
 		return "restaurant/searchlist";
 	}
