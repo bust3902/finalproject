@@ -75,8 +75,8 @@
 					<div class="col mx-2">
 						<div class="my-5 mx-3">
 							<dl>
-								<dt id="accoName">보코 서울 강남</dt>
-								<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>	
+								<dt id="accoName">보코 서울 강남</dt><dt id="accoNo" style="display:none;">005</dt>
+								<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span><dd id="roomNo" style="display:none;">001</dd>	
 								<dt class="col-3 form-text">체크인</dt>
 								<dd id="checkIn">22.07.28 15:00</dd>
 								<dd class="form-text">체크아웃</dd>	
@@ -303,21 +303,9 @@ function startPay(){
 		amount : 99000,
 		// 가격 : accoPrice.value
 		buyer_name : reserName.value,
-		buyer_tel : reserTel.value,
-		checkIn : checkIn.value,
-		checkOut : checkOut.value
-		
+		buyer_tel : reserTel.value
 	}, function(rsp) {
 		if ( rsp.success ) {
-			let msg = '결제가 완료되었습니다';
-			msg += '상품ID : ' + rsp.imp_uid;               
-        	msg += '결제ID : ' + rsp.merchant_uid;               
-        	msg += '결제자 : ' + reserName.value;                
-        	msg += '결제 금액 : ' + rsp.paid_amount;                
-        	msg += '결제자 전화번호 : ' + reserTel.value;                
-        	msg += '체크인 : ' + checkIn.value;                
-        	msg += '체크아웃 : ' + checkOut.value;                
-			console.log("결제성공 " + msg);
 			jQuery.ajax({
 	            url: "/reservation/complete/"+rsp.imp_uid, // 서버의결제정보를 받는 url
 	            type: 'POST',
@@ -328,13 +316,16 @@ function startPay(){
 	        		reserName : reserName.value,
 	        		reserTel : reserTel.value,
 	        		amount : rsp.paid_amount,
-	                checkIn : checkIn.value,
-	        		checkOut : checkOut.value
+	                checkIn : checkIn.textContent,
+	        		checkOut : checkOut.textContent,
+	        		roomNo : roomNo.textContent,
+	        		accoNo : accoNo.textContent
+	        		
 	            })
 	            
 	        }).done(function (data) {
 	          // 가맹점 서버 결제 API 성공시 로직
-	          location.href="http://localhost/reservation/complete/"+rsp.imp_uid;
+	         // location.href="http://localhost/reservation/complete/"+rsp.imp_uid;
 	        })
 	           
 	      } else {
