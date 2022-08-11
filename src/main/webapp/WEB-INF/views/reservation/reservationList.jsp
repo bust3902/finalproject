@@ -67,6 +67,9 @@
 		</div>
 	</div>
 </div>
+<div class="col-12">
+		<jsp:include page="../common/footer.jsp"></jsp:include>
+	</div>
 </body>
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>

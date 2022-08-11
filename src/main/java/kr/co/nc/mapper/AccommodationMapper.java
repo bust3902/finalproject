@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.vo.Accommodation;
+import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
@@ -37,8 +39,15 @@ public interface AccommodationMapper {
 	List<CommonFacility> getCommonFacilitiesByAccoId(int accoId);
 	// 숙소번호에 따른 태그 조회
 	List<String> getAccoTagsByAccoId(int accoId);
-	// 숙소번호에 따른 모든 객실정보 조회 (+ 예약 가능 여부)
+	// 숙소번호에 따른 이미지(파일명) 조회
+	List<String> getImagesByAccoId(int accoId);
 	
-	// 객실번호에 따른 객실상세정보 조회
-	
+	// 숙소번호에 따른 모든 객실정보 조회 (예약 가능 여부 제외)
+	List<AccommodationRoom> getAllRoomsByAccoId(int accoId);
+	// 객실번호에 따른 객실시설 조회
+	List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo);
+	// 객실번호에 따른 이미지(파일명) 조회
+	List<String> getImagesByRoomNo(int roomNo);
+	// 검색 기간에 따른 특정 객실의 예약 가능 여부 조회 (가능하면 1, 불가능하면 0을 반환)
+	Integer getAvailableRoomStock(RoomCriteria criteria);
 }

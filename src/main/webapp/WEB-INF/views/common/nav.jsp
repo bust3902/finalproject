@@ -1,14 +1,25 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="tags.jsp" %>
-<style>
-	.sticky {
- 		position: sticky;
-  		top: 0;
+<style>	
+	.nav-container {
+		display: flex;
+	    flex-wrap: inherit;
+	    align-items: center;
+	    justify-content: space-between;
+		width: 100%;
+	    padding-right: calc(var(--bs-gutter-x) * .5);
+	    padding-left: calc(var(--bs-gutter-x) * .5);
+	    margin-right: auto;
+	    margin-left: auto;
+        max-width: 1320px;
+        --bs-gutter-x: 1.5rem;
+    	--bs-gutter-y: 0;
+    	padding: var(--bs-navbar-padding-y) var(--bs-navbar-padding-x);
 	}
 </style>
 
 <nav class="navbar navbar-expand-md sticky-top bg-secondary navbar-dark">
-	<div class="container">
+	<div class="nav-container">
 		<!-- 홈버튼 -->
 		<a class="navbar-brand" href="/">
       		<img src="/resources/images/logo.png" alt="" width="80" height="auto">
@@ -36,10 +47,10 @@
 				<li class="nav-item dropdown" style="width:80px;height:auto">
 				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">내정보</a>
     			<ul class="dropdown-menu">
-      				<li><a class="dropdown-item" href="/user/imformation">내 정보</a></li>
-      				<li><a class="dropdown-item" href="">예약 내역</a></li>
-      				<li><a class="dropdown-item" href="">내가 찜한 목록</a></li>
-      				<li><a class="dropdown-item" href="">내 리뷰 보기</a></li>
+      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_001">내 정보</a></li>
+      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_002">예약 내역</a></li>
+      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_003">내가 찜한 목록</a></li>
+      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_004">내 리뷰 보기</a></li>
       				<li><hr class="dropdown-divider"></li>
 					<li><a class="dropdown-item" href="/logout">로그아웃</a></li>					
     			</ul>

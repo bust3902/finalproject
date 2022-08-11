@@ -139,8 +139,8 @@
 								<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 								<c:forEach var="tag" items="${tags }">
 									<div class="col-6 mb-3">
-										<input class="form-check-input" type="checkbox" name="tags" value="${tag.name }">
-										<label class="form-check-label small">${tag.name }</label>
+										<input class="form-check-input" type="checkbox" name="tags" value="${tag }">
+										<label class="form-check-label small">${tag }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -457,29 +457,16 @@ $(function () {
 				$tbody.append(content);
 			} else {
 				$.each(accos, function(index, acco) {
-					let reviewRateText = '';
-					if (acco.reviewRate <= 1) {
-						reviewRateText = '아쉬워요';
-					} else if (acco.reviewRate <= 2) {
-						reviewRateText = '부족해요';
-					} else if (acco.reviewRate <= 3) {
-						reviewRateText = '만족해요';
-					} else if (acco.reviewRate <= 4) {
-						reviewRateText = '추천해요';
-					} else if (acco.reviewRate <= 5) {
-						reviewRateText = '최고에요';
-					}
-					
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
 					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
 					content += '	<td class="align-middle p-3">';
-					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/' + acco.thumbnailImageName + '" />';
+					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/acco/' + acco.thumbnailImageName + '" />';
 					content += '	</td>';
 					content += '	<td class="p-3">';
 					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';
 					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + reviewRateText +' (' + acco.reviewCount  +')</strong>';
+					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
 					content += '		</p>';
 					content += '		<p>'
 					content += '			<small>' + acco.district + '</small>'

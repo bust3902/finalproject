@@ -18,14 +18,18 @@ import lombok.ToString;
  */
 public class AccommodationRoom {
 
+	private String accoId; // 이 객실이 포함된 숙소 아이디
+	@NotBlank
 	private int no;
 	private String name;
 	private int numbers; // 총 객실 수
 	private int capacity; // 실별 최대 숙박 인원
 	private int dayPrice; //1박 기본 요금
 	private String thumbnailImageName; // 객실 대표이미지
-	private String description;
-	private String accoId; // 이 객실이 포함된 숙소 아이디
+	private String description; // 객실이용안내 모달에 출력할 객실소개
+	
+	// DB 조회 시점 기준 예약 가능 객실 재고 수
+	private int stock;
 	
 	private List<RoomFacility> roomFacilities; // 이 객실이 가지는 모든 객실시설 정보
 	private List<MultipartFile> detailImageFiles; // 객실 상세 이미지

@@ -34,7 +34,7 @@
 	
  	#acco-swiper-wrapper .mySwiper2 img {
 		width: 100%;
-		height: 330px;
+		height: 300px;
 		object-fit: cover;
 	}
 
@@ -42,6 +42,22 @@
 		width: 100%;
 		height: 400px;
 		object-fit: cover;
+	}
+	
+	/* 크롤링데이터 h3 폰트크기, 스타일 강제변경 */
+	#acco-info-detail h3 {
+		font-size: 1rem !important;
+		font-weight: bold !important;
+	}
+	@media (min-width: 1200px)
+	#acco-info-detail h3 {
+	    font-size: 1rem !important;
+	    font-weight: bold !important;
+	}
+	
+	/* 크롤링 데이터 잘못 저장된 내용 안보이게 처리 (추후 가능하면 DB 데이터 수정) */
+	#acco-info-detail .comment_mobile,#google_maps {
+		display: none;
 	}
 
 </style>
@@ -57,42 +73,41 @@
 			<div id="acco-swiper-wrapper">
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/sampleacco1.jpg">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/sampleacco2.jpg">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/sampleacco3.jpg">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/logo.png">
-						</div>
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/logo.png">
-						</div>
+						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력. 이미지 정보가 없을 경우 로고 하나 출력 -->
+						<c:choose>
+							<c:when test="${empty detail.images }">
+								<div class="swiper-slide">
+									<img alt="accommodation expanded image" src="/resources/images/acco/logo.png">
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="image" items="${detail.images }">
+									<div class="swiper-slide">
+										<img alt="accommodation expanded image" src="/resources/images/acco/detail/${image }">
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 					</div>
 					<div class="swiper-button-next"></div>
 					<div class="swiper-button-prev"></div>
 				</div>
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco1.jpg" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco2.jpg" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/sampleacco3.jpg" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
-						</div>
-						<div class="swiper-slide">
-							<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
-						</div>
+						<c:choose>
+							<c:when test="${empty detail.images }">
+								<div class="swiper-slide">
+									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
+								</div>
+							</c:when>
+							<c:otherwise>
+								<c:forEach var="image" items="${detail.images }">
+									<div class="swiper-slide">
+										<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
+									</div>
+								</c:forEach>
+							</c:otherwise>
+						</c:choose>
 					</div>
 				</div>
 			</div>
@@ -100,18 +115,14 @@
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
 		<div class="col-6">
-			<h5 class="fw-bold text-dark">
-				숙소명 <a href=""><i class="bi bi-heart float-end"></i></a>
-			</h5>
-			<p class="text-muted">서울특별시 마포구 연남동 382-10</p>
+			<h4 id="acco-name" class="fw-semibold text-dark">
+				${detail.name } <a href="" data-acco-id="${detail.id }"><i class="bi bi-heart float-end"></i></a>
+			</h4>
+			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
 				<div class="fw-bold text-dark mb-3">한마디 소개</div>
 				<p>
-					연남동 거리 중심부에 위치한 BB 홍대는 홍대입구역 도보 3분 거리에 있습니다
-					모든 객실에 전용 화장실, 간이 주방, TV를 갖추고 있습니다
-					호스텔에서 가까운 도보 거리, 특히 연남동 지역에 수많은 레스토랑과 술집이 모여 있습니다
-					연남동에서 편안하게 쉬실 수 있는 호스텔이 되겠습니다!
-					감사합니다 ^^
+					${detail.introduceComment }
 				</p>
 			</div>
 		</div>
@@ -138,66 +149,17 @@
 		<div class="tab-content" id="myTabContent">
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
-				<div class="py-3">
+				<div class="my-3">
 					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
-					<input type="text" id="datepicker" class="form-control w-50" value="" />
-					<input type="hidden" name="startDate" value="">
-					<input type="hidden" name="endDate" value="">
+					<form id="form-search-rooms">
+						<input type="text" id="datepicker" class="form-control w-50" value="" />
+						<input type="hidden" name="startDate" value="">
+						<input type="hidden" name="endDate" value="">
+						<input type="hidden" name="accoId" value="${param.id }">
+					</form>
 				</div>
-				<div class="list-wraper mx-0">
-					<!-- TO DO: 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
-					<div class="card-room-info card mb-3">
-						<div class="card-body row">
-							<div class="col-5">
-								<div class="position-relative">
-									<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/sampleacco2.jpg">
-									<div class="card-img-overlay overlay-room-thumbnail">
-										<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
-									</div>
-								</div>
-							</div>
-							<div class="col-7 d-flex flex-column justify-content-between">
-								<h5 class="fw-bold text-dark">6인 여성 도미토리</h5>
-								<div class="pb-3 border-bottom text-dark">
-									가격<span class="float-end fw-bold">14,900원</span>
-								</div>
-								<a href="#link-room-info" class="text-decoration-none text-muted" data-bs-toggle="modal">
-									객실 이용 안내
-									<i class="bi bi-chevron-right float-end"></i>
-								</a>
-								<button type="button" class="btn btn-secondary w-100">예약</button>
-							</div>
-						</div>
-						<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
-							<span>
-								<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
-							</span>
-							<!-- 객실 이미지 wrapper -->
-							<div class="room-swiper-wrapper w-75 mx-auto">
-								<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
-									<div class="swiper-wrapper">
-										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/sampleacco1.jpg">
-										</div>
-										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/sampleacco2.jpg">
-										</div>
-										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/sampleacco3.jpg">
-										</div>
-										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/logo.png">
-										</div>
-										<div class="swiper-slide">
-											<img alt="room expanded image" src="/resources/images/logo.png">
-										</div>
-									</div>
-									<div class="swiper-button-next"></div>
-									<div class="swiper-button-prev"></div>
-								</div>
-							</div>
-						</div>
-					</div>
+				<div id="room-list-wraper" class="mx-0">
+					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
 				</div>
 			</div>
 			<!-- 숙소정보 -->
@@ -211,59 +173,11 @@
 						</h2>
 						<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3 small">
-								<!-- DB에 저장되어 있는 HTML컨텐츠 그대로 출력하기 -->
-								<strong>오시는 길</strong>
-								<ul>
-									<li>[홍대입구역에서 오시는 방법]</li>
-									<li>홍대입구역 3번출구로 나오셔서 정면 오른쪽 방향에 보이는 공원을 건너가주세요.</li>
-									<li>정면으로 100미터 직진하시면 오른쪽편에 핑크색 건물에 I'm PLASTIC이라는 간판이
-										보이실거에요</li>
-									<li>그 건물 기준 오른쪽 골목길로 50미터 직진하시고 갈림길이 나오시면 왼쪽 골목길로 들어가주세요.
-									</li>
-									<li>앞으로 조금만 오시다보면 낙랑파라 카페가 보이실거에요. 그 건물 정면에 있는 오른쪽 골목길로
-										들어가주세요.</li>
-									<li>정면으로 100미터 직진하시면 갈림길이 보이실거에요. GS25 편의점이 있는 건물 기준 왼쪽
-										골목길로 가주세요.</li>
-									<li>정면으로 50미터 직진하시면 호스텔 도착입니다!!</li>
-									<li>네이버,구글지도에 BB홍대를 검색해주세요~</li>
-								</ul>
-								<strong>주변정보</strong>
-								<ul>
-									<li>홍대입구역 도보 3분</li>
-									<li>연트럴파크 도보 1분</li>
-									<li>홍대거리 도보 5분</li>
-								</ul>
-								<strong>숙소 이용 규칙</strong>
-								<ul>
-									<li>체크인 : 15시~22시 / 체크아웃 : ~11시</li>
-									<li>24시간 출입 자유</li>
-									<li>보안을 위하여 투숙객 본인 외에 외부인 동반 출입을 금지합니다</li>
-									<li>호스텔 전구역은 금연입니다</li>
-									<li>애완동물 출입 금지입니다</li>
-									<li>타인에게 피해나 불쾌감을 주는 행위 또는 이용규정을 지키지 않을 경우 강제 퇴실 조치합니다</li>
-									<li>시설물을 파손하거나 침구류 훼손 및 오염 (세탁 불가능) 시 전액 배상해야 합니다</li>
-									<li>보호자 동반 없는 미성년자 입실 불가 (업체 문의 필수)</li>
-								</ul>
-								<strong>주차장 정보</strong>
-								<ul>
-									<li>숙소 앞 무료주차 가능 (업체 문의 필수)</li>
-								</ul>
-								<strong>취소 및 환불 규정</strong>
-								<ul>
-									<li>체크인일 기준 7일 전 : 100% 환불</li>
-									<li>체크인일 기준 6 ~ 4일 전 : 50% 환불</li>
-									<li>체크인일 기준 3일 전 ~ 당일 및 No-Show : 환불 불가</li>
-									<li>취소, 환불 시 수수료가 발생할 수 있습니다</li>
-								</ul>
-								<strong>확인 사항 및 기타</strong>
-								<ul>
-									<li>외국인 관광객을 위한 전용 게스트하우스입니다</li>
-									<li>위의 정보는 게스트하우스 사정에 따라 변경될 수 있습니다</li>
-									<li>해당 이미지는 실제와 상이 할 수 있습니다</li>
-									<li>예약 확정 이후의 취소는 취소 환불 규정에 의거하여 적용됩니다</li>
-								</ul>
-								<!-- TO DO : 숙소 정보 중 위도, 경도를 이용하여 해당 숙소의 위치를 지도에 표시하기 -->
-								<div id="map-acco-info" class="mx-auto" style="width:800px;height:200px;"></div>
+								<div id="acco-info-detail">
+									${detail.detailDescription }
+								</div>
+								<!-- 숙소 정보 중 위도, 경도를 이용하여 해당 숙소의 위치 지도에 표시 -->
+								<div id="map-acco-info" class="mx-auto mt-5" style="width:800px;height:200px;"></div>
 							</div>
 						</div>
 					</div>
@@ -273,55 +187,20 @@
 								편의시설 및 서비스</button>
 						</h2>
 						<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-acco-info">
-							<div class="accordion-body bg-light text-muted p-5 m-3 d-flex flex-wrap">
-							<!-- TO DO : DB에서 조회한 공용시설, 객실시설 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
+							<div class="accordion-body bg-light text-muted p-5 m-3">
+							<!-- DB에서 조회한 공용시설, 태그 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
+								<div id="cofas-wrapper" class="d-flex flex-wrap mb-3">
+									<c:forEach var="fac" items="${detail.commonFacilities }">
+										<div id="icon-wrapper-${fac.id }" class="text-center">
+											<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
+											<small>${fac.name }</small>
+										</div>
+									</c:forEach>
 								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
-								</div>
-								<div class="icon-img-wrapper text-center">
-									<img class="w-50" alt="facility icon" src="/resources/images/icons/ic_facility_kitchen_dark_secondary_normal_25px.png"><br/>
-									<small class="mx-3">주방/식당</small>
+								<div id="tags-wrapper" class="d-flex flex-wrap">
+									<c:forEach var="tag" items="${detail.tags }">
+										<span class="mx-1 badge bg-primary">${tag }</span>
+									</c:forEach>
 								</div>
 							</div>
 						</div>
@@ -331,16 +210,17 @@
 			<!-- 리뷰 -->
 			<div class="tab-pane fade" id="review-tab-pane" role="tabpanel" aria-labelledby="review-tab" tabindex="0">
 				<div class="row p-5 text-center border-bottom">
-					<h5>추천해요</h5>
-					<div class="fs-3 mb-3 text-warning">
-						<i class="bi bi-star-fill"></i>
-						<i class="bi bi-star-fill"></i>
-						<i class="bi bi-star-fill"></i>
-						<i class="bi bi-star-fill"></i>
-						<i class="bi bi-star-half"></i>
-						<span class="text-muted mx-1">4.5</span>
+					<h5>${detail.reviewRateKeyword }</h5>
+					<!-- 숙소 객체의 별점아이콘 객체를 활용해서 평점에 따른 별표 출력 (*.5 미만은 빈 별, *.5 초과는 채운 별) -->
+					<div id="review-rate-wrapper" class="text-warning fs-3 mb-3">
+						<i class="bi ${detail.reviewRateIcon.star1 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star2 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star3 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star4 }"></i>
+						<i class="bi ${detail.reviewRateIcon.star5 }"></i>
+						<span class="text-muted mx-1">${detail.reviewRate }</span>
 					</div>
-					<p>전체 리뷰 192</p>
+					<p>전체 리뷰 ${detail.reviewCount }</p>
 				</div>
 				<!-- TO DO : 리뷰 리스트 출력, 페이징 처리 (제목, 작성자, 내용, 좋아요 수, 예약정보, n일전(작성일 이용해서 표시), 사진) 
 							추후 여유가 되면 리뷰 태그 기능 추가 ? -->
@@ -369,67 +249,7 @@
 						</p>
 						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
 						<div class="my-3">
-							<img alt="review image" src="/resources/images/sampleacco1.jpg">
-						</div>
-						<small>18일 전</small>
-					</div>
-				</div>
-				<div class="row p-5 border-bottom">
-					<div class="col-2 profile-image-wrapper rounded-circle">
-						<img class="" alt="user profile" src="/resources/images/logo.png">
-					</div>
-					<div class="col">
-						<strong class="text-dark">조금 아쉬웠지만 이용할만해요.</strong>
-						<div class="text-warning">
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-half"></i>
-							<span class="text-muted mx-1">4.5</span>
-						</div>
-						<p class="my-1">
-							<small>작성자명</small> /
-							<small>6인 여성 도미토리 객실 이용</small><br/>
-						</p>
-						<p class="text-dark my-3">
-							<small>
-								일단 게스트하우스라 가격이 저렴한 편이라 좋아요. 홍대 연남동 부근이라 위치가 매우 좋습니다. 핫플 접근성이 좋아요. 4명이 묵을 수 있어서 좋았어요. 단점은 화장실 변기가 조금 흔들려서 무서웠어요. 이불도 좀 많이 얇았습니다.
-							</small>
-						</p>
-						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-						<div class="my-3">
-							<img alt="review image" src="/resources/images/sampleacco1.jpg">
-						</div>
-						<small>18일 전</small>
-					</div>
-				</div>
-				<div class="row p-5 border-bottom">
-					<div class="col-2 profile-image-wrapper rounded-circle">
-						<img class="" alt="user profile" src="/resources/images/logo.png">
-					</div>
-					<div class="col">
-						<strong class="text-dark">조금 아쉬웠지만 이용할만해요.</strong>
-						<div class="text-warning">
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-half"></i>
-							<span class="text-muted mx-1">4.5</span>
-						</div>
-						<p class="my-1">
-							<small>작성자명</small> /
-							<small>6인 여성 도미토리 객실 이용</small><br/>
-						</p>
-						<p class="text-dark my-3">
-							<small>
-								일단 게스트하우스라 가격이 저렴한 편이라 좋아요. 홍대 연남동 부근이라 위치가 매우 좋습니다. 핫플 접근성이 좋아요. 4명이 묵을 수 있어서 좋았어요. 단점은 화장실 변기가 조금 흔들려서 무서웠어요. 이불도 좀 많이 얇았습니다.
-							</small>
-						</p>
-						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-						<div class="my-3">
-							<img alt="review image" src="/resources/images/sampleacco1.jpg">
+							<img alt="review image" src="/resources/images/acco/logo.png">
 						</div>
 						<small>18일 전</small>
 					</div>
@@ -453,29 +273,28 @@
 					<label class="fw-bold mb-3">기본정보</label>
 					<ul>
 						<!-- room_name, room_capacity -->
-						<li>객실명</li>
-						<li>정원 6명</li>
+						<li>객실명 <span id="modal-content-name"></span></li>
+						<li>정원 <span id="modal-content-capacity"></span>명</li>
 					</ul>
 				</div>
 				<div class="my-3 border-bottom">
 					<label class="fw-bold mb-3">객실소개</label>
 					<ul>
-						<!-- room_description, 베드타입 정보가 있다면 베드타입도 출력 -->
-						<li>객실소개내용</li>
+						<li id="modal-content-description"></li>
 					</ul>
 				</div>
 				<div class="my-3 border-bottom">
 					<label class="fw-bold mb-3">편의시설</label>
 					<ul>
 						<!-- 현재 객실의 room facilities 모두 조회해서 출력 -->
-						<li>전용화장실, 에어컨, 헤어드라이기, 타월, 책상, 화장대, 거울, 옷걸이</li>
+						<li id="modal-content-rofas">전용화장실, 에어컨, 헤어드라이기, 타월, 책상, 화장대, 거울, 옷걸이</li>
 					</ul>
 				</div>
 				<div class="my-3">
 					<label class="fw-bold mb-3">선택날짜</label>
 					<ul>
 						<!-- 현재 사용자가 선택한 날짜를 출력 -->
-						<li>08월 01일 ~ 08월 02일</li>
+						<li><span id="modal-content-startdate"></span> ~ <span id="modal-content-enddate"></span></li>
 					</ul>
 				</div>
 			</div>
@@ -488,7 +307,7 @@
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
 $(function () {
-
+	
 /*
  * 숙소 이미지 swiper 생성
  * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
@@ -510,22 +329,6 @@ $(function () {
 		thumbs : {
 			swiper : swiper,
 		},
-	});
-
-/*
-	선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
- 		해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
-		(active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
- */
-	let $tabButtons = $('#myTab [data-bs-toggle="tab"]');
-	$tabButtons.click(function(){
-		$tabButtons.each(function (){
-			if ($(this).hasClass('active')) {
-				$(this).removeClass('text-muted').addClass('fw-bold').addClass('text-secondary');
-			} else {
-				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
-			}
-		});
 	});
 
 /*
@@ -571,7 +374,8 @@ $(function () {
         endDayString = end.format('YYYY-MM-DD');
         duration = end.diff(start,'days');
         setDateValues(startDayString, endDayString);
-        // TO DO : 객실 예약가능 여부 갱신하기
+        // 객실 정보 갱신하기
+        searchRooms();
     });
 
 	// html이 출력될 때 datepicker의 input태그의 value 저장
@@ -611,32 +415,195 @@ $(function () {
 /*
  * 검색 결과 카카오 openAPI로 지도에 표현하기
  */
+ 	// html에서 jstl로 출력한 숙소 좌표를 받아온다.
+ 	let accoLatitude = $("#acco-address").attr("data-alat");
+ 	let accoLongitude = $("#acco-address").attr("data-along");
 	// 지도 정의하기
 	let container = document.getElementById('map-acco-info');
-	let mapcenter = new kakao.maps.LatLng(37.564214, 127.0016985);
+ 	let mapcenter = new kakao.maps.LatLng(accoLatitude, accoLongitude);
 	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: mapcenter, //지도의 중심좌표.
-			level: 5 //지도의 레벨(확대, 축소 정도)
+			center: new kakao.maps.LatLng(accoLatitude, accoLongitude), //지도의 중심좌표.
+			level: 3 //지도의 레벨(확대, 축소 정도)
 	};
-	let map = new kakao.maps.Map(container, options); // 지도 생성
-
+	// 지도 생성
+	let map = new kakao.maps.Map(container, options);
+	
+	// 숙소 위치 마커 생성하고 지도에 표시하기
+	let accoMarker = new kakao.maps.Marker({
+	    position: mapcenter,
+	    image: new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45))
+	});
+	accoMarker.setMap(map);
+	
 	// 아코디언이 열렸을 때 카카오맵 레이아웃과 중심 재설정
-	// TO DO : 숙소 위치 표시하기
 	$("#flush-collapseOne").on('shown.bs.collapse', function () {
 		map.relayout(); 
 		map.setCenter(mapcenter);
 	});
 	
 /*
+ * 현재 화면에서 선택한 기간에 따른 객실 정보 조회하기
+ */
+	function searchRooms() {
+		let queryString = $("#form-search-rooms").serialize();
+		// 객실정보 카드가 출력되는 wrapper의 컨텐츠를 모두 비운다.
+		let $wrapper = $("#room-list-wraper").empty();
+		$.getJSON("/rooms", queryString).done(function(rooms) {
+			if (rooms.length === 0) {
+				let content = '<p class="py-5">조회된 결과가 없습니다.</p>'
+				$wrapper.append(content);
+			} else {
+				// 객실별 이미지 박스 콘텐츠 생성 시 사용할 html 태그를 미리 생성
+				let imageBoxHTML =	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
+										<span>
+											<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
+										</span>
+										<div class="room-swiper-wrapper w-75 mx-auto">
+											<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+												<div class="swiper-wrapper">
+												</div>
+												<div class="swiper-button-next"></div>
+												<div class="swiper-button-prev"></div>
+											</div>
+										</div>
+									</div>
+								</div>`;
+				
+				// 반복 처리로 객실 별 정보를 보여주는 카드 html콘텐츠 생성, 모달에 정보를 전달하는 이벤트핸들러 등록
+				$.each(rooms, function(index, room) {
+					// 1. 기본 카드 본문 콘텐츠
+					let cardBody = '';
+					cardBody +=	`<div class="card-body row">
+									<div class="col-4">
+										<div class="position-relative">`;
+					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/' + room.thumbnailImageName + '">';
+					cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
+												<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
+											</div>
+										</div>
+									</div>
+									<div class="col-8 p-3 d-flex flex-column justify-content-between">`;
+					cardBody +=			'<h5 class="text-dark fw-lighter">' + room.name + '</h5>';
+					cardBody +=			'<div class="pb-3 border-bottom text-dark fw-lighter">';
+					cardBody +=				'가격<span class="float-end">1박 <span class="fw-bold text-dark">' + room.dayPrice.toLocaleString() + '원</span></span>';
+					cardBody +=			'</div>';
+					cardBody +=			'<a id="link-modal-' + room.no +'" href="#link-room-info" class="link-modal text-decoration-none text-muted" data-bs-toggle="modal">';
+					cardBody +=				`객실 이용 안내
+											<i class="bi bi-chevron-right float-end"></i>
+										</a>`;
+					cardBody +=			'<div class="small fw-bold"><i class="bi bi-exclamation-circle fs-6"></i> 예약 가능한 객실 수 (' + room.stock +'/' + room.numbers + ')</div>';
+					if (room.stock > 0) {
+						cardBody +=		'<button type="button" class="btn-room-reserve btn btn-danger w-100" data-room-no="' + room.no +'">예약</button>';
+					} else {
+						cardBody +=		'<button type="button" class="btn btn-dark w-100 disabled">만실</button>';
+					}
+					cardBody +=		`</div>
+								</div>`;
+								
+					// 2-1. 이미지 swiper에 들어갈 복수개의 이미지를 htmlContent로 생성
+					let imageSlides = '';
+					$.each(room.images, function(index, imagename){
+						imageSlides += '<div class="swiper-slide">';
+						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/' + imagename +'">';
+						imageSlides +=	'</div>';
+					}) 
+					
+					// 2-2. 카드 썸네일 클릭시 보이는, 이미지 swiper를 포함하는 이미지 박스 콘텐츠
+					let imageBox = '';
+					imageBox += 	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
+										<span>
+											<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
+										</span>
+										<div class="room-swiper-wrapper w-75 mx-auto">
+											<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+												<div class="swiper-wrapper">`;
+					imageBox += imageSlides;
+					imageBox +=				`</div>
+												<div class="swiper-button-next"></div>
+												<div class="swiper-button-prev"></div>
+											</div>
+										</div>
+									</div>
+								</div>`;
+					
+					// 하나의 객실에 대한 콘텐츠 생성
+					let content ='';
+					content += '<div class="card-room-info card mb-3">';
+					content += cardBody;
+					content += imageBox;
+					content += '</div>'
+					// 생성한 컨텐츠 화면에 추가
+					$wrapper.append(content);
+					
+					// '객실 이용안내' 링크를 눌러서 모달을 열때마다 해당 객실의 정보를 모달에 저장하도록 한다.
+					// * 클릭한 링크에 대한 익명함수 등록 : content를 append하기 전에는 a태그가 아직 DOM객체가 아니어서 할 수가 없으므로, 그 이후에 등록한다.
+					$("#link-modal-" + room.no).click(function() {
+						$("#modal-content-name").text(room.name);
+						$("#modal-content-capacity").text(room.capacity);
+						$("#modal-content-description").text(room.description);
+						let rofas = room.roomFacilities;
+						let rofasContent = '';
+						if (rofas.length === 0) {
+							rofasContent += '등록된 정보가 없습니다. 업소에 문의 바랍니다.'
+						} else {
+							$.each(rofas, function (index, rofa) {
+								rofasContent += (rofa.name + (index === rofas.length-1 ? "" : ", " ));
+							});
+						}
+						$("#modal-content-rofas").text(rofasContent);
+						$("#modal-content-startdate").text(startDayString);
+						$("#modal-content-enddate").text(endDayString);
+					});
+				});
+				
+				// 화면에 추가한 모든 객실카드에 대하여 이벤트핸들러 등록
+				addRoomCardEventListener();
+				// 화면에 추가한 모든 예약버튼에 대하여 이벤트핸들러 등록
+				addReserveBtnEventListener();
+			}
+		});
+	}
+	// 최초 화면 출력 시 객실정보 조회 함수 실행
+	// * daterangepicker 값 모두 초기화된 뒤 실행할 것
+	searchRooms();
+ 
+/*
  * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
  */
- 	// 객실 이미지 썸네일을 클릭하면 상세이미지 swiper가 출력되고, swiper의 닫기 아이콘을 클릭하면 지워진다. 
-	$(".overlay-room-thumbnail").click(function() {
-		$(this).parents(".card-room-info").find(".box-room-detail-img").removeClass("d-none");
+ 	// 객실 이미지 썸네일을 클릭하면 상세이미지 swiper가 출력되고, swiper의 닫기 아이콘을 클릭하면 지워지는 함수
+ 	// * ajax로 객실 정보 조회 시 실행된다.
+ 	function addRoomCardEventListener() {
+		$(".overlay-room-thumbnail").click(function() {
+			$(this).parents(".card-room-info").find(".box-room-detail-img").removeClass("d-none");
+		});
+		$(".icon-close-room-detail-img").click(function() {
+			$(this).parents(".box-room-detail-img").addClass("d-none");
+		});
+	}
+	
+	// 객실 예약 버튼을 누르면 숙소아이디, 객실번호, 체크인/체크아웃 날짜를 파라미터로 하는 예약페이지 GET 요청을 보낸다.
+	function addReserveBtnEventListener() {
+		let accoId = $("#acco-name a").attr("data-acco-id");
+		$(".btn-room-reserve").click(function() {
+			let roomNo = $(this).attr("data-room-no");
+			location.href="../reservation?id=" + accoId + "&roomno=" + roomNo + "&checkin=" + startDayString + "&checkout=" +endDayString;
+		});
+	}
+	
+	 // 선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
+	 //		해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
+	 //		(active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
+	let $tabButtons = $('#myTab [data-bs-toggle="tab"]');
+	$tabButtons.click(function(){
+		$tabButtons.each(function (){
+			if ($(this).hasClass('active')) {
+				$(this).removeClass('text-muted').addClass('fw-bold').addClass('text-secondary');
+			} else {
+				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
+			}
+		});
 	});
-	$(".icon-close-room-detail-img").click(function() {
-		$(this).parents(".box-room-detail-img").addClass("d-none");
-	});
+
 })
 </script>
 </body>

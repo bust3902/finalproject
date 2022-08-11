@@ -202,11 +202,11 @@ IMP.init("imp72261061");
 
 function cancelPay() {
     jQuery.ajax({
-      "url": "/reservation/refund/"+imp_uid,
+      "url": "/reservation/refund/"+//IMP_UID로 받을것
       "type": "POST",
       "contentType": "application/json",
       "data": JSON.stringify({
-        "merchant_uid": "1659664324976", // 예: ORD20180131-0000011
+        "merchant_uid": "1659664324976", // 예: 주문번호
         "cancel_request_amount": 100, // 환불금액
         "reason": $("#payType option:selected").val(), // 환불사유
         "refund_holder": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
@@ -223,6 +223,12 @@ var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
 var collapseList = collapseElementList.map(function (collapseEl) {
   return new bootstrap.Collapse(collapseEl)
 })
+
+
+
+
+
+
 </script>
 </body>
 </html>

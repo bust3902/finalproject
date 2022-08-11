@@ -13,6 +13,7 @@
 	<title>로그인</title>
 </head>
 <body>
+<%@ include file="common/nav.jsp" %>
 <div class="container mt-3">  
 	<c:set var="menu" value="login"></c:set>
     <div class="row mb-3">
@@ -67,6 +68,7 @@
     	</form>
     </div>
 </div>
+<%@ include file="common/footer.jsp" %>
 <script type="text/javascript">
 $(function() {
 	// 카카오 로그인 버튼을 클릭할 때 실행할 이벤트 핸들러 함수를 등록한다.
