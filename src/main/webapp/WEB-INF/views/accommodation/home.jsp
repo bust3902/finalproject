@@ -461,7 +461,7 @@ $(function () {
 					let content = '';
 					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
 					content += '	<td class="align-middle p-3">';
-					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/acco/' + acco.thumbnailImageName + '" />';
+					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName + '" />';
 					content += '	</td>';
 					content += '	<td class="p-3">';
 					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';

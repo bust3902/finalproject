@@ -47,6 +47,6 @@ public class StarIconForRate extends HashMap<String, String> {
 				this.put("star" + i, "bi-star");
 			}
 		}
-
 	}
+	
 }

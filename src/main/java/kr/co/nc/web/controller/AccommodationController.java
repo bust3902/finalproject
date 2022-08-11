@@ -7,7 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.service.AccommodationService;
+import kr.co.nc.service.ReviewService;
 
 @Controller
 @RequestMapping("/acco")
@@ -15,6 +17,8 @@ public class AccommodationController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+	@Autowired
+	private ReviewService reviewService;
 
 	// 숙소 검색 페이지 뷰 반환
 	@GetMapping(path = "")
@@ -55,9 +59,11 @@ public class AccommodationController {
 	// 숙소 상세 페이지 뷰 반환
 	@GetMapping(path = "/detail")
 	public String detail(@RequestParam("id") int accoId, Model model) {
-		// 해당 id를 가진 숙소 상세정보를 전달한다.
-		// 숙소의 객실 정보, 리뷰 정보는 restController에서 제공한다.
+		// 해당 id를 가진 숙소 상세정보와 리뷰 정보를 전달한다.
+		// 숙소의 객실 정보는 restController에서 제공한다.
 		model.addAttribute("detail", accommodationService.getAccommodationDetailById(accoId));
+		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
+		model.addAttribute("reviews", reviewService.getReviewsByCriteria(criteria));
 		return "/accommodation/detail";
 	}
 	

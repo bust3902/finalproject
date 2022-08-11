@@ -222,38 +222,54 @@
 					</div>
 					<p>전체 리뷰 ${detail.reviewCount }</p>
 				</div>
-				<!-- TO DO : 리뷰 리스트 출력, 페이징 처리 (제목, 작성자, 내용, 좋아요 수, 예약정보, n일전(작성일 이용해서 표시), 사진) 
-							추후 여유가 되면 리뷰 태그 기능 추가 ? -->
-				<div class="row p-5 border-bottom">
-					<div class="col-2 profile-image-wrapper rounded-circle">
-						<img class="" alt="user profile" src="/resources/images/logo.png">
-					</div>
-					<div class="col">
-						<strong class="text-dark">조금 아쉬웠지만 이용할만해요.</strong>
-						<div class="text-warning">
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-half"></i>
-							<span class="text-muted mx-1">4.5</span>
+				<c:choose>
+					<c:when test="${empty reviews}">
+						<div class="p-5 border-bottom">
+							등록된 리뷰가 없습니다.
 						</div>
-						<p class="my-1">
-							<small>작성자명</small> /
-							<small>6인 여성 도미토리 객실 이용</small><br/>
-						</p>
-						<p class="text-dark my-3">
-							<small>
-								일단 게스트하우스라 가격이 저렴한 편이라 좋아요. 홍대 연남동 부근이라 위치가 매우 좋습니다. 핫플 접근성이 좋아요. 4명이 묵을 수 있어서 좋았어요. 단점은 화장실 변기가 조금 흔들려서 무서웠어요. 이불도 좀 많이 얇았습니다.
-							</small>
-						</p>
-						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-						<div class="my-3">
-							<img alt="review image" src="/resources/images/acco/logo.png">
-						</div>
-						<small>18일 전</small>
-					</div>
-				</div>
+					</c:when>
+					<c:otherwise>
+						<!-- 리뷰 리스트 출력 -->
+						<!-- TODO: 페이징 처리 -->
+						<c:forEach var="review" items="${reviews }">
+							<div class="row p-5 border-bottom">
+								<!-- TODO: 추후 프로필이미지 등록 구현한다면 맞는 이미지 파일명 출력하기 -->
+								<div class="col-2 profile-image-wrapper rounded-circle">
+									<img class="" alt="user profile" src="/resources/images/logo.png">
+								</div>
+								<div class="col">
+									<strong class="text-dark">${review.title }</strong>
+									<div class="text-warning">
+										<i class="bi ${review.pointIcon.star1 }"></i>
+										<i class="bi ${review.pointIcon.star2 }"></i>
+										<i class="bi ${review.pointIcon.star3 }"></i>
+										<i class="bi ${review.pointIcon.star4 }"></i>
+										<i class="bi ${review.pointIcon.star5 }"></i>
+										<span class="text-muted mx-1">${review.point }</span>
+									</div>
+									<p class="my-1">
+										<small>${review.user.nickname }</small> /
+										<small>${review.room.name } 이용</small><br/>
+									</p>
+									<p class="text-dark my-3 small">
+										${review.content }
+									</p>
+									<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
+									<c:if test="${not empty review.image }">
+										<div class="my-3">
+											<!-- TO DO : 리뷰 이미지 저장경로 확인 필요, 이미지 작게 보여주고 클릭하면 키울건지? -->
+											<img class="img-fluid" alt="review image" src="/resources/images/review/${review.image }">
+										</div>
+									</c:if>
+									<!-- js에서 moment.js 라이브러리 이용하여 경과시간을 계산한 후 이 태그의 컨텐츠로 전달한다. -->
+									<!-- review.createdDate은 Date객체이므로 패턴을 맞추어 저장한다. -->
+									<fmt:formatDate value="${review.createdDate }" var="formattedDate" type="date" pattern="YYYY-MM-dd HH:mm:ss"/>
+									<small class="elapsedTime" data-created-date="${formattedDate }"></small>
+								</div>
+							</div>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 			</div>
 		</div>
 	</div>
@@ -382,12 +398,15 @@ $(function () {
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
 	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
 	setDateValues(startDayString, endDayString);
+	// 화면 최초 요청 시에 날짜에 대한 값이 모두 저장되면 객실 정보를 조회하여 출력한다. 
+	searchRooms();
 	
 	// 날짜 변경 여부와 무관하게 적용을 누르면 발생하는 이벤트에 함수 등록
 	// * input태그의 value 설정 (생성 설정의 날짜변경 이벤트와 다름)
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	setDateValues(startDayString, endDayString);
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
+    	searchRooms();
     });
     
     // 날짜 정보를 hidden 태그와 localStorage에 저장하는 함수
@@ -413,7 +432,7 @@ $(function () {
     }
 	
 /*
- * 검색 결과 카카오 openAPI로 지도에 표현하기
+ * 숙소 위치 카카오 openAPI로 지도에 표현하기
  */
  	// html에서 jstl로 출력한 숙소 좌표를 받아온다.
  	let accoLatitude = $("#acco-address").attr("data-alat");
@@ -441,6 +460,40 @@ $(function () {
 		map.setCenter(mapcenter);
 	});
 	
+/*
+ * 리뷰 게시글 작성일로부터 경과시간 표시하기
+ */
+ 	// elapsedTime 클래스를 가지는 모든 태그에 획득한 경과시간을 출력
+	 $(".elapsedTime").each(function() {
+		 let elapsedTime = getElapsedTime($(this).attr("data-created-date"));
+		 $(this).text(elapsedTime);
+	 });
+	 // 작성일에 대한 문자열을 전달하면 경과시간을 적절한 단위로 반환하는 함수
+	 function getElapsedTime(createdDateString) {
+		let now = moment();
+		let createdDate = moment(createdDateString, 'YYYY-MM-DD HH:mm:ss');
+		// 경과시간 정보
+		let duration = moment.duration(now.diff(createdDate));
+		// 경과시간에 대해 문자열로 표시할 단위 옵션
+		let durationOptions = [
+			{"dur" : duration.asYears(), "option" : "년 전"},
+			{"dur" : duration.asMonths(), "option" : "개월 전"},
+			{"dur" : duration.asWeeks(), "option" : "주 전"},
+			{"dur" : duration.asDays(), "option" : "일 전"},
+			{"dur" : duration.asHours(), "option" : "시간 전"},
+			{"dur" : duration.asMinutes(), "option" : "분 전"},];
+		
+		// 반복문으로 duration의 값을 확인해 어떤 단위로 반환할지 결정한다.
+		// ex) 0.8년전이면 "8개월 전" 반환
+		for (let durOption of durationOptions) {
+			if (durOption.dur >= 1) {
+				return Math.round(durOption.dur) + durOption.option;
+			}
+		}
+		// 분 단위로 검사해도 1 이상이 아니면(반복문에서 함수가 종료되지 않으면) "방금 전" 반환
+		return "방금 전"
+	}
+ 
 /*
  * 현재 화면에서 선택한 기간에 따른 객실 정보 조회하기
  */
@@ -476,7 +529,7 @@ $(function () {
 					cardBody +=	`<div class="card-body row">
 									<div class="col-4">
 										<div class="position-relative">`;
-					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/' + room.thumbnailImageName + '">';
+					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/thumbnail/' + room.thumbnailImageName + '">';
 					cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
 												<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
 											</div>
@@ -504,7 +557,7 @@ $(function () {
 					let imageSlides = '';
 					$.each(room.images, function(index, imagename){
 						imageSlides += '<div class="swiper-slide">';
-						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/' + imagename +'">';
+						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/detail/' + imagename +'">';
 						imageSlides +=	'</div>';
 					}) 
 					
@@ -563,9 +616,6 @@ $(function () {
 			}
 		});
 	}
-	// 최초 화면 출력 시 객실정보 조회 함수 실행
-	// * daterangepicker 값 모두 초기화된 뒤 실행할 것
-	searchRooms();
  
 /*
  * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
