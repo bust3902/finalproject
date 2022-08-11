@@ -1,14 +1,15 @@
-package kr.co.nc.vo;
+package kr.co.nc.web.form;
 
 
 
 
-import org.springframework.beans.BeanUtils;
 
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 @Getter
+@Setter
 @ToString
 public class PaymentRequest {
 
@@ -19,7 +20,6 @@ public class PaymentRequest {
 	private int amount;
 	private String checkIn;
 	private String checkOut;
-	private String pgProvider;
 	private String paymentStatus;
 	private String reservationStatus;
 }
