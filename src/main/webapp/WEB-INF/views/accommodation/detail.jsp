@@ -222,39 +222,38 @@
 					</div>
 					<p>전체 리뷰 ${detail.reviewCount }</p>
 				</div>
-				<!-- TO DO : 리뷰 리스트 출력, 페이징 처리 (제목, 작성자, 내용, 좋아요 수, 예약정보, n일전(작성일 이용해서 표시), 사진) 
-							추후 여유가 되면 리뷰 태그 기능 추가 ? -->
-				<div class="row p-5 border-bottom">
-					<div class="col-2 profile-image-wrapper rounded-circle">
-						<img class="" alt="user profile" src="/resources/images/logo.png">
-					</div>
-					<div class="col">
-						${reviews }
-						<strong class="text-dark">조금 아쉬웠지만 이용할만해요.</strong>
-						<div class="text-warning">
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-fill"></i>
-							<i class="bi bi-star-half"></i>
-							<span class="text-muted mx-1">4.5</span>
+				<!-- 리뷰 리스트 출력 -->
+				<!-- TODO: 페이징 처리 -->
+				<c:forEach var="review" items="${reviews }">
+					<div class="row p-5 border-bottom">
+						<div class="col-2 profile-image-wrapper rounded-circle">
+							<img class="" alt="user profile" src="/resources/images/logo.png">
 						</div>
-						<p class="my-1">
-							<small>작성자명</small> /
-							<small>6인 여성 도미토리 객실 이용</small><br/>
-						</p>
-						<p class="text-dark my-3">
-							<small>
-								일단 게스트하우스라 가격이 저렴한 편이라 좋아요. 홍대 연남동 부근이라 위치가 매우 좋습니다. 핫플 접근성이 좋아요. 4명이 묵을 수 있어서 좋았어요. 단점은 화장실 변기가 조금 흔들려서 무서웠어요. 이불도 좀 많이 얇았습니다.
-							</small>
-						</p>
-						<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-						<div class="my-3">
-							<img alt="review image" src="/resources/images/acco/logo.png">
+						<div class="col">
+							<strong class="text-dark">${review.title }</strong>
+							<div class="text-warning">
+								<i class="bi ${review.pointIcon.star1 }"></i>
+								<i class="bi ${review.pointIcon.star2 }"></i>
+								<i class="bi ${review.pointIcon.star3 }"></i>
+								<i class="bi ${review.pointIcon.star4 }"></i>
+								<i class="bi ${review.pointIcon.star5 }"></i>
+								<span class="text-muted mx-1">${review.point }</span>
+							</div>
+							<p class="my-1">
+								<small>${review.user.nickname }</small> /
+								<small>${review.room.name } 이용</small><br/>
+							</p>
+							<p class="text-dark my-3 small">
+								${review.content }
+							</p>
+							<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
+							<div class="my-3">
+								<img alt="review image" src="/resources/images/acco/logo.png">
+							</div>
+							<small>18일 전</small>
 						</div>
-						<small>18일 전</small>
 					</div>
-				</div>
+				</c:forEach>
 			</div>
 		</div>
 	</div>

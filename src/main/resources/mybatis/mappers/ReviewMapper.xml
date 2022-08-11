@@ -30,17 +30,25 @@
 		where review_no = #{no}
 	</delete>
 	
+	<!-- reviewResultMap -->
+	<resultMap type="Review" id="reviewResultMap">
+		<id column="review_no" property="no"/>
+		<result column="review_title" property="title"/>
+		<result column="review_content" property="content"/>
+		<result column="review_like_count" property="likeCount"/>
+		<result column="review_created_date" property="createdDate"/>
+		<result column="review_updated_date" property="updatedDate"/>
+		<result column="review_image" property="image"/>
+		<result column="review_point" property="point"/>
+		<result column="user_nickname" property="user.nickname"/>
+		<result column="room_name" property="room.name"/>
+		<collection column="restaurant_no" property="reviewRestaurantTags" select="getAllReviewTagsByRestaurantNo"></collection>
+	</resultMap>
+	
 	<!-- List<Review> getAllReviewsById(ReviewCriteria criteria); -->
-	<!-- 식당 태그 조회는 별도의 메소드로 지정할 것 -->
-	<select id="getReviewsByCriteria" parameterType="kr.co.nc.criteria.ReviewCriteria" resultType="Review">
-		select rv.review_no as no, rv.review_title as title, rv.review_content as content, rv.review_like_count as likeCount,
-			rv.review_created_date as createdDate, rv.review_updated_date as updatedDate,
-			rv.review_image as image, rv.review_point as point,
-			u.user_nickname as nickname
-			<if test="accoId != 0">
-				, ar.room_name as roomName
-			</if>
-		from review rv, users u, restaurant rs
+	<select id="getReviewsByCriteria" parameterType="kr.co.nc.criteria.ReviewCriteria" resultMap="reviewResultMap">
+		select *
+			from review rv, users u, restaurant rs
 			<if test="accoId != 0">
 				, acco_rooms ar
 			</if>
@@ -59,6 +67,13 @@
 			</choose>
 		</where>
 		order by rv.review_no desc
+	</select>
+	
+	<!-- List<String> getAllReviewTagsByRestaurantNo(int no); -->
+	<select id="getAllReviewTagsByRestaurantNo" parameterType="int" resultType="string">
+		select restaurant_tag
+		from restaurant_tag
+		where restaurant_no = #{value}
 	</select>
 	
 </mapper>
