@@ -247,9 +247,12 @@
 								${review.content }
 							</p>
 							<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-							<div class="my-3">
-								<img alt="review image" src="/resources/images/acco/logo.png">
-							</div>
+							<c:if test="${not empty review.image }">
+								<div class="my-3">
+									<!-- TO DO : 리뷰 이미지 저장경로 확인 필요 -->
+									<img alt="review image" src="/resources/images/acco/logo.png">
+								</div>
+							</c:if>
 							<small>18일 전</small>
 						</div>
 					</div>
@@ -476,7 +479,7 @@ $(function () {
 					cardBody +=	`<div class="card-body row">
 									<div class="col-4">
 										<div class="position-relative">`;
-					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/' + room.thumbnailImageName + '">';
+					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/thumbnail/' + room.thumbnailImageName + '">';
 					cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
 												<i class="bi bi-images fs-3 text-white position-absolute bottom-0 end-0 p-3"></i>
 											</div>
@@ -504,7 +507,7 @@ $(function () {
 					let imageSlides = '';
 					$.each(room.images, function(index, imagename){
 						imageSlides += '<div class="swiper-slide">';
-						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/' + imagename +'">';
+						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/detail/' + imagename +'">';
 						imageSlides +=	'</div>';
 					}) 
 					
