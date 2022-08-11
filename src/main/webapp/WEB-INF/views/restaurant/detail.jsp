@@ -101,12 +101,15 @@
 					</li>
 					<!-- 카테고리 -->
 					<li class="list-group-item list-group-flush border-0">
-						<span class="badge bg-secondary">데이트</span>
+						<c:forEach var="restaurantCategory" items="${restaurant.categories }">
+							<span class="badge bg-secondary">${restaurantCategory.category.name }</span>
+						</c:forEach>
 					</li>
 					<!-- 방문목적 : 태그 -->
 					<li class="list-group-item list-group-flush border-0">
-						<span class="badge rounded-pill bg-light">야외자리</span>
-						<span class="badge rounded-pill bg-light">예쁜</span>
+						<c:forEach var="restaurantTag" items="${restaurant.tags }">
+							<span class="badge rounded-pill bg-light">${restaurantTag.tag }</span>
+						</c:forEach>
 					</li>
 				</ul>
 			</div>
@@ -129,15 +132,11 @@
 				<div class="mb-3">
 					<h3>메뉴정보</h3>
 					<ul class="list-group">
-						<li class="list-group-item list-group-flush border-0">
-							<span>Americano</span><span class="float-end">5000원</span>
-						</li>
-						<li class="list-group-item list-group-flush border-0">
-							<span>Cafe Latte</span><span class="float-end">7000원</span>
-						</li>
-						<li class="list-group-item list-group-flush border-0">
-							<span>Apple Mango Ade</span><span class="float-end">8000원</span>
-						</li>
+						<c:forEach var="restaurantMenue" items="${restaurant.menus }">
+							<li class="list-group-item list-group-flush border-0">
+								<span>${restaurantMenue.menuName }</span><span class="float-end">${restaurantMenue.price }</span>
+							</li>
+						</c:forEach>
 					</ul>
 				</div>
 				<div class="mb-3">
@@ -147,7 +146,7 @@
 			</div>
 			
 			<div class="mb-3 card p-1">
-				<h3>1건의 방문자 평가</h3>
+				<h3>${restaurant.reviewCount }건의 방문자 평가</h3>
 				<hr style="display: block;">
 			</div>
 		</div>
