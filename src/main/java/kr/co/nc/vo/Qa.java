@@ -1,6 +1,7 @@
 package kr.co.nc.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.apache.ibatis.type.Alias;
 
@@ -21,4 +22,7 @@ public class Qa {
 	private Date createdDate;
 	private String image;
 	private boolean answerStatus;
+	
+	List<QaCategory> categories;		// 문의사항 카테고리 (숙소, 객실, 음식점)
+	List<QaType> types;					// 문의사항 유형 (취소/환불, 예약/결제, 환불신청, 예약문의)
 }

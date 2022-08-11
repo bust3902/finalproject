@@ -27,6 +27,7 @@ public class Review {
 	private String deleted;
 	private String image;		// 리뷰 사진
 	private int point;			// 리뷰 평점
+	private int roomNo;			// 방 번호
 	
 	private List<ReviewRestaurantTag> reviewRestaurantTags;		// 음식점 리뷰 태그
 }
