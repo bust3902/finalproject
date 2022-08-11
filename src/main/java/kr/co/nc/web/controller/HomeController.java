@@ -20,6 +20,7 @@ public class HomeController {
 	
 	private static final String NORMAL_LOGIN_TYPE = "normal";
 	private static final String KAKAO_LOGIN_TYPE = "kakao";
+	private static final String FACEBOOK_LOGIN_TYPE = "facebook";
 	
 	@Autowired
 	private UserService userService;
@@ -153,4 +154,14 @@ public class HomeController {
 			SessionUtils.sessionInvlidate();
 			return "redirect:/";
 		}
+		
+	// 페이스북 로그인 요청을 처리한다.
+	@PostMapping("/facebook-login")
+	public String facebookLogin(String email, String name) {
+		
+		User user = userService.facebook(email, name);
+		SessionUtils.addAttribute("LOGIN_USER", user);
+
+		return "redirect:/";
+	}
 }

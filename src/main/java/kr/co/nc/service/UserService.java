@@ -90,4 +90,17 @@ public class UserService {
 		}
 		return savedUser;
 	}
+
+	public User facebook(String email, String name) {
+		User user = userMapper.getUserByEmail(email);
+		if (user == null) {
+			user = new User();
+			user.setId(UUID.randomUUID().toString());
+			user.setEmail(email);
+
+			userMapper.insert(user);// User의 no
+		}
+
+		return user;
+	}
 }

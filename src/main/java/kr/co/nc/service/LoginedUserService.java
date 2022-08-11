@@ -40,7 +40,7 @@ public class LoginedUserService {
 		
 		userMapper.update(user);
 		
-		return null;
+		return user;
 	}
 
 	public User updateTel(String userId, String tel) {
@@ -49,7 +49,7 @@ public class LoginedUserService {
 		
 		userMapper.update(user);
 		
-		return null;
+		return user;
 	}
 	
 	
