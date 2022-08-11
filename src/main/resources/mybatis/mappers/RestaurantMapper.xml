@@ -88,8 +88,8 @@
 	</select>
 	
 	<!-- List<String> getAllTags(); -->
-	<select id="getAllTags" resultType="string">
-		select distinct RESTAURANT_TAG
+	<select id="getAllTags" resultType="java.util.Map">
+		select distinct RESTAURANT_TAG, RESTAURANT_NO
 		from RESTAURANT_TAG
 	</select>
 	
@@ -152,12 +152,13 @@
 		</choose>
 	</select>
 	
-	<!-- List<RestaurantCategory> getAllCategories();-->
-	<select id="getAllCategories" resultType="RestaurantCategory">
-		select RESTAURANT_CAT_ID as id , RESTAURANT_CAT_NAME as name
-		from RESTAURANT_CAT_NAME
-		order by RESTAURANT_CAT_ID asc
+	<!-- List<Category> getAllCategories();-->
+	<select id="getAllCategories" resultType="java.util.Map">
+		select cname.RESTAURANT_CAT_ID as id , cname.RESTAURANT_CAT_NAME as name
+		from RESTAURANT_CAT_NAME cname
+		order by RESTAURANT_CAT_ID
 	</select>
+	
 	<!-- RestaurantCategory getCategoryById(String categoryId); -->
 	<select id="getCategoryById" parameterType="string" resultType="RestaurantCategory">
 		select RESTAURANT_CAT_ID as id , RESTAURANT_CAT_NAME as name
@@ -165,4 +166,59 @@
 		where RESTAURANT_CAT_ID = #{value}
 	</select>
 	
+	<!-- List<City> getAllCity(); -->
+	<select id="getAllCity" resultType="kr.co.nc.vo.City">
+		select city_id as id, city_name as name, city_latitude as latitude, city_longitude as longitude
+		from cities
+		order by city_id
+	</select>
+	
+	<select id="searchKeyword" parameterType="java.util.Map" resultType="java.util.Map">
+		SELECT
+		    res.restaurant_no,
+		    res.restaurant_name,
+		    res.restaurant_location,
+		    res.restaurant_imgname,
+		    res.restaurant_tel,
+		    res.restaurant_like_count,
+		    res.restaurant_review_count,
+		    res.restaurant_review_point,
+		    res.restaurant_created_date,
+		    res.restaurant_update_date,
+		    res.restaurant_latitud,
+		    res.restaurant_longitude,
+		    res.restaurant_delete,
+		    res.city_id,
+		    res.restaurant_opening,
+		    res.restaurant_break_time,
+		    res.restaurant_close		    
+		FROM
+		    restaurant res
+		WHERE res.restaurant_no in (
+		        SELECT
+		            restaurant_no
+		        FROM
+		        (
+		            SELECT
+		                   res1.restaurant_no
+		            FROM
+		                restaurant res1, restaurant_tag rtag1, restaurant_menu menu1
+		            WHERE res1.restaurant_no = rtag1.restaurant_no
+		            AND res1.restaurant_no = menu1.restaurant_no
+		            AND (res1.restaurant_name like '%' || #{keyword} || '%' or rtag1.restaurant_tag like '%' || #{keyword} || '%' or menu1.restaurant_menu_name like '%' || #{keyword} || '%')
+					<if test="categories != null and categories != ''">
+						AND res1.restaurant_no in (
+								select 
+									src.restaurant_no 
+								from RESTAURANT_CAT src 
+								where src.restaurant_cat_id = #{categories}
+							)
+					</if>					
+		            )    
+		            GROUP BY restaurant_no
+		)
+		<if test="order == 1">
+		ORDER BY RESTAURANT_LIKE_COUNT DESC
+		</if>
+	</select>
 </mapper>

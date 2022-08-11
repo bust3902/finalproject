@@ -1,7 +1,8 @@
 package kr.co.nc.web.controller;
 
 
-import java.util.List;
+
+import java.util.HashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,11 +22,28 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 	
 	@GetMapping(path="/searchlist")
-	public String searchList(@RequestParam(name = "cat",required = false) String categoryId,Model model ) {
-		List<RestaurantCategory> categories = restaurantService.getAllCategories();
-		model.addAttribute("categories",categories);
+	public String searchList(
+			@RequestParam(name = "cat",required = false) String categoryId,
+			@RequestParam(name = "keyword",required = false) String keyword,
+			@RequestParam(name = "categories",required = false) String categories,
+			@RequestParam(name = "order",required = false) String order,
+			Model model ) {
+		model.addAttribute("categories",restaurantService.getAllCategories());
 		
 		model.addAttribute("tags",restaurantService.getAlltags());
+		model.addAttribute("cities",restaurantService.getAllCity());
+		
+		HashMap params = new HashMap();	
+		if(keyword != null) {
+			model.addAttribute("keyword",keyword);
+			params.put("keyword", keyword);
+		}
+		if(categories != null)params.put("categories", categories);
+		if(order != null)params.put("order", order);
+		
+		if( !params.isEmpty() ) {
+			model.addAttribute("searchKeyword",restaurantService.searchKeyword(params));
+		}
 		
 		return "restaurant/searchlist";
 	}

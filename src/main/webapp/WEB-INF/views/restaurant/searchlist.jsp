@@ -18,8 +18,8 @@
 <body>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="position-relative">
-		<form id="form-search" class="d-flex" role="search" action="searchList">
-	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
+		<form id="form-search" class="d-flex" role="search" action="searchlist">
+	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요" value="${keyword }">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
 	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
   					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
@@ -58,9 +58,7 @@
 					</li>
 				</ul>
 			</div>
-	    </form>
 	</div>
-	<form id="form-search-restaurant">
 		<div class="row px-3 pt-5 pb-3">
 		</div>
 		<div class="row">
@@ -70,61 +68,35 @@
 						<li class="list-group-item py-3">
 							<div class="fw-bold mb-3">카테고리</div>
 							<!-- 음식 카테고리만큼 내용이 출력되게 하기 -->
-							<div class="row p-3">
-								<div class="form-check">
-								        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-								        <label class="form-check-label" for="optionsRadios1">
-								        배달
-								        </label>
-						      	</div>
-						     	<div class="form-check">
-							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-							        <label class="form-check-label" for="optionsRadios2">
-							          한식
-							        </label>
-						      	</div>
-						      	<div class="form-check">
-							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-							        <label class="form-check-label" for="optionsRadios3">
-							          일식
-							        </label>
-						      	</div>
+								<div class="row p-3">
+							<c:forEach var="category" items="${categories }">
+								<div class="col-12 mb-3">
+									<input class="form-check-input" type="radio" name="categories" value="${category.ID}">
+									<label class="form-check-label" for="optionsRadios1">${category.NAME }</label>
+								</div>
+							</c:forEach>
 							</div>
 						</li>
 						<li class="list-group-item py-3">
 							<div class="fw-bold mb-3">음식점 태그</div>
 							<!-- 음식 태그만큼 내용이 출력되게 하기 -->
-							 <div class="form-check" id="box-buttons">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          데이트
-							     </label>
-						     </div>
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          이국적
-							     </label>
-						     </div>
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          포장
-							     </label>
-						     </div>
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          혼밥
-							     </label>
-						     </div>
+							<c:forEach var="tag" items="${tags }">
+								 <div class="form-check" id="box-buttons">
+								     <input class="form-check-input" type="checkbox" value="${tag.RESTAURANT_NO }" id="flexCheckDefault" name="flexCheckDefault">
+								     <label class="form-check-label" for="flexCheckDefault">
+								          ${tag.RESTAURANT_TAG }
+								     </label>
+							     </div>
+							</c:forEach>
 						</li>
 						<li class="list-group-item py-3">
 							<div class="row p-3">
 								<select class="form-select w-80" name="city">
 									<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
 									<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
-									<option value="" data-city-lat="37.5666805" data-city-long="126.9784147">홍대/신촌/마포</option>
+									<c:forEach var="city" items="${cities }">
+										<option value="${city.id }" data-city-lat="37.5666805" data-city-long="126.9784147">${city.name }</option>
+									</c:forEach>
 								</select>
 							</div>
 						</li>
@@ -163,19 +135,24 @@
 					<div>
 						<div class="row mb-3" id="map" style="width:100%;height:350px;"></div>
 					</div>
-				<div class="row mx-auto">
-					<div class="card mb-3" style="max-width: 50rem;">
-					  <div class="card-body">
-					  <!-- <img src="/resources/images/"> -->
-					  <p class="card-title"><strong>리춘시장</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
-					  <p class="card-text m-0">912m</p>
-					  <p class="card-text m-0">중식포차, 중화요리</p>
-						  <div class="row mt-3">
-						  	<button type="button" class="btn btn-outline-secondary">평가하기</button>
-						  </div>
-					  </div>
-					</div>
-				</div>
+					<c:if test="${empty searchKeyword }">
+					데이터가 없습니다.
+					</c:if>
+					<c:forEach var="r" items="${searchKeyword }">
+						<div class="row mx-auto">
+							<div class="card mb-3" style="max-width: 50rem;">
+							  <div class="card-body">
+							  <!-- <img src="/resources/images/"> -->
+							  <p class="card-title"><strong>${r.RESTAURANT_NAME }</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
+							  <p class="card-text m-0">912m</p>
+							  <p class="card-text m-0">${r.RESTAURANT_TAG }</p>
+								  <div class="row mt-3">
+								  	<button type="button" class="btn btn-outline-secondary">평가하기</button>
+								  </div>
+							  </div>
+							</div>
+						</div>
+					</c:forEach>
 			</div>
 		</div>
 	</form>
