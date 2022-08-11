@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 
 import kr.co.nc.mapper.QaMapper;
 import kr.co.nc.vo.Qa;
+import kr.co.nc.vo.QaCategory;
+import kr.co.nc.vo.QaType;
 
 @Service
 public class QaService {
@@ -20,5 +22,13 @@ public class QaService {
 	 */
 	public List<Qa> getAllQas() {
 		return qaMapper.getAllQas();
+	}
+	
+	public List<QaCategory> getAllQaCategory() {
+		return qaMapper.getAllQaCategories();
+	}
+	
+	public List<QaType> getAllQaTypes() {
+		return qaMapper.getAllQaTypes();
 	}
 }

@@ -25,29 +25,35 @@
 				</ul>
 			</div>
 		</div>
-		<div class="alert-top text-center">
-			<p><strong>등록된 리뷰가 없습니다.</strong></p>
-			<table class="table">
-				<thead>
-					<tr>
-						<th>제목</th>
-						<th>작성자</th>
-						<th>내용</th>
-						<th>평점</th>
-						<th>등록일</th>
-					</tr>
-				</thead>
-				<tbody>
-					<tr>
-						<td>제목</td>
-						<td>작성자</td>
-						<td>내용</td>
-						<td>5점</td>
-						<td>2022-07-27</td>
-					</tr>
-				</tbody>
-			</table>
-		</div>
+		<c:if test="${empty review }">
+			<div class="alert alert-danger">
+				등록된 리뷰가 없습니다.
+			</div>
+		</c:if>
+		<c:if test="${not empty review }">
+			<div class="text-center">
+				<table class="table">
+					<thead>
+						<tr>
+							<th>제목</th>
+							<th>작성자</th>
+							<th>내용</th>
+							<th>평점</th>
+							<th>등록일</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>제목</td>
+							<td>작성자</td>
+							<td>내용</td>
+							<td>5점</td>
+							<td>2022-07-27</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</c:if>
 	</div>
 </div>
 </body>

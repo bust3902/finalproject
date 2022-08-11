@@ -27,11 +27,8 @@
 				</ul>
 			</div>
 		</div>
-		<div class="col">
-			<p class="text-center"><strong>등록된 1:1 문의가 없습니다.</strong></p>
-		</div>
-		<div class="col">
-			<table class="table text-center">
+		<div class="col-6">
+			<table class="table text-center" style="width:1000px;">
 				<thead>
 					<tr>
 						<th>카테고리</th>
@@ -42,13 +39,32 @@
 					</tr>
 				</thead>
 				<tbody>
-					<tr>
-						<td>카테고리</td>
-						<td>문의 유형</td>
-						<td>이미지</td>
-						<td>내용</td>
-						<td>등록일</td>
-					</tr>
+				<c:choose>
+					<c:when test="${empty qa }">
+						<tr>
+							<td colspan="5" class="text-center">등록된 1:1 문의가 없습니다.</td>
+						</tr>
+					</c:when>
+					<c:otherwise>
+						<c:forEach var="qa" items="${qa }">
+							<tr class="align-middle">
+								<td>
+								<c:forEach var="qaCat" items="${qa.categories }">
+									<div>${qaCat.cateogry.name }</div>
+								</c:forEach>
+								</td>
+								<td>
+								<c:forEach var="qaType" items="${qa.type }">
+									<div>${qaType.type.name }</div>
+								</c:forEach>
+								</td>
+								<td><img src="/resources/images" class="img-thumbnail rounded-0"></td>
+								<td>${qa.content }</td>
+								<td><fmt:formatDate value="YYYY년 M월 dd일"/> ${qa.createdDate }</td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
 				</tbody>
 			</table>
 		</div>

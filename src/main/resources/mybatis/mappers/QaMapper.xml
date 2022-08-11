@@ -20,4 +20,16 @@
 		from qa
 		order by qa_no = #{no}
 	</select>
+	
+	<!-- List<QaCategory> getAllQaCategories(); -->
+	<select id="getAllQaCategories" resultType="QaCategory">
+		select *
+		from qa_categories
+	</select>
+	
+	<!-- List<QaType> getAllQaTypes(); -->
+	<select id="getAllQaTypes" resultType="QaType">
+		select *
+		from qa_type
+	</select>
 </mapper>
