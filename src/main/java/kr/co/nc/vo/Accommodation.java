@@ -36,8 +36,8 @@ public class Accommodation {
 	private String reviewRateKeyword; // 리뷰 점수에 따라 화면에 출력할 키워드 (아쉬워요/부족해요/만족해요/추천해요/최고에요)
 	private StarIconForRate reviewRateIcon; // 리뷰 별점 아이콘을 표현하는 hashMap을 상속받는 객체
 	
-//	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
-//	private List<AccommodationRoom> rooms; // 이 숙소가 가지는 모든 객실정보
+	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
+	private List<AccommodationRoom> rooms; // 이 숙소가 가지는 모든 객실정보
 	private List<CommonFacility> commonFacilities; // 이 숙소가 가지는 모든 공용시설 정보
 	private List<String> tags; // 이 숙소가 가지는 모든 부가사항 태그
 	

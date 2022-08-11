@@ -2,7 +2,7 @@ package kr.co.nc.vo;
 
 import java.util.List;
 
-import javax.validation.constraints.NotBlank;
+import org.springframework.web.multipart.MultipartFile;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +32,6 @@ public class AccommodationRoom {
 	private int stock;
 	
 	private List<RoomFacility> roomFacilities; // 이 객실이 가지는 모든 객실시설 정보
-	private List<String> images; // 객실 이미지 파일명
+	private List<MultipartFile> detailImageFiles; // 객실 상세 이미지
 	
 }

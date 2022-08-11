@@ -37,19 +37,23 @@
 		</div>
 		
 		<div class="col-9 bg-white">
-			<form id="form-accommodation-room" class="col p-3" method="post" action="admin/accoinsert" enctype="multipart/form-data">
+			<form id="form-accommodation-room" class="col p-3" method="post" action="accommodation3" enctype="multipart/form-data">
 
 				<!-- 정보 입력 폼 -->
 				<div class="row mt-5 p-0">
-					<div class="col-4 mb-3">
-						<label class="form-label">객실 수</label>
+					<div class="col-6 mb-3">
+						<label class="form-label">객실명</label>
+						<input class="form-control " type="text" name="name">
+					</div>
+					<div class="col-6 mb-3">
+						<label class="form-label">총 객실 수</label>
 						<input class="form-control " type="text" name="numbers">
 					</div>
-					<div class="col-4 mb-3">
+					<div class="col-6 mb-3">
 						<label class="form-label">최대 숙박 인원</label>
 						<input class="form-control " type="text" name="capacity">
 					</div>
-					<div class="col-4 mb-3">
+					<div class="col-6 mb-3">
 						<label class="form-label">1박 기본 요금</label>
 						<input class="form-control " type="text" name="dayPrice">
 					</div>
@@ -67,7 +71,7 @@
 					<div>
 						<c:forEach var="rofacility" items="${rofacilities }">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="roomFacilities" value="${rofacility.id }">
+							<input class="form-check-input" type="checkbox" name="stringRoomFacilities" value="${rofacility.id }">
 							<label class="form-check-label" >${rofacility.name }</label>
 						</div>
 						</c:forEach>			
@@ -76,26 +80,41 @@
 				
 				<!-- 객실 메인 이미지 업로드 폼 -->
 				<div class="mb-5">
-					<label class="form-label">숙소 메인 이미지</label>
-					<input class="form-control w-50" type="file" name="thumbnailImageName" >
+					<label class="form-label">객실 메인 이미지</label>
+					<input class="form-control w-50" type="file" name="thumbnailImageFile" >
 				</div>
 				
 				<!-- 객실 디테일 이미지 업로드 폼 -->
 				<div class="mb-5">
 					<label class="form-label">상세 이미지(여러장 등록 가능)</label>
-					<input class="form-control w-50" type="file" name="detailImageFile" >
+					<input class="form-control w-50" multiple="multiple" type="file" name="detailImageFiles" >
 				</div>
 				
-				<!-- 객실 타입 저장버튼 -->
+				<!-- 
+				객실 타입 저장버튼
 				<div class="text-end mt-5">
 					<button type="button" class="btn btn-secondary px-5" id="btn-add-room">객실 타입 저장</button>
 				</div>
 				
-				<div></div>
+				<div id="save-room">${accommodationRegisterForm}</div>
 
-				<!-- 완료 -->
+				완료
 				<div class="text-end mt-5">
 					<button type="submit" class="btn btn-secondary px-5">다음</button>
+				</div>
+				 -->
+
+				<!-- 객실 타입 저장버튼 -->
+				<div class="text-end mt-5">
+					<button type="submit" class="btn btn-secondary px-5">객실 타입 저장</button>
+				</div>
+				
+				<!-- 입력된 방 갯수 출력 -->
+				<div id="save-room">저장된 객실 유형 : ${rooms-1 }실</div>
+				
+				<!-- 완료 -->
+				<div class="text-end mt-5">
+					<button type="button" class="btn btn-secondary px-5" onclick="inputCompleted()">입력 완료</button>
 				</div>
 			</form>
 		</div>
@@ -103,7 +122,7 @@
 </div>
 <%@ include file="../common/footer.jsp" %>
 <script type="text/javascript">
-// 태그 추가 버튼
+// 객실 추가 버튼
 $("#btn-add-room").click(function() {
 	// 객실수 필드에 값이 있는지 체크하기
 	let numbersValue = $.trim( $(":input[name=numbers]").val() );
@@ -139,7 +158,22 @@ $("#btn-add-room").click(function() {
 		return false;
 	}
 	
+	// 객실 상세 이미지가 설정되어있는지 체크하기
+	let detailImageNameValue = $.trim( $(":file[name=detailImageNames]").val() );
+	if (detailImageNameValue === "") {
+		alert("객실 상세 이미지를 첨부해주세요");
+		return false;
+	}
+	
 });
+
+function inputCompleted(){
+	let inputCompleted = document.createElement('form');
+	inputCompleted.setAttribute('method', 'post');
+	inputCompleted.setAttribute('action', '/admin/insert');
+	document.body.appendChild(inputCompleted);
+	inputCompleted.submit();
+}
 </script>
 </body>
 </html>
