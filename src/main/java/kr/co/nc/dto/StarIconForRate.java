@@ -35,8 +35,6 @@ public class StarIconForRate extends HashMap<String, String> {
 		
 		// 점수를 소수점 첫째 자리까지 반올림하기
 		double reviewRate = Math.round(rawReviewRate*10)/10.0;
-		System.out.println(rawReviewRate);
-		System.out.println(reviewRate);
 		for (int i = 1; i <= 5; i++) {
 			if (i - 0.5 == reviewRate) {
 			// ex) 평점이 1.5이면 2번째 별은 절반 채운 별이다.
@@ -49,6 +47,6 @@ public class StarIconForRate extends HashMap<String, String> {
 				this.put("star" + i, "bi-star");
 			}
 		}
-
 	}
+	
 }

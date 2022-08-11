@@ -49,7 +49,6 @@ public class Accommodation {
 		this.reviewRate = reviewRate;
 		initReviewRateIcon(reviewRate);
 		initReviewRateKeyword(reviewRate);
-		
 	}
 	
 	// 리뷰 점수에 따라 화면에서 표현할 키워드를 저장한다.

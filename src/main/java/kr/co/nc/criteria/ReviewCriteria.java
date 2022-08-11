@@ -18,7 +18,7 @@ public class ReviewCriteria {
 	
 	/**
 	 * ReviewCriteria 객체를 생성하기 위해 강제되는 생성자 메소드.
-	 * @param option : accommodation 또는 restaurant 를 입력
+	 * @param option : accommodation 또는 restaurant 를 입력. 둘 중 어느 문자열과도 일치하지 않으면 두 필드에 0이 저장된다.
 	 * @param value : 해당 숙소/식당의 식별번호(accoId/restaurantNo)를 입력
 	 */
 	public ReviewCriteria(String option, int value) {
