@@ -5,14 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.nc.vo.Payment;
-import kr.co.nc.vo.PaymentRequest;
 import kr.co.nc.vo.Reservation;
+import kr.co.nc.web.form.PaymentRequest;
 
 @Mapper
 public interface ReservationMapper {
 
 	// 숙소 예약
-	void insertReservation(PaymentRequest paymentRequest);
+	void insertReservation(Reservation reservation);
 	
 	// 숙소 예약 / 체크인-아웃에 따른 날짜 예약
 	void ReservateRoom(Reservation reservation);
@@ -29,7 +29,7 @@ public interface ReservationMapper {
 	
 	
 	// 예약번호로 모든 예약정보 가져오기.
-	List<Reservation> getAllReserveInfoByReserveId(int reservationId);
+	List<Reservation> getAllReserveInfo(int userNo);
 	
 	// 예약 상태변경하기 (예약가능 / 만실)
 	void updateReservationStatus(Reservation reservation);
@@ -38,8 +38,10 @@ public interface ReservationMapper {
 	void updatePaymentStatuts(Payment payment);
 
 	// 예약번호로 예약정보 가져오기
-	String getReserveInfoByReserveId(String reservationId);
+	Reservation getReserveInfoByReserveId(String reservationId);
 	// 결제 정보 저장하기
 	void insertPayment(PaymentRequest paymentRequest);
+
+
 
 }

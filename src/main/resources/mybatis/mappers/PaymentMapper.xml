@@ -16,4 +16,15 @@
 		payment_id = #{paymentId}
 </update>
 
+<select id="getPaymentStatus" parameterType="int" resultType="Payment">
+	select
+		p.payment_id as paymentId,
+		p.payment_status as paymentStatus,
+		p.payment_total_price as amount,
+		r.reservation_id as "reservationId"
+	from reservation r, payment p
+	where p.reservation_Id = r.reservation_id
+	and p.reservation_Id = ${value}
+</select>
+
 </mapper>
