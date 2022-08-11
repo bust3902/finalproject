@@ -5,29 +5,31 @@
 
 <!--void insertReservation(Reservation reservation); -->
 <insert id="insertReservation" parameterType="kr.co.nc.vo.Reservation">
-	insert 	into reservation
-		(reservation_id, reservation_status, reservation_check_in, reservation_check_out, reservation_name, reservation_tel)
+	insert into reservation
+		(reservation_id, reservation_check_in, reservation_check_out, reservation_name, reservation_tel)
 	values
-		(reservation_seq.nextval,#{status},#{checkIn},#{checkOut},#{reserName},#{reserTel})		
+		(reservation_seq.nextval,#{checkIn},#{checkOut},#{reserName},#{reserTel})		
+</insert>
+<insert id="insertPayment" parameterType="kr.co.nc.vo.Payment">
+	insert into payment
+		(payment_id, payment_status,payment_total_price,payment_date)
+	values
+		(payment_seq.nextval,#{status},#{amount},#{paidAt})
+
 </insert>
 
 <!-- 	List<Reservation> getAllReserveInfoByReserveId(int reservationId); 예약정보리스트 가져오기 -->
 <select id="getAllReserveInfoByReserveId" parameterType="int" resultType="Reservation" >
-	SELECT 
-		R.reservation_id, 
-		U.user_tel, 
-		U.user_name
-	FROM 
-		reservation R	
-	INNER JOIN users U
-	ON R.user_no = U.user_no
-	WHERE R.reservation_status = '예약'
-	and R.reservation_id = #{value}
-	order by R.reservation_check_out
+select r.RESERVATION_ID
+from reservation r
+INNER join users u
+on r.user_no = u.user_no
+where r.user_no = u.user_no
+order by r.reservation_check_in;
 </select>
 
 <!-- 	String getAllReserveInfoByReserveId(int reservationId); 예약정보 한개 가져오기 -->
-<select id="getReserveInfoByReserveId" parameterType="int" >
+<select id="getReserveInfoByReserveId" parameterType="int" resultType="int">
 	SELECT 
 		R.reservation_id, 
 		U.user_tel, 
@@ -39,7 +41,6 @@
 	WHERE R.reservation_id = #{value}
 	order by R.reservation_check_out
 </select>
-
 
 <!-- void updateReservationStatus(Reservation reservation);  예약 상태변경하기 (예약가능 / 만실)-->
 <update id="updateReservationStatus" parameterType="kr.co.nc.vo.Reservation">

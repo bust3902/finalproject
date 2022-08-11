@@ -57,6 +57,11 @@ public class ReservationService {
 		
 		
 	}
-
+	/*
+	 * 결제정보 저장
+	 */
+	public void insertPayment(PaymentRequest paymentRequest) {
+		reservationMapper.insertPayment(paymentRequest);
+	}
 	
 }
