@@ -36,8 +36,8 @@ public class ReservationService {
 	 * 예약정보를 예약번호로 가져오기
 	 * @param uid_imp 예약번호
 	 */
-	public Reservation  getReserveInfoByReserveId(String uid_imp){
-		return reservationMapper.getReserveInfoByReserveId(uid_imp);
+	public Reservation  getReserveInfoByReserveId(String reservationNo){
+		return reservationMapper.getReserveInfoByReserveId(reservationNo);
 	}
 
 	/**

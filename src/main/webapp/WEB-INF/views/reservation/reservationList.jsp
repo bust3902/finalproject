@@ -22,12 +22,12 @@
 		<div class="col-8">
 			<div class="m-3" style="color:black;"><strong>예약 내역</strong>
 				<div class="row" style="width:250px;">
-				<c:forEach var="reserv" items="${reservationList }">
+				<c:forEach var="reserv" items="${reservationList }" >
 					<div class="border col m-2 " >
-						<img class="img-fluid" src="/resources/images/acco/detail/${acco.thumbnailImageName}"><br>
+						<img class="img-fluid" src="/resources/images/acco/thumbnail/${reserv.acco.thumbnailImageName}"><br>
 						<a href="myreservation" style="text-decoration: none; color:black;">
 							<p class="text-center"><span class="badge rounded-pill bg-danger mt-3">예약확정</span></p>
-							<p class="text-center"><strong>${reserv.reserName }</strong></p>
+							<p class="text-center"><strong>${reserv.acco.name }</strong></p>
 							<p class="form-text text-center">체크인 : ${reserv.checkIn } -  체크아웃 : ${reserv.checkOut } </p>
 						</a>
 						<div class="row">
@@ -39,32 +39,36 @@
 			</div>
 			<div class="m-3" style="color:black;"><strong>이용 내역</strong>
 				<div class="row" style="width:250px;">
-					<div class="border col m-2" >
-						<img class="img-fluid" src="/resources/images/acco/detail/${acco.thumbnailImageName }"><br>
+					<c:forEach var="reserv" items="${reservationList }" >
+					<div class="border col m-2 " >
+						<img class="img-fluid" src="/resources/images/acco/thumbnail/${reserv.acco.thumbnailImageName}"><br>
 						<a href="myreservation" style="text-decoration: none; color:black;">
 							<p class="text-center"><span class="badge rounded-pill bg-danger mt-3">예약확정</span></p>
-							<p class="text-center"><strong>${reserva.accomodation.id }</strong></p>
-							<p class="text-center">07.29 금 - 07.30 토 / 1박 </p>
+							<p class="text-center"><strong>${reserv.acco.name }</strong></p>
+							<p class="form-text text-center">체크인 : ${reserv.checkIn } -  체크아웃 : ${reserv.checkOut } </p>
 						</a>
 						<div class="row">
 							<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
 						</div>
 					</div>
+				</c:forEach>
 				</div>
 			</div>
 			<div class="m-3" style="color:black;"><strong>취소 내역</strong>
 				<div class="row" style="width:250px;">
+					<c:forEach var="reserv" items="${reservationList }" >
 					<div class="border col m-2 " >
-						<img class="img-fluid" src="/resources/images/acco/detail/${acco.thumbnailImageName }"><br>
+						<img class="img-fluid" src="/resources/images/acco/thumbnail/${reserv.acco.thumbnailImageName}"><br>
 						<a href="myreservation" style="text-decoration: none; color:black;">
 							<p class="text-center"><span class="badge rounded-pill bg-info mt-3">예약취소</span></p>
-							<p class="text-center"><strong>천안 호텔 소설 스미스</strong></p>
-							<p class="text-center">07.29 금 - 07.30 토 / 1박 </p>
+							<p class="text-center"><strong>${reserv.acco.name }</strong></p>
+							<p class="form-text text-center">체크인 : ${reserv.checkIn } -  체크아웃 : ${reserv.checkOut } </p>
 						</a>
 						<div class="row">
 							<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
 						</div>
 					</div>
+				</c:forEach>
 				</div>
 			</div>
 		</div>

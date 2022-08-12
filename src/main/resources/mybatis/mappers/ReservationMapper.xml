@@ -27,28 +27,45 @@
 		r.reservation_name as reserName,
 		r.reservation_tel as reserTel,
 		r.acco_id as "Accommodation.id",
-		r.room_no as "AccommodationRoom.no"
+		r.room_no as "AccommodationRoom.no",
+		u.user_name as "users.name",
+		a.acco_name as "acco.name",
+		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName"
 	from
 		reservation r
 	INNER join users u
 	on r.user_no = u.user_no
+	INNER join ACCOMMODATIONS a
+	on r.acco_id = a.acco_id
 	where r.user_no = u.user_no
+	and r.acco_id = a.acco_id
 	and r.user_no = #{value}
 	order by r.reservation_check_in
 </select>
 
 <!-- 	String getReserveInfoByReserveId(int reservationId); 예약정보 한개 가져오기 -->
-<select id="getReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Reservation">
-	SELECT 
-		R.reservation_no as reservationNo, 
-		U.user_tel       as  "user.tel",
-		U.user_name		 as  "user.name"
-	FROM 
-		reservation R	
-	INNER JOIN users U
-	ON R.user_no = U.user_no
-	WHERE R.reservation_id = #{value}
-	order by R.reservation_check_out
+<select id="getReserveInfoByReserveId" parameterType="String" resultType="kr.co.nc.vo.Reservation">
+	select 
+		r.reservation_id as reservationNo,
+		r.reservation_check_in as checkIn,
+		r.reservation_check_out as checkOut,
+		r.reservation_name as reserName,
+		r.reservation_tel as reserTel,
+		r.acco_id as "Accommodation.id",
+		r.room_no as "AccommodationRoom.no",
+		u.user_name as "users.name",
+		a.acco_name as "acco.name",
+		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName"
+	from
+		reservation r
+	INNER join users u
+	on r.user_no = u.user_no
+	INNER join ACCOMMODATIONS a
+	on r.acco_id = a.acco_id
+	where r.user_no = u.user_no
+	and r.acco_id = a.acco_id
+	and r.reservation_id = #{value}
+	order by r.reservation_check_in
 </select>
 
 <!-- void updateReservationStatus(Reservation reservation);  예약 상태변경하기 (예약가능 / 만실)-->

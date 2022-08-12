@@ -2,7 +2,6 @@ package kr.co.nc.web.controller;
 
 
 
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,9 +30,13 @@ public class ReservationController {
 	@GetMapping(path = "/reservation")
 	public String reservation(@RequestParam(name ="id", required =false)Integer accoId, int roomNo, @RequestParam(value ="checkIn") String checkIn, @RequestParam(value ="checkOut") String checkOut ,
 	Model model, PaymentRequest paymentRequest) {
+		
 		//상세페이지에서 온 해당 id를 가지고 숙소예약을한다.
 		model.addAttribute("accommodation", accommodationService.getAccommodationDetailById(accoId));
+		
 		// 체크인 체크아웃 데이터 가져오기...?
+		
+		
 		return "reservation/reservation";
 	}
 	
@@ -44,13 +47,14 @@ public class ReservationController {
 	 * 마이페이지의 나의 상세예약정보페이지 요청 추후 마이페이지에 보낼예정
 	 */
 	@GetMapping(path = "/myreservation")
-	public String myReservation(@LoginUser User user , String uid_imp ,Model model) {
+	public String myReservation(@LoginUser User user ,Model model) {
 		
-		model.addAttribute("reservation",  reservationService.getReserveInfoByReserveId(uid_imp));
+		model.addAttribute("reservationList", reservationService.getAllReserveInfo(user.getNo()));
+
 		return "reservation/myreservation";
 	}
 	/*
-	 * 예약페이지에서 요청이 옴과 동시에 DB의 PAYMENT테이블의 PAYMENT_TYPE을 '결제완료'로 변경
+	
 	 * 내 예약내역 리스트페이지 요청
 	 * 요청URI : /reservationList
 	 * 뷰 페이지 : /WEB-INF/views/reservationList.jsp
