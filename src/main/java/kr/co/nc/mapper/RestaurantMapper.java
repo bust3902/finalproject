@@ -1,15 +1,10 @@
 package kr.co.nc.mapper;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
-import kr.co.nc.criteria.RestaurantCriteria;
-import kr.co.nc.vo.Category;
-import kr.co.nc.vo.City;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.RestaurantCategory;
 import kr.co.nc.vo.RestaurantMenu;
@@ -33,16 +28,5 @@ public interface RestaurantMapper {
 	List<Review> getAllReview();
 	
 	// 리스트 출력시 사용할 태그
-	List<Map> getAllTags();
-	List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria);
-
-	// 음식점 관련 카테고리 가져오는 mapper 인터페이스
-	List<Category> getAllCategories();
-	RestaurantCategory getCategoryById(String categoryId);
-	
-	// 음식점 지역 정보를 가져오는 mapper 인터페이스
-	List<City> getAllCity();
-
-	List<Map> searchKeyword(HashMap params);
-	
+	List<String> getAllTags();
 }

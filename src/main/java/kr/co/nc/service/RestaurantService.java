@@ -56,26 +56,25 @@ public class RestaurantService {
 	}
 	
 	// 검색 조건에 따른 음식점 검색
-	public List<Restaurant> searchRestaurant(RestaurantCriteria criteria) {
-		return restaurantMapper.getRestaurantByCriteria(criteria);
-	}
+	/*
+	 * public List<Restaurant> searchRestaurant(RestaurantCriteria criteria) {
+	 * return restaurantMapper.getRestaurantByCriteria(criteria); }
+	 */
 	
 	// 모든 카테고리를 가져오기
-	public List<Category> getAllCategories() {
-		return restaurantMapper.getAllCategories();
-	}
+	/*
+	 * public List<Category> getAllCategories() { return
+	 * restaurantMapper.getAllCategories(); }
+	 */
 	
 	// 모든 태그를 가져오기
-	public List<Map> getAlltags() {
+	public List<String> getAlltags() {
 		return restaurantMapper.getAllTags();
 	}
 	
 	// 모든 위치를 가져오기
-	public List<City> getAllCity() {
-		return restaurantMapper.getAllCity();
-	}
-	
-	public List<Map> searchKeyword(HashMap params){
-		return restaurantMapper.searchKeyword(params);
-	}
+	/*
+	 * public List<City> getAllCity() { return restaurantMapper.getAllCity(); }
+	 */
+
 }
