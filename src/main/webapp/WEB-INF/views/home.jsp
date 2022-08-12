@@ -21,26 +21,26 @@
 		<div class="row">
 			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src=""></a>
 		</div>
-		<div class="d-flex flex-wrap justify-content-evenly" style="min-height: 300px;">
+		<div class="d-flex flex-wrap justify-content-evenly" style="min-height: 350px;">
 			<!-- 숙소유형별 조회 아이콘은 DB에서 숙소유형 조회해서 출력 -->
 			<c:forEach var="accoType" items="${accoTypes }">
 				<div class="text-center my-auto">
 					<a href="acco?type=${accoType.id }"><img class="img-fluid" src="/resources/images/homeicons/${accoType.id }.png" style="width:100px;height:auto;"></a><br/>
-			    	<a href="acco?type=${accoType.id }" class="text-decoration-none text-muted fw-bold">${accoType.name }</a>
+			    	<a href="acco?type=${accoType.id }" class="text-decoration-none text-dark fw-light">${accoType.name }</a>
 				</div>
 			</c:forEach>
 			<!-- TODO : 내 주변 조회 - 추후 가능하면 구현, 아니면 삭제하기  -->
 			<div class="text-center my-auto">
 				<a href="#"><img class="img-fluid" src="/resources/images/homeicons/near.png" style="width:100px;height:auto;"></a><br/>
-		    	<a href="#" class="text-decoration-none text-muted fw-bold">내주변</a>
+		    	<a href="#" class="text-decoration-none text-dark fw-light">내주변</a>
 			</div>
 			<div class="text-center my-auto">
 				<a href="restaurant/searchlist"><img class="img-fluid" src="/resources/images/homeicons/restaurant.png" style="width:100px;height:auto;"></a><br/>
-		    	<a href="restaurant/searchlist" class="text-decoration-none text-muted fw-bold">맛어때</a>
+		    	<a href="restaurant/searchlist" class="text-decoration-none text-dark fw-light">맛어때</a>
 			</div>
 		</div>
 		<div class="row my-5 mx-auto" style="max-width: 950px;">
-			<div class="fw-bold mb-3"> 서울어때 소식</div>
+			<div class="fw-bold text-dark mb-3"> 서울어때 소식</div>
 			<div class="d-flex flex-wrap justify-content-between ">
 				<div class="card flex-fill p-1 mb-3 me-3">
 					<div class="row g-0">
