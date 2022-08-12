@@ -232,24 +232,24 @@
 	</select>
 	
 	<!-- 찜하기 기능 관련 -->
-	<!-- int isExistUserLikeByAccoId(Map<String, Integer> param); -->
-	<select id="isExistUserLikeByAccoId" parameterType="map" resultType="int">
+	<!-- int isExistUserLikeByAccoId(LikeCriteria criteria); -->
+	<select id="isExistUserLikeByAccoId" parameterType="kr.co.nc.criteria.LikeCriteria" resultType="int">
 		select count(*)
 		from user_accommodation_likes
 		where user_no = #{userNo}
-			and acco_id = #{accoId}
+			and acco_id = #{id}
 	</select>
 	
 	<!-- void insertUserLikeByAccoId(Map<String, Integer> param); -->
-	<insert id="insertUserLikeByAccoId" parameterType="map">
+	<insert id="insertUserLikeByAccoId" parameterType="kr.co.nc.criteria.LikeCriteria">
 		insert into user_accommodation_likes (user_no, acco_id)
-		values (#{userNo}, #{accoId})
+		values (#{userNo}, #{id})
 	</insert>
 	
 	<!-- void deleteUserLikeByAccoId(Map<String, Integer> param); -->
-	<delete id="deleteUserLikeByAccoId" parameterType="map">
+	<delete id="deleteUserLikeByAccoId" parameterType="kr.co.nc.criteria.LikeCriteria">
 		delete from user_accommodation_likes
 		where user_no = #{userNo}
-			and acco_id = #{accoId}
+			and acco_id = #{id}
 	</delete>
 </mapper>

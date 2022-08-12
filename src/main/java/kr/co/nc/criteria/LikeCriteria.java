@@ -1,5 +1,7 @@
 package kr.co.nc.criteria;
 
+import org.apache.ibatis.type.Alias;
+
 import lombok.Getter;
 
 /**
