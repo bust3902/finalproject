@@ -32,10 +32,6 @@ public class RestaurantController {
 		return "restaurant/searchlist";
 	}
 	
-	public List<Restaurant> search(RestaurantCriteria criteria) {
-		return restaurantService.searchRestaurant(criteria);
-	}
-	
 	@GetMapping(path = "/detail")
 	public String detail(@RequestParam("no") int restaurantNo, Model model) {
 		// 변수 따로 만들지 않고 reviews안에 넣었습니다.
