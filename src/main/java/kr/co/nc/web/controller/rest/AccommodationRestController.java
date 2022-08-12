@@ -10,7 +10,6 @@ import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.service.AccommodationService;
-import kr.co.nc.service.UserService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.User;
@@ -25,9 +24,6 @@ public class AccommodationRestController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
-	
-	@Autowired
-	private UserService userService;
 	
 	// 검색 조건에 맞는 숙소 리스트 반환
 	@GetMapping(path = "/accommodations")
@@ -45,7 +41,7 @@ public class AccommodationRestController {
 	public boolean like(@LoginUser User loginUser, int accoId) {
 		try {
 			// 서비스에서 비즈니스 로직 수행 : service에서는 user_accommodation_like 테이블에 일치하는 정보가 존재하면 삭제하고, 존재하지 않으면 저장한다.
-			userService.changeMyAccoLikeStatus(loginUser, accoId);
+			accommodationService.changeMyAccoLikeStatus(loginUser, accoId);
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();

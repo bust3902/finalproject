@@ -8,12 +8,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
-import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.ReviewService;
 import kr.co.nc.service.UserService;
-import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.User;
 
 @Controller
@@ -25,8 +23,6 @@ public class AccommodationController {
 	private AccommodationService accommodationService;
 	@Autowired
 	private ReviewService reviewService;
-	@Autowired
-	private UserService userService;
 
 	// 숙소 검색 페이지 뷰 반환
 	@GetMapping(path = "")
@@ -78,7 +74,7 @@ public class AccommodationController {
 
 		// 로그인 상태일 경우 찜하기 여부를 조회해서 그 값을 전달하고, 로그아웃 상태일 경우 무조건 false를 전달한다.
 		User loginUser = (User) model.getAttribute("LOGIN_USER");
-		model.addAttribute("isLiked", (loginUser != null ? userService.isLikedAcco(loginUser.getNo(), accoId) : false));
+		model.addAttribute("isLiked", (loginUser != null ? accommodationService.isLikedAcco(loginUser.getNo(), accoId) : false));
 		
 		return "/accommodation/detail";
 	}

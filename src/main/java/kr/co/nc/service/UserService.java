@@ -1,7 +1,5 @@
 package kr.co.nc.service;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,36 +104,4 @@ public class UserService {
 		return user;
 	}
 	
-	/**
-	 * 해당 번호를 가진 사용자의, 해당 아이디를 가진 숙소에 대한 찜하기 상태를 변경한다.
-	 * USER_ACCOMMODATION_LIKE 테이블에 해당사용자의 해당숙소 찜하기 정보가 있으면 삭제하고, 없으면 추가한다.
-	 * @param userNo
-	 * @param accoId
-	 */
-	public void changeMyAccoLikeStatus(User loginUser, int accoId) {
-		Map<String, Integer> param = new HashMap<>();
-		int userNo = loginUser.getNo();
-		param.put("userNo", userNo);
-		param.put("accoId", accoId);
-		
-		// isExistUserLikeByAccoId(param)는 존재하면 1을, 존재하지 않으면 0을 반환한다.
-		if (isLikedAcco(userNo, accoId)) {
-			userMapper.deleteUserLikeByAccoId(param);
-		} else {
-			userMapper.insertUserLikeByAccoId(param);
-		}
-	}
-	
-	/**
-	 * 해당 사용자가 해당 숙소를 찜하기 눌렀는지 여부를 조회해 boolean타입의 값으로 반환한다.
-	 * @param param {userNo=사용자번호, accoId=숙소아이디}가 담긴 map객체
-	 * @return
-	 */
-	public boolean isLikedAcco(int userNo, int accoId) {
-		Map<String, Integer> param = new HashMap<>();
-		param.put("userNo", userNo);
-		param.put("accoId", accoId);
-		
-		return userMapper.isExistUserLikeByAccoId(param) == 1 ? true : false;
-	}
 }
