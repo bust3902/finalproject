@@ -16,7 +16,7 @@
 		 acco_thumbnail_image, city_id, acco_introduce_comment, acco_detail_description)
 		values
 		(#{id}, #{name}, #{district}, #{address}, #{latitude}, #{longitude},
-		 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription}
+		 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription})
 	</insert>
 	
 	<!-- 
@@ -24,7 +24,7 @@
 		숙소 타입 저장
 	 -->
 	<insert id="insertAccommodationTypes" parameterType="AccoTypeRegisterForm">
-		insert into accommodation_types
+		insert into acco_types
 		(acco_id, acco_type_id)
 		values
 		(#{id}, #{typeId})
@@ -49,7 +49,7 @@
 		insert into acco_common_facilities
 		(acco_id, co_facility_id)
 		values
-		(#{id}, #{commonFacilities})
+		(#{id}, #{commonFacility})
 	</insert>
 		
 	<!-- 
@@ -57,10 +57,10 @@
 		숙소 상세이미지 저장
 	 -->
 	<insert id="insertAccommodationDetailImages" parameterType="AccoDetailImageNamesRegisterForm">
-		insert into accommodations
+		insert into acco_detail_images
 		(acco_id, image_file_name)
 		values
-		(#{id}, #{detailImageNames})
+		(#{id}, #{detailImageName})
 	</insert>
 	
 	<!-- 
@@ -99,7 +99,7 @@
 		insert into acco_room_detail_images
 		(room_no, room_image_file_name)
 		values
-		(#{no}, #{detailImageNames})
+		(#{no}, #{detailImageName})
 	</insert>
 	
 </mapper>
