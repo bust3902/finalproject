@@ -27,4 +27,5 @@
 			delete from review
 			where review_no = #{no}
 		</delete>
+		
 </mapper>

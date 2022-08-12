@@ -9,4 +9,5 @@ public interface ReviewMapper {
 	void insertReview(Review review);
 	void updateReview(Review review);
 	void deleteReview(Review reivew);
+	
 }
