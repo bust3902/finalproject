@@ -129,4 +129,42 @@
 		</if>
 		order by RESTAURANT_CREATED_DATE desc
 	</select>
+	
+	<!-- List<Restaurant> getRestaurantByByCriteria(RestaurantCriteria criteria); -->
+	<select id="getRestaurantByByCriteria" parameterType="" resultMap="RestaurantResultMap">
+		select distinct r.RESTAURANT_NO,r.RESTAURANT_NAME, r.RESTAURANT_LOCATION,r.RESTAURANT_IMGNAME,
+				r.RESTAURANT_LIKE_COUNT,r.RESTAURANT_REVIEW_COUNT,r.RESTAURANT_REVIEW_POINT,r.RESTAURANT_LATITUD,
+				r.RESTAURANT_LONGITUDE,r.CITY_ID,
+				ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.RESTAURANT_LATITUD, r.RESTAURANT_LONGITUDE),2) as distance
+		from RESTAURANT r
+		
+		WHERE RESTAURANT_DELETE='N'
+		and	r.restaurant_no in (
+		        SELECT
+		            restaurant_no
+		        FROM
+		        (
+		            SELECT
+		                   res.restaurant_no
+		            FROM
+		                restaurant res, restaurant_tag rtag, restaurant_menu rmenu
+		            WHERE res.restaurant_no = rtag.restaurant_no (+)
+		            AND res.restaurant_no = rmenu.restaurant_no (+)
+		            AND (res.restaurant_name like '%송파구%' or res.restaurant_district like '%송파구%' or rtag.restaurant_tag like '%송파구%' or rmenu.restaurant_menu_name like '%송파구%' )));
+		<choose>
+			<when test="sort == 'point'">
+				order by RESTAURANT_REVIEW_POINT desc
+			</when>
+			<when test="sort == 'count'">
+				order by RESTAURANT_REVIEW_COUNT desc
+			</when>
+			<when test="sort == 'like'">
+				order by RESTAURANT_LIKE_COUNT desc
+			</when>
+			<when test="sort == 'dist'">
+				order by distance asc
+			</when>
+		</choose>
+	</select>
+	
 </mapper>

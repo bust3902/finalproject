@@ -18,7 +18,7 @@
 
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="position-relative">
-		<form id="form-search" class="d-flex" role="search" action="searchlist">
+		<form id="form-search" class="d-flex" role="search" action="restaurant/searchlist">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
 	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">

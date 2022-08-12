@@ -10,9 +10,16 @@ import lombok.ToString;
 @Setter
 @ToString
 public class RestaurantCriteria {
-
+	// 현재 위도
+	private String currentLat; 
+	// 현재 경도
+	private String currentLong;
+	// 카테고리 아이디로 조회했을 경우
 	private String categoryId;
+	// 검색으로 조회했을 경우
 	private String keyword;
-	private String sort;
+	// 선택한 지역으로 검색했을 경우
+	private String city;
+	// 태그로 검색했을 경우
 	private List<String> tags;
 }
