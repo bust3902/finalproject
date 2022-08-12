@@ -49,11 +49,11 @@ public class AdminController {
 	String accommodationDetailImageSaveDirectory;
 	
 	// 객실 메인이미지 저장 디렉토리
-	@Value("${seoul.accommodation.image.save-directory}")
+	@Value("${seoul.accommodationRoom.image.save-directory}")
 	String accommodationRoomImageSaveDirectory;
 	
 	// 객실 상세이미지 저장 디렉토리
-	@Value("${seoul.accommodation.detail.image.save-directory}")
+	@Value("${seoul.accommodationRoom.detail.image.save-directory}")
 	String accommodationRoomDetailImageSaveDirectory;
 	
 	@Autowired
@@ -98,7 +98,7 @@ public class AdminController {
 		return "admin/restaurantregister2";
 	}
 	
-	// 숙소 입력폼1
+	// 숙소 입력폼1(지역선택 및 숙소 소개) 요청 
 	@GetMapping(path = "/accommodation")
 	public String AccommodationMapRegister(Model model) {
 
@@ -107,7 +107,7 @@ public class AdminController {
 		return "admin/accommodationregister1";
 	}
 	
-	// 숙소 입력폼2
+	// 숙소 입력폼2(숙소 입력폼) 요청
 	@PostMapping(path = "/accommodation2")
 	public String AccommodationRegister(
 			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm, 
@@ -119,12 +119,12 @@ public class AdminController {
 		// 	모든 지역 정보 전달
 		model.addAttribute("cities", accommodationService.getAllCities());
 		
-		model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
+		// model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
 		
 		return "admin/accommodationregister2";
 	}
 	
-	// 공용시설 리스트 전달
+	// 숙소유형 선택시 공용시설 리스트 출력을 위한 데이터 전달
 	@GetMapping("/search")
 	@ResponseBody
 	public List<CommonFacility> search(@RequestParam("type") String type) {
@@ -132,34 +132,15 @@ public class AdminController {
 		return accommodationService.getCommonFacilityOptions(type);
 	}
 	
-	// 숙소 입력폼3(객실 입력폼)
+	// 숙소 입력폼3(객실 입력폼) 요청
 	@PostMapping(path = "/accommodation3")
-	public String accommodationRoom(
-			AccommodationRoomRegisterForm accommodationRoomRegisterForm,
+	public String accommodation(
 			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
 			Model model
-			) throws IOException {
+	) throws IOException {
 
-		// 객실시설 옵션 list 전달
+		// 객실시설 옵션 출력을 위한 list 전달
 		model.addAttribute("rofacilities", accommodationService.getRoomFacilityOptions());
-		
-		accommodationRegisterForm.addAccommodationRoomRegisterForm(accommodationRoomRegisterForm);
-
-		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
-		System.out.println(accommodationRegisterForm.getAccommodationRooms().size());
-		
-		// System.out.println(accommodationRegisterForm.getDetailImageFiles().size());
-		
-		model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
-		return "admin/accommodationregister3";
-	}
-	
-	// 숙소 최종 입력
-	@PostMapping(path = "/insert")
-	public String AccommodationInsert(
-			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
-			SessionStatus sessionStatus
-			) throws IOException {
 		
 		// 숙소 썸네일 이미지 업로드
 		if (!accommodationRegisterForm.getThumbnailImageFile().isEmpty()) {
@@ -172,53 +153,123 @@ public class AdminController {
 			
 			FileCopyUtils.copy(in, out);
 		}
-		
+
 		// 숙소 상세 이미지 업로드
 		if (!accommodationRegisterForm.getDetailImageFiles().isEmpty()) {
 			List<MultipartFile> imageFileList = accommodationRegisterForm.getDetailImageFiles();
+			List<String> filenames = new ArrayList<>();
 			for (MultipartFile imageFile : imageFileList) {
+				// 파일명 저장
 				String filename = imageFile.getOriginalFilename();
-				List<String> filenames = new ArrayList<>();
 				filenames.add(filename);
-				accommodationRegisterForm.setDetailImageNames(filenames);
 				
 				InputStream in = imageFile.getInputStream();
 				FileOutputStream out = new FileOutputStream(new File(accommodationDetailImageSaveDirectory, filename));
 				
 				FileCopyUtils.copy(in, out);
 			}
+			accommodationRegisterForm.setDetailImageNames(filenames);
 		}
 		
 		// 객실 썸네일 이미지 업로드
-		for (int index=0; index < accommodationRegisterForm.getAccommodationRooms().size(); index++) {
-			if (!accommodationRegisterForm.getAccommodationRooms().get(index).getThumbnailImageFile().isEmpty()) {
-				MultipartFile imageFile = accommodationRegisterForm.getAccommodationRooms().get(index).getThumbnailImageFile();
+//		if (accommodationRoomRegisterForm.getThumbnailImageFile() != null && !accommodationRoomRegisterForm.getThumbnailImageFile().isEmpty()) {
+//			int index = accommodationRegisterForm.getAccommodationRooms().size()-1;
+//			MultipartFile imageFile = accommodationRoomRegisterForm.getThumbnailImageFile();
+//			String filename = imageFile.getOriginalFilename();
+//			
+//			accommodationRegisterForm.getAccommodationRooms().get(index).setThumbnailImageName(filename);
+//			
+//			InputStream in = imageFile.getInputStream();
+//			FileOutputStream out = new FileOutputStream(new File(accommodationRoomImageSaveDirectory, filename));
+//			
+//			FileCopyUtils.copy(in, out);
+//		} else {
+//			
+//		}
+//		
+//		// 객실 상세 이미지 업로드
+//		if (!accommodationRegisterForm.getAccommodationRooms().isEmpty()) {
+//			int index = accommodationRegisterForm.getAccommodationRooms().size()-1;
+//			List<MultipartFile> imageFileList = accommodationRegisterForm.getAccommodationRooms().get(index).getDetailImageFiles();
+//			for (MultipartFile imageFile : imageFileList) {
+//				String filename = imageFile.getOriginalFilename();
+//				List<String> filenames = new ArrayList<>();
+//				filenames.add(filename);
+//				accommodationRegisterForm.getAccommodationRooms().get(index).setDetailImageNames(filenames);
+//				
+//				InputStream in = imageFile.getInputStream();
+//				FileOutputStream out = new FileOutputStream(new File(accommodationRoomDetailImageSaveDirectory, filename));
+//				
+//				FileCopyUtils.copy(in, out);
+//			}
+//		} else {
+//			
+//		}
+//		
+
+		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
+		// System.out.println(accommodationRegisterForm.getAccommodationRooms().size());
+		
+		// System.out.println(accommodationRegisterForm.getDetailImageFiles().size());
+		
+		// model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
+		
+		return "admin/accommodationregister3";
+	}
+	
+	@PostMapping("/accommodation3-room")
+	public String accommodataionRoom(AccommodationRoomRegisterForm accommodationRoomRegisterForm,
+			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
+			Model model
+	) throws IOException {
+		
+		accommodationRegisterForm.addAccommodationRoomRegisterForm(accommodationRoomRegisterForm);
+		
+		// 객실 썸네일 이미지 업로드
+		if (!accommodationRoomRegisterForm.getThumbnailImageFile().isEmpty()) {
+			MultipartFile imageFile = accommodationRoomRegisterForm.getThumbnailImageFile();
+			String filename = imageFile.getOriginalFilename();
+			
+			accommodationRoomRegisterForm.setThumbnailImageName(filename);
+			
+			InputStream in = imageFile.getInputStream();
+			FileOutputStream out = new FileOutputStream(new File(accommodationRoomImageSaveDirectory, filename));
+			
+			FileCopyUtils.copy(in, out);
+		} 
+		
+		// 객실 상세 이미지 업로드
+		if (!accommodationRoomRegisterForm.getDetailImageFiles().isEmpty()) {
+			List<MultipartFile> imageFileList = accommodationRoomRegisterForm.getDetailImageFiles();
+			List<String> filenames = new ArrayList<>();
+			for (MultipartFile imageFile : imageFileList) {
+				// 파일명 저장
 				String filename = imageFile.getOriginalFilename();
+				filenames.add(filename);
 				
-				accommodationRegisterForm.getAccommodationRooms().get(index).setThumbnailImageName(filename);
-				
+				// 파일 저장
 				InputStream in = imageFile.getInputStream();
-				FileOutputStream out = new FileOutputStream(new File(accommodationRoomImageSaveDirectory, filename));
+				FileOutputStream out = new FileOutputStream(new File(accommodationRoomDetailImageSaveDirectory, filename));
 				
 				FileCopyUtils.copy(in, out);
 			}
-			
-			// 객실 상세 이미지 업로드
-			if (!accommodationRegisterForm.getAccommodationRooms().get(index).getDetailImageFiles().isEmpty()) {
-				List<MultipartFile> imageFileList = accommodationRegisterForm.getAccommodationRooms().get(index).getDetailImageFiles();
-				for (MultipartFile imageFile : imageFileList) {
-					String filename = imageFile.getOriginalFilename();
-					List<String> filenames = new ArrayList<>();
-					filenames.add(filename);
-					accommodationRegisterForm.getAccommodationRooms().get(index).setDetailImageNames(filenames);
-					
-					InputStream in = imageFile.getInputStream();
-					FileOutputStream out = new FileOutputStream(new File(accommodationRoomDetailImageSaveDirectory, filename));
-					
-					FileCopyUtils.copy(in, out);
-				}
-			}
-		}
+			accommodationRoomRegisterForm.setDetailImageNames(filenames);
+		} 
+
+		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
+		
+		// model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
+		
+		return "admin/accommodationregister3";
+	}
+	
+	
+	// 숙소 최종 입력
+	@PostMapping(path = "/insert")
+	public String AccommodationInsert(
+			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
+			Model model, SessionStatus sessionStatus
+			) throws IOException {
 		
 		adminService.addNewAccommodation(accommodationRegisterForm);
 

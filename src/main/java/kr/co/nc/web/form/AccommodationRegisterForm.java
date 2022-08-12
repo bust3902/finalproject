@@ -6,13 +6,14 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.nc.vo.AccommodationType;
+import kr.co.nc.vo.CommonFacility;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 /**
  * 숙소정보 저장용 폼
+ * ACCOMMODATIONS 테이블에 저장
  * @author USER
  *
  */
@@ -24,7 +25,7 @@ public class AccommodationRegisterForm {
 
 
 	private int id;
-	private String name;		// 숙소명
+	private String accoName;	// 숙소명
 	private String district;	// 지역(시/군/구)명
 	private String address;		// 주소
 	private String latitude;	// 위도
@@ -35,12 +36,13 @@ public class AccommodationRegisterForm {
 	private String detailDescription;			// 숙소 상세설명
 	private String cityId;						// 지역 아이디
 	
-	private List<MultipartFile> detailImageFiles = new ArrayList<>(); // 숙소 상세 이미지
-	private List<String> detailImageNames = new ArrayList<>(); // 숙소 상세 이미지 파일명
-	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
+	private List<MultipartFile> detailImageFiles = new ArrayList<>();	// 숙소 상세 이미지
+	private List<String> detailImageNames = new ArrayList<>(); 			// 숙소 상세 이미지 파일명
+	private List<String> types;											// 이 숙소가 해당하는 모든 숙소유형
 	private List<AccommodationRoomRegisterForm> accommodationRooms = new ArrayList<>(); // 이 숙소가 가지는 모든 객실정보
-	private List<String> stringCommonFacilities = new ArrayList<>(); // 이 숙소가 가지는 모든 공용시설 정보
-	private List<String> tags; // 이 숙소가 가지는 모든 부가사항 태그
+	private List<String> stringCommonFacilities = new ArrayList<>();	// 이 숙소가 가지는 모든 공용시설 정보
+	private List<CommonFacility> commonFacilities = new ArrayList<>();	// 이 숙소가 가지는 모든 공용시설 정보
+	private List<String> tags;											// 이 숙소가 가지는 모든 부가사항 태그
 	
 	public void addAccommodationRoomRegisterForm(AccommodationRoomRegisterForm accommodationRoomRegisterForm) {
 		accommodationRooms.add(accommodationRoomRegisterForm);

@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 숙소 이미지명 저장을 위한 폼
+ * ACCO_DETAIL_IMAGES 테이블에 저장
+ * @author USER
+ *
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -15,10 +21,10 @@ import lombok.ToString;
 public class AccoDetailImageNamesRegisterForm {
 
 	private int id;
-	private String detailImageNames;
+	private String detailImageName; // 숙소 상세 이미지명
 	
-	public AccoDetailImageNamesRegisterForm(int id, String detailImageNames) {
+	public AccoDetailImageNamesRegisterForm(int id, String detailImageName) {
 		this.id = id;
-		this.detailImageNames = detailImageNames;
+		this.detailImageName = detailImageName;
 	}
 }

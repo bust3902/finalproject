@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import kr.co.nc.mapper.AdminMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
-import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.web.form.AccoCommonFacilityRegisterForm;
 import kr.co.nc.web.form.AccoDetailImageNamesRegisterForm;
 import kr.co.nc.web.form.AccoRoomDetailImageNamesRegisterForm;
@@ -29,7 +28,7 @@ public class AdminService {
 		
 		// 숙소정보 저장하기
 		Accommodation accommodation = new Accommodation();
-		accommodation.setName(accommodationRegisterForm.getName());
+		accommodation.setName(accommodationRegisterForm.getAccoName());
 		accommodation.setDistrict(accommodationRegisterForm.getDistrict());
 		accommodation.setAddress(accommodationRegisterForm.getAddress());
 		accommodation.setLatitude(accommodationRegisterForm.getLatitude());
@@ -42,9 +41,9 @@ public class AdminService {
 		adminMapper.insertAccommodation(accommodation);
 
 		// 숙소 타입 정보 저장하기
-		List<AccommodationType> types = accommodationRegisterForm.getTypes();
-		for (AccommodationType type : types) {
-			adminMapper.insertAccommodationTypes(new AccoTypeRegisterForm(accommodation.getId(), type.getId()));
+		List<String> types = accommodationRegisterForm.getTypes();
+		for (String type : types) {
+			adminMapper.insertAccommodationTypes(new AccoTypeRegisterForm(accommodation.getId(), type));
 		}
 		
 		// 이 숙소가 가지는 모든 부가사항 태그
@@ -69,37 +68,52 @@ public class AdminService {
 		List<AccommodationRoomRegisterForm> rooms = accommodationRegisterForm.getAccommodationRooms();
 		AccommodationRoom accoRoom;
 		for (AccommodationRoomRegisterForm room : rooms) {
-			for (int index = 0; index < accommodationRegisterForm.getAccommodationRooms().size(); index++) {
+			// for (int index = 0; index < accommodationRegisterForm.getAccommodationRooms().size(); index++) {
+				// 객실 정보
 				accoRoom = new AccommodationRoom();
-				accoRoom.setNo(index);
 				accoRoom.setName(room.getName());
 				accoRoom.setNumbers(room.getNumbers());
 				accoRoom.setCapacity(room.getCapacity());
 				accoRoom.setDayPrice(room.getDayPrice());
 				accoRoom.setThumbnailImageName(room.getThumbnailImageName());
 				accoRoom.setDescription(room.getDescription());
-				accoRoom.setAccoId(room.getAccoId());
+				accoRoom.setAccoId(accommodation.getId());
 				accoRoom.setRoomFacilities(room.getRoomFacilities());
 
 			adminMapper.insertAccoRooms(accoRoom);
-			accommodation.getRooms().add(accoRoom);
-			}
+
+				// 이 객실이 가지는 모든 시설 정보
+				// List<String> roomFacilities = accommodationRegisterForm.getAccommodationRooms().get(index).getStringRoomFacilities();
+				List<String> roomFacilities = room.getStringRoomFacilities();
+				for (String roomFacility : roomFacilities) {
+					adminMapper.insertAccoRoomFacilities(new AccoRoomFacilitiesRegisterForm(accoRoom.getNo() , roomFacility));
+				}
+
+				// 이 객실이 가지는 모든 상세이미지 정보
+				// List<String> roomDetailImageNames = accommodationRegisterForm.getAccommodationRooms().get(index).getDetailImageNames();
+				List<String> roomDetailImageNames = room.getDetailImageNames();
+				for (String roomDetailImageName : roomDetailImageNames) {
+					adminMapper.insertAccoRoomDetailImages(new AccoRoomDetailImageNamesRegisterForm(accoRoom.getNo(), roomDetailImageName));
+				}
+			// }
 		}
-		
+
+		/*
 		// 이 객실이 가지는 모든 시설 정보
-		for (int index = 0; index < accommodation.getRooms().size(); index++) {
+		for (int index = 0; index < accommodationRegisterForm.getAccommodationRooms().size(); index++) {
 			List<String> roomFacilities = accommodationRegisterForm.getAccommodationRooms().get(index).getStringRoomFacilities();
 			for (String roomFacility : roomFacilities) {
-				adminMapper.insertAccoRoomFacilities(new AccoRoomFacilitiesRegisterForm(accommodation.getRooms().get(index).getNo() , roomFacility));
+				adminMapper.insertAccoRoomFacilities(new AccoRoomFacilitiesRegisterForm(accommodationRegisterForm.getAccommodationRooms().get(index).getNo() , roomFacility));
 			}
 		}
 		
 		// 이 객실이 가지는 모든 상세이미지 정보
-		for (int index = 0; index < accommodation.getRooms().size(); index++) {
+		for (int index = 0; index < accommodationRegisterForm.getAccommodationRooms().size(); index++) {
 			List<String> roomDetailImageNames = accommodationRegisterForm.getAccommodationRooms().get(index).getDetailImageNames();
 			for (String roomDetailImageName : roomDetailImageNames) {
-				adminMapper.insertAccoRoomDetailImages(new AccoRoomDetailImageNamesRegisterForm(accommodation.getRooms().get(index).getNo(), roomDetailImageName));
+				adminMapper.insertAccoRoomDetailImages(new AccoRoomDetailImageNamesRegisterForm(accommodationRegisterForm.getAccommodationRooms().get(index).getNo(), roomDetailImageName));
 			}
 		}
+		*/
 	}
 }
