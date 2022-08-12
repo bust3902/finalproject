@@ -54,10 +54,10 @@ public class RestaurantService {
 	}
 	
 	// 검색 조건에 따른 음식점 검색
-	/*
-	 * public List<Restaurant> searchRestaurant(RestaurantCriteria criteria) {
-	 * return restaurantMapper.getRestaurantByCriteria(criteria); }
-	 */
+
+	public List<Restaurant> searchRestaurant(RestaurantCriteria criteria) {
+	return restaurantMapper.getRestaurantByCriteria(criteria); }
+
 	
 	// 모든 카테고리를 가져오기
 

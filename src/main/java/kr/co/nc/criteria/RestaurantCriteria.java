@@ -22,4 +22,6 @@ public class RestaurantCriteria {
 	private String city;
 	// 태그로 검색했을 경우
 	private List<String> tags;
+	// 정렬기준
+	private String sort;
 }

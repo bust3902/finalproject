@@ -119,7 +119,7 @@
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantsByCategoryId(@Param("categoryId") String categoryId); -->
-	<select id="getRestaurantsByCategoryId">
+	<select id="getRestaurantsByCategoryId" >
 		select *
 		from RESTAURANT
 		<if test="categoryId != null">
@@ -130,27 +130,42 @@
 		order by RESTAURANT_CREATED_DATE desc
 	</select>
 	
-	<!-- List<Restaurant> getRestaurantByByCriteria(RestaurantCriteria criteria); -->
-	<select id="getRestaurantByByCriteria" parameterType="" resultMap="RestaurantResultMap">
-		select distinct r.RESTAURANT_NO,r.RESTAURANT_NAME, r.RESTAURANT_LOCATION,r.RESTAURANT_IMGNAME,
-				r.RESTAURANT_LIKE_COUNT,r.RESTAURANT_REVIEW_COUNT,r.RESTAURANT_REVIEW_POINT,r.RESTAURANT_LATITUD,
-				r.RESTAURANT_LONGITUDE,r.CITY_ID,
-				ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.RESTAURANT_LATITUD, r.RESTAURANT_LONGITUDE),2) as distance
-		from RESTAURANT r
+	<!-- List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria); -->
+	<select id="getRestaurantByCriteria" parameterType="kr.co.nc.criteria.RestaurantCriteria" resultMap="RestaurantResultMap">
+		select distinct res.RESTAURANT_NO,res.RESTAURANT_NAME, res.RESTAURANT_LOCATION,res.RESTAURANT_IMGNAME,
+				res.RESTAURANT_LIKE_COUNT,res.RESTAURANT_REVIEW_COUNT,res.RESTAURANT_REVIEW_POINT,res.RESTAURANT_LATITUD,
+				res.RESTAURANT_LONGITUDE,res.CITY_ID,
+				ROUND(DISTANCE_WGS84(37, 128, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),3) as distance
 		
-		WHERE RESTAURANT_DELETE='N'
-		and	r.restaurant_no in (
-		        SELECT
-		            restaurant_no
-		        FROM
-		        (
-		            SELECT
-		                   res.restaurant_no
-		            FROM
-		                restaurant res, restaurant_tag rtag, restaurant_menu rmenu
-		            WHERE res.restaurant_no = rtag.restaurant_no (+)
+		FROM
+		   restaurant res, restaurant_tag rtag, restaurant_menu rmenu,RESTAURANT_CAT rcat,RESTAURANT_CAT_NAME rcatname
+		            
+		<where>
+			res.RESTAURANT_DELETE = 'N'
+			<if test="keyword != null">
+				WHERE res.restaurant_no = rtag.restaurant_no (+)
 		            AND res.restaurant_no = rmenu.restaurant_no (+)
-		            AND (res.restaurant_name like '%송파구%' or res.restaurant_district like '%송파구%' or rtag.restaurant_tag like '%송파구%' or rmenu.restaurant_menu_name like '%송파구%' )));
+                    AND res.restaurant_no = rcat.restaurant_no(+)
+                    AND rcat.restaurant_cat_id =  rcatname.restaurant_cat_id (+)
+		            AND (res.restaurant_name like '%' || #{keyword} || '%' or res.restaurant_district like '%' || #{keyword} || '%' or rcatname.restaurant_cat_name like '%' || #{keyword} || '%'  or rtag.restaurant_tag like '%' || #{keyword} || '%' or rmenu.restaurant_menu_name like '%' || #{keyword} || '%' )
+			</if>
+			<if test="categoryId != null">
+				and res.restaurant_no in (select restaurant_no
+										from RESTAURANT_CAT
+										where RESTAURANT_CAT_ID = #{categoryId})
+			</if>
+			<if test="city != null and city != ''">
+				and res.CITY_ID = #{city}
+			</if>
+			<if test="tags != null and tags !=''">
+				and res.restaurant_no (select restaurant_no
+										from restaurant_tag
+										where RESTAURANT_TAG in 
+										<foreach collection="tags" item="tag" open="(" close=")" separator=",">
+											#{tag}
+										</foreach>)
+			</if>
+		</where>
 		<choose>
 			<when test="sort == 'point'">
 				order by RESTAURANT_REVIEW_POINT desc

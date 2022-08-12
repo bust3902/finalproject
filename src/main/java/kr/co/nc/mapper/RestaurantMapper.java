@@ -1,6 +1,5 @@
 package kr.co.nc.mapper;
 
-import java.util.HashMap;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
@@ -39,6 +38,6 @@ public interface RestaurantMapper {
 	List<City> getAllCities();
 	
 	// 검색조건에 따른 맛집 정보를 조회
-	List<Restaurant> getRestaurantByByCriteria(RestaurantCriteria criteria);
+	List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria);
 	
 }

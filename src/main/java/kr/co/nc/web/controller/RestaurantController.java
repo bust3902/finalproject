@@ -1,6 +1,8 @@
 package kr.co.nc.web.controller;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -8,7 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.co.nc.criteria.RestaurantCriteria;
 import kr.co.nc.service.RestaurantService;
+import kr.co.nc.vo.Restaurant;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -18,12 +22,18 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 	
 	@GetMapping(path="/searchlist")
-	public String searchList(@RequestParam(name="cat",required=false) String categgoryId,Model model ) {
+	public String searchList(@RequestParam(name="keyword",required=false) String keyword,Model model ) {
 		
 		model.addAttribute("categories",restaurantService.getAllCategories());
 		model.addAttribute("cities",restaurantService.getAllCity());
 		model.addAttribute("tags",restaurantService.getAlltags());
+		
+		
 		return "restaurant/searchlist";
+	}
+	
+	public List<Restaurant> search(RestaurantCriteria criteria) {
+		return restaurantService.searchRestaurant(criteria);
 	}
 	
 	@GetMapping(path = "/detail")
