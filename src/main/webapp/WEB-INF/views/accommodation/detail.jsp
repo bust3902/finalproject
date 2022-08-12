@@ -113,10 +113,10 @@
 			</div>
 		</div>
 		<!-- 숙소명, 주소, 한마디 소개
-			TO DO : 좋아요 누르면 bi-heart-fill로 변경 -->
+			TO DO : 좋아요 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장-->
 		<div class="col-6">
 			<h4 id="acco-name" class="fw-semibold text-dark">
-				${detail.name } <a href="" data-acco-id="${detail.id }"><i class="bi bi-heart float-end"></i></a>
+				${detail.name } <a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'  } float-end"></i></a>
 			</h4>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
@@ -617,8 +617,23 @@ $(function () {
 		});
 	}
  
+	
+	 // 선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
+	 //		해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
+	 //		(active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
+	let $tabButtons = $('#myTab [data-bs-toggle="tab"]');
+	$tabButtons.click(function(){
+		$tabButtons.each(function (){
+			if ($(this).hasClass('active')) {
+				$(this).removeClass('text-muted').addClass('fw-bold').addClass('text-secondary');
+			} else {
+				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
+			}
+		});
+	});
+
 /*
- * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+ * 엘리먼트에 대한 사용자 상호작용 이벤트 관련 함수
  */
  	// 객실 이미지 썸네일을 클릭하면 상세이미지 swiper가 출력되고, swiper의 닫기 아이콘을 클릭하면 지워지는 함수
  	// * ajax로 객실 정보 조회 시 실행된다.
@@ -639,22 +654,36 @@ $(function () {
 			location.href="../reservation?id=" + accoId + "&roomno=" + roomNo + "&checkin=" + startDayString + "&checkout=" +endDayString;
 		});
 	}
-	
-	 // 선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
-	 //		해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
-	 //		(active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
-	let $tabButtons = $('#myTab [data-bs-toggle="tab"]');
-	$tabButtons.click(function(){
-		$tabButtons.each(function (){
-			if ($(this).hasClass('active')) {
-				$(this).removeClass('text-muted').addClass('fw-bold').addClass('text-secondary');
-			} else {
-				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
-			}
-		});
-	});
 
-})
+});
+	
+/*
+ * 숙소 찜하기 저장/삭제, 아이콘 상태를 변경하는 함수
+ * a태그의 href에 연결해두었기 때문에 DOM객체 생성 이전에 정의되어야 한다.
+ */
+// 하트 아이콘을 누르면, 숙소아이디를 전달해 USER_ACCOMMODATION_LIKES 테이블에 저장한다.
+// 이미 좋아요를 누른 숙소일 경우, 아이콘을 누르면 좋아요 정보가 테이블에서 삭제된다.
+// * 로그인하지 않은 상태일 경우 alert을 띄우고, 요청을 보내지 않는다.
+function toggleAccoLike(accoId) {
+	let $icon = $("#icon-heart");
+	
+	// 로그인 여부 체크
+	if ("${LOGIN_USER }" == "") {
+		alert("찜하기는 로그인이 필요한 기능입니다.");
+		return false;
+	}
+	
+	// 숙소아이디 전달해서 ajax로 like 저장 요청
+	$.getJSON("/changelike", "accoId=" + accoId).done(function(result) {
+		if (result === true) {
+			// 아이콘 표현 토글 처리
+			$icon.toggleClass("bi-heart-fill");
+			$icon.toggleClass("bi-heart");
+		} else {
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
+		}
+	});
+}
 </script>
 </body>
 </html>

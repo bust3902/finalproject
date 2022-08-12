@@ -2,11 +2,13 @@ package kr.co.nc.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.UserService;
 import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.User;
@@ -24,6 +26,8 @@ public class HomeController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AccommodationService accommodationService;
 	
 	/*
 	 * 홈화면 요청을 처리한다.
@@ -32,7 +36,9 @@ public class HomeController {
 	 * 뷰 페이지 : /WEB-INF/views/home.jsp
 	 */
 	@GetMapping(path = "/")
-	public String home() {
+	public String home(Model model) {
+		// 홈 메뉴에 출력할 숙소 유형 정보를 전달한다.
+		model.addAttribute("accoTypes", accommodationService.getAllTypes());
 		return "home";
 	}
 	
