@@ -240,16 +240,26 @@
 			and acco_id = #{id}
 	</select>
 	
-	<!-- void insertUserLikeByAccoId(Map<String, Integer> param); -->
+	<!-- void insertUserLikeByAccoId(LikeCriteria criteria); -->
 	<insert id="insertUserLikeByAccoId" parameterType="kr.co.nc.criteria.LikeCriteria">
 		insert into user_accommodation_likes (user_no, acco_id)
 		values (#{userNo}, #{id})
 	</insert>
 	
-	<!-- void deleteUserLikeByAccoId(Map<String, Integer> param); -->
+	<!-- void deleteUserLikeByAccoId(LikeCriteria criteria); -->
 	<delete id="deleteUserLikeByAccoId" parameterType="kr.co.nc.criteria.LikeCriteria">
 		delete from user_accommodation_likes
 		where user_no = #{userNo}
 			and acco_id = #{id}
 	</delete>
+	
+	<!-- List<Accommodation> getAllLikedAccoByUserNo(int no); -->
+	<select id="getAllLikedAccoByUserNo" parameterType="int" resultMap="AccoResultMap">
+		select *
+		from user_accommodation_likes l, accommodations a
+		where l.user_no = #{value}
+			and a.acco_deleted = 'N'
+			and l.acco_id = a.acco_id
+	</select>
+	
 </mapper>
