@@ -18,8 +18,11 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 	
 	@GetMapping(path="/searchlist")
-	public String searchList() {
+	public String searchList(@RequestParam(name="cat",required=false) String categgoryId,Model model ) {
 		
+		model.addAttribute("categories",restaurantService.getAllCategories());
+		model.addAttribute("cities",restaurantService.getAllCity());
+		model.addAttribute("tags",restaurantService.getAlltags());
 		return "restaurant/searchlist";
 	}
 	

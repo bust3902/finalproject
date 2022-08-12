@@ -18,7 +18,7 @@
 <body>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="position-relative">
-		<form id="form-search" class="d-flex" role="search" action="searchList">
+		<form id="form-search" class="d-flex" role="search" action="searchlist">
 	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
 	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
@@ -71,60 +71,34 @@
 							<div class="fw-bold mb-3">카테고리</div>
 							<!-- 음식 카테고리만큼 내용이 출력되게 하기 -->
 							<div class="row p-3">
-								<div class="form-check">
-							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="option1" checked="">
-							        <label class="form-check-label" for="optionsRadios1">
-							          배달
-							        </label>
-						      	</div>
-						     	<div class="form-check">
-							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2" value="option2">
-							        <label class="form-check-label" for="optionsRadios2">
-							          한식
-							        </label>
-						      	</div>
-						      	<div class="form-check">
-							        <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios3" value="option3">
-							        <label class="form-check-label" for="optionsRadios3">
-							          일식
-							        </label>
-						      	</div>
+								<c:forEach var="category" items="${categories }">
+									<div class="form-check">
+								        <input class="form-check-input" type="radio" name="optionsRadios" value="${category.id }">
+								        <label class="form-check-label" for="optionsRadios1">
+								          ${category.name }
+								        </label>
+							      	</div>
+								</c:forEach>
 							</div>
 						</li>
 						<li class="list-group-item py-3">
 							<div class="fw-bold mb-3">음식점 태그</div>
 							<!-- 음식 태그만큼 내용이 출력되게 하기 -->
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          데이트
-							     </label>
-						     </div>
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          이국적
-							     </label>
-						     </div>
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          포장
-							     </label>
-						     </div>
-							 <div class="form-check">
-							     <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault">
-							     <label class="form-check-label" for="flexCheckDefault">
-							          혼밥
-							     </label>
-						     </div>
+							<c:forEach var="tag" items="${tags }">
+								 <div class="form-check">
+								     <input class="form-check-input" type="checkbox" value="${tag }">
+								     <label class="form-check-label" for="flexCheckDefault">${tag }</label>
+							     </div>
+							</c:forEach>
 						</li>
 						<li class="list-group-item py-3">
 							<div class="row p-3">
 								<select class="form-select w-80" name="city">
 									<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
 									<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
-									<option value="" data-city-lat="37.5666805" data-city-long="126.9784147">홍대/신촌/마포</option>
+									<c:forEach var="city" items="${cities }">
+										<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
+									</c:forEach>
 								</select>
 							</div>
 						</li>

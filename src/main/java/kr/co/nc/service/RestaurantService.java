@@ -1,8 +1,6 @@
 package kr.co.nc.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -62,10 +60,10 @@ public class RestaurantService {
 	 */
 	
 	// 모든 카테고리를 가져오기
-	/*
-	 * public List<Category> getAllCategories() { return
-	 * restaurantMapper.getAllCategories(); }
-	 */
+
+	public List<Category> getAllCategories() { 
+		return restaurantMapper.getAllCategories(); }
+
 	
 	// 모든 태그를 가져오기
 	public List<String> getAlltags() {
@@ -73,8 +71,10 @@ public class RestaurantService {
 	}
 	
 	// 모든 위치를 가져오기
-	/*
-	 * public List<City> getAllCity() { return restaurantMapper.getAllCity(); }
-	 */
+
+	public List<City> getAllCity() {
+		return restaurantMapper.getAllCities();
+	}
+
 
 }

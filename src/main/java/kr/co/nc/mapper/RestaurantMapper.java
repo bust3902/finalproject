@@ -5,6 +5,8 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import kr.co.nc.vo.Category;
+import kr.co.nc.vo.City;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.RestaurantCategory;
 import kr.co.nc.vo.RestaurantMenu;
@@ -29,4 +31,8 @@ public interface RestaurantMapper {
 	
 	// 리스트 출력시 사용할 태그
 	List<String> getAllTags();
+	
+	List<Category> getAllCategories();
+	
+	List<City> getAllCities();
 }

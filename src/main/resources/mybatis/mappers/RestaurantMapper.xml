@@ -93,6 +93,20 @@
 		from RESTAURANT_TAG
 	</select>
 	
+	<!-- List<Category> getAllCategories(); -->
+	<select id="getAllCategories" resultType="Category">
+		select RESTAURANT_CAT_ID as id, RESTAURANT_CAT_NAME as name
+		from RESTAURANT_CAT_NAME
+		order by RESTAURANT_CAT_ID asc
+	</select>
+	
+	<!-- List<City> getAllCities(); -->
+	<select id="getAllCities" resultType="kr.co.nc.vo.City">
+		select city_id as id, city_name as name, city_latitude as latitude, city_longitude as longitude
+		from cities
+		order by city_id
+	</select>
+	
 	<!-- List<Review> getAllReview(); -->
 	<select id="getAllReview" resultMap="ReviewResultMap">
 		select *
