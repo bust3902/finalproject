@@ -38,7 +38,7 @@ public interface ReservationMapper {
 	void updatePaymentStatuts(Payment payment);
 
 	// 예약번호로 예약정보 가져오기
-	Reservation getReserveInfoByReserveId(String reservationId);
+	Reservation getReserveInfoByReserveId(String reservationNo);
 	// 결제 정보 저장하기
 	void insertPayment(PaymentRequest paymentRequest);
 
