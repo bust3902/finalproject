@@ -114,14 +114,28 @@ public class UserService {
 	 */
 	public void changeMyAccoLikeStatus(User loginUser, int accoId) {
 		Map<String, Integer> param = new HashMap<>();
-		param.put("userNo", loginUser.getNo());
+		int userNo = loginUser.getNo();
+		param.put("userNo", userNo);
 		param.put("accoId", accoId);
 		
 		// isExistUserLikeByAccoId(param)는 존재하면 1을, 존재하지 않으면 0을 반환한다.
-		if (userMapper.isExistUserLikeByAccoId(param) == 1) {
+		if (isLikedAcco(userNo, accoId)) {
 			userMapper.deleteUserLikeByAccoId(param);
 		} else {
 			userMapper.insertUserLikeByAccoId(param);
 		}
+	}
+	
+	/**
+	 * 해당 사용자가 해당 숙소를 찜하기 눌렀는지 여부를 조회해 boolean타입의 값으로 반환한다.
+	 * @param param {userNo=사용자번호, accoId=숙소아이디}가 담긴 map객체
+	 * @return
+	 */
+	public boolean isLikedAcco(int userNo, int accoId) {
+		Map<String, Integer> param = new HashMap<>();
+		param.put("userNo", userNo);
+		param.put("accoId", accoId);
+		
+		return userMapper.isExistUserLikeByAccoId(param) == 1 ? true : false;
 	}
 }

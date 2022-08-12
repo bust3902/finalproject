@@ -116,7 +116,7 @@
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장-->
 		<div class="col-6">
 			<h4 id="acco-name" class="fw-semibold text-dark">
-				${detail.name } <a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi bi-heart float-end"></i></a>
+				${detail.name } <a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'  } float-end"></i></a>
 			</h4>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
