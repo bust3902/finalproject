@@ -35,8 +35,8 @@
 		    	<a href="#" class="text-decoration-none text-dark fw-light">내주변</a>
 			</div>
 			<div class="text-center my-auto">
-				<a href="restaurant/searchlist"><img class="img-fluid" src="/resources/images/homeicons/restaurant.png" style="width:100px;height:auto;"></a><br/>
-		    	<a href="restaurant/searchlist" class="text-decoration-none text-dark fw-light">맛어때</a>
+				<a href="restaurant"><img class="img-fluid" src="/resources/images/homeicons/restaurant.png" style="width:100px;height:auto;"></a><br/>
+		    	<a href="restaurant" class="text-decoration-none text-dark fw-light">맛어때</a>
 			</div>
 		</div>
 		<div class="row my-5 mx-auto" style="max-width: 950px;">
