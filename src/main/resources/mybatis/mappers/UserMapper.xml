@@ -63,4 +63,26 @@
 			user_no = #{no}
 	
 	</update>
+	
+	<!-- int isExistUserLikeByAccoId(Map<String, Integer> param); -->
+	<select id="isExistUserLikeByAccoId" parameterType="map" resultType="int">
+		select count(*)
+		from user_accommodation_likes
+		where user_no = #{userNo}
+			and acco_id = #{accoId}
+	</select>
+	
+	<!-- void insertUserLikeByAccoId(Map<String, Integer> param); -->
+	<insert id="insertUserLikeByAccoId" parameterType="map">
+		insert into user_accommodation_likes (user_no, acco_id)
+		values (#{userNo}, #{accoId})
+	</insert>
+	
+	<!-- void deleteUserLikeByAccoId(Map<String, Integer> param); -->
+	<delete id="deleteUserLikeByAccoId" parameterType="map">
+		delete from user_accommodation_likes
+		where user_no = #{userNo}
+			and acco_id = #{accoId}
+	</delete>
+	
 </mapper>
