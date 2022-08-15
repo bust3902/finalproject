@@ -45,6 +45,7 @@
 	}
 
  	.room-swiper-wrapper .mySwiper2 img {
+ 		width: 100%;
 		height: 400px;
 		object-fit: cover;
 	}
@@ -125,9 +126,10 @@
 		<!-- 숙소명, 주소, 한마디 소개
 			TO DO : 좋아요 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장-->
 		<div class="col-6">
-			<h4 id="acco-name" class="fw-semibold text-dark">
-				${detail.name } <a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi ${isLiked ? 'bi-heart-fill' : 'bi-heart'  } float-end"></i></a>
-			</h4>
+			<div class="d-flex justify-content-between">
+				<h4 id="acco-name" class="fw-semibold text-dark p-1 me-3" style="word-break: keep-all;">${detail.name } </h4>
+				<a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi fs-4 ${isLiked ? 'bi-heart-fill' : 'bi-heart'  }"></i></a>
+			</div>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
 				<div class="fw-bold text-dark mb-3">한마디 소개</div>
