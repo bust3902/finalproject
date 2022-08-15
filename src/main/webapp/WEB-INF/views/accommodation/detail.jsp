@@ -33,14 +33,24 @@
 	}
 	
  	#acco-swiper-wrapper .mySwiper2 img {
-		width: 100%;
+ 		width: 100%;
 		height: 300px;
 		object-fit: cover;
 	}
 
+ 	#acco-swiper-wrapper .mySwiper img {
+ 		width: 100%;
+		height: 70px;
+		object-fit: cover;
+	}
+
  	.room-swiper-wrapper .mySwiper2 img {
-		width: 100%;
 		height: 400px;
+		object-fit: cover;
+	}
+	
+	.room-thumbnail {
+		height: 250px;
 		object-fit: cover;
 	}
 	
@@ -72,42 +82,42 @@
 		<div class="col-6 mb-3 pe-3">
 			<div id="acco-swiper-wrapper">
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+					<!-- 숙소 이미지 - 큰이미지 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 					<div class="swiper-wrapper">
-						<!-- 숙소 정보에서 이미지 리스트 가져와서 반복문으로 출력. 이미지 정보가 없을 경우 로고 하나 출력 -->
-						<c:choose>
-							<c:when test="${empty detail.images }">
-								<div class="swiper-slide">
-									<img alt="accommodation expanded image" src="/resources/images/acco/logo.png">
-								</div>
-							</c:when>
-							<c:otherwise>
-								<c:forEach var="image" items="${detail.images }">
-									<div class="swiper-slide">
-										<img alt="accommodation expanded image" src="/resources/images/acco/detail/${image }">
-									</div>
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
+						<!-- 썸네일 이미지 : DB에서 NOT NULL이므로 별도로 empty는 체크하지 않음 -->
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/acco/thumbnail/${detail.thumbnailImageName }">
+						</div>
+						<!-- 상세이미지 -->
+						<c:forEach var="image" items="${detail.images }">
+							<div class="swiper-slide">
+								<img alt="accommodation expanded image" src="/resources/images/acco/detail/${image }">
+							</div>
+						</c:forEach>
 					</div>
 					<div class="swiper-button-next"></div>
 					<div class="swiper-button-prev"></div>
 				</div>
+				<!-- 숙소 이미지 - 미리보기 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<c:choose>
-							<c:when test="${empty detail.images }">
+						<!-- 이미지 미리보기 : 썸네일 이미지, 상세 이미지 3장 총 4장이 첫 화면 가장 먼저 보인다. -->
+						<div class="swiper-slide">
+							<img alt="accommodation expanded image" src="/resources/images/acco/thumbnail/${detail.thumbnailImageName }">
+						</div>
+						<c:forEach var="image" items="${detail.images }">
+							<div class="swiper-slide">
+								<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
+							</div>
+						</c:forEach>
+						<!-- 이미지 정보가 3개 미만일 경우, 미리 보기에는 부족한 개수만큼 로고 이미지 출력  -->
+						<c:if test="${fn:length(detail.images) < 3 }">
+							<c:forEach begin="0" end="${2 - fn:length(detail.images) }">
 								<div class="swiper-slide">
 									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
 								</div>
-							</c:when>
-							<c:otherwise>
-								<c:forEach var="image" items="${detail.images }">
-									<div class="swiper-slide">
-										<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
-									</div>
-								</c:forEach>
-							</c:otherwise>
-						</c:choose>
+							</c:forEach>
+						</c:if>
 					</div>
 				</div>
 			</div>
@@ -527,7 +537,7 @@ $(function () {
 					// 1. 기본 카드 본문 콘텐츠
 					let cardBody = '';
 					cardBody +=	`<div class="card-body row">
-									<div class="col-4">
+									<div class="col-5">
 										<div class="position-relative">`;
 					cardBody +=				'<img class="room-thumbnail img-fluid card-img" alt="room image" src="/resources/images/acco/room/thumbnail/' + room.thumbnailImageName + '">';
 					cardBody +=				`<div class="card-img-overlay overlay-room-thumbnail">
@@ -535,7 +545,7 @@ $(function () {
 											</div>
 										</div>
 									</div>
-									<div class="col-8 p-3 d-flex flex-column justify-content-between">`;
+									<div class="col-7 p-3 d-flex flex-column justify-content-between">`;
 					cardBody +=			'<h5 class="text-dark fw-lighter">' + room.name + '</h5>';
 					cardBody +=			'<div class="pb-3 border-bottom text-dark fw-lighter">';
 					cardBody +=				'가격<span class="float-end">1박 <span class="fw-bold text-dark">' + room.dayPrice.toLocaleString() + '원</span></span>';
@@ -559,7 +569,7 @@ $(function () {
 						imageSlides += '<div class="swiper-slide">';
 						imageSlides += 		'<img alt="room expanded image" src="/resources/images/acco/room/detail/' + imagename +'">';
 						imageSlides +=	'</div>';
-					}) 
+					}); 
 					
 					// 2-2. 카드 썸네일 클릭시 보이는, 이미지 swiper를 포함하는 이미지 박스 콘텐츠
 					let imageBox = '';
