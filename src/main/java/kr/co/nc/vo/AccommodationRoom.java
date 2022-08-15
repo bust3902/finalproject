@@ -18,7 +18,7 @@ import lombok.ToString;
  */
 public class AccommodationRoom {
 
-	private String accoId; // 이 객실이 포함된 숙소 아이디
+	private int accoId; // 이 객실이 포함된 숙소 아이디
 	@NotBlank
 	private int no;
 	private String name;
