@@ -80,8 +80,9 @@ public class AccommodationController {
 	}
 	
 	@GetMapping(path = "/best")
-	public String best() {
-		System.out.println(accommodationService.getBestAccommodations(10));
+	public String best(Model model) {
+		// 가장 평점이 높은 숙소 상위 5건 조회
+		model.addAttribute("bests", accommodationService.getBestAccommodations(5));
 		return "/accommodation/best";
 	}
 	
