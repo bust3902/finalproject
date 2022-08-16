@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.nc.service.UserService;
@@ -125,7 +124,7 @@ public class HomeController {
 	
 	// 카카오 로그인 요청을 처리한다.
 	@PostMapping("/kakao-login")
-	public String loginWithKakao(KakaoLoginForm form) {
+	public String kakaoLogin(KakaoLoginForm form) {
 		log.info("카카오 로그인 인증정보: " + form);
 			
 		User user = User.builder()
@@ -144,16 +143,15 @@ public class HomeController {
 		}
 		log.info("카카오 로그인 완료");
 			
+		return "redirect:/";		
+	}
+		
+	// 로그아웃 요청을 처리한다.
+	@GetMapping("/logout")
+	public String logout() {
+		SessionUtils.sessionInvlidate();
 		return "redirect:/";
-		
-		}
-		
-		// 로그아웃 요청을 처리한다.
-		@GetMapping("/logout")
-		public String logout() {
-			SessionUtils.sessionInvlidate();
-			return "redirect:/";
-		}
+	}
 		
 	// 페이스북 로그인 요청을 처리한다.
 	@PostMapping("/facebook-login")
@@ -164,4 +162,5 @@ public class HomeController {
 
 		return "redirect:/";
 	}
+	
 }
