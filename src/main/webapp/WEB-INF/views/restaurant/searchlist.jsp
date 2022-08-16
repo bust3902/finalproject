@@ -25,8 +25,8 @@
   					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 				</svg>
 			</button>
-			<input type="hidden" name="lat" value="" />
-			<input type="hidden" name="lng" value="" />
+			<input type="hidden" name="currentLat" value="" />
+			<input type="hidden" name="currentLong" value="" />
 			<div id="box-keywords" class="position-absolute w-100 d-none" style="top:44px; left:0; z-index: 1000;">
 				<ul class="list-group" id="fix-grop-keywords">
 					<li class="list-group-item list-group-flush border">
@@ -126,10 +126,13 @@
 					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
 					  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="">
 					  <label class="btn btn-outline-secondary" for="btnradio1">500m</label>
+					
 					  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
 					  <label class="btn btn-outline-secondary" for="btnradio2">1km</label>
+					
 					  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
 					  <label class="btn btn-outline-secondary" for="btnradio3">2km</label>
+					
 					  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
 					  <label class="btn btn-outline-secondary" for="btnradio4">3km</label>
 					</div>
@@ -137,18 +140,18 @@
 					<div>
 						<div class="row mb-3" id="map" style="width:100%;height:350px;"></div>
 					</div>
+				<!-- 검색 결과 조회 리스트 -->
 				<div class="row mx-auto">
-					<div class="card mb-3" style="max-width: 50rem;">
-					  <div class="card-body">
-					  <!-- <img src="/resources/images/"> -->
-					  <p class="card-title"><strong>리춘시장</strong><button class="btn btn-outline-secondary border-0 float-end"><i class="bi bi-heart"></i></button></p>
-					  <p class="card-text m-0">912m</p>
-					  <p class="card-text m-0">중식포차, 중화요리</p>
-						  <div class="row mt-3">
-						  	<button type="button" class="btn btn-outline-secondary">평가하기</button>
-						  </div>
-					  </div>
-					</div>
+					<table class="table">
+						<colgroup>
+							<col width="30%">
+							<col width="*">
+							<col width="20%">
+						</colgroup>
+						<tbody id="tbody-rests">
+							<!-- 숙소 검색결과가 script를 통해 출력됨-->
+						</tbody>
+					</table>
 				</div>
 			</div>
 		</div>
@@ -163,6 +166,42 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=49a6f0504323df1e2fbc06bfac690d78"></script>
 <script type="text/javascript">
 
+let currentLat = '';
+let currentLong = '';
+
+$("#locationButton").click(function() {
+	let x = document.getElementById("demo");
+	// 위도와 경도 값을 가져오는 코드입니다.
+	if (navigator.geolocation) {
+	    navigator.geolocation.getCurrentPosition(function(position) {
+	    	let latitude = position.coords.latitude;
+	        let longitude = position.coords.longitude;
+	        //alert(latitude + ", " + longitude);
+	        
+	        // 구글 map api를 이용해서 위도 경도 값을 통해 해당하는 주소값 가져오기
+	        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+	        		  {sensor:false, 
+	        	       language:"ko",
+	        	       latlng: latitude+","+longitude, 
+	        	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+	        .done(function(data) {
+	        	console.log(data);
+	        	let location = data.results[0];
+	        	//let address = location.formatted_address.replace("대한민국 ", " ");
+	        	let address2 = location.formatted_address.split(' ');
+	        	//alert(address2[2]+' '+address2[3]);
+	        	//alert(address);
+	        	$("#locationButton").text(address2[2]+' '+address2[3]);
+	        })
+	    });
+	  } else { 
+		// 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
+	    	currentLat = 37.564214;
+	    	currentLong = 127.0016985;
+			$(":hidden[name=currentLat]").val(currentLat);
+			$(":hidden[name=currentLong]").val(currentLong);
+	  }
+});
 	let $boxKeywords = $("#box-keywords");
 	
 	$("#search").click(function() {
@@ -253,7 +292,110 @@
 	};
 	
 	//지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
-	var map = new kakao.maps.Map(mapContainer, mapOption);
+	let map = new kakao.maps.Map(mapContainer, mapOption);
+	
+	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
+	changeMapCenter(map);
+	// 내 위치 마커 생성하기
+	// 내 위치 마커 이미지 만들기
+	let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
+	let myLocationMarker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(currentLat, currentLong),
+	    image: myLocaMarkerImage
+	});
+	// 내 위치 마커 지도에 표시하기
+	myLocationMarker.setMap(map);
+	
+	/*
+	* 선택한 지역에 따라 지도의 중심좌표 변경하기
+	*/
+	function changeMapCenter(map) {
+		// 지도의 중심 좌표는 지역 선택에 따라 달라진다.
+		let cityLat = $("select[name=city] :selected").attr("data-city-lat");
+		let cityLong = $("select[name=city] :selected").attr("data-city-long");
+		map.setCenter(new kakao.maps.LatLng(cityLat, cityLong));
+		// 전체 조회 / 지역 조회에 따라 확대 레벨이 달라진다. '서울전체' 항목은 value 값이 ""이다.
+		if ($("select[name=city] :selected").val() == "") {
+			map.setLevel(8);
+		} else {
+			map.setLevel(7);
+		}
+	}
+	
+	
+	/*
+		ajax로 검색 조건에 따른 음식점 정보 조회하기
+	*/
+	// 현재 지도에 표시된 마커를 관리하기 위한 배열을 정의하기
+	let restaurantMakers = [];
+	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수
+	// * 인자값이 null이면 마커를 삭제하고, 지도 객체면 그 지도에 마커를 표시한다.
+	function setMarker(map) {
+		for(let i = 0; i < restaurantMakers.length; i++) {
+			restaurantMakers[i].setMap(map);
+		}
+	}
+	// 마커에서 사용할 이미지 객체를 만들기
+	let restMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+	
+	function searchRestaurants() {
+		let queryString = $("#form-search").serialize();
+		
+		let $tbody = $("#tbody-rests").empty();
+		// 기존 지도에 표시된 마커를 모두 삭제하고 배열을 비운다.
+		setMarker(null);
+		restaurantMakers = [];
+		
+		// ajax로 검색조건에 따른 숙소정보를 요청해 응답 데이터로 받는다.
+		$.getJSON("/restaurants", queryString).done(function(rests) {
+			if (rests.length === 0) {
+				let content = `
+					<tr>
+						<td colspan="3" class="text-center">
+							<p class="py-5">조회된 결과가 없습니다.</p>
+						</td>
+					</tr>
+				`;
+				$tbody.append(content);
+			} else {
+				$.each(accos, function(index, acco) {
+					let content = '<tr id="row-rest-' + rest.name +'" style="cursor: pointer;"/>';
+					content += '		<td class="align-middle p-3">';
+					content += '			<img class="img-thumbnail list-image" alt="thumbnail" src="' + rest.imgname + '" />';
+					content += '		</td>'
+					content += '		<td class="p-3">';
+					content += ''
+					content += ''
+					content += ''
+					
+					
+					$tbody.append(content);
+					$("#row-rest-"+rest.id).click(function() {
+						location.href = "restaurant/detail?no=" + rest.no;
+					});
+					
+					let markerPosition = new kakao.maps.LatLng(rest.latitude, rest.longitude);
+					let marker = new kakao.maps.Marker({
+					    position: markerPosition,
+					    image: accoMarkerImage
+					});
+					
+					// 마커에 click 이벤트를 등록
+					kakao.maps.event.addListener(marker, 'click', function() {
+						location.href="restaurant/detail?no=" + rest.no;
+					});
+				})
+			}
+		});
+	}
+	
+	/*
+	 * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+	 */
+	 $("input[name=sort]").click(function() {
+		 searchRestaurants();
+	 });
+	
 </script>
 </body>
 </html>

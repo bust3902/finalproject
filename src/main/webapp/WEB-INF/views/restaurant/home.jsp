@@ -356,7 +356,6 @@
 		
 </div>
 <script type="text/javascript">
-
 	$("#locationButton").click(function() {
 		let x = document.getElementById("demo");
 		// 위도와 경도 값을 가져오는 코드입니다.
@@ -500,6 +499,12 @@
 		
 		location.href="/searchlist.jsp?keyword=" + keyword;
 	};
+	
+	function searchRestaurants() {
+		let queryString = $("#form-search").serialize();
+		
+		let $tbody = $("#")
+	}
 
 
 </script>
