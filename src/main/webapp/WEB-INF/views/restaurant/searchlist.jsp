@@ -411,7 +411,7 @@ $("#locationButton").click(function() {
 		searchRestaurants();
 		changeMapCenter(map);
 	});
-	
+
 </script>
 </body>
 </html>
