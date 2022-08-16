@@ -35,6 +35,7 @@ public class Restaurant {
 	private String breakTime;	// 휴식시간
 	private String close;		// 휴무일
 	private MultipartFile imgfile;
+	private String district;	// 구역(시/군/구 정보)
 	
 	private List<RestaurantTag> tags;				// 음식점 태그
 	private List<RestaurantMenu> menus;				// 음식점 메뉴

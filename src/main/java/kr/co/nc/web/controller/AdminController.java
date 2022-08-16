@@ -24,6 +24,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.AdminService;
+import kr.co.nc.service.RestaurantService;
 import kr.co.nc.vo.CommonFacility;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.web.form.AccommodationRegisterForm;
@@ -37,8 +38,12 @@ import kr.co.nc.web.form.RestaurantRegisterForm;
  */
 @Controller
 @RequestMapping("/admin")
-@SessionAttributes({"accommodationRegisterForm"})
+@SessionAttributes({"accommodationRegisterForm", "restaurantRegisterForm"})
 public class AdminController {
+	
+	// 음식점 이미지 저장 디렉토리
+	@Value("${seoul.restaurant.image.save-directory}")
+	String restaurantImageSaveDirectory;
 
 	// 숙소 메인썸네일 저장 디렉토리
 	@Value("${seoul.accommodation.image.save-directory}")
@@ -60,11 +65,10 @@ public class AdminController {
 	private AdminService adminService;
 	
 	@Autowired
-	private AccommodationService accommodationService;
+	private RestaurantService restaurantService;
 	
-	// 음식점 이미지 저장 디렉토리
-	@Value("${seoul.restaurant.image.save-directory}")
-	String restaurantImageSaveDirectory;
+	@Autowired
+	private AccommodationService accommodationService;
 
 	// 관리자 메인화면
 	@GetMapping(path = "")
@@ -75,14 +79,26 @@ public class AdminController {
 	// 음식점 입력폼1
 	@GetMapping(path = "/restaurant")
 	public String RestaurantRegister(Model model) {
-		model.addAttribute("restaurant", new Restaurant());
+
+		// 화면에 지역정보를 출력시키기 위한 모든 지역정보 전달
+		model.addAttribute("cities",restaurantService.getAllCity());
+		// 화면에 카테고리를 출력시키기 위한 모든 카테고리정보 전달
+		model.addAttribute("categories",restaurantService.getAllCategories());
+		
+		// 모델객체에 식당 저장폼 담기
+		model.addAttribute("restaurantRegisterForm", new RestaurantRegisterForm());
 		
 		return "/admin/restaurantregister1";
 	}
 	
 	// 음식점 입력폼2
 	@PostMapping(path = "/restaurant2")
-	public String restaurantdetail(@ModelAttribute("restaurantRegisterForm") RestaurantRegisterForm restaurantRegisterForm) throws IOException {
+	public String restaurantdetail(@ModelAttribute("restaurantRegisterForm") RestaurantRegisterForm restaurantRegisterForm,
+			Model model) throws IOException {
+
+		// 화면에 태그리스트를 출력시키기 위한 모든 태그정보 전달
+		// model.addAttribute("tags",restaurantService.getAlltags());
+		
 		// 음식점 이미지 사진 업로드
 		if (!restaurantRegisterForm.getImgfile().isEmpty()) {
 			MultipartFile imageFile = restaurantRegisterForm.getImgfile();
@@ -95,13 +111,26 @@ public class AdminController {
 			FileCopyUtils.copy(in, out);
 		}
 		
-		return "admin/restaurantregister2";
+		return "/admin/restaurantregister2";
+	}
+	
+	// 음식점 저장
+	@PostMapping(path = "/restauinsert")
+	public String restaurantinsert(@ModelAttribute("restaurantRegisterForm") RestaurantRegisterForm restaurantRegisterForm,
+			Model model, SessionStatus sessionStatus) throws IOException {
+		
+		adminService.addNewRestaurant(restaurantRegisterForm);
+		
+		sessionStatus.setComplete();
+		
+		return "/admin/restauCompleted";
 	}
 	
 	// 숙소 입력폼1(지역선택 및 숙소 소개) 요청 
 	@GetMapping(path = "/accommodation")
 	public String AccommodationMapRegister(Model model) {
 
+		// 모델객체에 숙소 저장폼 담기
 		model.addAttribute("accommodationRegisterForm", new AccommodationRegisterForm());
 		
 		return "admin/accommodationregister1";
@@ -114,12 +143,10 @@ public class AdminController {
 			Model model
 			) throws IOException {
 		
-		// 	모든 숙소유형 정보 전달
+		// 화면에 숙소유형을 출력시키기 위한 모든 숙소유형 정보 전달
 		model.addAttribute("types", accommodationService.getAllTypes());
-		// 	모든 지역 정보 전달
+		// 화면에 지역정보를 출력시키기 위한 모든 지역 정보 전달
 		model.addAttribute("cities", accommodationService.getAllCities());
-		
-		// model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
 		
 		return "admin/accommodationregister2";
 	}
@@ -171,42 +198,6 @@ public class AdminController {
 			accommodationRegisterForm.setDetailImageNames(filenames);
 		}
 		
-		// 객실 썸네일 이미지 업로드
-//		if (accommodationRoomRegisterForm.getThumbnailImageFile() != null && !accommodationRoomRegisterForm.getThumbnailImageFile().isEmpty()) {
-//			int index = accommodationRegisterForm.getAccommodationRooms().size()-1;
-//			MultipartFile imageFile = accommodationRoomRegisterForm.getThumbnailImageFile();
-//			String filename = imageFile.getOriginalFilename();
-//			
-//			accommodationRegisterForm.getAccommodationRooms().get(index).setThumbnailImageName(filename);
-//			
-//			InputStream in = imageFile.getInputStream();
-//			FileOutputStream out = new FileOutputStream(new File(accommodationRoomImageSaveDirectory, filename));
-//			
-//			FileCopyUtils.copy(in, out);
-//		} else {
-//			
-//		}
-//		
-//		// 객실 상세 이미지 업로드
-//		if (!accommodationRegisterForm.getAccommodationRooms().isEmpty()) {
-//			int index = accommodationRegisterForm.getAccommodationRooms().size()-1;
-//			List<MultipartFile> imageFileList = accommodationRegisterForm.getAccommodationRooms().get(index).getDetailImageFiles();
-//			for (MultipartFile imageFile : imageFileList) {
-//				String filename = imageFile.getOriginalFilename();
-//				List<String> filenames = new ArrayList<>();
-//				filenames.add(filename);
-//				accommodationRegisterForm.getAccommodationRooms().get(index).setDetailImageNames(filenames);
-//				
-//				InputStream in = imageFile.getInputStream();
-//				FileOutputStream out = new FileOutputStream(new File(accommodationRoomDetailImageSaveDirectory, filename));
-//				
-//				FileCopyUtils.copy(in, out);
-//			}
-//		} else {
-//			
-//		}
-//		
-
 		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
 		// System.out.println(accommodationRegisterForm.getAccommodationRooms().size());
 		
@@ -217,6 +208,7 @@ public class AdminController {
 		return "admin/accommodationregister3";
 	}
 	
+	// 객실정보 저장시 객실 이미지 처리를 해주는 메소드
 	@PostMapping("/accommodation3-room")
 	public String accommodataionRoom(AccommodationRoomRegisterForm accommodationRoomRegisterForm,
 			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
@@ -258,8 +250,6 @@ public class AdminController {
 
 		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
 		
-		// model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
-		
 		return "admin/accommodationregister3";
 	}
 	
@@ -271,6 +261,7 @@ public class AdminController {
 			Model model, SessionStatus sessionStatus
 			) throws IOException {
 		
+		// 객실 정보 저장
 		adminService.addNewAccommodation(accommodationRegisterForm);
 
 		sessionStatus.setComplete();
