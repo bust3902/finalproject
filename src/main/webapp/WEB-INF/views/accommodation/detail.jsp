@@ -176,19 +176,6 @@
 				<!-- 페이징 버튼 : 버튼을 누르면, 해당 값을 currentPage로 해서 숙소정보를 다시 출력한다. -->
 				<div id="pagination-wrapper" class="d-flex justify-content-center">
 					<ul id="ul-item-wrapper" class="pagination" class="mx-auto">
-						<li class="page-item">
-							<a class="page-link ${pagination.currentPage le 1 ? 'disabled' : '' }" href="javascript:changeCurrentPage(${num - 1 });" aria-label="Previous">
-								<span aria-hidden="true">&laquo;</span>
-							</a>
-						</li>
-						<c:forEach var="num" begin="${pagination.beginPage }" end="${pagination.endPage }">
-							<li class="page-item ${pagination.currentPage eq num ? 'active' : '' }" data-page-num="${num }"><a class="page-link" href="javascript:changeCurrentPage(${num });">${num }</a></li>
-						</c:forEach>
-						<li class="page-item">
-							<a class="page-link ${pagination.currentPage eq pagination.totalPages ? 'disabled' : '' }" href="javascript:changeCurrentPage(${num + 1 });" aria-label="Next">
-							  <span aria-hidden="true">&raquo;</span>
-							</a>
-						</li>
 					</ul>
 				</div>
 			</div>

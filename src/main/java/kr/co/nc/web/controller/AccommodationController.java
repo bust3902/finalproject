@@ -71,8 +71,6 @@ public class AccommodationController {
 		// 리뷰 정보
 		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
 		model.addAttribute("reviews", reviewService.getReviewsByCriteria(criteria));
-		// 페이징 정보(currentPage=1)
-		model.addAttribute("pagination", accommodationService.generatePagination(accoId, 1));
 
 		// 로그인 상태일 경우 찜하기 여부를 조회해서 그 값을 전달하고, 로그아웃 상태일 경우 무조건 false를 전달한다.
 		User loginUser = (User) model.getAttribute("LOGIN_USER");
