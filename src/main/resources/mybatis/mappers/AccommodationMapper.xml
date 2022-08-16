@@ -205,7 +205,7 @@
 		select *
 		from acco_rooms
 		where acco_id = #{value}
-		order by room_no
+		order by room_capacity asc
 	</select>
 	
 	<!-- List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo); -->
@@ -264,11 +264,25 @@
 	
 	<!-- List<Accommodation> getBestAccommodations(int count); -->
 	<select id="getBestAccommodations" parameterType="int" resultMap="AccoResultMap">
-	select *
-	from (select *
-	    from accommodations
-	    order by acco_review_rate desc, acco_review_count desc)
-	where rownum &lt;= #{value}
+		select *
+		from (select *
+		    from accommodations
+		    order by acco_review_rate desc, acco_review_count desc)
+		where rownum &lt;= #{value}
+	</select>
+	
+	<!-- int getTotalRowOfRoomsByAccoId(int accoId); -->
+	<select id="getTotalRowsOfRoomsByAccoId" parameterType="int" resultType="int">
+		select count(*)
+		from acco_rooms
+		where acco_id = #{value}
+	</select>
+	
+	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(Map<String, Object> param); -->
+	<select id="getRoomsByAccoIdwithPagination" parameterType="map" resultMap="RoomResultMap">
+		select *
+		from (select row_number() over(order by a.room_capacity) row_num, a.* from acco_rooms a where acco_id = #{accoId})
+		where row_num between #{beginIndex} and #{endIndex}
 	</select>
 	
 </mapper>

@@ -1,6 +1,7 @@
 package kr.co.nc.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -52,6 +53,7 @@ public interface AccommodationMapper {
 	// 검색 기간에 따른 특정 객실의 예약 가능 여부 조회 (가능하면 1, 불가능하면 0을 반환)
 	Integer getAvailableRoomStock(RoomCriteria criteria);
 	
+	//// 찜하기 관련
 	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보가 존재하면 1을, 존재하지 않으면 0을 반환
 	int isExistUserLikeByAccoId(LikeCriteria criteria);
 	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보 저장
@@ -63,4 +65,10 @@ public interface AccommodationMapper {
 	
 	// 인기숙소 상위 n건 조회
 	List<Accommodation> getBestAccommodations(int count);
+	
+	//// 페이징 관련
+	// 해당 숙소의 객실정보 행 수 조회
+	int getTotalRowsOfRoomsByAccoId(int accoId);
+	// 특정 숙소의 객실정보를 특정 페이지번호에 맞게 조회
+	List<AccommodationRoom> getRoomsByAccoIdwithPagination(Map<String, Object> param);
 }
