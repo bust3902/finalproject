@@ -34,13 +34,17 @@
 	</div>
 	<!-- 검색결과 조회 리스트 -->
 	<div id="accos-wrapper" class="row px-3 my-5">
+		<!-- TODO: 검색결과, 지역 관련 통계 -->
+		<div class="row mb-3">
+			<h5 class="fw-bold">통계</h5>
+		</div>
 		<!-- 숙소 검색결과 -->
 		<c:forEach var="acco" items="${bests }">
 			<div data-acco-id="${acco.id }" class="card-acco card text-bg-light p-0 rounded-0">
 				<img src="/resources/images/acco/thumbnail/${acco.thumbnailImageName }" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">
 				<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">
 					<div class="my-auto">
-					<h5 class="fw-semibold"> ${acco.name } </h5>
+						<h5 class="fw-semibold"> ${acco.name } </h5>
 						<p class="text-warning">
 							<span class="badge bg-warning"><fmt:formatNumber value="${acco.reviewRate }" pattern=".0" /></span><strong class="ms-2">${acco.reviewRateKeyword }(${acco.reviewCount })</strong>
 						</p>
@@ -50,10 +54,6 @@
 				</div>
 			</div>
 		</c:forEach>
-	</div>
-	<!-- TODO: 검색결과, 지역 관련 통계 -->
-	<div class="row">
-		<h5>통계</h5>
 	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
