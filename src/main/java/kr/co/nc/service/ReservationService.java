@@ -28,8 +28,8 @@ public class ReservationService {
 		return reservationMapper.getAllReserveInfo(userNo);
 	}
 	
-	public List<Payment> getPaymentStatus(int reservationNo){
-		return paymentMapper.getPaymentInfo(reservationNo);
+	public List<Payment> getPaymentInfo(int userNo){
+		return paymentMapper.getPaymentInfo(userNo);
 	}
 	
 	/**
@@ -41,18 +41,11 @@ public class ReservationService {
 	}
 
 	/**
-	 * 예약상태 변경하기 (예약가능 -> 만실)
-	 * @param reservation 예약정보
-	 */
-	public void updateReservationStatus(Reservation reservation) {
-		reservationMapper.updateReservationStatus(reservation);
-	}
-	/**
 	 * 결재상태 변경하기 (결제대기 -> 결제완료)
 	 * @param payment 결제정보
 	 */
 	public void updatePaymentStatus(Payment payment) {
-		reservationMapper.updatePaymentStatuts(payment);
+		paymentMapper.updatePaymentStatuts(payment);
 	}
 	
 	/*
@@ -78,7 +71,7 @@ public class ReservationService {
 		payment.setPaymentId(paymentRequest.getImpUid());
 		payment.setPaymentTotalPrice(paymentRequest.getAmount());
 		payment.setReservationNo(paymentRequest.getMerchantUid());
-		reservationMapper.insertPayment(paymentRequest);
+		paymentMapper.insertPayment(paymentRequest);
 	}
 	
 }
