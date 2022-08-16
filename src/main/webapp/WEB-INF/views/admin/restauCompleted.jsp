@@ -15,7 +15,7 @@
 	<div class="row mb-3">
 		<div class="col">
 			<div class="border p-5 bg-light">
-				<h1 class="display-3 mb-5">숙소 입력이 완료되었습니다.</h1>
+				<h1 class="display-3 mb-5">음식점 입력이 완료되었습니다.</h1>
 				<a href="/admin" class="btn btn-primary btn-lg">홈으로</a>
 			</div>
 		</div>

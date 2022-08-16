@@ -41,48 +41,49 @@
 				<div id="map" style="width:100%;height:40vh;"></div>
 			</div>
 				
-			<form id="form-restaurant" class="col p-3" method="post" action="admin/restinsert">
-		
-				<!-- DB에서 태그 꺼내와서 c:forEach로 출력 -->
+			<form id="form-restaurant" class="col p-3" method="post" action="restauinsert">
+				
+				<!-- 태그 입력 폼(acco_tags 테이블에 저장) -->
 				<div class="mb-5">
-					<label class="form-label">태그</label>
-					<div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="tags" value="">
-							<label class="form-check-label" >태그</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="tags" value="">
-							<label class="form-check-label" >태그</label>
-						</div>
-						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="tags" value="">
-							<label class="form-check-label" >태그</label>
-						</div>
+					<label class="form-label">태그를 입력해주세요.</label>
+					<input class="form-control mb-2" type="text" id="input-tag">
+					<div class="text-end">
+						<button type="button" class="btn btn-secondary" id="btn-add-tag">추가</button>
+					</div>
+					<div class="mb-3 mt-2">
+						<div id="tag-box"></div>
 					</div>
 				</div>
 				
 				<!-- 메뉴 입력 폼 -->
-				<div class="mb-5">
-					<label class="form-label">메뉴</label>
-					<input class="form-control mb-2" type="text" id="menu-name">
-					<label class="form-label">금액</label>
-					<input class="form-control mb-2" type="text" id="menu-price">
+				<div class="row mb-5">
+					<div class="col-6">
+						<label class="form-label">메뉴</label>
+						<input class="form-control mb-2" type="text" id="menu-name">
+					</div>
+					<div class="col-6">
+						<label class="form-label">금액</label>
+						<input class="form-control mb-2" type="text" id="menu-price">
+					</div>
 					<div class="text-end">
-						<button type="button" class="btn btn-secondary" id="btn-add-menu">추가</button>
+						<button type="button" class="btn btn-secondary mt-3" id="btn-add-menu">추가</button>
 					</div>
 					<div class="mb-3 mt-2">
 						<div id="menu-box"></div>
 					</div>
 				</div>
-				
+									
+				<!-- 폼2로 넘길 입력값들 히든폼 -->
+				<input type="hidden" name="location" value="">
+				<input type="hidden" name="district" value="">
+				<input type="hidden" name="latitude" value="">
+				<input type="hidden" name="longitude" value="">
+					
 				<!-- submit -->
 				<div class="text-end mt-5">
 					<button type="submit" class="btn btn-secondary px-5">등록</button>
-				</div>		
-				
+				</div>	
 			</form>
-			
 		</div>
 	</div>
 </div>
@@ -92,53 +93,70 @@
 <!-- 카카오맵 API -->
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=1e9adb3077789558d707162df08956e7&libraries=services"></script>
 <script>
-	// 다음 주소 검색 API
-    var mapContainer = document.getElementById('map'), // 지도를 표시할 div
-        mapOption = {
-            center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
-            level: 1 // 지도의 확대 레벨
-        };
+// 다음 주소 검색 API
+var mapContainer = document.getElementById('map'), // 지도를 표시할 div
+    mapOption = {
+        center: new daum.maps.LatLng(37.537187, 127.005476), // 지도의 중심좌표
+        level: 1 // 지도의 확대 레벨
+    };
 
-    //지도를 미리 생성
-    var map = new daum.maps.Map(mapContainer, mapOption);
-    //주소-좌표 변환 객체를 생성
-    var geocoder = new daum.maps.services.Geocoder();
-    //마커를 미리 생성
-    var marker = new daum.maps.Marker({
-        position: new daum.maps.LatLng(37.537187, 127.005476),
-        map: map
-    });
+//지도를 미리 생성
+var map = new daum.maps.Map(mapContainer, mapOption);
+//주소-좌표 변환 객체를 생성
+var geocoder = new daum.maps.services.Geocoder();
+//마커를 미리 생성
+var marker = new daum.maps.Marker({
+    position: new daum.maps.LatLng(37.537187, 127.005476),
+    map: map
+});
 
-	// 주소 검색
-    function addressSearch() {
-        new daum.Postcode({
-            oncomplete: function(data) {
-                var addr = data.address; // 최종 주소 변수
+var coords; // 위도, 경도
+var addr; // 최종 주소 변수
+var sigungu // 시/군/구 정보
 
-                // 주소 정보를 해당 필드에 넣는다.
-                document.getElementById("address").value = addr;
-                // 주소로 상세 정보를 검색
-                geocoder.addressSearch(data.address, function(results, status) {
-                    // 정상적으로 검색이 완료됐으면
-                    if (status === daum.maps.services.Status.OK) {
+// 주소 검색
+function addressSearch() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            addr = data.address; // 최종 주소 변수
+            sigungu = data.sigungu // 시/군/구 정보
 
-                        var result = results[0]; //첫번째 결과의 값을 활용
+            // 주소 정보를 해당 필드에 넣는다.
+            document.getElementById("address").value = addr;
+            // 주소로 상세 정보를 검색
+            geocoder.addressSearch(data.address, function(results, status) {
+                // 정상적으로 검색이 완료됐으면
+                if (status === daum.maps.services.Status.OK) {
 
-                        // 해당 주소에 대한 좌표를 받아서
-                        var coords = new daum.maps.LatLng(result.y, result.x);
-                        // 지도를 보여준다.
-                        mapContainer.style.display = "block";
-                        map.relayout();
-                        // 지도 중심을 변경한다.
-                        map.setCenter(coords);
-                        // 마커를 결과값으로 받은 위치로 옮긴다.
-                        marker.setPosition(coords)
-                    }
-                });
-            }
-        }).open();
-    }
-    
+                    var result = results[0]; //첫번째 결과의 값을 활용
+
+                    // 해당 주소에 대한 좌표를 받아서
+                    coords = new daum.maps.LatLng(result.y, result.x);
+                    // 지도를 보여준다.
+                    mapContainer.style.display = "block";
+                    map.relayout();
+                    // 지도 중심을 변경한다.
+                    map.setCenter(coords);
+                    // 마커를 결과값으로 받은 위치로 옮긴다.
+                    marker.setPosition(coords)
+                    // console.log(coords);
+                    // console.log(sigungu);
+                    // console.log(addr);
+
+                    // 시/군/구 히든 폼에 입력
+            	    $('input[name=district]').attr('value', sigungu);
+                    // 주소 히든 폼에 입력
+            	    $('input[name=location]').attr('value', addr);
+                    // 위도 히든 폼에 입력
+            	    $('input[name=latitude]').attr('value', coords.La);
+                    // 경도 히든 폼에 입력
+					$('input[name=longitude]').attr('value', coords.Ma);
+                }
+            });
+        }
+    }).open();
+}
+
 // 메뉴 추가 버튼
 $("#btn-add-menu").click(function() {
 	let $div = $("#menu-box");
@@ -156,7 +174,11 @@ $("#btn-add-menu").click(function() {
 	let menuPrice = $inputPrice.val();
 	if (menuName != "") {
 		let spanContent = '<span>메뉴명 : '+menuName+' 금액 : '+menuPrice+'</span><br>';
-		let hiddenContent = '<input type="hidden" name="menus" value="'+menuName+''+menuPrice+'" />'
+		let hiddenContent = '';
+		hiddenContent += '<input type="hidden" name="menuNames" value="'+menuName+'">';
+		hiddenContent += '<input type="hidden" name="prices" value="'+menuPrice+'">';
+		
+		// let hiddenContent = '<input type="hidden" name="menus" value="'+menuName+''+menuPrice+'" />'
 		
 		$div.before(spanContent);
 		$div.append(hiddenContent);
@@ -165,6 +187,31 @@ $("#btn-add-menu").click(function() {
 		$inputPrice.val("");
 	}		
 });
+
+//태그 추가 버튼
+$("#btn-add-tag").click(function() {
+	let $div = $("#tag-box");
+	let $input = $("#input-tag");
+
+	let tagLength = $(":input[name=tags]").length;
+	if (tagLength >= 10) {
+		alert("최대 10개까지만 가능합니다.");
+		$input.val("");
+		return;
+	}
+	
+	let value = $input.val();
+	if (value != "") {
+		let spanContent = '<span class="badge text-bg-secondary rounded-1 p-2 me-2">'+value+'</span>';
+		let hiddenContent = '<input type="hidden" name="tags" value="'+value+'" />'
+		
+		$div.before(spanContent);
+		$div.append(hiddenContent);
+		
+		$input.val("");
+	}		
+});
+
 </script>
 </body>
 </html>

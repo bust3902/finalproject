@@ -7,6 +7,12 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+/**
+ * 숙소 타입 저장을 위한 폼
+ * ACCO_TYPES 테이블에 저장
+ * @author USER
+ *
+ */
 @NoArgsConstructor
 @Getter
 @Setter
@@ -15,7 +21,7 @@ import lombok.ToString;
 public class AccoTypeRegisterForm {
 
 	private int id;
-	private String typeId;
+	private String typeId; // 숙소 타입 아이디
 	
 	public AccoTypeRegisterForm(int id, String typeId) {
 		this.id = id;

@@ -33,7 +33,7 @@ public class Accommodation {
 	//// 화면 표현 시 사용하는 변수
 	private String currentDistance; // 현재 조회한 위치로부터의 거리 (데이터 조회시에만 사용하는 필드)
 	private int minPrice; // 현재 조회한 날짜에서 가장 저렴한 객실의 1박 금액 (데이터 조회시에만 사용하는 필드)
-	private String reviewRateKeyword; // 리뷰 점수에 따라 화면에 출력할 키워드 (아쉬워요/부족해요/만족해요/추천해요/최고에요)
+	private String reviewRateKeyword; // 리뷰 점수에 따라 화면에 출력할 키워드 (평가없음(리뷰 정보 없을 시)/아쉬워요/부족해요/만족해요/추천해요/최고에요)
 	private StarIconForRate reviewRateIcon; // 리뷰 별점 아이콘을 표현하는 hashMap을 상속받는 객체
 	
 	private List<AccommodationType> types; // 이 숙소가 해당하는 모든 숙소유형
@@ -54,6 +54,10 @@ public class Accommodation {
 	// 리뷰 점수에 따라 화면에서 표현할 키워드를 저장한다.
 	private void initReviewRateKeyword(double reviewRate) {
 		if (reviewRate <= 1) {
+			if (reviewCount == 0) {
+				this.reviewRateKeyword = "평가정보없음";
+				return;
+			}
 			this.reviewRateKeyword = "아쉬워요";
 		} else if (reviewRate <= 2) {
 			this.reviewRateKeyword = "부족해요";

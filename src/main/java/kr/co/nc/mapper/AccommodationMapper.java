@@ -5,6 +5,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
@@ -50,4 +51,14 @@ public interface AccommodationMapper {
 	List<String> getImagesByRoomNo(int roomNo);
 	// 검색 기간에 따른 특정 객실의 예약 가능 여부 조회 (가능하면 1, 불가능하면 0을 반환)
 	Integer getAvailableRoomStock(RoomCriteria criteria);
+	
+	
+	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보가 존재하면 1을, 존재하지 않으면 0을 반환
+	int isExistUserLikeByAccoId(LikeCriteria criteria);
+	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보 저장
+	void insertUserLikeByAccoId(LikeCriteria criteria);
+	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보 삭제
+	void deleteUserLikeByAccoId(LikeCriteria criteria);
+	// 사용자가 찜하기 누른 모든 숙소 정보 반환
+	List<Accommodation> getAllLikedAccoByUserNo(int no); 
 }

@@ -16,7 +16,7 @@
 		 acco_thumbnail_image, city_id, acco_introduce_comment, acco_detail_description)
 		values
 		(#{id}, #{name}, #{district}, #{address}, #{latitude}, #{longitude},
-		 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription}
+		 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription})
 	</insert>
 	
 	<!-- 
@@ -24,7 +24,7 @@
 		숙소 타입 저장
 	 -->
 	<insert id="insertAccommodationTypes" parameterType="AccoTypeRegisterForm">
-		insert into accommodation_types
+		insert into acco_types
 		(acco_id, acco_type_id)
 		values
 		(#{id}, #{typeId})
@@ -49,7 +49,7 @@
 		insert into acco_common_facilities
 		(acco_id, co_facility_id)
 		values
-		(#{id}, #{commonFacilities})
+		(#{id}, #{commonFacility})
 	</insert>
 		
 	<!-- 
@@ -57,10 +57,10 @@
 		숙소 상세이미지 저장
 	 -->
 	<insert id="insertAccommodationDetailImages" parameterType="AccoDetailImageNamesRegisterForm">
-		insert into accommodations
+		insert into acco_detail_images
 		(acco_id, image_file_name)
 		values
-		(#{id}, #{detailImageNames})
+		(#{id}, #{detailImageName})
 	</insert>
 	
 	<!-- 
@@ -99,7 +99,56 @@
 		insert into acco_room_detail_images
 		(room_no, room_image_file_name)
 		values
-		(#{no}, #{detailImageNames})
+		(#{no}, #{detailImageName})
 	</insert>
 	
+	<!-- 
+		void insertRestaurant(Restaurant restaurant);
+		음식점 정보 저장
+	 -->
+	<insert id="insertRestaurant" parameterType="Restaurant">
+		<selectKey keyProperty="no" resultType="int" order="BEFORE">
+			select restaurant_seq.nextval 
+			from dual
+		</selectKey>
+		insert into restaurant
+		(restaurant_no, restaurant_name, restaurant_location, restaurant_imgname, restaurant_tel, restaurant_latitud,
+		 restaurant_longitude, city_id, restaurant_opening, restaurant_break_time, restaurant_close, restaurant_district)
+		values
+		(#{no}, #{name}, #{location}, #{imgname}, #{tel}, #{latitud},
+		 #{longitude}, #{cityId}, #{opening}, #{breakTime}, #{close}, #{district})
+	</insert>
+
+	<!-- 
+		void insertRestaurantTags(RestaurantTag restaurantTag);
+		음식점 태그 정보 저장
+	 -->
+	<insert id="insertRestaurantTags" parameterType="RestaurantTag">
+		insert into restaurant_tag
+		(restaurant_no, restaurant_tag)
+		values
+		(#{restaurantNo}, #{tag})
+	</insert>
+	 
+	 <!-- 
+		void insertRestaurantMenus(RestaurantMenuRegisterForm restaurantMenuRegisterForm);
+		음식점 메뉴 정보 저장
+	 -->
+	<insert id="insertRestaurantMenus" parameterType="RestaurantMenuRegisterForm">
+		insert into restaurant_menu
+		(restaurant_no, restaurant_menu_name, restaurant_price)
+		values
+		(#{no}, #{menuName}, #{price})
+	</insert>
+	 
+	 <!-- 
+		void insertRestaurantCategories(RestaurantCategoryRegisterForm restaurantCategoryRegisterForm);
+		음식점 카테고리 정보 저장
+	 -->
+	<insert id="insertRestaurantCategories" parameterType="RestaurantCategoryRegisterForm">
+		insert into restaurant_cat
+		(restaurant_no, restaurant_cat_id)
+		values
+		(#{no}, #{category})
+	</insert>
 </mapper>

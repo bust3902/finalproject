@@ -2,11 +2,12 @@ package kr.co.nc.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.UserService;
 import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.User;
@@ -24,6 +25,8 @@ public class HomeController {
 	
 	@Autowired
 	private UserService userService;
+	@Autowired
+	private AccommodationService accommodationService;
 	
 	/*
 	 * 홈화면 요청을 처리한다.
@@ -32,7 +35,9 @@ public class HomeController {
 	 * 뷰 페이지 : /WEB-INF/views/home.jsp
 	 */
 	@GetMapping(path = "/")
-	public String home() {
+	public String home(Model model) {
+		// 홈 메뉴에 출력할 숙소 유형 정보를 전달한다.
+		model.addAttribute("accoTypes", accommodationService.getAllTypes());
 		return "home";
 	}
 	
@@ -125,7 +130,7 @@ public class HomeController {
 	
 	// 카카오 로그인 요청을 처리한다.
 	@PostMapping("/kakao-login")
-	public String loginWithKakao(KakaoLoginForm form) {
+	public String kakaoLogin(KakaoLoginForm form) {
 		log.info("카카오 로그인 인증정보: " + form);
 			
 		User user = User.builder()
@@ -144,16 +149,15 @@ public class HomeController {
 		}
 		log.info("카카오 로그인 완료");
 			
+		return "redirect:/";		
+	}
+		
+	// 로그아웃 요청을 처리한다.
+	@GetMapping("/logout")
+	public String logout() {
+		SessionUtils.sessionInvlidate();
 		return "redirect:/";
-		
-		}
-		
-		// 로그아웃 요청을 처리한다.
-		@GetMapping("/logout")
-		public String logout() {
-			SessionUtils.sessionInvlidate();
-			return "redirect:/";
-		}
+	}
 		
 	// 페이스북 로그인 요청을 처리한다.
 	@PostMapping("/facebook-login")
@@ -164,4 +168,5 @@ public class HomeController {
 
 		return "redirect:/";
 	}
+	
 }
