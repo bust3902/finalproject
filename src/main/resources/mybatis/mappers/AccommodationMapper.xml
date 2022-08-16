@@ -262,4 +262,13 @@
 			and l.acco_id = a.acco_id
 	</select>
 	
+	<!-- List<Accommodation> getBestAccommodations(int count); -->
+	<select id="getBestAccommodations" parameterType="int" resultMap="AccoResultMap">
+	select *
+	from (select *
+	    from accommodations
+	    order by acco_review_rate desc)
+	where rownum &lt;= #{value}
+	</select>
+	
 </mapper>

@@ -52,7 +52,6 @@ public interface AccommodationMapper {
 	// 검색 기간에 따른 특정 객실의 예약 가능 여부 조회 (가능하면 1, 불가능하면 0을 반환)
 	Integer getAvailableRoomStock(RoomCriteria criteria);
 	
-	
 	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보가 존재하면 1을, 존재하지 않으면 0을 반환
 	int isExistUserLikeByAccoId(LikeCriteria criteria);
 	// 해당 사용자의, 해당 번호의 숙소에 대한 찜하기 정보 저장
@@ -61,4 +60,7 @@ public interface AccommodationMapper {
 	void deleteUserLikeByAccoId(LikeCriteria criteria);
 	// 사용자가 찜하기 누른 모든 숙소 정보 반환
 	List<Accommodation> getAllLikedAccoByUserNo(int no); 
+	
+	// 인기숙소 상위 n건 조회
+	List<Accommodation> getBestAccommodations(int count);
 }

@@ -109,4 +109,14 @@ public class AccommodationService {
 	public boolean isLikedAcco(LikeCriteria criteria) {
 		return accommodationMapper.isExistUserLikeByAccoId(criteria) == 1 ? true : false;
 	}
+	
+	/**
+	 * 리뷰 평점이 높은 숙소 정보를 상위 n건 조회해서 반환한다.
+	 * @param count
+	 * @return
+	 */
+	public List<Accommodation> getBestAccommodations(int count) {
+		return accommodationMapper.getBestAccommodations(count);
+	}
+	
 }

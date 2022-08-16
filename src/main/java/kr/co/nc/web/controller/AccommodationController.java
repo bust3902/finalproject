@@ -79,4 +79,10 @@ public class AccommodationController {
 		return "/accommodation/detail";
 	}
 	
+	@GetMapping(path = "/best")
+	public String best() {
+		System.out.println(accommodationService.getBestAccommodations(10));
+		return "/accommodation/best";
+	}
+	
 }
