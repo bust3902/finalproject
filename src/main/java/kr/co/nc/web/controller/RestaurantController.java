@@ -1,8 +1,7 @@
 package kr.co.nc.web.controller;
 
 
-
-import java.util.HashMap;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -11,8 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.co.nc.criteria.RestaurantCriteria;
 import kr.co.nc.service.RestaurantService;
-import kr.co.nc.vo.RestaurantCategory;
+import kr.co.nc.vo.Restaurant;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -22,28 +22,12 @@ public class RestaurantController {
 	private RestaurantService restaurantService;
 	
 	@GetMapping(path="/searchlist")
-	public String searchList(
-			@RequestParam(name = "cat",required = false) String categoryId,
-			@RequestParam(name = "keyword",required = false) String keyword,
-			@RequestParam(name = "categories",required = false) String categories,
-			@RequestParam(name = "order",required = false) String order,
-			Model model ) {
+	public String searchList(@RequestParam(name="keyword",required=false) String keyword,Model model ) {
+		
 		model.addAttribute("categories",restaurantService.getAllCategories());
-		
-		model.addAttribute("tags",restaurantService.getAlltags());
 		model.addAttribute("cities",restaurantService.getAllCity());
+		model.addAttribute("tags",restaurantService.getAlltags());
 		
-		HashMap params = new HashMap();	
-		if(keyword != null) {
-			model.addAttribute("keyword",keyword);
-			params.put("keyword", keyword);
-		}
-		if(categories != null)params.put("categories", categories);
-		if(order != null)params.put("order", order);
-		
-		if( !params.isEmpty() ) {
-			model.addAttribute("searchKeyword",restaurantService.searchKeyword(params));
-		}
 		
 		return "restaurant/searchlist";
 	}

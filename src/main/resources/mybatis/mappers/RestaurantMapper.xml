@@ -47,6 +47,7 @@
 		<result column="RESTAURANT_OPENING" property="opening"/>
 		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
 		<result column="RESTAURANT_CLOSE" property="close"/>
+		<result column="RESTAURANT_DISTRICT" property="district"/>
 	</resultMap>
 	
 	<!-- List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo); -->
@@ -88,9 +89,23 @@
 	</select>
 	
 	<!-- List<String> getAllTags(); -->
-	<select id="getAllTags" resultType="java.util.Map">
-		select distinct RESTAURANT_TAG, RESTAURANT_NO
+	<select id="getAllTags" resultType="string">
+		select distinct RESTAURANT_TAG
 		from RESTAURANT_TAG
+	</select>
+	
+	<!-- List<Category> getAllCategories(); -->
+	<select id="getAllCategories" resultType="Category">
+		select RESTAURANT_CAT_ID as id, RESTAURANT_CAT_NAME as name
+		from RESTAURANT_CAT_NAME
+		order by RESTAURANT_CAT_ID asc
+	</select>
+	
+	<!-- List<City> getAllCities(); -->
+	<select id="getAllCities" resultType="kr.co.nc.vo.City">
+		select city_id as id, city_name as name, city_latitude as latitude, city_longitude as longitude
+		from cities
+		order by city_id
 	</select>
 	
 	<!-- List<Review> getAllReview(); -->
@@ -105,7 +120,7 @@
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantsByCategoryId(@Param("categoryId") String categoryId); -->
-	<select id="getRestaurantsByCategoryId">
+	<select id="getRestaurantsByCategoryId" >
 		select *
 		from RESTAURANT
 		<if test="categoryId != null">
@@ -118,107 +133,54 @@
 	
 	<!-- List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria); -->
 	<select id="getRestaurantByCriteria" parameterType="kr.co.nc.criteria.RestaurantCriteria" resultMap="RestaurantResultMap">
-		select *
-		from RESTAURANT
+		select distinct res.RESTAURANT_NO,res.RESTAURANT_NAME, res.RESTAURANT_LOCATION,res.RESTAURANT_IMGNAME,
+				res.RESTAURANT_LIKE_COUNT,res.RESTAURANT_REVIEW_COUNT,res.RESTAURANT_REVIEW_POINT,res.RESTAURANT_LATITUD,
+				res.RESTAURANT_LONGITUDE,res.CITY_ID,
+				ROUND(DISTANCE_WGS84(37, 128, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),3) as distance
+		
+		FROM
+		   restaurant res, restaurant_tag rtag, restaurant_menu rmenu,RESTAURANT_CAT rcat,RESTAURANT_CAT_NAME rcatname
+		            
 		<where>
-			<if test="categoryId != null">
-				RESTAURANT_NO in (select RESTAURANT_NO
-									from RESTAURANT_CAT
-									where RESTAURANT_CAT_ID = #{categoryId})
-				
+			res.RESTAURANT_DELETE = 'N'
+			<if test="keyword != null">
+					AND res.restaurant_no = rtag.restaurant_no (+)
+		            AND res.restaurant_no = rmenu.restaurant_no (+)
+                    AND res.restaurant_no = rcat.restaurant_no(+)
+                    AND rcat.restaurant_cat_id =  rcatname.restaurant_cat_id (+)
+		            AND (res.restaurant_name like '%' || #{keyword} || '%' or res.restaurant_district like '%' || #{keyword} || '%' or rcatname.restaurant_cat_name like '%' || #{keyword} || '%'  or rtag.restaurant_tag like '%' || #{keyword} || '%' or rmenu.restaurant_menu_name like '%' || #{keyword} || '%' )
 			</if>
-			<if test="tags != null">
-				and RESTAURANT_NO in (select RESTAURANT_NO
-										from RESTAURANT_TAG
-										where RESTAURANT_TAG in
+			<if test="categoryId != null">
+				and res.restaurant_no in (select restaurant_no
+										from RESTAURANT_CAT
+										where RESTAURANT_CAT_ID = #{categoryId})
+			</if>
+			<if test="city != null and city != ''">
+				and res.CITY_ID = #{city}
+			</if>
+			<if test="tags != null and tags !=''">
+				and res.restaurant_no (select restaurant_no
+										from restaurant_tag
+										where RESTAURANT_TAG in 
 										<foreach collection="tags" item="tag" open="(" close=")" separator=",">
 											#{tag}
-										</foreach> )		
+										</foreach>)
 			</if>
 		</where>
 		<choose>
 			<when test="sort == 'point'">
-				order by RESTAURANT_REVIEW_POINT desc
+				order by res.RESTAURANT_REVIEW_POINT desc
 			</when>
 			<when test="sort == 'count'">
-				order by RESTAURANT_REVIEW_COUNT desc
+				order by res.RESTAURANT_REVIEW_COUNT desc
 			</when>
 			<when test="sort == 'like'">
-				order by RESTAURANT_LIKE_COUNT desc
+				order by res.RESTAURANT_LIKE_COUNT desc
 			</when>
-			<when test="sort == 'distance'">
-				order by RESTAURANT_NO desc
+			<when test="sort == 'dist'">
+				order by res.RESTAURANT_DISTRICT asc
 			</when>
 		</choose>
 	</select>
 	
-	<!-- List<Category> getAllCategories();-->
-	<select id="getAllCategories" resultType="java.util.Map">
-		select cname.RESTAURANT_CAT_ID as id , cname.RESTAURANT_CAT_NAME as name
-		from RESTAURANT_CAT_NAME cname
-		order by RESTAURANT_CAT_ID
-	</select>
-	
-	<!-- RestaurantCategory getCategoryById(String categoryId); -->
-	<select id="getCategoryById" parameterType="string" resultType="RestaurantCategory">
-		select RESTAURANT_CAT_ID as id , RESTAURANT_CAT_NAME as name
-		from RESTAURANT_CAT_NAME
-		where RESTAURANT_CAT_ID = #{value}
-	</select>
-	
-	<!-- List<City> getAllCity(); -->
-	<select id="getAllCity" resultType="kr.co.nc.vo.City">
-		select city_id as id, city_name as name, city_latitude as latitude, city_longitude as longitude
-		from cities
-		order by city_id
-	</select>
-	
-	<select id="searchKeyword" parameterType="java.util.Map" resultType="java.util.Map">
-		SELECT
-		    res.restaurant_no,
-		    res.restaurant_name,
-		    res.restaurant_location,
-		    res.restaurant_imgname,
-		    res.restaurant_tel,
-		    res.restaurant_like_count,
-		    res.restaurant_review_count,
-		    res.restaurant_review_point,
-		    res.restaurant_created_date,
-		    res.restaurant_update_date,
-		    res.restaurant_latitud,
-		    res.restaurant_longitude,
-		    res.restaurant_delete,
-		    res.city_id,
-		    res.restaurant_opening,
-		    res.restaurant_break_time,
-		    res.restaurant_close		    
-		FROM
-		    restaurant res
-		WHERE res.restaurant_no in (
-		        SELECT
-		            restaurant_no
-		        FROM
-		        (
-		            SELECT
-		                   res1.restaurant_no
-		            FROM
-		                restaurant res1, restaurant_tag rtag1, restaurant_menu menu1
-		            WHERE res1.restaurant_no = rtag1.restaurant_no
-		            AND res1.restaurant_no = menu1.restaurant_no
-		            AND (res1.restaurant_name like '%' || #{keyword} || '%' or rtag1.restaurant_tag like '%' || #{keyword} || '%' or menu1.restaurant_menu_name like '%' || #{keyword} || '%')
-					<if test="categories != null and categories != ''">
-						AND res1.restaurant_no in (
-								select 
-									src.restaurant_no 
-								from RESTAURANT_CAT src 
-								where src.restaurant_cat_id = #{categories}
-							)
-					</if>					
-		            )    
-		            GROUP BY restaurant_no
-		)
-		<if test="order == 1">
-		ORDER BY RESTAURANT_LIKE_COUNT DESC
-		</if>
-	</select>
 </mapper>
