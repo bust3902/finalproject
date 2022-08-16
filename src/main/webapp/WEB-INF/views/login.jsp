@@ -10,7 +10,6 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<!-- 카카오 로그인지원 자바스크립트 라이브러리를 포함시킨다. -->
 	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
-
 <style type="text/css">
 .login #content {
     width: 336px;
@@ -24,84 +23,58 @@
 #logo img {
 	width: 180px;
 }
+
+.normal .login button {
+	width: 329px;
+}
+
+.kakao{
+	width: 336px;
+	list-style: none;
+	padding: 0px;
+	margin: 0px;
+}
+
+.kakao {
+	width: 329px;
+}
+
+ul{
+	padding: 0px;
+}
+
+li {
+	display: inline-block;
+}
 </style>
 	<title>로그인</title>
 </head>
 <body>
-<%@ include file="common/nav.jsp" %>
-<div class="container mt-3">  
-	<c:set var="menu" value="login"></c:set>
-    <div class="row mb-3">
-    	<div class="col-7">
-    		<p>아이디 비밀번호를 입력해서 로그인하세요</p>
-    		<%-- 
-    			일반 로그인 처리중 중 오류가 발생하면 아래 경고창에 표시된다.
-    			오류 메세지는 RequestAttributes의 addFlashAttribute(String name, Object value) 메소드를 사용해서 전달한다.
-    		 --%>
-    		<c:if test="${not empty error }">
-    			<div class="alert alert-danger">
-    				${error }
-    			</div>
-    		</c:if>
-    		<form class="border p-3 bg-light" method="post" action="login">
-    			<div class="mb-3">
-    				<label class="form-label">아이디</label>
-    				<input type="text" class="form-control" name="id"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">비밀번호</label>
-    				<input type="password" class="form-control" name="password"/>
-    			</div>
-    			<div class="mb-1 text-end">
-    				<a href="/register" class="btn btn-secondary">회원가입</a>
-    				<button class="btn btn-primary">로그인</button>
-    			</div>
-    		</form>
-    	</div>
-    	<div class="col-5">
-    		<p>카카오, 네이버 계정을 이용해서 로그인하세요
-    		<%-- 
-    			카카오 로그인 처리중 중 오류가 발생하면 아래 경고창에 표시된다.
-    			카카오 로그인 오류는 스크립트에서 아래 경고창에 표시합니다.
-    		 --%>
-    		<div class="alert alert-danger d-none" id="alert-kakao-login">오류 메세지</div>
-    		
-    		<div class="border p-3 mb-4 bg-light">
-    			<a id="btn-kakao-login" href="kakao/login">
-  					<img src="//k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="222" alt="카카오 로그인 버튼"/>
-				</a>
-    		</div>
-    	</div>
-    	<%--
-    		카카오 로그인 서비스가 제공하는 사용자 정보를 서버로 제출할 때 사용하는 폼과 폼 입력요소다.
-    		카카오 로그인 인증이 완료되면 사용자정보를 전달받아서 아래 폼 입력필드에 설정하고, 폼을 서버로 제출한다.
-    	 --%>
-    	<form id="form-kakao-login" method="post" action="kakao-login">
-    		<input type="hidden" name="id" />
-    		<input type="hidden" name="nickname" />
-    		<input type="hidden" name="email" />
-    	</form>
-    </div>
-</div>
-
-<%--
-<!-- 새 로그인 양식 -->
+<!-- 로그인 양식 -->
 <div class="login">
 	<div id="content">
         <form id="loginForm" action="" autocomplete="off" method="post" novalidate="novalidate">
             <input type="hidden" name="seoul" value="">
             <div id="logo">
                 <a class="navbar-brand" href="/">
-      				<img src="/resources/images/logo.png" alt="" width="80" height="auto">
+      				<img src="/resources/images/logo.png" alt="서울어때" width="80" height="auto">
     			</a>
             </div>
             
             <!-- 카카오톡 로그인 -->
             <div class="kakao">
-    			<div class="alert alert-danger d-none" id="alert-kakao-login">오류 메세지</div>   			    		
-    			<a id="btn-kakao-login" href="kakao/login">
-  					<img src="//k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="336" height="" alt="카카오 로그인 버튼"/>
-				</a>
+    			<ul>
+					<li onclick="kakaoLogin();">
+      					<a href="javascript:void(0)">
+          					<img src="/resources/images/login/kakaoLogin.png" alt="카카오톡 로그인" width="329px;">
+      					</a>
+					</li>
+					<li onclick="kakaoLogout();">
+      					<a href="javascript:void(0)">
+          					<img src="#" alt="카카오톡 로그아웃" width="329px;">
+      					</a>
+					</li>
+				</ul>
     		</div>
     		<form id="form-kakao-login" method="post" action="kakao-login">
     			<input type="hidden" name="id" />
@@ -111,8 +84,15 @@
     		
     		<!-- 페이스북 로그인 -->
     		<div class="facebook">
-    			
-			</div>
+    			<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+				<button onclick="logout()">로그아웃</button>
+				<div id="status"></div>
+
+				<form id="form-facebook" method="post" action="facebook">
+					<input type="hidden" name="email">
+					<input type="hidden" name="name">
+				</form>   			
+			</div
     		<form id="form-facebook-login" method="post" action="facebook-login">
 				<input type="hidden" name="email">
 			</form>
@@ -125,64 +105,79 @@
             <p class="space_or"><span>또는</span></p>
             
             <!-- 일반 로그인 -->
-            <div class="normal"><!-- focus / err -->
-                <input type="email" name="uid" placeholder="이메일 주소" required="" class="required" value="" data-msg-required="이메일 주소를 입력해 주세요.">
-            	<button type="button" class="login">초기화</button>
-            </div>
-            <div class="inp_type_1 ico_pw form-errors">
-                <input type="password" name="upw" placeholder="비밀번호" required="" class="required" data-msg-required="비밀번호를 입력해 주세요.">
-            <button type="button" class="reset_val">초기화</button></div>
-            <button class="btn btn-primary" type="submit"><span>로그인</span></button>
-            <div class="">
-                <div><a href=""><span>비밀번호 재설정</span></a></div>
-                <div><a href="/register"><span>회원가입</span></a></div>
+            <div class="normal">
+               <c:set var="menu" value="login"></c:set>
+    			<div class="row mb-3">
+    				<c:if test="${not empty error }">
+    					<div class="alert alert-danger">
+    						${error }
+    					</div>
+    				</c:if>
+    				<form class="login p-3" method="post" action="login">
+    					<div class="mb-2">
+    						<input type="text" class="form-control" name="id" placeholder="아이디를 입력하세요."/>
+    					</div>
+    					<div class="mb-3">
+    						<input type="password" class="form-control" name="password" placeholder="비밀번호를 입력하세요."/>
+    					</div>
+    					<div class="mb-1 text-end">
+    						<button class="btn btn-primary btn-lg">로그인</button>
+    					</div>
+    				</form>
+    			</div>
+            	<ul class="link">
+					<li class="password"><a href="#">비밀번호 재설정</a><span>|</span></li>
+					<li class="register"><a href="/register">회원가입</a></li>
+				</ul>
             </div>
     	</form>
     </div>
 </div>
- --%>
-<%@ include file="common/footer.jsp" %>
-<script type="text/javascript">
-$(function() {
-	// 카카오 로그인 버튼을 클릭할 때 실행할 이벤트 핸들러 함수를 등록한다.
-	$('#btn-kakao-login').click(function(event){
-		// a태그는 클릭이벤트가 발생하면 페이지를 이동하는 기본동작이 수행되는데, 그 기본동작이 실행되지 않게 한다.
-		event.preventDefault();
-		// 카카오 로그인 실행시 오류메세지를 표시하는 경고창을 화면에 보이지 않게 한다.
-		$("#alert-kakao-login").addClass("d-none");
-		// 사용자키를 전달해서 카카오 로그인 서비스를 초기화한다.
-		Kakao.init('9f3a5b1dadaeae93a5ebb2ab206b6506');
-		// 카카오 로그인 서비스 실행하기 및 사용자 정보 가져오기
-		Kakao.Auth.login({
-			success: function(auth) {
-				Kakao.API.request({
-					url: '/v2/user/me',
-					success: function(response) {
-						// 사용자 정보를 가져와서 폼에 추가한다.
-						var account = response.kakao_account;
-						
-						$('#form-kakao-login input[name=username]').val(response.id);
-						$('#form-kakao-login input[name=nickname]').val(account.profile.nickname);
-						$('#form-kakao-login input[name=email]').val(account.email);
-						// 사용자 정보가 포함된 폼을 서버로 제출한다.
-						document.querySelector("#form-kakao-login").submit()
-					},
-					fail: function(error) {
-						// 경고창에 에러 메세지를 표시한다.
-						$("#alert-kakao-login").removeClass("d-none").text("카카오 로그인 처리 중 오류가 발생하였습니다.");
-					}
-				});
-			},
-			fail: function(error) {
-				// 경고창에 에러 메세지를 표시한다.
-				$("#alert-kakao-login").removeClass("d-none").text("카카오 로그인 처리 중 오류가 발생하였습니다.");
-			}
-		});		
-	})
-})
 
+<%-- 카카오 로그인 --%>
+<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<script>
+Kakao.init('1c64be084ffd66ec4e090f13f7ff9ac8'); //발급받은 키 중 javascript키를 사용해준다.
+console.log(Kakao.isInitialized()); // sdk초기화여부판단
+//카카오로그인
+function kakaoLogin() {
+    Kakao.Auth.login({
+      success: function (response) {
+        Kakao.API.request({
+          url: '/v2/user/me',
+          success: function (response) {
+        	  console.log(response)
+          },
+          fail: function (error) {
+            console.log(error)
+          },
+        })
+      },
+      fail: function (error) {
+        console.log(error)
+      },
+    })
+  }
+//카카오로그아웃  
+function kakaoLogout() {
+    if (Kakao.Auth.getAccessToken()) {
+      Kakao.API.request({
+        url: '/v1/user/unlink',
+        success: function (response) {
+        	console.log(response)
+        },
+        fail: function (error) {
+          console.log(error)
+        },
+      })
+      Kakao.Auth.setAccessToken(undefined)
+    }
+  }  
+</script>
 <%-- 페이스북 로그인 --%>
-window.fbAsyncInit = function() {
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
+<script>
+	window.fbAsyncInit = function() {
 		FB.init({
 			appId : '2878645332429159',
 			cookie : true,
@@ -211,9 +206,11 @@ window.fbAsyncInit = function() {
 			FB.api('/me', function(response) {
 				console.log(response);
 				
-				$("#form-facebook-login input[name=email]").val(response.name);
-				$("#form-facebook-login").trigger("submit");
-								
+				$("#form-facebook input[name=name]").val(response.name);
+				$("#form-facebook input[name=email]").val(response.name);
+				$("#form-facebook").trigger("submit");
+				
+				
 				console.log('Successful login for: ' + response.name);
 				document.getElementById('status').innerHTML =  'Thanks for logging in, ' + response.name + '!';
 			});
