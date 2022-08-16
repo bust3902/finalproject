@@ -241,25 +241,29 @@ $(function () {
 		// 받아온 좌표값은 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
-	    	currentLat = position.coords.latitude;
-	    	currentLong = position.coords.longitude;
-			$(":hidden[name=currentLat]").val(currentLat);
-			$(":hidden[name=currentLong]").val(currentLong);
-			// 화면, 모달창에 현재 위치 주소를 출력한다.
-			getLocationAddress();
-			searchAccos();
-	    });
-		} else {
-		  // 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
-	    	currentLat = 37.564214;
-	    	currentLong = 127.0016985;
-			$(":hidden[name=currentLat]").val(currentLat);
-			$(":hidden[name=currentLong]").val(currentLong);
-			// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
-	      	$("#modal-current-location-address").text('(정보 없음)');
-    	  	$("#home-current-location-address").text('(정보 없음)');
-			searchAccos();
-	  	}
+				// 성공 시 콜백함수
+				console.log(currentLat);
+				console.log(currentLong);
+		    	currentLat = position.coords.latitude;
+		    	currentLong = position.coords.longitude;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
+				// 화면, 모달창에 현재 위치 주소를 출력한다.
+				getLocationAddress();
+				searchAccos();
+	    	}, function(position) {
+				// 실패 시 콜백함수
+				// 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
+				  	currentLat = 37.564214;
+				  	currentLong = 127.0016985;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
+				// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
+				    	$("#modal-current-location-address").text('(정보 없음)');
+				 	  	$("#home-current-location-address").text('(정보 없음)');
+				searchAccos();
+			});
+		}
 	}
 	
 	// 현재 위치 좌표값으로 주소 정보를 조회해 모달 창 화면에 출력하는 함수
