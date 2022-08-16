@@ -32,12 +32,12 @@
 				<dt class="form-text col-3">체크아웃</dt>
 				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
 				<dt class="form-text col-3 mt-2">예약번호</dt>
-				<dd class="form-text col-7">100198</dd> <!-- 난수생성 -->
+				<dd class="form-text col-7">${reservationList.reservationNo }</dd> <!-- 난수생성 -->
 				<dt class="form-text col-3">예약자이름</dt>
-				<dd class="form-text col-7">안재용</dd>
+				<dd class="form-text col-7">${reservationList.resername }</dd>
 				<dt class="form-text col-3">안심번호</dt>
 				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
-				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 01050577576은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${reservationList.resertel }은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
 			</dl>
 	
 			<hr>
@@ -202,16 +202,16 @@ IMP.init("imp72261061");
 
 function cancelPay() {
     jQuery.ajax({
-      "url": "/reservation/refund/"+//IMP_UID로 받을것
-      "type": "POST",
-      "contentType": "application/json",
-      "data": JSON.stringify({
-        "merchant_uid": "1659664324976", // 예: 주문번호
-        "cancel_request_amount": 100, // 환불금액
-        "reason": $("#payType option:selected").val(), // 환불사유
-        "refund_holder": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
-        "refund_bank": "56", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
-        "refund_account": "" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
+      url: "/reservation/refund/",//IMP_UID로 받을것
+      type: "POST",
+      contentType: "application/json",
+      data: JSON.stringify({
+        merchant_uid: "1659664324976", // 예: 주문번호
+        cancel_request_amount: 100, // 환불금액
+        reason: $("#payType option:selected").val(), // 환불사유
+        refund_holder: "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
+        refund_bank: "56", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
+        refund_account: "" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
       }),
       "dataType": "json"
     });

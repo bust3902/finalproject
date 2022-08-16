@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.vo.Accommodation;
@@ -14,6 +15,7 @@ import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
 import kr.co.nc.vo.RoomFacility;
+import kr.co.nc.vo.User;
 
 @Service
 public class AccommodationService {
@@ -81,4 +83,30 @@ public class AccommodationService {
 		return rooms;
 	}
 
+	/**
+	 * 해당 번호를 가진 사용자의, 해당 아이디를 가진 숙소에 대한 찜하기 상태를 변경한다.
+	 * USER_ACCOMMODATION_LIKES 테이블에 해당사용자의 해당숙소 찜하기 정보가 있으면 삭제하고, 없으면 추가한다.
+	 * @param userNo
+	 * @param accoId
+	 */
+	public void changeMyAccoLikeStatus(User loginUser, int accoId) {
+		int userNo = loginUser.getNo();
+		LikeCriteria criteria = new LikeCriteria(userNo, accoId);
+		
+		// isExistUserLikeByAccoId(param)는 존재하면 1을, 존재하지 않으면 0을 반환한다.
+		if (isLikedAcco(criteria)) {
+			 accommodationMapper.deleteUserLikeByAccoId(criteria);
+		} else {
+			accommodationMapper.insertUserLikeByAccoId(criteria);
+		}
+	}
+	
+	/**
+	 * 해당 사용자가 해당 숙소를 찜하기 눌렀는지 여부를 조회해 boolean타입의 값으로 반환한다.
+	 * @param criteria {userNo=사용자번호, id=숙소아이디}가 담긴 객체
+	 * @return
+	 */
+	public boolean isLikedAcco(LikeCriteria criteria) {
+		return accommodationMapper.isExistUserLikeByAccoId(criteria) == 1 ? true : false;
+	}
 }

@@ -36,7 +36,7 @@
 				<div class="mb-3">
 					<label class="form-label">지역</label>
 					<div>
-						<select class="form-select" name="cities" aria-label="select box cities" id="select-cities">
+						<select class="form-select" name="cityId" aria-label="select box cities" id="select-cities">
 							<option selected value="">지역을 선택해주세요</option>
 							<option></option>
 							<c:forEach var="city" items="${cities }">
@@ -45,31 +45,32 @@
 						</select>			
 					</div>
 				</div>
-				
+
 				<!-- 숙소유형(ACCOMMODATION_TYPES 테이블) 선택 폼 -->
 				<div class="mb-3">
 					<label class="form-label">숙소 유형</label>
 					<div>
-						<select class="form-select" aria-label="select box types" name="selectCommonFacility" id="select-common-facility">
-							<option selected value="">숙소 유형을 선택해주세요</option>
-							<option></option>
-							<c:forEach var="type" items="${types }">
-								<option value="${type.id }">${type.name }</option>
-							</c:forEach>
-						</select>			
+						<c:forEach var="type" items="${types }">
+						<div class="form-check form-check-inline">
+							<input class="form-check-input" type="checkbox" name="types" value="${type.id }">
+							<label class="form-check-label" >${type.name }</label>
+						</div>
+						</c:forEach>			
 					</div>
 				</div>
 							
 				<!-- 숙소 공용시설 출력 폼(숙소유형 선택시 출력) -->
 				<div class="mb-5">
 					<label class="form-label">공용 시설 정보</label>
-					<div id="common-facilities-box"></div>
+					<c:forEach var="type" items="${types }">
+						<div id="common-facilities-${type.id }"></div>
+					</c:forEach>
 				</div>
 				
 				<!-- 정보 입력 폼 -->
 				<div class="mb-3">
 					<label class="form-label">숙소명</label>
-					<input class="form-control " type="text" name="name">
+					<input class="form-control " type="text" name="accoName">
 				</div>
 				<div class="mb-5">
 					<label class="form-label">객실 소개 내용</label>
@@ -79,7 +80,7 @@
 				<!-- 태그 입력 폼(acco_tags 테이블에 저장) -->
 				<div class="mb-5">
 					<label class="form-label">태그를 입력해주세요.</label>
-					<input class="form-control mb-2" type="text" id="tags">
+					<input class="form-control mb-2" type="text" id="input-tag">
 					<div class="text-end">
 						<button type="button" class="btn btn-secondary" id="btn-add-tag">추가</button>
 					</div>
@@ -111,30 +112,48 @@
 </div>
 <%@ include file="../common/footer.jsp" %>
 <script type="text/javascript">
-// 공용시설 체크박스 스크립트
-$("#select-common-facility").change(function() {
-	let commonFacility = $(this).val();
-	console.log(commonFacility);
-	
-	let $box = $("#common-facilities-box").empty();
-	$.getJSON("/admin/search", {type:commonFacility}).done(function(cofacilities) {
-		$.each(cofacilities, function(index, cofacility) {
-			let content = '';
-			
-			content += '	<div class="form-check form-check-inline">';
-			content += '		<input class="form-check-input" type="checkbox" name="stringCommonFacilities" value="${"'+cofacility.id+'"}">';
-			content += '		<label class="form-check-label" >${"'+cofacility.name+'"}</label>';
-			content += '	</div>';
+//공용시설 체크박스 스크립트
+$(document).ready(function(){
+    $("input[name=types]").change(function(){
 
-			$box.append(content);
-		})
-	})
-})
+    	let commonFacility = $(this).val();
+    	let $box = $("#common-facilities-"+($(this).val()));
+    	console.log(commonFacility);
+    	
+        if($(this).is(":checked") == true){
+        	$.getJSON("/admin/search", {type:commonFacility}).done(function(cofacilities) {
+        		$.each(cofacilities, function(index, cofacility) {
+        			let content = '';
+        			
+        			content += '	<div class="form-check form-check-inline">';
+        			content += '		<input class="form-check-input" type="checkbox" name="stringCommonFacilities" value="${"'+cofacility.id+'"}">';
+        			content += '		<label class="form-check-label" >${"'+cofacility.name+'"}</label>';
+        			content += '	</div>';
+
+        			$box.append(content);
+        		})
+        	})
+        }
+    });
+});
+
+$(document).ready(function(){
+    $("input[name=types]").change(function(){
+
+    	let commonFacility = $(this).val();
+    	let $box = $("#common-facilities-"+($(this).val()));
+    	console.log(commonFacility);
+    	
+        if($(this).is(":checked") == false){
+        	$box.empty();
+        }
+    });
+});
 
 // 태그 추가 버튼
 $("#btn-add-tag").click(function() {
 	let $div = $("#tag-box");
-	let $input = $("#tags");
+	let $input = $("#input-tag");
 
 	let tagLength = $(":input[name=tags]").length;
 	if (tagLength >= 10) {
@@ -157,7 +176,6 @@ $("#btn-add-tag").click(function() {
 
 $(function() {
 	$("#form-accommodation").submit(function() {
-
 		
 		// 지역 셀렉트박스가 설정되어있는지 체크하기
 		let citiesValue = $("#select-cities option:selected").val();
@@ -174,7 +192,6 @@ $(function() {
 		}
 
 		// 공용시설 체크박스가 체크되어있는지 확인하기
-		
 		let targetFieldLength = $(":input[name=stringCommonFacilities]:checked").length;
 		if (targetFieldLength < 1) {
 			alert("공용시설을 선택해주세요.");
@@ -182,7 +199,7 @@ $(function() {
 		}
 		
 		// 숙소필드에 값이 있는지 체크하기
-		let nameValue = $.trim( $(":input[name=name]").val() );
+		let nameValue = $.trim( $(":input[name=accoName]").val() );
 		if (nameValue === "") {
 			alert("숙소명을 입력해주세요.");
 			return false;

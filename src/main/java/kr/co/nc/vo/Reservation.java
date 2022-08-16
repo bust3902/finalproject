@@ -1,6 +1,5 @@
 package kr.co.nc.vo;
 
-import java.util.List;
 
 
 
@@ -23,7 +22,7 @@ public class Reservation {
 	private String reservationStatus;
 	
 	
-	private User users;
+	private User user;
 	private Accommodation acco;
 	private AccommodationRoom Room;
 }

@@ -306,7 +306,7 @@ function startPay(){
 		buyer_tel : reserTel.value
 	}, function(rsp) {
 		if ( rsp.success ) {
-			jQuery.ajax({
+			$.ajax({
 	            url: "/reservation/complete/"+rsp.imp_uid, // 서버의결제정보를 받는 url
 	            type: 'POST',
 	            headers: { "Content-Type": "application/json" },

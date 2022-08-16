@@ -17,6 +17,20 @@
 <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
 <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+<style type="text/css">
+	.list-thumbnail {
+		height: 150px;
+		object-fit: cover;
+	}
+	
+	.list-overlay {
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+	
+	.list-overlay:hover {
+		background-color: rgba(255, 255, 255, 0.15);
+	}
+</style>
 <title>서울어때</title>
 </head>
 <body>
@@ -181,17 +195,8 @@
 					<button type="button" class="btn btn-light my-auto" id="btn-open-modal-map"><i class="bi bi-map"></i></button>
 				</div>
 				<!-- 검색결과 조회 리스트 -->
-				<div class="row mx-auto">
-					<table class="table">
-						<colgroup>
-							<col width="30%">
-							<col width="*">
-							<col width="20%">
-						</colgroup>
-						<tbody id="tbody-accos">
-							<!-- 숙소 검색결과가 script를 통해 출력됨-->
-						</tbody>
-					</table>
+				<div id="accos-wrapper" class="row px-3 mx-auto">
+					<!-- 숙소 검색결과가 script를 통해 출력됨-->
 				</div>
 			</div>
 		</div>
@@ -439,7 +444,7 @@ $(function () {
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
 		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
-		let $tbody = $("#tbody-accos").empty();
+		let $div = $("#accos-wrapper").empty();
 		// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
 		setMarker(null);
 		accoMarkers = [];
@@ -448,37 +453,30 @@ $(function () {
 		$.getJSON("/accommodations", queryString).done(function(accos) {
 			if (accos.length === 0) {
 				let content = `
-					<tr>
-						<td colspan="3" class="text-center">
-							<p class="py-5">조회된 결과가 없습니다.</p>
-						</td>
-					</tr>
+					<p class="my-5 text-center">조회된 결과가 없습니다.</p>
 				`;
-				$tbody.append(content);
+				$div.append(content);
 			} else {
 				$.each(accos, function(index, acco) {
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
-					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
-					content += '	<td class="align-middle p-3">';
-					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName + '" />';
-					content += '	</td>';
-					content += '	<td class="p-3">';
-					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';
-					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
-					content += '		</p>';
-					content += '		<p>'
-					content += '			<small>' + acco.district + '</small>'
-					content += '		</p>'
-					content += '	</td>';
-					content += '	<td class="align-bottom p-3">';
-					content += '		<p class="text-end text-dark fs-5 fw-bold">' + acco.minPrice.toLocaleString() + '원</p>';
-					content += '	</td>';
+					content += '<div id="card-acco-' + acco.id +'" class="card text-bg-light p-0 rounded-0">';
+					content += '	<img src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName +'" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">';
+					content += '	<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
+					content += '		<div class="my-auto">';
+					content += '		<h5 class="fw-semibold">' + acco.name + '</h5>';
+					content += '			<p class="text-warning">';
+					content += '				<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
+					content += '			</p>';
+					content += '			<small>' + acco.district + '</small>';
+					content += '		</div>';
+					content += '		<p class="text-end fs-4 fw-semibold mt-auto">' + acco.minPrice.toLocaleString() + '<span class="fs-5"> 원 ~</span></p>';
+					content += '	</div>';
+					content += '</div>';
 					
 					// 숙소 정보 html컨텐츠를 tbody에 추가
-					$tbody.append(content);
-					$("#row-acco-"+acco.id).click(function() {
+					$div.append(content);
+					$("#card-acco-"+acco.id).click(function() {
 						location.href = "acco/detail?id=" + acco.id;
 					});
 					

@@ -37,7 +37,7 @@
 		</div>
 		
 		<div class="col-9 bg-white">
-			<form id="form-accommodation-room" class="col p-3" method="post" action="accommodation3" enctype="multipart/form-data">
+			<form id="form-accommodation-room" class="col p-3" method="post" action="accommodation3-room" enctype="multipart/form-data">
 
 				<!-- 정보 입력 폼 -->
 				<div class="row mt-5 p-0">
@@ -110,7 +110,7 @@
 				</div>
 				
 				<!-- 입력된 방 갯수 출력 -->
-				<div id="save-room">저장된 객실 유형 : ${rooms-1 }실</div>
+				<div id="save-room">저장된 객실 유형 : ${rooms }실</div>
 				
 				<!-- 완료 -->
 				<div class="text-end mt-5">

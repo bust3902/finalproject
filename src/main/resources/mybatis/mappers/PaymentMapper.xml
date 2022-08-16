@@ -16,15 +16,30 @@
 		payment_id = #{paymentId}
 </update>
 
-<select id="getPaymentStatus" parameterType="int" resultType="Payment">
-	select
-		p.payment_id as paymentId,
-		p.payment_status as paymentStatus,
-		p.payment_total_price as amount,
-		r.reservation_id as "reservationId"
-	from reservation r, payment p
-	where p.reservation_Id = r.reservation_id
-	and p.reservation_Id = ${value}
+<select id="getPaymentInfo" parameterType="int" resultType="Payment">
+select
+    p.payment_id as paymentId,
+    p.payment_status as paymentStatus,
+    p.payment_total_price as amount,
+    r.reservation_check_in as "reservation.checkIn",
+		r.reservation_check_out as "reservation.checkOut",
+    r.reservation_id as "reservation.reservationId",
+    a.acco_id as "reservation.Accommodation.id",
+    r.room_no as "reservation.AccommodationRoom.no",
+    u.user_name as "reservation.users.name",
+    a.acco_name as "reservation.acco.name",
+    a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
+from reservation r, payment p, users u, ACCOMMODATIONS a
+where p.reservation_Id = r.reservation_id
+and r.acco_id = a.acco_id
+and u.user_no = r.user_no
+and r.user_no = ${value}
 </select>
 
+<insert id="insertPayment">
+	insert into payment
+	(payment_id, payment_status, payment_total_price, reservation_id)
+	values
+	(${paymentId}, ${paymentStatus}, ${amount}, ${reservationId})
+</insert>
 </mapper>
