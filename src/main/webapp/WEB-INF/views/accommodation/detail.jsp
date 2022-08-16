@@ -333,7 +333,7 @@
 					<label class="fw-bold mb-3">편의시설</label>
 					<ul>
 						<!-- 현재 객실의 room facilities 모두 조회해서 출력 -->
-						<li id="modal-content-rofas">전용화장실, 에어컨, 헤어드라이기, 타월, 책상, 화장대, 거울, 옷걸이</li>
+						<li id="modal-content-rofas"></li>
 					</ul>
 				</div>
 				<div class="my-3">
@@ -667,7 +667,7 @@ function searchRooms(currentPage) {
 				$("#link-modal-" + room.no).click(function() {
 					$("#modal-content-name").text(room.name);
 					$("#modal-content-capacity").text(room.capacity);
-					$("#modal-content-description").text(room.description);
+					$("#modal-content-description").text((room.description == null || room.description === "") ? "등록된 정보가 없습니다." : room.description);
 					let rofas = room.roomFacilities;
 					let rofasContent = '';
 					if (rofas.length === 0) {
@@ -678,8 +678,8 @@ function searchRooms(currentPage) {
 						});
 					}
 					$("#modal-content-rofas").text(rofasContent);
-					$("#modal-content-startdate").text(startDayString);
-					$("#modal-content-enddate").text(endDayString);
+					$("#modal-content-startdate").text($(":hidden[name=startDate]").val());
+					$("#modal-content-enddate").text($(":hidden[name=endDate]").val());
 				});
 			});
 			
