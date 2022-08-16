@@ -47,6 +47,7 @@
 		<result column="RESTAURANT_OPENING" property="opening"/>
 		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
 		<result column="RESTAURANT_CLOSE" property="close"/>
+		<result column="RESTAURANT_DISTRICT" property="district"/>
 	</resultMap>
 	
 	<!-- List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo); -->
@@ -143,7 +144,7 @@
 		<where>
 			res.RESTAURANT_DELETE = 'N'
 			<if test="keyword != null">
-				WHERE res.restaurant_no = rtag.restaurant_no (+)
+					AND res.restaurant_no = rtag.restaurant_no (+)
 		            AND res.restaurant_no = rmenu.restaurant_no (+)
                     AND res.restaurant_no = rcat.restaurant_no(+)
                     AND rcat.restaurant_cat_id =  rcatname.restaurant_cat_id (+)
@@ -168,16 +169,16 @@
 		</where>
 		<choose>
 			<when test="sort == 'point'">
-				order by RESTAURANT_REVIEW_POINT desc
+				order by res.RESTAURANT_REVIEW_POINT desc
 			</when>
 			<when test="sort == 'count'">
-				order by RESTAURANT_REVIEW_COUNT desc
+				order by res.RESTAURANT_REVIEW_COUNT desc
 			</when>
 			<when test="sort == 'like'">
-				order by RESTAURANT_LIKE_COUNT desc
+				order by res.RESTAURANT_LIKE_COUNT desc
 			</when>
 			<when test="sort == 'dist'">
-				order by distance asc
+				order by res.RESTAURANT_DISTRICT asc
 			</when>
 		</choose>
 	</select>

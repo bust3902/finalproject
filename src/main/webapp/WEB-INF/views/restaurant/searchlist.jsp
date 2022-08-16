@@ -108,16 +108,16 @@
 			<div class="col-8">
 				<div class="d-flex flex-wrap mx-3 mb-3">
 					<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
-						<input type="radio" class="btn-check" id="btnradio11" name="sort" value="rate" checked>
+						<input type="radio" class="btn-check" id="btnradio11" name="sort" value="point" checked>
 						<label class="btn btn-secondary" for="btnradio11">평점 순</label>
 		
-						<input type="radio" class="btn-check" id="btnradio22" name="sort" value="review">
+						<input type="radio" class="btn-check" id="btnradio22" name="sort" value="count">
 						<label class="btn btn-secondary" for="btnradio22">리뷰 많은 순</label>
 						
 						<input type="radio" class="btn-check" id="btnradio33" name="sort" value="like">
 						<label class="btn btn-secondary" for="btnradio33">좋아요 많은 순</label>
 						
-						<input type="radio" class="btn-check" id="btnradio44" name="sort" value="distance">
+						<input type="radio" class="btn-check" id="btnradio44" name="sort" value="dist">
 					  	<label class="btn btn-secondary" for="btnradio44">거리 순</label>
 					</div>
 				</div>
@@ -358,33 +358,44 @@ $("#locationButton").click(function() {
 				`;
 				$tbody.append(content);
 			} else {
-				$.each(accos, function(index, acco) {
-					let content = '<tr id="row-rest-' + rest.name +'" style="cursor: pointer;"/>';
+				$.each(rests, function(index, rest) {
+					let content = '<tr id="row-rest-' + rest.no +'" style="cursor: pointer;"/>';
 					content += '		<td class="align-middle p-3">';
-					content += '			<img class="img-thumbnail list-image" alt="thumbnail" src="' + rest.imgname + '" />';
+					// content += '			<img class="img-thumbnail list-image" alt="thumbnail" src="' + rest.imgname + '" />';
 					content += '		</td>'
 					content += '		<td class="p-3">';
-					content += ''
-					content += ''
-					content += ''
+					content += '		<h5 class="fw-bold text-dark">' + rest.name +'</h5>';
+					content += '		<p class="text-warning">';
+					content += '			<span class="badge bg-warning">' + rest.reviewPoint.toFixed(1) + '</span><strong class="ms-2">' +' (' + rest.reviewCount  +')</strong>';
+					content += '		</p>';
+					content += '		<p>'
+					content += '			<small>' + rest.district + '</small>'
+					content += '		</p>'
+					content += '	</td>';
+					content += '	<td class="align-bottom p-3">';
+					content += '		<p class="text-end text-dark fs-5 fw-bold">' + rest.tel + '</p>';
+					content += '	</td>';
 					
 					
 					$tbody.append(content);
-					$("#row-rest-"+rest.id).click(function() {
-						location.href = "restaurant/detail?no=" + rest.no;
+					$("#row-rest-"+rest.no).click(function() {
+						location.href = "detail?no=" + rest.no;
 					});
 					
 					let markerPosition = new kakao.maps.LatLng(rest.latitude, rest.longitude);
 					let marker = new kakao.maps.Marker({
 					    position: markerPosition,
-					    image: accoMarkerImage
+					    image: restMarkerImage
 					});
 					
 					// 마커에 click 이벤트를 등록
 					kakao.maps.event.addListener(marker, 'click', function() {
+						// 상세조회 페이지로 이동
 						location.href="restaurant/detail?no=" + rest.no;
 					});
-				})
+					restaurantMakers.push(marker);
+				});
+				setMarker(map);
 			}
 		});
 	}
@@ -395,6 +406,11 @@ $("#locationButton").click(function() {
 	 $("input[name=sort]").click(function() {
 		 searchRestaurants();
 	 });
+	
+	$("select[name=city]").change(function() {
+		searchRestaurants();
+		changeMapCenter(map);
+	});
 	
 </script>
 </body>

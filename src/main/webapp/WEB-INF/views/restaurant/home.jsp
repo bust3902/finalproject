@@ -499,13 +499,6 @@
 		
 		location.href="/searchlist.jsp?keyword=" + keyword;
 	};
-	
-	function searchRestaurants() {
-		let queryString = $("#form-search").serialize();
-		
-		let $tbody = $("#")
-	}
-
 
 </script>
 </body>
