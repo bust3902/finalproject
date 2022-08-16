@@ -39,6 +39,8 @@ public class HomeController {
 	public String home(Model model) {
 		// 홈 메뉴에 출력할 숙소 유형 정보를 전달한다.
 		model.addAttribute("accoTypes", accommodationService.getAllTypes());
+		// 홈 화면에 출력할 인기 숙소 정보를 전달한다.
+		model.addAttribute("bestAccos", accommodationService.getBestAccommodations(5));
 		return "home";
 	}
 	
