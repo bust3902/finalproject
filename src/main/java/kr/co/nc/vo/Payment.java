@@ -14,7 +14,8 @@ public class Payment {
 	private String paymentId;
 	private String paymentStatus;
 	private int paymentTotalPrice;
-	
 	private String reservationNo;
 	
+	private Reservation reservation;
+	private User user;
 }
