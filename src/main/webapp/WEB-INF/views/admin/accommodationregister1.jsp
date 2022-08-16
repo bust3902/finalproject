@@ -207,9 +207,9 @@
                         // 주소 히든 폼에 입력
                 	    $('input[name=address]').attr('value', addr);
                         // 위도 히든 폼에 입력
-                	    $('input[name=latitude]').attr('value', coords.La);
+                	    $('input[name=longitude]').attr('value', coords.La);
                         // 경도 히든 폼에 입력
-						$('input[name=longitude]').attr('value', coords.Ma);
+						$('input[name=latitude]').attr('value', coords.Ma);
                     }
                 });
             }

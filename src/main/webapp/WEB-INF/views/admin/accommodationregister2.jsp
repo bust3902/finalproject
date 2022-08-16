@@ -112,27 +112,7 @@
 </div>
 <%@ include file="../common/footer.jsp" %>
 <script type="text/javascript">
-// 공용시설 체크박스 스크립트
-/*
-$("#select-common-facility").change(function() {
-	let commonFacility = $(this).val();
-	console.log(commonFacility);
-	
-	let $box = $("#common-facilities-box").empty();
-	$.getJSON("/admin/search", {type:commonFacility}).done(function(cofacilities) {
-		$.each(cofacilities, function(index, cofacility) {
-			let content = '';
-			
-			content += '	<div class="form-check form-check-inline">';
-			content += '		<input class="form-check-input" type="checkbox" name="stringCommonFacilities" value="${"'+cofacility.id+'"}">';
-			content += '		<label class="form-check-label" >${"'+cofacility.name+'"}</label>';
-			content += '	</div>';
-
-			$box.append(content);
-		})
-	})
-})
-*/
+//공용시설 체크박스 스크립트
 $(document).ready(function(){
     $("input[name=types]").change(function(){
 
@@ -196,7 +176,6 @@ $("#btn-add-tag").click(function() {
 
 $(function() {
 	$("#form-accommodation").submit(function() {
-
 		
 		// 지역 셀렉트박스가 설정되어있는지 체크하기
 		let citiesValue = $("#select-cities option:selected").val();
@@ -213,7 +192,6 @@ $(function() {
 		}
 
 		// 공용시설 체크박스가 체크되어있는지 확인하기
-		
 		let targetFieldLength = $(":input[name=stringCommonFacilities]:checked").length;
 		if (targetFieldLength < 1) {
 			alert("공용시설을 선택해주세요.");
