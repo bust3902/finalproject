@@ -18,7 +18,7 @@
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="row mb-3">
 		<div class="col-8">
-			<form action="/complete" method="post">
+			<form action="reservation/complete" method="post" id="form-reserv">
 				<div class="my-3">
 					<p><strong>예약자 정보</strong></p>
 					<label class="form-label" name="reserName">예약자 이름</label>
@@ -75,19 +75,23 @@
 					<div class="col mx-2">
 						<div class="my-5 mx-3">
 							<dl>
-								<dt id="accoName">보코 서울 강남</dt><dt id="accoNo" style="display:none;">005</dt>
-								<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span><dd id="roomNo" style="display:none;">001</dd>	
+								<dt id="accoName">보코 서울 강남</dt>
+								<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>
 								<dt class="col-3 form-text">체크인</dt>
 								<dd id="checkIn">22.07.28 15:00</dd>
-								<dd class="form-text">체크아웃</dd>	
+								<dd class="form-text">체크아웃</dd>
 								<dd id="checkOut">22.07.29 12:00</dd>
 							</dl>
+							<input type="hidden" id="accoId" name="accoId" value="54329">
+							<input type="hidden" id="roomNo" name="roomNo" value="251844">
+							<input type="hidden" id="checkIn" name="checkIn" value="22.07.28 15:00">
+							<input type="hidden" id="checkOut" name="checkOut" value="22.07.29 12:00">
 						</div>
 					<hr>
 					</div>
 					<div class="my-3 mx-3">
 						<p><strong>총 결제 금액</strong><small>(VAT포함)</small></p>
-						<h4><strong class="text-danger">99000원</strong></h4>
+						<h4><strong class="text-danger" name="amount">99000원</strong></h4>
 						<label><small>
 							<li class="mx-2">해당 객실가는세금, 봉사료가 포함된 금액입니다.</li>
 							<li class="mx-2">결제완료 후 <span class="text-danger">예약자</span> 이름으로 바로 <span class="text-danger">체크인</span> 하시면 됩니다.</li>
@@ -275,6 +279,8 @@ let reserName = document.getElementById("reserName");
 let reserTel = document.getElementById("reserTel");
 let checkIn = document.getElementById("checkIn");
 let checkOut = document.getElementById("checkOut");
+let roomNo = document.getElementById("roomNo");
+let accoId = document.getElementById("accoId");
 
 // 필수 규정 모달
 function openRefundModal() {
@@ -284,7 +290,7 @@ function openinfo1Modal() {
 	info1Modal.show();
 }
 function openinfo2Modal() {
-	info2Modal.show();
+	info2Modal.show();	
 }
 
 // api 포트번호
@@ -296,38 +302,28 @@ function startPay(){
 	IMP.request_pay({
 		pg: $("#payType option:selected").val(), // 셀렉트창에서 pg사를 선택 
 	    pay_method: "card", 
-	    // $(:input:select[name=payType]:checked").val(),
 		merchant_uid : new Date().getTime(),
 		name : '보코 서울 강남',
 		// 숙소명 : accoName.value
 		amount : 99000,
 		// 가격 : accoPrice.value
 		buyer_name : reserName.value,
-		buyer_tel : reserTel.value
+		buyer_tel : reserTel.value,
+		imp_uid : "imp_00"+new Date()
 	}, function(rsp) {
 		if ( rsp.success ) {
-			$.ajax({
-	            url: "/reservation/complete/"+rsp.imp_uid, // 서버의결제정보를 받는 url
-	            type: 'POST',
-	            headers: { "Content-Type": "application/json" },
-	            data: JSON.stringify({
-	                imp_uid: rsp.imp_uid,
-	                merchantUid: rsp.merchant_uid,
-	        		reserName : reserName.value,
-	        		reserTel : reserTel.value,
-	        		amount : rsp.paid_amount,
-	                checkIn : checkIn.textContent,
-	        		checkOut : checkOut.textContent,
-	        		roomNo : roomNo.textContent,
-	        		accoNo : accoNo.textContent
-	        		
-	            })
-	            
-	        }).done(function (data) {
-	          // 가맹점 서버 결제 API 성공시 로직
-	         // location.href="http://localhost/reservation/complete/"+rsp.imp_uid;
-	        })
-	           
+			
+				$("input[name=impUid]").val(rsp.imp_uid);
+				$("input[name=merchantUid]").val(rsp.merchant_uid);
+				$("input[name=amount]").val(rsp.paid_amount);
+				$("input[name=reserName]").val(reserName.value);
+				$("input[name=reserTel]").val(reserTel.value);
+				$("input[name=checkIn]").val(checkIn.value);
+				$("input[name=checkOut]").val(checkOut.value);
+				$("input[name=accoId]").val(accoId.value);
+				$("input[name=roomNo]").val(roomNo.value);
+				
+				document.getElementById("form-reserv").submit();
 	      } else {
 	        alert("결제에 실패하였습니다. 에러 내용: " +  rsp.error_msg);
 	      }

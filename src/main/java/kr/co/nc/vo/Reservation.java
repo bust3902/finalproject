@@ -12,14 +12,14 @@ import lombok.ToString;
 @ToString
 public class Reservation {
 
-	private String reservationNo;
+	private int reservationNo;
 	private String reserName;
 	private String reserTel;
 	private String amount;
 	private String checkIn;
 	private String checkOut;
-	private String paymentStatus;
-	private String reservationStatus;
+	private int roomNo;
+	private int accoId;
 	
 	
 	private User user;
