@@ -18,8 +18,7 @@ public interface ReservationMapper {
 	
 
 	// 예약번호로 예약정보 가져오기
-	Reservation getReserveInfoByReserveId(String reservationNo);
-
+	Reservation getReserveInfoByReserveId(int reservationNo);
 
 
 }

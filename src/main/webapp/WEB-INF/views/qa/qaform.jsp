@@ -104,6 +104,7 @@
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 <!-- 카테고리 미선택 경고창 출력 팝업 -->
 <div id="modal-danger" class="modal fade" >
 	<div class="modal-dialog modal-dialog-centered">

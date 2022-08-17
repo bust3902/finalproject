@@ -5,7 +5,6 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.nc.vo.Payment;
-import kr.co.nc.web.form.PaymentRequest;
 
 @Mapper
 public interface PaymentMapper {
@@ -15,7 +14,12 @@ public interface PaymentMapper {
 	
 	// 결제정보 가져오기
 	List<Payment> getPaymentInfo(int userNo);
+	// 예약완료된
+	List<Payment> getReadytoReserveInfoByReserveId(int userNo);
+	// 예약취소된 예약정보가져오기
+	List<Payment> getRefundReserveInfoByReserveId(int userNo);
 	
 	// 결제 정보 저장하기
-	void insertPayment(PaymentRequest paymentRequest);
+	void insertPayment(Payment payment);
+	
 }

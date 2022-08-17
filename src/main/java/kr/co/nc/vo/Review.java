@@ -31,6 +31,8 @@ public class Review {
 	private int point;			// 리뷰 평점
 	private int roomNo;			// 방 번호
 	
+	private List<ReviewCategory> reviewCategories;
+	
 	private List<ReviewRestaurantTag> reviewRestaurantTags;		// 음식점 리뷰 태그
 	
 	// 화면 표현 시 사용하는 필드
