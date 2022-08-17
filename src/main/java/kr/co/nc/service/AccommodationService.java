@@ -1,6 +1,8 @@
 package kr.co.nc.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,7 @@ import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
+import kr.co.nc.vo.Pagination;
 import kr.co.nc.vo.RoomFacility;
 import kr.co.nc.vo.User;
 
@@ -66,7 +69,11 @@ public class AccommodationService {
 		return accommodation;
 	}
 	
-	// 숙소번호에 따른 모든 객실정보 조회 (예약 가능 여부 포함)
+	/**
+	 * 숙소 번호에 따른 모든 객실정보 조회 (예약 가능 여부 포함)
+	 * @param criteria
+	 * @return
+	 */
 	public List<AccommodationRoom> getAllRoomDetailsByAccoId(RoomCriteria criteria) {
 		// 요청파라미터로 획득하는 값: 숙소아이디, 검색기간(시작날짜, 종료날짜)
 		int accoId = criteria.getAccoId();
@@ -83,6 +90,33 @@ public class AccommodationService {
 		return rooms;
 	}
 
+	/**
+	 * 숙소 번호에 따른 객실정보를 페이징 번호에 맞게 조회 (예약 가능 여부 포함)
+	 * @param criteria
+	 * @return
+	 */
+	public List<AccommodationRoom> getRoomDetailsByAccoIdwithPagination(RoomCriteria criteria) {
+		// 요청파라미터로 획득하는 값: 숙소아이디, 검색기간(시작날짜, 종료날짜), 현재페이지번호
+		int accoId = criteria.getAccoId();
+		// pagination 객체 획득
+		Pagination pagination = generatePagination(accoId, criteria.getCurrentPage());
+		// pagination의 beginIndex, endIndex 값 사용해서 리스트 획득
+		Map<String, Object> param = new HashMap<>();
+		param.put("accoId", accoId);
+		param.put("beginIndex", pagination.getBeginIndex());
+		param.put("endIndex", pagination.getEndIndex());
+		List<AccommodationRoom> rooms = accommodationMapper.getRoomsByAccoIdwithPagination(param);
+		// 각 객실 별로 예약 가능 재고 조회해서 객실 객체에 저장
+		for (AccommodationRoom room : rooms) {
+			// 객실 별 조회를 위해 기준 객체에 객실 번호를 저장해서 전달 (roomNo가 0이어도 조회결과가 없음으로 나와서 0 반환되므로 문제 x)
+			// jsp에서는 stock이 양의 정수인 객실만 예약버튼을 활성화시킨다.
+			criteria.setRoomNo(room.getNo());
+			int stock = accommodationMapper.getAvailableRoomStock(criteria);
+			room.setStock(stock);
+		}
+		return rooms;
+	}
+	
 	/**
 	 * 해당 번호를 가진 사용자의, 해당 아이디를 가진 숙소에 대한 찜하기 상태를 변경한다.
 	 * USER_ACCOMMODATION_LIKES 테이블에 해당사용자의 해당숙소 찜하기 정보가 있으면 삭제하고, 없으면 추가한다.
@@ -109,4 +143,28 @@ public class AccommodationService {
 	public boolean isLikedAcco(LikeCriteria criteria) {
 		return accommodationMapper.isExistUserLikeByAccoId(criteria) == 1 ? true : false;
 	}
+	
+	/**
+	 * 리뷰 평점이 높은 숙소 정보를 상위 n건 조회해서 반환한다.
+	 * @param count
+	 * @return
+	 */
+	public List<Accommodation> getBestAccommodations(int count) {
+		return accommodationMapper.getBestAccommodations(count);
+	}
+
+	/**
+	 * 숙소의 객실 정보 행 수를 조회해서, 현재 페이지에 대한 pagination 객체를 반환한다.
+	 * @param accoId
+	 * @param currentPage
+	 * @return
+	 */
+	public Pagination generatePagination(int accoId, int currentPage) {
+		int totalRows = accommodationMapper.getTotalRowsOfRoomsByAccoId(accoId);
+		Pagination pagination = new Pagination(totalRows, currentPage);
+		// 페이징에 필요한 값들 초기화
+		pagination.init();
+		return pagination;
+	}
+	
 }

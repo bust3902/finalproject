@@ -79,4 +79,11 @@ public class AccommodationController {
 		return "/accommodation/detail";
 	}
 	
+	@GetMapping(path = "/best")
+	public String best(Model model) {
+		// 가장 평점이 높은 숙소 상위 5건 조회
+		model.addAttribute("bests", accommodationService.getBestAccommodations(5));
+		return "/accommodation/best";
+	}
+	
 }

@@ -12,14 +12,57 @@
 	.home{
 		display: block;
 	}
+	
+	.carousel-img {
+		height: 420px;
+		object-fit: cover;
+	}
+	
+	.card-img-overlay {
+		background-color: rgba(0, 0, 0, 0.3);
+	}
+	
+	.card-img-overlay:hover {
+		background-color: rgba(255, 255, 255, 0.75);
+	}
+	
+	.acco-info {
+		display: none!important;
+	}
+	
+	.card-img-overlay:hover .acco-info {
+		display: block!important;
+	}
+	
+	.card-img-overlay:hover #link-best {
+		color: black!important;
+	}
+	
 </style>
 </head>
 <body>
 <%@ include file="common/nav.jsp" %>
 <div class="home" >
-<div class="container my-3">
-		<div class="row">
-			<a href="#" class="d-flex justify-content-center my-5"><img alt="" src=""></a>
+<div class="container">
+		<div class="row mt-5">
+			<div id="carouselBestAccos" class="carousel slide" data-bs-ride="carousel">
+				<div class="carousel-inner">
+					<c:forEach var="acco" varStatus="status" items="${bestAccos }">
+						<div data-acco-id="${acco.id }" class="carousel-item ${status.first? 'active' : '' }"  data-interval="20000">
+							<img src="/resources/images/acco/thumbnail/${acco.thumbnailImageName }" class="carousel-img card-img w-100">
+							<div class="card-img-overlay d-flex justify-content-between p-3" onclick="location.href='acco/detail?id=${acco.id}'">
+								<p class="acco-info text-dark fw-light p-3 mt-auto">
+									<span class="fs-3">${acco.name }</span>
+									<small class="ms-3">${acco.district }</small>
+								</p>
+								<a class="text-decoration-none ms-auto" href="acco/best">
+									<small id="link-best" class="text-light fw-light">지금 인기있는 숙소를 확인해보세요</small>
+								</a>
+							</div>
+						</div>
+					</c:forEach>
+				</div>
+			</div>
 		</div>
 		<div class="d-flex flex-wrap justify-content-evenly" style="min-height: 350px;">
 			<!-- 숙소유형별 조회 아이콘은 DB에서 숙소유형 조회해서 출력 -->

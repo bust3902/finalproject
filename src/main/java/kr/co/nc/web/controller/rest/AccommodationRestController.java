@@ -12,6 +12,7 @@ import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
+import kr.co.nc.vo.Pagination;
 import kr.co.nc.vo.User;
 
 /**
@@ -34,9 +35,16 @@ public class AccommodationRestController {
 	// 검색 조건(날짜)에 맞는 객실 리스트 반환
 	@GetMapping(path = "/rooms")
 	public List<AccommodationRoom> rooms(RoomCriteria roomCriteria) {
-		return accommodationService.getAllRoomDetailsByAccoId(roomCriteria);
+		return accommodationService.getRoomDetailsByAccoIdwithPagination(roomCriteria);
 	}
 	
+	// 객실 정보에 대한 pagination 객체 반환
+	@GetMapping(path = "/pagination")
+	public Pagination pagination(int accoId, int currentPage) {
+		return accommodationService.generatePagination(accoId, currentPage);
+	}
+	
+	// 숙소 찜하기 토글
 	@GetMapping(path = "/changelike")
 	public boolean like(@LoginUser User loginUser, int accoId) {
 		try {
