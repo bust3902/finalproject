@@ -1,5 +1,6 @@
 package kr.co.nc.web.controller;
 
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.UserService;
 import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.User;
+import kr.co.nc.web.form.FacebookLoginForm;
 import kr.co.nc.web.form.KakaoLoginForm;
 import kr.co.nc.web.form.UserRegisterForm;
 import lombok.extern.slf4j.Slf4j;
@@ -163,10 +165,23 @@ public class HomeController {
 		
 	// 페이스북 로그인 요청을 처리한다.
 	@PostMapping("/facebook-login")
-	public String facebookLogin(String email, String name) {
+	public String facebookLogin(FacebookLoginForm form) {
+		log.info("페이스북 로그인 인증정보: " + form);
 		
-		User user = userService.facebook(email, name);
-		SessionUtils.addAttribute("LOGIN_USER", user);
+		User user = User.builder()				
+						.name(form.getName())
+						.email(form.getEmail())
+						.loginType(FACEBOOK_LOGIN_TYPE)
+						.build();
+		
+		User savedUser = userService.loginWithfacebook(user);
+		
+		if (savedUser != null) {
+			SessionUtils.addAttribute("LOGIN_USER", savedUser);
+		} else {
+			SessionUtils.addAttribute("LOGIN_USER", user);
+		}
+		log.info("페이스북 로그인 완료");
 
 		return "redirect:/";
 	}
