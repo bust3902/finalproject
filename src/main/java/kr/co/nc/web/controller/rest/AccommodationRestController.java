@@ -1,6 +1,8 @@
 package kr.co.nc.web.controller.rest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -8,8 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.service.AccommodationService;
+import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.Pagination;
@@ -25,6 +29,9 @@ public class AccommodationRestController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	// 검색 조건에 맞는 숙소 리스트 반환
 	@GetMapping(path = "/accommodations")
@@ -42,6 +49,19 @@ public class AccommodationRestController {
 	@GetMapping(path = "/pagination")
 	public Pagination pagination(int accoId, int currentPage) {
 		return accommodationService.generatePagination(accoId, currentPage);
+	}
+	
+	// 해당 숙소에 대한 리뷰 리스트, 평점분포 집계결과 반환
+	@GetMapping(path = "/reviews")
+	public Map<String, Object> reviews(int accoId) {
+		// 두 가지 정보를 map객체에 담아 반환한다.
+		Map<String, Object> reviewdatas = new HashMap<>();
+		// 리뷰 리스트
+		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
+		reviewdatas.put("reviews", reviewService.getReviewsByCriteria(criteria));
+		// 평점분포 집계결과 객체
+		reviewdatas.put("chartData", reviewService.getReviewPointChartByAccoId(accoId));
+		return reviewdatas;
 	}
 	
 	// 숙소 찜하기 토글

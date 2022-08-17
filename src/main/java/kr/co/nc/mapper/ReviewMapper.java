@@ -1,6 +1,7 @@
 package kr.co.nc.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -20,4 +21,9 @@ public interface ReviewMapper {
 	List<Review> getReviewsByCriteria(ReviewCriteria criteria);
 	// 해당 식당 번호를 가지는 식당 리뷰 태그 조회
 	List<String> getAllReviewTagsByRestaurantNo(int no);
+
+	// 해당 숙소 번호를 가지는 숙소의 리뷰 평점 분포 집계 
+	// list에는 {POINT=1, COUNT=0}, {POINT=2, COUNT=7}, ... , {POINT=5, COUNT=3} 과 같이 map 객체들이 담겨서 반환된다.
+	List<Map<String, Integer>> countReviewPointsByAccoId(int accoId);
+
 }
