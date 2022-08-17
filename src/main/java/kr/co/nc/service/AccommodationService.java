@@ -1,8 +1,6 @@
 package kr.co.nc.service;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -100,12 +98,10 @@ public class AccommodationService {
 		int accoId = criteria.getAccoId();
 		// pagination 객체 획득
 		Pagination pagination = generatePagination(accoId, criteria.getCurrentPage());
-		// pagination의 beginIndex, endIndex 값 사용해서 리스트 획득
-		Map<String, Object> param = new HashMap<>();
-		param.put("accoId", accoId);
-		param.put("beginIndex", pagination.getBeginIndex());
-		param.put("endIndex", pagination.getEndIndex());
-		List<AccommodationRoom> rooms = accommodationMapper.getRoomsByAccoIdwithPagination(param);
+		// pagination의 beginIndex, endIndex 값 사용해서 해당 페이지에 맞는 정보만 조회
+		criteria.setBeginIndex(pagination.getBeginIndex());
+		criteria.setEndIndex(pagination.getEndIndex());
+		List<AccommodationRoom> rooms = accommodationMapper.getRoomsByAccoIdwithPagination(criteria);
 		// 각 객실 별로 예약 가능 재고 조회해서 객실 객체에 저장
 		for (AccommodationRoom room : rooms) {
 			// 객실 별 조회를 위해 기준 객체에 객실 번호를 저장해서 전달 (roomNo가 0이어도 조회결과가 없음으로 나와서 0 반환되므로 문제 x)

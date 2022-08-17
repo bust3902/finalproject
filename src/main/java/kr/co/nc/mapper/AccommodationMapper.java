@@ -1,7 +1,6 @@
 package kr.co.nc.mapper;
 
 import java.util.List;
-import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -70,5 +69,5 @@ public interface AccommodationMapper {
 	// 해당 숙소의 객실정보 행 수 조회
 	int getTotalRowsOfRoomsByAccoId(int accoId);
 	// 특정 숙소의 객실정보를 특정 페이지번호에 맞게 조회
-	List<AccommodationRoom> getRoomsByAccoIdwithPagination(Map<String, Object> param);
+	List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria);
 }
