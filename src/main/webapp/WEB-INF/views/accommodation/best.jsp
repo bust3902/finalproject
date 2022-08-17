@@ -28,9 +28,14 @@
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
+<div class="row bg-secondary" style="height:13vh;">
+	<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
+		<h3 class="text-white ps-0 mb-3">지금 가장 핫한 숙소</h3>
+	</div>
+</div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="row px-0 pt-5 pb-3">
-		<h3>지금 가장 핫한 숙소</h3>
+		<h3></h3>
 	</div>
 	<!-- 검색결과 조회 리스트 -->
 	<div id="accos-wrapper" class="row px-3 my-5">
