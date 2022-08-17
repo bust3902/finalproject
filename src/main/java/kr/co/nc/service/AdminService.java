@@ -10,8 +10,6 @@ import kr.co.nc.mapper.AdminMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.Restaurant;
-import kr.co.nc.vo.RestaurantCategory;
-import kr.co.nc.vo.RestaurantMenu;
 import kr.co.nc.vo.RestaurantTag;
 import kr.co.nc.web.form.AccoCommonFacilityRegisterForm;
 import kr.co.nc.web.form.AccoDetailImageNamesRegisterForm;
@@ -142,5 +140,10 @@ public class AdminService {
 		for (String category : categories) {
 			adminMapper.insertRestaurantCategories(new RestaurantCategoryRegisterForm(restaurant.getNo(), category));
 		}
+	}
+	
+	// 검색조건에 맞는 모든 숙소정보를 반환
+	public List<Accommodation> searchAccommodation(String keyword) {
+		return adminMapper.getSearchAccommodations(keyword);
 	}
 }

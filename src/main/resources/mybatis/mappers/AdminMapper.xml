@@ -151,4 +151,44 @@
 		values
 		(#{no}, #{category})
 	</insert>
+	
+	<!-- 숙소 관련 resultMap -->
+	<resultMap type="Accommodation" id="AccommodationResultMap">
+		<id column="acco_id" property="id"/>
+		<result column="acco_name" property="name"/>
+		<result column="acco_district" property="district"/>
+		<result column="acco_address" property="address"/>
+		<result column="acco_latitude" property="latitude"/>
+		<result column="acco_longitude" property="longitude"/>
+		<result column="acco_introduce_comment" property="introduceComment"/>
+		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
+		<result column="acco_detail_description" property="detailDescription"/>
+		<result column="acco_deleted" property="deleted"/>
+		<result column="city_id" property="cityId"/>
+	</resultMap>
+	
+	<!-- 
+	<resultMap type="Accommodation" id="ExtendsAccommodationListResultMap" extends="AccommodationResultMap">
+		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
+		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
+		<collection column="acco_id" property="images" select="getImagesByAccoId"></collection>
+	</resultMap>
+	 -->
+	
+	<!-- 
+		List<Accommodation> getSearchAccommodations(String keyword);
+		키워드로 숙소를 검색(숙소명, 지역(시/군/구), 주소로 검색)
+	 -->
+	<select id="getSearchAccommodations" parameterType="string" resultType="Accommodation">
+		select acco_id as id, acco_name as name, acco_district as district, 
+			   acco_address as address, acco_latitude as latitude, acco_longitude as longitude,
+			   acco_thumbnail_image as thumbnailImageName, acco_deleted as deleted, 
+			   city_id as cityId, acco_introduce_comment as introduceComment,
+			   acco_detail_description as detailDescription
+		from accommodations
+		where acco_deleted = 'N'
+		and acco_name like '%' || #{value} || '%'
+		or acco_district like '%' || #{value} || '%'
+		or acco_address like '%' || #{value} || '%'
+	</select>
 </mapper>

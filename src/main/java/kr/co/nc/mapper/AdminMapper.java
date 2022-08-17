@@ -59,4 +59,7 @@ public interface AdminMapper {
 
 	// 음식점 카테고리 정보 저장
 	void insertRestaurantCategories(RestaurantCategoryRegisterForm restaurantCategoryRegisterForm);
+	
+	// 키워드로 숙소 정보 검색
+	List<Accommodation> getSearchAccommodations(String keyword);
 }
