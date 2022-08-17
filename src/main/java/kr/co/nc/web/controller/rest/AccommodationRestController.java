@@ -8,11 +8,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.service.AccommodationService;
+import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.Pagination;
+import kr.co.nc.vo.Review;
 import kr.co.nc.vo.User;
 
 /**
@@ -25,6 +28,9 @@ public class AccommodationRestController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+	
+	@Autowired
+	private ReviewService reviewService;
 	
 	// 검색 조건에 맞는 숙소 리스트 반환
 	@GetMapping(path = "/accommodations")
@@ -42,6 +48,13 @@ public class AccommodationRestController {
 	@GetMapping(path = "/pagination")
 	public Pagination pagination(int accoId, int currentPage) {
 		return accommodationService.generatePagination(accoId, currentPage);
+	}
+	
+	// 해당 숙소에 대한 리뷰 리스트 반환
+	@GetMapping(path = "/reviews")
+	public List<Review> reviews(int accoId) {
+		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
+		return reviewService.getReviewsByCriteria(criteria);
 	}
 	
 	// 숙소 찜하기 토글

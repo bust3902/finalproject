@@ -9,9 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.co.nc.criteria.LikeCriteria;
-import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.service.AccommodationService;
-import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.User;
 
 @Controller
@@ -21,8 +19,6 @@ public class AccommodationController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
-	@Autowired
-	private ReviewService reviewService;
 
 	// 숙소 검색 페이지 뷰 반환
 	@GetMapping(path = "")
@@ -68,10 +64,6 @@ public class AccommodationController {
 		
 		// 숙소 정보
 		model.addAttribute("detail", accommodationService.getAccommodationDetailById(accoId));
-		// 리뷰 정보
-		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
-		model.addAttribute("reviews", reviewService.getReviewsByCriteria(criteria));
-
 		// 로그인 상태일 경우 찜하기 여부를 조회해서 그 값을 전달하고, 로그아웃 상태일 경우 무조건 false를 전달한다.
 		User loginUser = (User) model.getAttribute("LOGIN_USER");
 		model.addAttribute("isLiked", (loginUser != null ? accommodationService.isLikedAcco(new LikeCriteria(loginUser.getNo(), accoId)) : false));

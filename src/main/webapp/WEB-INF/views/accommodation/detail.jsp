@@ -123,8 +123,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- 숙소명, 주소, 한마디 소개
-			TO DO : 좋아요 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장-->
+		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장됨-->
 		<div class="col-6">
 			<div class="d-flex justify-content-between">
 				<h4 id="acco-name" class="fw-semibold text-dark p-1 me-3" style="word-break: keep-all;">${detail.name } </h4>
@@ -238,55 +237,9 @@
 						<span class="text-muted mx-1">${detail.reviewRate }</span>
 					</div>
 					<p>전체 리뷰 ${detail.reviewCount }</p>
+					<!-- TO DO : 리뷰 평점별 집계 -->
+					<!--  윈도우 바닥으로 스크롤을 내리면 리뷰가 출력된다. -->
 				</div>
-				<c:choose>
-					<c:when test="${empty reviews}">
-						<div class="p-5 border-bottom">
-							등록된 리뷰가 없습니다.
-						</div>
-					</c:when>
-					<c:otherwise>
-						<!-- 리뷰 리스트 출력 -->
-						<!-- TODO: 페이징 처리 -->
-						<c:forEach var="review" items="${reviews }">
-							<div class="row p-5 border-bottom">
-								<!-- TODO: 추후 프로필이미지 등록 구현한다면 맞는 이미지 파일명 출력하기 -->
-								<div class="col-2 profile-image-wrapper rounded-circle">
-									<img class="" alt="user profile" src="/resources/images/logo.png">
-								</div>
-								<div class="col">
-									<strong class="text-dark">${review.title }</strong>
-									<div class="text-warning">
-										<i class="bi ${review.pointIcon.star1 }"></i>
-										<i class="bi ${review.pointIcon.star2 }"></i>
-										<i class="bi ${review.pointIcon.star3 }"></i>
-										<i class="bi ${review.pointIcon.star4 }"></i>
-										<i class="bi ${review.pointIcon.star5 }"></i>
-										<span class="text-muted mx-1">${review.point }</span>
-									</div>
-									<p class="my-1">
-										<small>${review.user.nickname }</small> /
-										<small>${review.room.name } 이용</small><br/>
-									</p>
-									<p class="text-dark my-3 small">
-										${review.content }
-									</p>
-									<!-- 첨부파일이 없는 경우 이미지 태그는 출력하지 않음 -->
-									<c:if test="${not empty review.image }">
-										<div class="my-3">
-											<!-- TO DO : 리뷰 이미지 저장경로 확인 필요, 이미지 작게 보여주고 클릭하면 키울건지? -->
-											<img class="img-fluid" alt="review image" src="/resources/images/review/${review.image }">
-										</div>
-									</c:if>
-									<!-- js에서 moment.js 라이브러리 이용하여 경과시간을 계산한 후 이 태그의 컨텐츠로 전달한다. -->
-									<!-- review.createdDate은 Date객체이므로 패턴을 맞추어 저장한다. -->
-									<fmt:formatDate value="${review.createdDate }" var="formattedDate" type="date" pattern="YYYY-MM-dd HH:mm:ss"/>
-									<small class="elapsedTime" data-created-date="${formattedDate }"></small>
-								</div>
-							</div>
-						</c:forEach>
-					</c:otherwise>
-				</c:choose>
 			</div>
 		</div>
 	</div>
@@ -341,6 +294,22 @@
 <script type="text/javascript">
 $(function () {
 	
+/**
+ * 선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
+ * 해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
+ * (active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
+ */
+	let $tabButtons = $('#myTab [data-bs-toggle="tab"]');
+	$tabButtons.click(function(){
+		$tabButtons.each(function (){
+			if ($(this).hasClass('active')) {
+				$(this).removeClass('text-muted').addClass('fw-bold').addClass('text-secondary');
+			} else {
+				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
+			}
+		});
+	});
+
 /*
  * 숙소 이미지 swiper 생성
  * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
@@ -476,40 +445,6 @@ $(function () {
 		map.relayout(); 
 		map.setCenter(mapcenter);
 	});
-	
-/*
- * 리뷰 게시글 작성일로부터 경과시간 표시하기
- */
- 	// elapsedTime 클래스를 가지는 모든 태그에 획득한 경과시간을 출력
-	 $(".elapsedTime").each(function() {
-		 let elapsedTime = getElapsedTime($(this).attr("data-created-date"));
-		 $(this).text(elapsedTime);
-	 });
-	 // 작성일에 대한 문자열을 전달하면 경과시간을 적절한 단위로 반환하는 함수
-	 function getElapsedTime(createdDateString) {
-		let now = moment();
-		let createdDate = moment(createdDateString, 'YYYY-MM-DD HH:mm:ss');
-		// 경과시간 정보
-		let duration = moment.duration(now.diff(createdDate));
-		// 경과시간에 대해 문자열로 표시할 단위 옵션
-		let durationOptions = [
-			{"dur" : duration.asYears(), "option" : "년 전"},
-			{"dur" : duration.asMonths(), "option" : "개월 전"},
-			{"dur" : duration.asWeeks(), "option" : "주 전"},
-			{"dur" : duration.asDays(), "option" : "일 전"},
-			{"dur" : duration.asHours(), "option" : "시간 전"},
-			{"dur" : duration.asMinutes(), "option" : "분 전"},];
-		
-		// 반복문으로 duration의 값을 확인해 어떤 단위로 반환할지 결정한다.
-		// ex) 0.8년전이면 "8개월 전" 반환
-		for (let durOption of durationOptions) {
-			if (durOption.dur >= 1) {
-				return Math.round(durOption.dur) + durOption.option;
-			}
-		}
-		// 분 단위로 검사해도 1 이상이 아니면(반복문에서 함수가 종료되지 않으면) "방금 전" 반환
-		return "방금 전"
-	}
 
 });
 
@@ -554,6 +489,7 @@ function refreshPaginationButton(currentPage) {
 	});
 }
 
+//////////////////////////////////////////// DOM 생성 전에 정의되는 내용
 /**
  * 현재 화면에서 선택한 기간에 따른 객실 정보 조회해서 엘리먼트 생성하는 함수
  * changeCurrentPage(num) 함수를 통해 실행된다.
@@ -727,6 +663,106 @@ function toggleAccoLike(accoId) {
 		}
 	});
 }
+
+/**
+ * 작성일을 표현하는 날짜값을 전달하면 경과시간을 적절한 단위로 반환하는 함수
+ * 리뷰 게시글에 작성일로부터 경과한 시간을 표시하는 데 사용한다.
+ */
+	 function getElapsedTime(value) {
+		let now = moment();
+		// 경과시간 정보
+		let createdDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
+		let duration = moment.duration(now.diff(createdDate));
+		// 경과시간에 대해 문자열로 표시할 단위 옵션
+		let durationOptions = [
+			{"dur" : duration.asYears(), "option" : "년 전"},
+			{"dur" : duration.asMonths(), "option" : "개월 전"},
+			{"dur" : duration.asWeeks(), "option" : "주 전"},
+			{"dur" : duration.asDays(), "option" : "일 전"},
+			{"dur" : duration.asHours(), "option" : "시간 전"},
+			{"dur" : duration.asMinutes(), "option" : "분 전"},];
+		
+		// 반복문으로 duration의 값을 확인해 어떤 단위로 반환할지 결정한다.
+		// ex) 0.8년전이면 "8개월 전" 반환
+		for (let durOption of durationOptions) {
+			if (durOption.dur >= 1) {
+				return Math.round(durOption.dur) + durOption.option;
+			}
+		}
+		// 분 단위로 검사해도 1 이상이 아니면(반복문에서 함수가 종료되지 않으면) "방금 전" 반환
+		return "방금 전"
+	}
+
+/**
+ * 리뷰 데이터에 대한 무한스크롤링
+ */
+// 1. ajax로 리뷰 리스트 획득해서 배열에 html콘텐츠 담기
+let reviewArray = [];
+$.getJSON("/reviews", "accoId=" + ${param.id}).done(function(reviews) {
+	if (reviews.length == 0) {
+		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
+		reviewArray.push(content);
+	} else {
+		for (let review of reviews) {
+			let content = '';
+			content += '<div class="row p-5 border-bottom">';
+			content += '    <div class="col-2 profile-image-wrapper rounded-circle">';
+			content += '        <img class="" alt="user profile" src="/resources/images/logo.png">';
+			content += '    </div>';
+			content += '    <div class="col">';
+			content += '        <strong class="text-dark">' + review.title +'</strong>';
+			content += '        <div class="text-warning">';
+			content += '            <i class="bi ' + review.pointIcon.star1 +'"></i>';
+			content += '            <i class="bi ' + review.pointIcon.star2 +'"></i>';
+			content += '            <i class="bi ' + review.pointIcon.star3 +'"></i>';
+			content += '            <i class="bi ' + review.pointIcon.star4 +'"></i>';
+			content += '            <i class="bi ' + review.pointIcon.star5 +'"></i>';
+			content += '            <span class="text-muted mx-1">' + review.point +'</span>';
+			content += '        </div>';
+			content += '        <p class="my-1">';
+			content += '            <small>' + review.user.nickname +'</small> /';
+			content += '            <small>' + review.room.name + ' 이용</small><br/>';
+			content += '        </p>';
+			content += '        <p class="text-dark my-3 small">' + review.content +'</p>';
+			if (!(review.image == null || review.image === "")) {
+				content += '            <div class="my-3">';
+				content += '                <img class="img-fluid" alt="review image" src="/resources/images/review/' + review.image +'">';
+				content += '            </div>';
+			}
+			// review.createdDate은 iso-8601 형식의 날짜정보를 반환한다. 이 값을 getElapsedTime 함수에 전달해 경과시간을 획득한다.
+			content += '        <small class="elapsedTime">' + getElapsedTime(review.createdDate) + '</small>';
+			content += '    </div>';
+			content += '</div>';
+			reviewArray.push(content);
+		}
+	}
+});
+ 
+// 2. 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
+let count = 0; 
+window.onscroll = function(e) {
+	// 리뷰 탭 눌렀을 때만 스크롤링 실행되게 하기
+	if (!$("#review-tab").hasClass("active")) {
+		return false;
+	}
+	
+	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
+	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
+	$("#footer").addClass("d-none");
+	if (reviewArray.length == count) {
+		$("#footer").removeClass("d-none");
+		return false;
+	}
+	
+	// 임시 콘텐츠(리뷰정보) 추가하기
+	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 꺼내 콘텐츠를 추가시킨다.
+	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+		let addContent = reviewArray[count];
+		count++;
+		$("#review-tab-pane").append(addContent);
+	}
+};
+
 </script>
 </body>
 </html>

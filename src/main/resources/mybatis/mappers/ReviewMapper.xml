@@ -66,7 +66,7 @@
 				</when>
 			</choose>
 		</where>
-		order by rv.review_no desc
+		order by rv.review_created_date desc
 	</select>
 	
 	<!-- List<String> getAllReviewTagsByRestaurantNo(int no); -->
