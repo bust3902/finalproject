@@ -25,8 +25,6 @@
   					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 				</svg>
 			</button>
-			<input type="hidden" name="currentLat" value="" />
-			<input type="hidden" name="currentLong" value="" />
 			<div id="box-keywords" class="position-absolute w-100 d-none" style="top:44px; left:0; z-index: 1000;">
 				<ul class="list-group" id="fix-grop-keywords">
 					<li class="list-group-item list-group-flush border">
@@ -73,7 +71,7 @@
 							<div class="row p-3">
 								<c:forEach var="category" items="${categories }">
 									<div class="form-check">
-								        <input class="form-check-input" type="radio" name="optionsRadios" value="${category.id }">
+								        <input class="form-check-input" type="radio" name="categorys" value="${category.id }">
 								        <label class="form-check-label" for="optionsRadios1">
 								          ${category.name }
 								        </label>
@@ -281,7 +279,7 @@ $("#locationButton").click(function() {
 	function searchKeyword(keyword) {
 		//alert(keyword);
 		
-		location.href="/searchlist?keyword=" + keyword;
+		location.href="searchlist?keyword=" + keyword;
 	};
 	
 	// 카카오 맵 api를 이용한 지도 구현
@@ -337,6 +335,7 @@ $("#locationButton").click(function() {
 	}
 	// 마커에서 사용할 이미지 객체를 만들기
 	let restMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+	// form-search 검색 기능
 	
 	function searchRestaurants() {
 		let queryString = $("#form-search-restaurant").serialize();
@@ -361,7 +360,7 @@ $("#locationButton").click(function() {
 				$.each(rests, function(index, rest) {
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
-					content += '<div id="card-acco-' + rest.no +'" class="card text-bg-light p-0 rounded-0">';
+					content += '<div id="card-rest-' + rest.no +'" class="card text-bg-light p-0 rounded-0">';
 					// content += '	<img src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName +'" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">';
 					content += '	<div class="p-3 rounded-0">';
 					content += '		<div class="my-auto">';
@@ -372,13 +371,14 @@ $("#locationButton").click(function() {
 					content += '			<small>' + rest.district + '</small>';
 					content += '			<small>' + rest.tel + '</small>';
 					content += '			<small>' + rest.cityId + '</small>';
+					content += '		<p class="text-end fs-4 fw-semibold mt-auto">' + rest.tel + '<span class="fs-5"></span></p>';
 					content += '		</div>';
 					content += '	</div>';
 					content += '</div>';
 					
 					
 					$tbody.append(content);
-					$("#row-rest-"+rest.no).click(function() {
+					$("#card-rest-"+rest.no).click(function() {
 						location.href = "detail?no=" + rest.no;
 					});
 					
@@ -410,6 +410,10 @@ $("#locationButton").click(function() {
 	$("select[name=city]").change(function() {
 		searchRestaurants();
 		changeMapCenter(map);
+	});
+	
+	$("input[name=categorys]").click(function() {
+		searchRestaurants();
 	});
 	
 	

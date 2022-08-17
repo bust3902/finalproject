@@ -497,7 +497,7 @@
 	function searchKeyword(keyword) {
 		//alert(keyword);
 		
-		location.href="/searchlist.jsp?keyword=" + keyword;
+		location.href="restaurant/searchlist?keyword=" + keyword;
 	};
 
 </script>
