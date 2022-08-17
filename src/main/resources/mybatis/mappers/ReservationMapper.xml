@@ -6,17 +6,12 @@
 <!--void insertReservation(Reservation reservation); -->
 <insert id="insertReservation" parameterType="kr.co.nc.vo.Reservation">
 	insert into reservation
-		(reservation_id, reservation_check_in, reservation_check_out, reservation_name, reservation_tel,user_no,room_no,acco_id)
+		(reservation_id, reservation_check_in, reservation_check_out, 
+		 reservation_name, reservation_tel, user_no, room_no, acco_id)
 	values
-		(${merchantUid},#{checkIn},#{checkOut},#{reserName},#{reserTel}, ${userNo}, ${roomNo), ${accoId})		
+		(#{reservationNo}, #{checkIn}, #{checkOut}, #{reserName}, #{reserTel}, #{user.No}, #{roomNo}, #{accoId} )		
 </insert>
-<insert id="insertPayment" parameterType="kr.co.nc.vo.Payment">
-	insert into payment
-		(payment_id, payment_status,payment_total_price,payment_date)
-	values
-		(${imp_uid},#{status},#{amount},#{paidAt})
 
-</insert>
 
 <!-- 	List<Reservation> getAllReserveInfo 예약정보리스트 가져오기 -->
 <select id="getAllReserveInfo" parameterType="int" resultType="Reservation" >
@@ -42,6 +37,7 @@
 	and r.user_no = #{value}
 	order by r.reservation_check_in
 </select>
+
 
 <!-- 	String getReserveInfoByReserveId(int reservationId); 예약정보 한개 가져오기 -->
 <select id="getReserveInfoByReserveId" parameterType="String" resultType="kr.co.nc.vo.Reservation">

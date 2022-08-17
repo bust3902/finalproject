@@ -23,12 +23,12 @@
 			<div class="m-3" style="color:black;"><strong>예약 내역</strong>
 				<div class="row">
 					<c:choose >
-						<c:when test="${!empty reservationList }">
+						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
 								<div class="border col m-2 " >
 									<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
-									<a href="myreservation" style="text-decoration: none; color:black;">
-										<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '결재완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
+									<a href="/myreservation?reservationNo=${payment.reservationNo }" style="text-decoration: none; color:black;">
+										<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
 										<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
 										<p class="form-text text-center">체크인 : ${payment.reservation.checkIn } -<br>  체크아웃 : ${payment.reservation.checkOut } </p>
 									</a>
@@ -51,7 +51,7 @@
 			<div class="m-3" style="color:black;"><strong>이용 내역</strong>
 				<div class="row" >
 					<c:choose>
-						<c:when test="${empty reservationList }">
+						<c:when test="${empty Readyreservation }">
 							<div class="border col m-2 " >
 								<tr>
 									<td colspan="5" class="text-center">예약내역이 없습니다.</td>
@@ -59,13 +59,13 @@
 							</div>
 						</c:when>
 						<c:otherwise>
-							<c:forEach var="payment" items="${payment }" >
+							<c:forEach var="Readyreservation" items="${Readyreservation }" >
 								<div class="border col m-2 " >
-									<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+									<img class="img-fluid" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
 									<a href="myreservation" style="text-decoration: none; color:black;">
-										<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '결재완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
-										<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-										<p class="form-text text-center">체크인 : ${payment.reservation.checkIn } -<br>  체크아웃 : ${payment.reservation.checkOut } </p>
+										<p class="text-center"><span class="badge rounded-pill ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${Readyreservation.paymentStatus }</span></p>
+										<p class="text-center"><strong>${Readyreservation.reservation.acco.name }</strong></p>
+										<p class="form-text text-center">체크인 : ${Readyreservation.reservation.checkIn } -<br>  체크아웃 : ${Readyreservation.reservation.checkOut } </p>
 									</a>
 									<div class="row">
 										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
@@ -79,7 +79,7 @@
 			<div class="m-3" style="color:black;"><strong>취소 내역</strong>
 				<div class="row">
 					<c:choose>
-						<c:when test="${empty payment }">
+						<c:when test="${empty Refundreservation }">
 							<div class="border col m-2 " >
 								<tr>
 									<td colspan="5" class="text-center">취소내역이 없습니다.</td>
@@ -87,13 +87,13 @@
 							</div>
 						</c:when>
 						<c:otherwise>
-								<c:forEach var="payment" items="${payment }" >
+								<c:forEach var="Refundreservation" items="${Refundreservation }" >
 									<div class="border col m-2 " >
-										<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+										<img class="img-fluid" src="/resources/images/acco/thumbnail/${Refundreservation.reservation.acco.thumbnailImageName}"><br>
 										<a href="myreservation" style="text-decoration: none; color:black;">
-											<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '결재완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
-											<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-											<p class="form-text text-center">체크인 : ${payment.reservation.checkIn } -<br>  체크아웃 : ${payment.reservation.checkOut } </p>
+											<p class="text-center"><span class="badge rounded-pill ${Refundreservation.paymentStatus eq '결재완료' ? 'bg-danger' : 'bg-info' } mt-3">${Refundreservation.paymentStatus }</span></p>
+											<p class="text-center"><strong>${Refundreservation.reservation.acco.name }</strong></p>
+											<p class="form-text text-center">체크인 : ${Refundreservation.reservation.checkIn } -<br>  체크아웃 : ${Refundreservation.reservation.checkOut } </p>
 										</a>
 										<div class="row">
 											<button class="btn btn-success" type="button" href="#">리뷰 작성</button>

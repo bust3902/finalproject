@@ -36,8 +36,17 @@ public class ReservationService {
 	 * 예약정보를 예약번호로 가져오기
 	 * @param uid_imp 예약번호
 	 */
-	public Reservation  getReserveInfoByReserveId(String reservationNo){
+	//모든리스트
+	public Reservation  getReserveInfoByReserveId(int reservationNo){
 		return reservationMapper.getReserveInfoByReserveId(reservationNo);
+	}
+	// 예약완료
+	public List<Payment>  getReadytoReserveInfoByReserveId(int userNo){
+		return paymentMapper.getReadytoReserveInfoByReserveId(userNo);
+	}
+	// 예약취소
+	public List<Payment>  getRefundReserveInfoByReserveId(int userNo){
+		return paymentMapper.getRefundReserveInfoByReserveId(userNo);
 	}
 
 	/**
@@ -58,20 +67,18 @@ public class ReservationService {
 		reservation.setCheckIn(paymentRequest.getCheckIn());
 		reservation.setCheckOut(paymentRequest.getCheckOut());
 		reservation.setReservationNo(paymentRequest.getMerchantUid());
+		reservation.setAccoId(paymentRequest.getAccoId());
+		reservation.setRoomNo(paymentRequest.getRoomNo());
 		
-		reservationMapper.insertReservation(reservation);
-		
-		
-	}
-	/*
-	 * 결제정보 저장
-	 */
-	public void insertPayment(PaymentRequest paymentRequest) {
 		Payment payment = new Payment();
 		payment.setPaymentId(paymentRequest.getImpUid());
 		payment.setPaymentTotalPrice(paymentRequest.getAmount());
 		payment.setReservationNo(paymentRequest.getMerchantUid());
-		paymentMapper.insertPayment(paymentRequest);
+		
+		reservationMapper.insertReservation(reservation);
+		paymentMapper.insertPayment(payment);
+		
+		
 	}
 	
 }

@@ -14,12 +14,12 @@ import lombok.ToString;
 public class PaymentRequest {
 
 	private String impUid;
-	private String merchantUid;
+	private int merchantUid;
+	private int amount;
 	private String reserName;
 	private String reserTel;
-	private int amount;
 	private String checkIn;
 	private String checkOut;
-	private String paymentStatus;
-	private String reservationStatus;
+	private int roomNo;
+	private int accoId;
 }

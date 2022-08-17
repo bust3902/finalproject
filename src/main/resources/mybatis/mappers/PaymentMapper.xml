@@ -15,7 +15,7 @@
 	where 
 		payment_id = #{paymentId}
 </update>
-
+<!-- 예약완료 리스트가져오기 -->
 <select id="getPaymentInfo" parameterType="int" resultType="Payment">
 select
     p.payment_id as paymentId,
@@ -36,10 +36,56 @@ and u.user_no = r.user_no
 and r.user_no = ${value}
 </select>
 
-<insert id="insertPayment">
+	<!-- 예약완료된 예약정보가져오기-->
+<select id="getReadytoReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Payment" >
+	
+select
+    p.payment_id as paymentId,
+    p.payment_status as paymentStatus,
+    p.payment_total_price as amount,
+    r.reservation_check_in as "reservation.checkIn",
+		r.reservation_check_out as "reservation.checkOut",
+    r.reservation_id as "reservation.reservationId",
+    a.acco_id as "reservation.Accommodation.id",
+    r.room_no as "reservation.AccommodationRoom.no",
+    u.user_name as "reservation.users.name",
+    a.acco_name as "reservation.acco.name",
+    a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
+from reservation r, payment p, users u, ACCOMMODATIONS a
+where p.reservation_Id = r.reservation_id
+and r.acco_id = a.acco_id
+and u.user_no = r.user_no
+and p.payment_status = '예약완료'
+and r.user_no = ${value}
+</select>
+	<!-- 예약취소된 예약정보 가져오기-->
+<select id="getRefundReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Payment" >
+
+select
+    p.payment_id as paymentId,
+    p.payment_status as paymentStatus,
+    p.payment_total_price as amount,
+    r.reservation_check_in as "reservation.checkIn",
+		r.reservation_check_out as "reservation.checkOut",
+    r.reservation_id as "reservation.reservationId",
+    a.acco_id as "reservation.Accommodation.id",
+    r.room_no as "reservation.AccommodationRoom.no",
+    u.user_name as "reservation.users.name",
+    a.acco_name as "reservation.acco.name",
+    a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
+from reservation r, payment p, users u, ACCOMMODATIONS a
+where p.reservation_Id = r.reservation_id
+and r.acco_id = a.acco_id
+and u.user_no = r.user_no
+and p.payment_status = '예약취소'
+and r.user_no = ${value}	
+</select>
+	
+<insert id="insertPayment" parameterType="kr.co.nc.vo.Payment">
 	insert into payment
-	(payment_id, payment_status, payment_total_price, reservation_id)
+		(PAYMENT_ID, payment_status,payment_total_price,reservation_id)
 	values
-	(${paymentId}, ${paymentStatus}, ${amount}, ${reservationId})
+		( #{paymentId}, #{paymentStatus}, #{paymentTotalPrice}, #{reservationNo})
 </insert>
+
 </mapper>
