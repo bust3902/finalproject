@@ -76,4 +76,19 @@
 		where restaurant_no = #{value}
 	</select>
 	
+	<!--  List<Map<String, Integer>> countReviewPointsByAccoId(int accoId); -->
+	<select id="countReviewPointsByAccoId" parameterType="int" resultType="hashmap">
+		with points
+		as (select 1 as review_point from dual
+		    union all select 2 from dual
+		    union all select 3 from dual
+		    union all select 4 from dual
+		    union all select 5 from dual)
+		select p.review_point as point, nvl(x.cnt,0) as count
+		from points p,
+		    (select review_point, count(*) cnt from review where acco_id=#{value} group by review_point) x
+		where x.review_point (+) = p.review_point
+		order by p.review_point
+	</select>
+	
 </mapper>

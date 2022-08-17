@@ -237,9 +237,10 @@
 						<span class="text-muted mx-1">${detail.reviewRate }</span>
 					</div>
 					<p>전체 리뷰 ${detail.reviewCount }</p>
-					<!-- TO DO : 리뷰 평점별 집계 -->
-					<!--  윈도우 바닥으로 스크롤을 내리면 리뷰가 출력된다. -->
+					<!-- 리뷰 키워드(평점 범위)별 집계 그래프 -->
+					<div id="chart" style="height: 250px;"></div>
 				</div>
+				<!--  윈도우 바닥으로 스크롤을 내리면 리뷰가 출력된다. -->
 			</div>
 		</div>
 	</div>
@@ -291,6 +292,8 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <!-- swiper js -->
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
+<!-- gstatic chart js -->
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
 <script type="text/javascript">
 $(function () {
 	
@@ -309,6 +312,40 @@ $(function () {
 			}
 		});
 	});
+	
+	
+/**
+ * 리뷰 탭을 누르면, id='chart'인 div엘리먼트에 리뷰평점에 대한 차트 그래프를 출력하는 이벤트핸들러 등록
+ * (그냥 dom 출력 시 같이 그래프를 draw하도록 하면, 해당 div가 display:none 상태이기 때문에 오류가 발생함)
+ * ajax 리뷰데이터 요청 시 획득한 reviewChartData 객체 사용
+ */
+ $("#review-tab").click(function() {
+	 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+	 if (isEmpty) {
+		 $("#chart").addClass("d-none");
+		 return false;
+	 }
+     google.charts.load("current", {packages:["corechart"]});
+     google.charts.setOnLoadCallback(drawChart);
+     function drawChart() {
+       var data = google.visualization.arrayToDataTable([
+         ['review point', 'out of 5'],
+         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
+         ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
+         ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
+         ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
+         ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
+       ]);
+
+       var options = {
+         title: '평점 분포',
+         pieHole: 0.4,
+       };
+
+       var chart = new google.visualization.PieChart(document.getElementById('chart'));
+       chart.draw(data, options);
+     };
+ })
 
 /*
  * 숙소 이미지 swiper 생성
@@ -448,6 +485,7 @@ $(function () {
 
 });
 
+//////////////////////////////////////////// DOM 생성 전에 정의되는 내용
 /**
  * 페이징 버튼을 누르면 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
  */
@@ -487,9 +525,8 @@ function refreshPaginationButton(currentPage) {
 		content += '</li>';
 		$wrapper.append(content);
 	});
-}
+}	
 
-//////////////////////////////////////////// DOM 생성 전에 정의되는 내용
 /**
  * 현재 화면에서 선택한 기간에 따른 객실 정보 조회해서 엘리먼트 생성하는 함수
  * changeCurrentPage(num) 함수를 통해 실행된다.
@@ -668,40 +705,46 @@ function toggleAccoLike(accoId) {
  * 작성일을 표현하는 날짜값을 전달하면 경과시간을 적절한 단위로 반환하는 함수
  * 리뷰 게시글에 작성일로부터 경과한 시간을 표시하는 데 사용한다.
  */
-	 function getElapsedTime(value) {
-		let now = moment();
-		// 경과시간 정보
-		let createdDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
-		let duration = moment.duration(now.diff(createdDate));
-		// 경과시간에 대해 문자열로 표시할 단위 옵션
-		let durationOptions = [
-			{"dur" : duration.asYears(), "option" : "년 전"},
-			{"dur" : duration.asMonths(), "option" : "개월 전"},
-			{"dur" : duration.asWeeks(), "option" : "주 전"},
-			{"dur" : duration.asDays(), "option" : "일 전"},
-			{"dur" : duration.asHours(), "option" : "시간 전"},
-			{"dur" : duration.asMinutes(), "option" : "분 전"},];
-		
-		// 반복문으로 duration의 값을 확인해 어떤 단위로 반환할지 결정한다.
-		// ex) 0.8년전이면 "8개월 전" 반환
-		for (let durOption of durationOptions) {
-			if (durOption.dur >= 1) {
-				return Math.round(durOption.dur) + durOption.option;
-			}
+ function getElapsedTime(value) {
+	let now = moment();
+	// 경과시간 정보
+	let createdDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
+	let duration = moment.duration(now.diff(createdDate));
+	// 경과시간에 대해 문자열로 표시할 단위 옵션
+	let durationOptions = [
+		{"dur" : duration.asYears(), "option" : "년 전"},
+		{"dur" : duration.asMonths(), "option" : "개월 전"},
+		{"dur" : duration.asWeeks(), "option" : "주 전"},
+		{"dur" : duration.asDays(), "option" : "일 전"},
+		{"dur" : duration.asHours(), "option" : "시간 전"},
+		{"dur" : duration.asMinutes(), "option" : "분 전"},];
+	
+	// 반복문으로 duration의 값을 확인해 어떤 단위로 반환할지 결정한다.
+	// ex) 0.8년전이면 "8개월 전" 반환
+	for (let durOption of durationOptions) {
+		if (durOption.dur >= 1) {
+			return Math.round(durOption.dur) + durOption.option;
 		}
-		// 분 단위로 검사해도 1 이상이 아니면(반복문에서 함수가 종료되지 않으면) "방금 전" 반환
-		return "방금 전"
 	}
+	// 분 단위로 검사해도 1 이상이 아니면(반복문에서 함수가 종료되지 않으면) "방금 전" 반환
+	return "방금 전"
+}
 
 /**
- * 리뷰 데이터에 대한 무한스크롤링
+ * 리뷰 차트 정보 획득, 리뷰 데이터에 대한 무한스크롤링
  */
-// 1. ajax로 리뷰 리스트 획득해서 배열에 html콘텐츠 담기
+// 1. ajax로 리뷰정보 획득해서 차트정보 꺼내기, 배열에 html콘텐츠 담기
+// * 차트정보reviewArray, 리뷰 존재여부isEmpty는 그래프 표시에서 사용한다.
+let reviewChartData = '';
 let reviewArray = [];
-$.getJSON("/reviews", "accoId=" + ${param.id}).done(function(reviews) {
+let isEmpty = false; 
+$.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
+	reviewChartData = data.chartData;
+	let reviews = data.reviews
 	if (reviews.length == 0) {
 		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
 		reviewArray.push(content);
+		isEmpty = true;
 	} else {
 		for (let review of reviews) {
 			let content = '';

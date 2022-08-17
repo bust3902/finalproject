@@ -1,6 +1,8 @@
 package kr.co.nc.web.controller.rest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +17,6 @@ import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.Pagination;
-import kr.co.nc.vo.Review;
 import kr.co.nc.vo.User;
 
 /**
@@ -50,11 +51,17 @@ public class AccommodationRestController {
 		return accommodationService.generatePagination(accoId, currentPage);
 	}
 	
-	// 해당 숙소에 대한 리뷰 리스트 반환
+	// 해당 숙소에 대한 리뷰 리스트, 평점분포 집계결과 반환
 	@GetMapping(path = "/reviews")
-	public List<Review> reviews(int accoId) {
+	public Map<String, Object> reviews(int accoId) {
+		// 두 가지 정보를 map객체에 담아 반환한다.
+		Map<String, Object> reviewdatas = new HashMap<>();
+		// 리뷰 리스트
 		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
-		return reviewService.getReviewsByCriteria(criteria);
+		reviewdatas.put("reviews", reviewService.getReviewsByCriteria(criteria));
+		// 평점분포 집계결과 객체
+		reviewdatas.put("chartData", reviewService.getReviewPointChartByAccoId(accoId));
+		return reviewdatas;
 	}
 	
 	// 숙소 찜하기 토글
