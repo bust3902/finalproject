@@ -25,43 +25,48 @@
 				</ul>
 			</div>
 		</div>
-		<c:if test="${empty review }">
-			<div class="alert alert-danger">
-				등록된 리뷰가 없습니다.
-			</div>
-		</c:if>
-		<c:if test="${not empty review }">
-			<div class="text-center">
-				<table class="table">
-					<thead>
-						<tr>
-							<th>제목</th>
-							<th>작성자</th>
-							<th>내용</th>
-							<th>평점</th>
-							<th>등록일</th>
-						</tr>
-					</thead>
-					<tbody>
-						<tr>
-							<td>제목</td>
-							<td>작성자</td>
-							<td>내용</td>
-							<td>5점</td>
-							<td>2022-07-27</td>
-						</tr>
-					</tbody>
-				</table>
-			</div>
-		</c:if>
+		<div class="text-center" style="width:950px;">
+			<table class="table">
+				<thead>
+					<tr>
+						<th>카테고리</th>
+						<th>제목</th>
+						<th>작성자</th>
+						<th>내용</th>
+						<th>이미지</th>
+						<th>평점</th>
+						<th>등록일</th>
+					</tr>
+				</thead>
+				<tbody>
+				<c:choose>
+					<c:when test="${empty review }">
+						<div class="alert text-center">
+							<p>등록된 리뷰가 없습니다.</p>
+						</div>
+					</c:when>
+					<c:otherwise>
+						<c:forEach var="review" items="${review }">
+							<tr>
+								<td>
+								<c:forEach var="reviewCat" items="${reviewCategory }">
+								<div>${reveiwCat.cateogry.id }</div>
+								</c:forEach>
+								</td>
+								<td>${review.title }</td>
+								<td>${review.user.no }</td>
+								<td>${review.content }</td>
+								<td>${review.point }</td>
+								<td><img src="/resources/images/review/${review.image }"></td>
+								<td><fmt:formatDate value="${review.createdDate }" pattern="YYYY년 MM월 dd일"/></td>
+							</tr>
+						</c:forEach>
+					</c:otherwise>
+				</c:choose>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 </body>
-<footer>
-	<div class="container my-3">
-		<div class="row mb-3">
-			<h3 class="fs-4 mb-3 border text-center">임시</h3>
-		</div>
-	</div>
-</footer>
 </html>

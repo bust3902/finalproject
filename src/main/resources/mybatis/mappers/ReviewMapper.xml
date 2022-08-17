@@ -25,11 +25,19 @@
 	</update>
 		
 	<!-- void deleteReview(Review reivew); -->
-	<delete id="deleteReview" parameterType="Review">
-		delete from review
-		where review_no = #{no}
-	</delete>
+		<delete id="deleteReview" parameterType="Review">
+			delete from review
+			where review_no = #{no}
+		</delete>
 	
+	<!-- void insertReviewCategory(ReviewCategory reviewCategory); -->
+	<insert id="insertReviewCategory" parameterType="ReviewCategory">
+		insert into review_categories
+		(review_no, category_id)
+		values
+		(#{reviewNo}, #{category.id})
+	</insert>
+		
 	<!-- reviewResultMap -->
 	<resultMap type="Review" id="reviewResultMap">
 		<id column="review_no" property="no"/>

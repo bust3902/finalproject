@@ -14,6 +14,7 @@
 		<result column="REVIEW_DELETED" property="deleted"/>
 		<result column="REVIEW_IMAGE" property="image"/>
 		<result column="REVIEW_POINT" property="point"/>
+		<association property="user" column="user_no" select="kr.co.nc.mapper.UserMapper."></association>
 		<association property="restaurant" column="RESTAURANT_NO" select="kr.co.nc.mapper.RestaurantMapper"></association>
 		<!-- <association property="user" column="user_no"></association> -->
 	</resultMap>

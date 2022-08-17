@@ -56,7 +56,7 @@
 					</div>
 				</div>
 				<div class="my-3">
-					<label type="image-field" class="form-label">사진첨부</label>
+					<label type="image-field" class="form-label">이미지첨부</label>
 					<input type="file" class="form-control" name="imageFile" id="image-field">
 				</div>
 				<div class="my-3">
@@ -85,7 +85,7 @@
 	</div>
 </div>
 <!-- 리뷰 등록 시 확인하는 모달창 -->
-<div id="reviewConfirm" class="modal fade" >
+<div id="reviewConfirm" class="modal fade" data-bs-backdrop="static">
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -102,7 +102,11 @@
 		</div>
 	</div>
 </div>
+<link href="resources/css/bootstrap.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
+let reviewConfirm = new bootstrap.Modal(document.getElementById("reviewConfirm"));
+
 $(document).ready(function() {
 	var reviewModal = new bootstrap.Modal(document.getElementById("modal-danger"))
 	$("#modal-button").click(function() {

@@ -49,18 +49,18 @@
 						<c:forEach var="qa" items="${qa }">
 							<tr class="align-middle">
 								<td>
-								<c:forEach var="qaCat" items="${qa.categories }">
-									<div>${qaCat.cateogry.name }</div>
+								<c:forEach var="qaCat" items="${qaCategories }">
+									<div>${qaCat.category.name }</div>
 								</c:forEach>
 								</td>
 								<td>
-								<c:forEach var="qaType" items="${qa.type }">
-									<div>${qaType.type.name }</div>
+								<c:forEach var="qaType" items="${qatype }">
+									<div>${qaType.category.name }</div>
 								</c:forEach>
 								</td>
-								<td><img src="/resources/images" class="img-thumbnail rounded-0"></td>
+								<td><img src="/resources/images/reviews/${qa.image }" class="img-thumbnail rounded-0"></td>
 								<td>${qa.content }</td>
-								<td><fmt:formatDate value="YYYY년 M월 dd일"/> ${qa.createdDate }</td>
+								<td><fmt:formatDate value="${qa.createdDate }" pattern="YYYY년 MM월 dd일" /></td>
 							</tr>
 						</c:forEach>
 					</c:otherwise>

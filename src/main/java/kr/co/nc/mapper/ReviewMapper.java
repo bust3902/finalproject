@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 
 import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.vo.Review;
+import kr.co.nc.vo.ReviewCategory;
 
 @Mapper
 public interface ReviewMapper {
@@ -13,6 +14,7 @@ public interface ReviewMapper {
 	void insertReview(Review review);
 	void updateReview(Review review);
 	void deleteReview(Review reivew);
+	void insertReviewCategory(ReviewCategory reviewCategory);		// 리뷰 카테고리를 저장한다.
 	// 리뷰 조회
 	// ReviewCriteria의 값에 따라 동적 sql문을 이용해 특정 식별번호를 가지는 식당리뷰 / 숙소리뷰를 조회한다.
 	List<Review> getReviewsByCriteria(ReviewCriteria criteria);
