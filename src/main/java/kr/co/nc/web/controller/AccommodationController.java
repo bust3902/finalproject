@@ -1,18 +1,15 @@
 package kr.co.nc.web.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
-import kr.co.nc.criteria.AccoCriteria;
+import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.service.AccommodationService;
-import kr.co.nc.vo.Accommodation;
+import kr.co.nc.service.ReviewService;
 
 @Controller
 @RequestMapping("/acco")
@@ -20,11 +17,14 @@ public class AccommodationController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+	@Autowired
+	private ReviewService reviewService;
 
+	// 숙소 검색 페이지 뷰 반환
 	@GetMapping(path = "")
 	public String home(@RequestParam(defaultValue = "") String type, @RequestParam(defaultValue = "") String keyword, Model model) {
 		
-		// 검색 데이터 제공은 ajax에 대해 restController가 응답하기 때문에 이 요청핸들러에서 제공하지 않는다.
+		// 검색 데이터는 restController에서 제공하기 때문에 이 요청핸들러에서 제공하지 않는다.
 		// 그 외의 화면에서 필요한 정보를 이 요청핸들러에서 모두 전달한다. 
 		
 		// type, keyword를 동시에 전달받은 경우 오류화면으로 이동한다.
@@ -33,7 +33,10 @@ public class AccommodationController {
 			return "home";
 		}
 		
-		// 	모든 숙소유형 정보 전달
+		// TODO URL에 잘못된 type명을 적은 경우?
+		
+		// 	모든 숙소유형 정보 전달.
+		// type은 최초 화면 요청할 때 쓰는 이름이고 types는 정보 전달하고, 조건검색으로 선택할 때 쓰는 이름
 		model.addAttribute("types", accommodationService.getAllTypes());
 		// 	모든 지역 정보 전달
 		model.addAttribute("cities", accommodationService.getAllCities());
@@ -52,18 +55,16 @@ public class AccommodationController {
 		
 		return "accommodation/home";
 	}
-	
-	@GetMapping(path = "/search")
-	@ResponseBody
-	public List<Accommodation> accommodations(AccoCriteria criteria) {
-		System.out.println(criteria);
-		System.out.println(accommodationService.searchAccommodation(criteria));
-		return accommodationService.searchAccommodation(criteria);
-	}
 
-	
+	// 숙소 상세 페이지 뷰 반환
 	@GetMapping(path = "/detail")
-	public String detail() {
+	public String detail(@RequestParam("id") int accoId, Model model) {
+		// 해당 id를 가진 숙소 상세정보와 리뷰 정보를 전달한다.
+		// 숙소의 객실 정보는 restController에서 제공한다.
+		model.addAttribute("detail", accommodationService.getAccommodationDetailById(accoId));
+		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
+		model.addAttribute("reviews", reviewService.getReviewsByCriteria(criteria));
 		return "/accommodation/detail";
 	}
+	
 }

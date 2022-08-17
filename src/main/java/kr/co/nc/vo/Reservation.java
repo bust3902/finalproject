@@ -1,7 +1,8 @@
 package kr.co.nc.vo;
 
-import java.util.Date;
 import java.util.List;
+
+
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,14 +13,17 @@ import lombok.ToString;
 @ToString
 public class Reservation {
 
-	private int reservationId;
-	private String reservationMemo;
-	private String status;
-	private Date checkIn;
-	private Date checkOut;
-	private int HeadCount;
+	private String reservationNo;
+	private String reserName;
+	private String reserTel;
+	private String amount;
+	private String checkIn;
+	private String checkOut;
+	private String paymentStatus;
+	private String reservationStatus;
 	
-	private List<User> users;
-	private List<Accommodation> accomoAccommodations;
-	private List<AccommodationRoom> accommodationRooms;
+	
+	private User users;
+	private Accommodation acco;
+	private AccommodationRoom Room;
 }

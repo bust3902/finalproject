@@ -10,9 +10,25 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<!-- 카카오 로그인지원 자바스크립트 라이브러리를 포함시킨다. -->
 	<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+
+<style type="text/css">
+.login #content {
+    width: 336px;
+    margin: 100px auto 0 auto;
+}
+
+#logo{
+	text-align: center;
+}
+
+#logo img {
+	width: 180px;
+}
+</style>
 	<title>로그인</title>
 </head>
 <body>
+<%@ include file="common/nav.jsp" %>
 <div class="container mt-3">  
 	<c:set var="menu" value="login"></c:set>
     <div class="row mb-3">
@@ -67,6 +83,65 @@
     	</form>
     </div>
 </div>
+
+<%--
+<!-- 새 로그인 양식 -->
+<div class="login">
+	<div id="content">
+        <form id="loginForm" action="" autocomplete="off" method="post" novalidate="novalidate">
+            <input type="hidden" name="seoul" value="">
+            <div id="logo">
+                <a class="navbar-brand" href="/">
+      				<img src="/resources/images/logo.png" alt="" width="80" height="auto">
+    			</a>
+            </div>
+            
+            <!-- 카카오톡 로그인 -->
+            <div class="kakao">
+    			<div class="alert alert-danger d-none" id="alert-kakao-login">오류 메세지</div>   			    		
+    			<a id="btn-kakao-login" href="kakao/login">
+  					<img src="//k.kakaocdn.net/14/dn/btroDszwNrM/I6efHub1SN5KCJqLm1Ovx1/o.jpg" width="336" height="" alt="카카오 로그인 버튼"/>
+				</a>
+    		</div>
+    		<form id="form-kakao-login" method="post" action="kakao-login">
+    			<input type="hidden" name="id" />
+    			<input type="hidden" name="nickname" />
+    			<input type="hidden" name="email" />
+    		</form>
+    		
+    		<!-- 페이스북 로그인 -->
+    		<div class="facebook">
+    			
+			</div>
+    		<form id="form-facebook-login" method="post" action="facebook-login">
+				<input type="hidden" name="email">
+			</form>
+			
+            <!-- 네이버 로그인 -->
+            <div class="naver">
+    			
+			</div>
+            
+            <p class="space_or"><span>또는</span></p>
+            
+            <!-- 일반 로그인 -->
+            <div class="normal"><!-- focus / err -->
+                <input type="email" name="uid" placeholder="이메일 주소" required="" class="required" value="" data-msg-required="이메일 주소를 입력해 주세요.">
+            	<button type="button" class="login">초기화</button>
+            </div>
+            <div class="inp_type_1 ico_pw form-errors">
+                <input type="password" name="upw" placeholder="비밀번호" required="" class="required" data-msg-required="비밀번호를 입력해 주세요.">
+            <button type="button" class="reset_val">초기화</button></div>
+            <button class="btn btn-primary" type="submit"><span>로그인</span></button>
+            <div class="">
+                <div><a href=""><span>비밀번호 재설정</span></a></div>
+                <div><a href="/register"><span>회원가입</span></a></div>
+            </div>
+    	</form>
+    </div>
+</div>
+ --%>
+<%@ include file="common/footer.jsp" %>
 <script type="text/javascript">
 $(function() {
 	// 카카오 로그인 버튼을 클릭할 때 실행할 이벤트 핸들러 함수를 등록한다.
@@ -105,6 +180,47 @@ $(function() {
 		});		
 	})
 })
+
+<%-- 페이스북 로그인 --%>
+window.fbAsyncInit = function() {
+		FB.init({
+			appId : '2878645332429159',
+			cookie : true,
+			xfbml : true,
+			version : 'v14.0'
+		});
+     	FB.AppEvents.logPageView();   
+     };
+
+	function checkLoginState() {
+   		FB.getLoginStatus(function(response) {
+     		statusChangeCallback(response);
+		});
+	}
+ 
+	function logout() {
+   		FB.logout(function(response) {
+	   		location.href = "/";
+		});
+  	}
+ 
+	function statusChangeCallback(response) {  // Called with the results from FB.getLoginStatus().
+   		console.log('statusChangeCallback');
+		console.log(response);                   // The current login status of the person.
+		if (response.status === 'connected') {   // Logged into your webpage and Facebook.
+			FB.api('/me', function(response) {
+				console.log(response);
+				
+				$("#form-facebook-login input[name=email]").val(response.name);
+				$("#form-facebook-login").trigger("submit");
+								
+				console.log('Successful login for: ' + response.name);
+				document.getElementById('status').innerHTML =  'Thanks for logging in, ' + response.name + '!';
+			});
+  		} else {                                 // Not logged into your webpage or we are unable to tell.
+			document.getElementById('status').innerHTML = 'Please log ' + 'into this webpage.';
+		}
+	}
 </script>
 </body>
 </html>

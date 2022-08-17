@@ -26,22 +26,23 @@
 			<p class="badge rounded-pill bg-danger">예약확정</p>
 			<h5>천안 호텔 소설 스미스</h5>
 			<h6>비즈니스 (공기청정기, 스타일러) / 1박</h6>
-			<p class="form-text col-3">체크인</p>
-			<dd class="form-text col-7">2022.07.29 금 15:00</dd>
-			<dt class="form-text col-3">체크아웃</dt>
-			<dd class="form-text col-7">2022.07.29 금 15:00</dd>
-			<dt class="form-text col-3 mt-2">예약번호</dt>
-			<dd class="form-text col-7">100198</dd> <!-- 난수생성 -->
-			<dt class="form-text col-3">예약자이름</dt>
-			<dd class="form-text col-7">안재용</dd>
-			<dt class="form-text col-3">안심번호</dt>
-			<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
-			
-			<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 01050577576은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+			<dl>
+				<dt class="form-text col-3">체크인</dt>
+				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
+				<dt class="form-text col-3">체크아웃</dt>
+				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
+				<dt class="form-text col-3 mt-2">예약번호</dt>
+				<dd class="form-text col-7">100198</dd> <!-- 난수생성 -->
+				<dt class="form-text col-3">예약자이름</dt>
+				<dd class="form-text col-7">안재용</dd>
+				<dt class="form-text col-3">안심번호</dt>
+				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
+				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 01050577576은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+			</dl>
 	
 			<hr>
 			<div class="row">
-				<h6>결제정보</h6>
+				<h6 class="mb-3">결제정보</h6>
 				<dl>
 					<dt>총 결제금액</dt>
 					<dd class="text-danger"><strong>60,000원</strong></dd>
@@ -111,10 +112,10 @@
 						</div>
 		     		</div>
 				</div>
-				<div class="row" name="reason">
+				<div class="row m-4" name="reason">
 					<h6 class="my-3"><strong>취소사유</strong></h6>
 					<!-- 환불이유란 DB에 추가하기 -->
-					<select class="form-select" aria-label="Default select example">
+					<select id="reason" class="form-select" aria-label="Default select example">
 						<option selected>[필수] 취소 사유를 선택해주세요</option>
 						<option value="1">방문불가/여행취소</option>
 						<option value="2">타 서비스에서 더 싼 상품발견</option>
@@ -196,18 +197,21 @@ function openCancelModal() {
 	cancelModal.show();
 }
 
+var IMP = window.IMP;
+IMP.init("imp72261061");
+
 function cancelPay() {
     jQuery.ajax({
-      "url": "http://localhost/myreservation",
+      "url": "/reservation/refund/"+//IMP_UID로 받을것
       "type": "POST",
       "contentType": "application/json",
       "data": JSON.stringify({
-        "merchant_uid": "000001", // 예: ORD20180131-0000011
-        "cancel_request_amount": 99000, // 환불금액
-        "reason": "테스트 결제 환불", // 환불사유
-        "refund_holder": "홍길동", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
-        "refund_bank": "88", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
-        "refund_account": "56211105948400" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
+        "merchant_uid": "1659664324976", // 예: 주문번호
+        "cancel_request_amount": 100, // 환불금액
+        "reason": $("#payType option:selected").val(), // 환불사유
+        "refund_holder": "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
+        "refund_bank": "56", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
+        "refund_account": "" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
       }),
       "dataType": "json"
     });
@@ -219,6 +223,12 @@ var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
 var collapseList = collapseElementList.map(function (collapseEl) {
   return new bootstrap.Collapse(collapseEl)
 })
+
+
+
+
+
+
 </script>
 </body>
 </html>

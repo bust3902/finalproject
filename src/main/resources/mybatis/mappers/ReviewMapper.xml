@@ -9,23 +9,79 @@
 		values
 		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{likeCount}, #{image})
 	</insert>
+	
 	<!-- void updateReview(Review review); -->
-		<update id="updateReview" parameterType="Review">
-			update
-				review
-			set
-				review_title = #{title},
-				review_content = #{content},
-				review_like_count = #{likeCount},
-				review_image = #{image},
-				review_updated_date = sysdate
-			where
-				review_no = #{no}
-		</update>
+	<update id="updateReview" parameterType="Review">
+		update
+			review
+		set
+			review_title = #{title},
+			review_content = #{content},
+			review_like_count = #{likeCount},
+			review_image = #{image},
+			review_updated_date = sysdate
+		where
+			review_no = #{no}
+	</update>
+		
 	<!-- void deleteReview(Review reivew); -->
 		<delete id="deleteReview" parameterType="Review">
 			delete from review
 			where review_no = #{no}
 		</delete>
+	
+	<!-- void insertReviewCategory(ReviewCategory reviewCategory); -->
+	<insert id="insertReviewCategory" parameterType="ReviewCategory">
+		insert into review_categories
+		(review_no, category_id)
+		values
+		(#{reviewNo}, #{category.id})
+	</insert>
 		
+	<!-- reviewResultMap -->
+	<resultMap type="Review" id="reviewResultMap">
+		<id column="review_no" property="no"/>
+		<result column="review_title" property="title"/>
+		<result column="review_content" property="content"/>
+		<result column="review_like_count" property="likeCount"/>
+		<result column="review_created_date" property="createdDate"/>
+		<result column="review_updated_date" property="updatedDate"/>
+		<result column="review_image" property="image"/>
+		<result column="review_point" property="point"/>
+		<result column="user_nickname" property="user.nickname"/>
+		<result column="room_name" property="room.name"/>
+		<collection column="restaurant_no" property="reviewRestaurantTags" select="getAllReviewTagsByRestaurantNo"></collection>
+	</resultMap>
+	
+	<!-- List<Review> getAllReviewsById(ReviewCriteria criteria); -->
+	<select id="getReviewsByCriteria" parameterType="kr.co.nc.criteria.ReviewCriteria" resultMap="reviewResultMap">
+		select *
+			from review rv, users u, restaurant rs
+			<if test="accoId != 0">
+				, acco_rooms ar
+			</if>
+		<where>
+			rv.review_deleted = 'N'
+			and rv.user_no = u.user_no
+			<choose>
+				<when test="accoId != 0">
+					and rv.acco_id = #{accoId}
+					and rv.room_no = ar.room_no
+				</when>
+				<when test="restaurantNo != 0">
+					and rv.restaurant_no = #{restaurantNo}
+					and rv.restaurant_no = rs.restaurant_no
+				</when>
+			</choose>
+		</where>
+		order by rv.review_no desc
+	</select>
+	
+	<!-- List<String> getAllReviewTagsByRestaurantNo(int no); -->
+	<select id="getAllReviewTagsByRestaurantNo" parameterType="int" resultType="string">
+		select restaurant_tag
+		from restaurant_tag
+		where restaurant_no = #{value}
+	</select>
+	
 </mapper>

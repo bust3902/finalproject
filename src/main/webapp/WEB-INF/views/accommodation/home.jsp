@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="/resources/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.0/font/bootstrap-icons.css">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <!-- jQuery range slider를 위해 필요한 라이브러리 -->
@@ -50,13 +51,21 @@
 			</c:choose>
 		</div>
 		<div class="row p-3">
-			<select class="form-select w-25 p-1" name="city">
-				<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
-				<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
-				<c:forEach var="city" items="${cities }">
-					<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
-				</c:forEach>
-			</select>
+			<div class="col d-flex justify-content-start align-items-center my-auto px-0">
+				<select class="form-select w-50 p-1" name="city">
+					<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
+					<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
+					<c:forEach var="city" items="${cities }">
+						<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
+					</c:forEach>
+				</select>
+			</div>
+			<div class="col d-flex justify-content-end align-items-center my-auto">
+				<small>
+					현재 내 위치는 <strong id="home-current-location-address"></strong>
+				</small>
+				<i id="icon-refresh-location" class="bi bi-compass fs-4 text-primary ps-2" style="cursor: pointer;"></i>
+			</div>
 		</div>
 		<div class="row">
 			<div class="col-4">
@@ -64,7 +73,7 @@
 					<ul class="list-group list-group-flush">
 						<li class="list-group-item py-3">
 							<div class="fw-bold mt-3 mb-1 fs-5">날짜</div>
-							<div class="text-small mt-1 mb-3 text-muted">7박까지 조회 가능</div>
+							<div class="text-small mt-1 mb-3 text-muted">최대 7박까지 조회 가능</div>
 							<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
 							<input type="text" id="datepicker" class="form-control" value="" />
 							<input type="hidden" name="startDate" value="" />
@@ -107,7 +116,7 @@
 								<c:forEach var="facility" items="${cofacilities }">
 									<div class="col-6 mb-3">
 										<input class="form-check-input" type="checkbox" name="commonFacilities" value="${facility.id }">
-										<label class="form-check-label">${facility.name }</label>
+										<label class="form-check-label small">${facility.name }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -119,7 +128,7 @@
 								<c:forEach var="facility" items="${rofacilities }">
 									<div class="col-6 mb-3">
 										<input class="form-check-input" type="checkbox" name="roomFacilities" value="${facility.id }">
-										<label class="form-check-label">${facility.name }</label>
+										<label class="form-check-label small">${facility.name }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -130,8 +139,8 @@
 								<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 								<c:forEach var="tag" items="${tags }">
 									<div class="col-6 mb-3">
-										<input class="form-check-input" type="checkbox" name="tags" value="${tag.name }">
-										<label class="form-check-label">${tag.name }</label>
+										<input class="form-check-input" type="checkbox" name="tags" value="${tag }">
+										<label class="form-check-label small">${tag }</label>
 									</div>
 								</c:forEach>
 							</div>
@@ -156,20 +165,20 @@
 			<div class="col-8">
 				<!-- 정렬기준 radio button, 지도 modal button (버튼 스타일 식당 조회와 통일시킬 예정) -->
 				<div class="d-flex flex-wrap mx-3 mb-3">
-					<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
+					<div id="btn-group-sort" class="btn-group flex-fill pe-2 my-auto" role="group" aria-label="Basic radio toggle button group">
 						<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
 						<label class="btn btn-secondary" for="btnradio1">평점 순</label>
 		
 						<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
 						<label class="btn btn-secondary" for="btnradio2">거리 순</label>
 						
-						<input type="radio" class="btn-check" id="btnradio3" name="sort" value="rowprice">
+						<input type="radio" class="btn-check" id="btnradio3" name="sort" value="lowprice">
 						<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
 						
 						<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
 					  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
 					</div>
-					<button type="button" class="btn btn-light" style="border-color: gray" id="btn-open-modal-map">지도</button>
+					<button type="button" class="btn btn-light my-auto" id="btn-open-modal-map"><i class="bi bi-map"></i></button>
 				</div>
 				<!-- 검색결과 조회 리스트 -->
 				<div class="row mx-auto">
@@ -188,22 +197,14 @@
 		</div>
 	</form>
 </div>
-<!-- footer include start -->
-<div class="contatiner">
-   	<div class="row">
-		<div class="col">
-			<h1 class="fs-4 p-2 mb-3 border text-center">임시푸터</h1>
-		</div>
-	</div>
-</div>
-<!-- footer include end -->
+<%@ include file="../common/footer.jsp" %>
 
 <!-- 지도 조회 모달 -->
 <div id="modal-map" class="modal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered modal-xl">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h5 class="modal-title">지도 조회</h5>
+				<small class="modal-title text-center">내 위치 : <strong id="modal-current-location-address"></strong></small>
 				<button type="button" class="btn-close" data-bs-dismiss="modal"
 					aria-label="Close"></button>
 			</div>
@@ -219,30 +220,92 @@
 $(function () {
 	
 /*
- * 화면 요청할 때 현재 위치 위경도 받아오기
+ * 현재 위치 좌표 갱신하고, 숙소 검색 결과 갱신하기 : 최초 화면 출력시에 실행하고, 사용자가 내 위치 버튼 클릭 시에도 실행한다.
  */
+	// 현재 위치 좌표를 저장하는 변수
 	let currentLat = '';
 	let currentLong = '';
- 	getLocation();
-	function getLocation() {
-		// 받아온 위경도는 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
-		// 		비동기로 실행되어서 if문 밖에서 값 저장하면 안되는듯?
+	refreshLocation();
+	
+	// geolocation.getCurrentPosition은 비동기 통신으로 이루어지므로 반드시 이 통신이 완료되고 숙소 검색 요청을 보내야 한다.
+	// 아래 함수를 실행하면 현재 위치 좌표를 새로 조회하고, 전역변수 currentLat, currentLong와 hidden 태그에 값이 저장된다.
+	// 현재 위치 좌표를 새로 조회하지 못하면 서울 중심 좌표를 대신 저장한다.
+	// 위 수행을 완료하면 숙소 검색 결과를 새로 요청해 화면에 출력한다.
+	function refreshLocation() {
+		// navigator.geolocation에서 지원하는 메소드를 사용해 사용자의 현재 위치 좌표값을 획득한다.
+		// 받아온 좌표값은 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
 	    	currentLat = position.coords.latitude;
 	    	currentLong = position.coords.longitude;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
+			// 화면, 모달창에 현재 위치 주소를 출력한다.
+			getLocationAddress();
+			searchAccos();
 	    });
 		} else {
-		  // 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
+		  // 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
 	    	currentLat = 37.564214;
 	    	currentLong = 127.0016985;
 			$(":hidden[name=currentLat]").val(currentLat);
 			$(":hidden[name=currentLong]").val(currentLong);
+			// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
+	      	$("#modal-current-location-address").text('(정보 없음)');
+    	  	$("#home-current-location-address").text('(정보 없음)');
+			searchAccos();
 	  	}
 	}
 	
+	// 현재 위치 좌표값으로 주소 정보를 조회해 모달 창 화면에 출력하는 함수
+	function getLocationAddress() {
+        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+      		  {sensor:false, 
+      	       language:"ko",
+      	       latlng: currentLat+","+currentLong, 
+      	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+      .done(function(data) {
+      	let location = data.results[0];
+      	let address = location.formatted_address.split(' ');
+      	$("#modal-current-location-address").text(address[2]+' '+address[3]);
+      	$("#home-current-location-address").text(address[2]+' '+address[3]);
+      })
+	}
+	
+/*
+ * 모달 창에 카카오 openAPI로 지도 가져오기
+ */
+	// 모달 창에 지도 정의하기
+	let container = document.getElementById('map');
+	// mapcenter 값 설정
+	let options = { //지도를 생성할 때 필요한 기본 옵션
+			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
+			level: 7 //지도의 레벨(확대, 축소 정도)
+	};
+	// 지도 생성
+	let map = new kakao.maps.Map(container, options);
+	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
+	changeMapCenter(map);
+	// 내 위치 마커 생성하기
+	// 내 위치 마커 이미지 만들기
+	let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
+	let myLocationMarker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng(currentLat, currentLong),
+	    image: myLocaMarkerImage
+	});
+	// 내 위치 마커 지도에 표시하기
+	myLocationMarker.setMap(map);
+
+	// 지도 버튼에 모달 이벤트 연결하기
+	let modalMap = new bootstrap.Modal($("#modal-map"));
+	$("#btn-open-modal-map").click(function () {
+		modalMap.show();
+		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
+		map.relayout(); 
+		changeMapCenter(map);
+		myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+	});
+
 /*
  * 선택한 지역에 따라 지도의 중심좌표 변경하기
  */
@@ -258,43 +321,17 @@ $(function () {
 		map.setLevel(7);
 	}
 }
-	
-/*
- * 검색 결과 카카오 openAPI로 지도에 표현하기
- */
-	// 모달 창에 지도 정의하기
-	let container = document.getElementById('map');
-	// mapcenter 값 설정
-	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
-			level: 7 //지도의 레벨(확대, 축소 정도)
-	};
-	// 지도 생성
-	let map = new kakao.maps.Map(container, options);
-	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
-	changeMapCenter(map);
 
-	// 지도 버튼에 모달 이벤트 연결하기
-	let modalMap = new bootstrap.Modal($("#modal-map"));
-	$("#btn-open-modal-map").click(function () {
-		modalMap.show();
-		// 카카오맵이 보이지 않다가 보이게 되므로, 카카오맵 api 메소드 중 레이아웃과 중심을 재설정 해주는 메소드를 실행해야 지도 화면과 중심이 깨지지 않는다.
-		map.relayout(); 
-		changeMapCenter(map);
-	});
-	
 /*
 	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : 로컬스토리지에 값을 저장해 상세 조회페이지로 이동하거나 다시 돌아와도 선택한 일정을 이용할 수 있게 하기.
-	TO DO : 가능하면 확인 버튼 위치 등 수정
+	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
 */
-	// 화면 로드 시 날짜 및 기간 초기화 : 이 값이 input태그의 val에 저장된다.
-	// 기본설정은 오늘날짜, 내일날짜이다.
-	// TO DO : 저장한 값이 있는 경우 그 값을 가져오기.
-	let startDayString = moment().format('YYYY-MM-DD');
-	let endDayString = moment().add(+1, 'd').format('YYYY-MM-DD');
+	// 화면 로드 시 날짜 및 기간 초기화
+	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
+	// * 이 변수의 값이 hidden태그, 로컬스토리지, daterangepicker 에서 관리된다.
+	let startDayString = getDateValues().start
+	let endDayString = getDateValues().end;
 	let duration = 1;
-
 	// daterangepicker 생성 설정
     $('#datepicker').daterangepicker({
     	// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
@@ -316,29 +353,54 @@ $(function () {
             "monthNames": ["1월", "2월", "3월", "4월", "5월", "6월", "7월", "8월", "9월", "10월", "11월", "12월"],
             "firstDay": 1
         },
+        "minDate": moment().format('YYYY-MM-DD'), // 오늘 이전의 날짜는 조회 불가능하다.
         "startDate": startDayString,
         "endDate": endDayString,
         "drops": "down"
     }, function (start, end, label) {
-    	// 날짜가 변경된 뒤 실행되는 함수
-    	// 시작일, 종료일, 기간의 값을 초기화한다.
+    	// 생성 시, 날짜를 변경한 뒤 적용시키면 실행되는 함수
+    	// 화면에 출력할 시작일, 종료일, 기간에 대한 문자열을 값을 변경하고, 변경된 날짜를 hidden태그, localStorage에도 저장한다.
         startDayString = start.format('YYYY-MM-DD');
         endDayString = end.format('YYYY-MM-DD');
         duration = end.diff(start,'days');
-        $(":hidden[name=startDate]").val(startDayString);
-        $(":hidden[name=endDate]").val(endDayString);
-        searchAccos();
+        setDateValues(startDayString, endDayString);
     });
 
-	// html이 출력될 때 datepicker의 input태그의 value 설정
+	// html이 출력될 때 datepicker의 input태그의 value 저장
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
-	// 날짜 변경 시 input태그의 value 설정
+	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
+	setDateValues(startDayString, endDayString);
+	
+	// 날짜 변경 여부와 무관하게 적용을 누르면 발생하는 이벤트에 함수 등록
+	// * input태그의 value 설정 (생성 설정의 날짜변경 이벤트와 다름)
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
+    	setDateValues(startDayString, endDayString);
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
+    	// 검색 조건이 바뀌었으므로 숙소 검색 함수를 실행한다.
+        searchAccos();
     });
-	// html이 출력될 때 폼에서 사용할 hidden태그의 value 설정
-    $(":hidden[name=startDate]").val(startDayString);
-    $(":hidden[name=endDate]").val(endDayString);
+    
+    // 날짜 정보를 hidden 태그와 localStorage에 저장하는 함수
+	// * hidden태그 저장 : 검색조건으로 날짜포맷의 값을 전달하기 위함
+    // * localStorage 저장 : 이 페이지를 다시 요청하거나 상세조회 페이지를 요청해도 설정한 날짜가 유지되도록 한다.
+    function setDateValues(start, end) {
+        $(":hidden[name=startDate]").val(start);
+        $(":hidden[name=endDate]").val(end);
+        localStorage.setItem("startDate", start);
+        localStorage.setItem("endDate", end);
+    }
+    
+    // 초기화할 날짜 정보를 가져오는 함수.
+    // localStorage에 값이 있으면 그 값을, 없으면 현재 날짜, 현재 날짜 + 1을 가져온다.
+    function getDateValues() {
+    	let startvalue = localStorage.getItem("startDate");
+    	let endvalue = localStorage.getItem("endDate")
+    	let selectedDate = {
+   			start : ((typeof startvalue == "undefined" || startvalue == null || startvalue == "") ? moment().format('YYYY-MM-DD') : startvalue),
+   			end : ((typeof endvalue == "undefined" || endvalue == null || endvalue == "") ? moment().add(+1, 'd').format('YYYY-MM-DD') : endvalue)
+    	};
+    	return selectedDate;
+    }
     
 /*
 	jQuery UI를 이용한 금액 슬라이더 생성하기  
@@ -362,10 +424,28 @@ $(function () {
 /*
  * ajax로 검색 조건에 따른 숙소정보 조회하기
  */
+ 	// 현재 지도에 표시된 마커를 관리하기 위한 배열을 정의한다.
+ 	let accoMarkers = [];
+ 	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수.
+ 	// * 인자값이 null이면 마커를 삭제하고, 지도 객체이면 그 지도에 마커를 표시한다.
+ 	function setMarker(map) {
+ 		for (let i = 0; i < accoMarkers.length; i++) {
+ 			accoMarkers[i].setMap(map);
+ 		}
+ 	}
+ 	
+ 	// 마커에서 사용할 이미지 객체를 만든다.
+ 	let accoMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
+		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
 		let $tbody = $("#tbody-accos").empty();
-		$.getJSON("/acco/search", queryString).done(function(accos) {
+		// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
+		setMarker(null);
+		accoMarkers = [];
+		
+		// ajax로 검색조건에 따른 숙소정보를 요청해 응답데이터로 받는다.
+		$.getJSON("/accommodations", queryString).done(function(accos) {
 			if (accos.length === 0) {
 				let content = `
 					<tr>
@@ -377,28 +457,16 @@ $(function () {
 				$tbody.append(content);
 			} else {
 				$.each(accos, function(index, acco) {
-					let reviewRateText = '';
-					if (acco.reviewRate <= 1) {
-						reviewRateText = '아쉬워요';
-					} else if (acco.reviewRate <= 2) {
-						reviewRateText = '부족해요';
-					} else if (acco.reviewRate <= 3) {
-						reviewRateText = '만족해요';
-					} else if (acco.reviewRate <= 4) {
-						reviewRateText = '추천해요';
-					} else if (acco.reviewRate <= 5) {
-						reviewRateText = '최고에요';
-					}
-					
+					// 숙소 정보 html컨텐츠 생성
 					let content = '';
 					content += '<tr id="row-acco-' + acco.id +'" style="cursor: pointer;"/>';
 					content += '	<td class="align-middle p-3">';
-					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/' + acco.thumbnailImageName + '" />';
+					content += '		<img class="img-thumbnail list-image" alt="thumbnail" src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName + '" />';
 					content += '	</td>';
 					content += '	<td class="p-3">';
 					content += '		<h5 class="fw-bold text-dark">' + acco.name +'</h5>';
 					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + acco.reviewRate + '</span><strong class="ms-2">' + reviewRateText +' (' + acco.reviewCount  +')</strong>';
+					content += '			<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
 					content += '		</p>';
 					content += '		<p>'
 					content += '			<small>' + acco.district + '</small>'
@@ -408,20 +476,63 @@ $(function () {
 					content += '		<p class="text-end text-dark fs-5 fw-bold">' + acco.minPrice.toLocaleString() + '원</p>';
 					content += '	</td>';
 					
+					// 숙소 정보 html컨텐츠를 tbody에 추가
 					$tbody.append(content);
 					$("#row-acco-"+acco.id).click(function() {
-						location.href = "acco/detail?no=" + acco.id;
+						location.href = "acco/detail?id=" + acco.id;
 					});
+					
+					// 지도에 표시할 마커 객체 생성
+					let markerPosition = new kakao.maps.LatLng(acco.latitude, acco.longitude);
+					let marker = new kakao.maps.Marker({
+					    position: markerPosition,
+					    image: accoMarkerImage
+					});
+					
+					// 마커에 click 이벤트를 등록
+	 				kakao.maps.event.addListener(marker, 'click', function() {
+	 					// 상세조회 페이지로 이동
+	 					location.href= "acco/detail?id=" + acco.id;
+	 				});
+					
+					// 마커에 mouseover, mouseout 이벤트를 등록
+					// * mouseover 시 보여줄 커스텀오버레이를 생성 (숙소 정보 요약)
+					let overlaycontent = '';
+					overlaycontent += `<div class="position-relative">
+											<div class="position-absolute" style="top: -130px; left: -95px;">
+												<button type="button" class="btn btn-dark position-relative" style="background-color: rgba( 0, 0, 0, 0.5 );">
+													<div>`;
+					overlaycontent += acco.name + '<br/>';
+					overlaycontent += '<small>평점 : </small><span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><br/>';
+					overlaycontent += '<small>내 위치까지 거리 : <strong>' + acco.currentDistance + 'km</strong></small>';
+					overlaycontent += `				</div>
+												<svg width="1em" height="1em" viewBox="0 0 16 16" class="position-absolute top-100 start-50 translate-middle mt-1 opacity-50" fill="#212529" xmlns="http://www.w3.org/2000/svg"><path d="M7.247 11.14L2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z"/></svg>
+											</button>
+										</div>
+									</div>`;
+					let overlay = new kakao.maps.CustomOverlay({
+						content: overlaycontent,
+						position: markerPosition
+					});
+					kakao.maps.event.addListener(marker, 'mouseover', function() {
+						overlay.setMap(map);
+					});
+					kakao.maps.event.addListener(marker, 'mouseout', function() {
+						overlay.setMap(null);
+					});
+					
+					// 배열에 마커 객체를 저장
+					accoMarkers.push(marker);
 				});
+				// 배열에 새로 담긴 마커 객체를 모두 지도에 표시한다.
+				setMarker(map);
 			}
 		});
 	}
 	
-	
-	
-	// 처음 화면 로딩될 때 숙소 검색 결과 화면에 출력하기 (다른 input태그 값 초기화 설정보다 늦게 실행돼야 함)
-	searchAccos();
-	
+/*
+ * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
+ */
 	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
 	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	//		TO DO: 적용 버튼의 필요 유무? 다른 거 눌러도 다 현 상태로 폼 제출되는데
@@ -431,7 +542,6 @@ $(function () {
 	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
 	$("input[name=sort]").click(function() {
-		console.log('test');
 		searchAccos();
 	});
 	// 지역을 변경했을 때 숙소 재검색 후 화면 갱신, 지도 center 변경
@@ -455,6 +565,11 @@ $(function () {
 		// 기타
 		$(":checkbox[name=tags]").prop("checked", false);
 	});
+	// 나침반 아이콘을 눌렀을 때 내 위치 정보를 다시 조회하고, 검색결과도 갱신
+	$("#icon-refresh-location").click(function(){
+		refreshLocation();
+	});
+	
 });
 </script>
 </body>

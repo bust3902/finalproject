@@ -12,6 +12,7 @@
 			@Alias 어노테이션이 있으면 그 어노테이션으로 지정한 이름이 별칭으로 등록된다
 		 -->
 		<package name="kr.co.nc.vo"/>
+		<package name="kr.co.nc.web.form"/>
 	</typeAliases>
 
 </configuration>

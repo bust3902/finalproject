@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="kr.co.nc.mapper.ReservationMapper">
+
+<!--void insertReservation(Reservation reservation); -->
+<insert id="insertReservation" parameterType="kr.co.nc.vo.Reservation">
+	insert into reservation
+		(reservation_id, reservation_check_in, reservation_check_out, reservation_name, reservation_tel)
+	values
+		(${merchantUid},#{checkIn},#{checkOut},#{reserName},#{reserTel})		
+</insert>
+<insert id="insertPayment" parameterType="kr.co.nc.vo.Payment">
+	insert into payment
+		(payment_id, payment_status,payment_total_price,payment_date)
+	values
+		(${imp_uid},#{status},#{amount},#{paidAt})
+
+</insert>
+
+<!-- 	List<Reservation> getAllReserveInfo 예약정보리스트 가져오기 -->
+<select id="getAllReserveInfo" parameterType="int" resultType="Reservation" >
+	select 
+		r.reservation_id as reservationNo,
+		r.reservation_check_in as checkIn,
+		r.reservation_check_out as checkOut,
+		r.reservation_name as reserName,
+		r.reservation_tel as reserTel,
+		r.acco_id as "Accommodation.id",
+		r.room_no as "AccommodationRoom.no"
+	from
+		reservation r
+	INNER join users u
+	on r.user_no = u.user_no
+	where r.user_no = u.user_no
+	and r.user_no = #{value}
+	order by r.reservation_check_in
+</select>
+
+<!-- 	String getReserveInfoByReserveId(int reservationId); 예약정보 한개 가져오기 -->
+<select id="getReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Reservation">
+	SELECT 
+		R.reservation_no as reservationNo, 
+		U.user_tel       as  "user.tel",
+		U.user_name		 as  "user.name"
+	FROM 
+		reservation R	
+	INNER JOIN users U
+	ON R.user_no = U.user_no
+	WHERE R.reservation_id = #{value}
+	order by R.reservation_check_out
+</select>
+
+<!-- void updateReservationStatus(Reservation reservation);  예약 상태변경하기 (예약가능 / 만실)-->
+<update id="updateReservationStatus" parameterType="kr.co.nc.vo.Reservation">
+	update
+		reservation
+	set
+		reservation_status = #{status},
+		reservation_check_in =#{checkIn},
+		reservation_check_out = #{checkOut}
+	where
+		reservation_id = #{reservationId}
+</update>
+
+
+
+</mapper>

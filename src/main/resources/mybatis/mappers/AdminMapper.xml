@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.AdminMapper">
+
+	<!-- 
+		void insertAccommodation(Accommodation accommodation)
+		숙소 데이터 저장
+	 -->
+	<insert id="insertAccommodation" parameterType="Accommodation">
+		<selectKey keyProperty="id" resultType="int" order="BEFORE">
+			select acco_seq.nextval 
+			from dual
+		</selectKey>
+		insert into accommodations
+		(acco_id, acco_name, acco_district, acco_address, acco_latitude, acco_longitude,
+		 acco_thumbnail_image, city_id, acco_introduce_comment, acco_detail_description)
+		values
+		(#{id}, #{name}, #{district}, #{address}, #{latitude}, #{longitude},
+		 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription}
+	</insert>
+	
+	<!-- 
+		void insertAccommodationTypes(AccoTypeRegisterForm accoTypeRegisterForm);
+		숙소 타입 저장
+	 -->
+	<insert id="insertAccommodationTypes" parameterType="AccoTypeRegisterForm">
+		insert into accommodation_types
+		(acco_id, acco_type_id)
+		values
+		(#{id}, #{typeId})
+	</insert>	
+	
+	<!-- 
+		void insertAccommodationTags(AccoTagRegisterForm accoTagRegisterForm);
+		숙소 태그 저장
+	 -->
+	<insert id="insertAccommodationTags" parameterType="AccoTagRegisterForm">
+		insert into acco_tags
+		(acco_id, acco_tag)
+		values
+		(#{id}, #{tag})
+	</insert>	
+	
+	<!-- 
+		void insertAccommodationCommonFacilities(AccoCommonFacilityRegisterForm accoCommonFacilityRegisterForm);
+		숙소 공용시설 저장
+	 -->
+	<insert id="insertAccommodationCommonFacilities" parameterType="AccoCommonFacilityRegisterForm">
+		insert into acco_common_facilities
+		(acco_id, co_facility_id)
+		values
+		(#{id}, #{commonFacilities})
+	</insert>
+		
+	<!-- 
+		void insertAccommodationDetailImages(AccoDetailImageNamesRegisterForm accoDetailImageNamesRegisterForm);
+		숙소 상세이미지 저장
+	 -->
+	<insert id="insertAccommodationDetailImages" parameterType="AccoDetailImageNamesRegisterForm">
+		insert into accommodations
+		(acco_id, image_file_name)
+		values
+		(#{id}, #{detailImageNames})
+	</insert>
+	
+	<!-- 
+		void insertAccoRooms(AccommodationRoom accommodationRoom);
+		숙소 객실별 저장
+	 -->
+	<insert id="insertAccoRooms" parameterType="AccommodationRoom">
+		<selectKey keyProperty="no" resultType="int" order="BEFORE">
+			select room_seq.nextval 
+			from dual
+		</selectKey>
+		insert into acco_rooms
+		(room_no, room_name, room_numbers, room_capacity,
+		 room_day_price, room_description, acco_id, room_thumbnail_image)
+		values
+		(#{no}, #{name}, #{numbers}, #{capacity},
+		 #{dayPrice}, #{description}, #{accoId}, #{thumbnailImageName})
+	</insert>
+	
+	<!-- 
+		void insertAccoRoomFacilities(AccoRoomFacilitiesRegisterForm accoRoomFacilitiesRegisterForm);
+		객실별 시설 저장
+	 -->
+	<insert id="insertAccoRoomFacilities" parameterType="AccoRoomFacilitiesRegisterForm">
+		insert into acco_room_facilities
+		(room_no, ro_facility_id)
+		values
+		(#{no}, #{roomFacilities})
+	</insert>
+	
+	<!-- 
+		void insertAccoRoomDetailImages(AccoRoomDetailImageNamesRegisterForm accoRoomDetailImageNamesRegisterForm);
+		객실 상세 이미지 저장
+	 -->
+	<insert id="insertAccoRoomDetailImages" parameterType="AccoRoomDetailImageNamesRegisterForm">
+		insert into acco_room_detail_images
+		(room_no, room_image_file_name)
+		values
+		(#{no}, #{detailImageNames})
+	</insert>
+	
+</mapper>

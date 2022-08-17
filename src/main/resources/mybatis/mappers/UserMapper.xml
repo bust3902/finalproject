@@ -3,10 +3,13 @@
 <mapper namespace="kr.co.nc.mapper.UserMapper">
 
 	<insert id="insert" parameterType="kr.co.nc.vo.User">
+		<selectKey keyProperty="no" resultType="int" order="BEFORE">
+			select user_seq.nextval from dual
+		</selectKey>
 		insert into users
-		(user_no, user_id, user_password, user_nickname, user_name, user_email, user_tel, user_address, user_login_type)
+			(user_no, user_id, user_password, user_nickname, user_name, user_email, user_tel, user_address, user_login_type)
 		values
-		(user_seq.nextval, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address}, #{loginType})
+			(user_seq.nextval, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address}, #{loginType})
 	</insert>
 	
 	<select id="getUserById" parameterType="string" resultType="kr.co.nc.vo.User">
@@ -14,8 +17,10 @@
 			user_no as no,
 			user_id as id,
 			user_password password,
+			user_nickname nickname,
 			user_name name,
 			user_email email,
+			user_tel tel,
 			user_login_type loginType,
 			user_disabled disabled,
 			user_updated_date updatedDate,
@@ -31,8 +36,10 @@
 			user_no as no,
 			user_id as id,
 			user_password password,
+			user_nickname nickname,
 			user_name name,
 			user_email email,
+			user_tel tel,
 			user_login_type loginType,
 			user_disabled disabled,
 			user_updated_date updatedDate,
@@ -47,12 +54,13 @@
 		update
 			users
 		set
-			user_password = #{password},
+			user_nickname = #{nickname},
+			user_name = #{name},
+			user_tel = #{tel},
 			user_disabled = #{disabled},
 			user_updated_date = sysdate
 		where
 			user_no = #{no}
 	
 	</update>
-
 </mapper>
