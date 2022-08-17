@@ -27,7 +27,7 @@
     	</a>
 		<ul class="navbar-nav">			
 			<div class="container-fluid position-relative" style="width:700px;height:auto">
-   				<form id="form-search" class="d-flex justify-content-center my-auto" action="acco" autocomplete="off">
+   				<form id="form-search" class="d-flex justify-content-center my-auto" action="/acco" autocomplete="off">
      					<input class="form-control me-2" type="text" id="search" name="keyword" placeholder="지역, 숙소명" style="max-width:600px;height:auto">
      					<button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
      					<!-- 최근 검색어 box -->
