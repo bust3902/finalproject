@@ -86,7 +86,7 @@
 							<!-- 음식 태그만큼 내용이 출력되게 하기 -->
 							<c:forEach var="tag" items="${tags }">
 								 <div class="form-check">
-								     <input class="form-check-input" type="checkbox" value="${tag }">
+								     <input class="form-check-input" type="checkbox" name="tags" value="${tag }">
 								     <label class="form-check-label" for="flexCheckDefault">${tag }</label>
 							     </div>
 							</c:forEach>
@@ -149,7 +149,7 @@
 							<col width="20%">
 						</colgroup>
 						<tbody id="tbody-rests">
-							<!-- 숙소 검색결과가 script를 통해 출력됨-->
+							<!-- 음식 검색결과가 script를 통해 출력됨-->
 						</tbody>
 					</table>
 				</div>
@@ -281,7 +281,7 @@ $("#locationButton").click(function() {
 	function searchKeyword(keyword) {
 		//alert(keyword);
 		
-		location.href="/searchlist.jsp?keyword=" + keyword;
+		location.href="/searchlist?keyword=" + keyword;
 	};
 	
 	// 카카오 맵 api를 이용한 지도 구현
@@ -339,7 +339,7 @@ $("#locationButton").click(function() {
 	let restMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
 	
 	function searchRestaurants() {
-		let queryString = $("#form-search").serialize();
+		let queryString = $("#form-search-restaurant").serialize();
 		
 		let $tbody = $("#tbody-rests").empty();
 		// 기존 지도에 표시된 마커를 모두 삭제하고 배열을 비운다.
@@ -359,22 +359,22 @@ $("#locationButton").click(function() {
 				$tbody.append(content);
 			} else {
 				$.each(rests, function(index, rest) {
-					let content = '<tr id="row-rest-' + rest.no +'" style="cursor: pointer;"/>';
-					content += '		<td class="align-middle p-3">';
-					// content += '			<img class="img-thumbnail list-image" alt="thumbnail" src="' + rest.imgname + '" />';
-					content += '		</td>'
-					content += '		<td class="p-3">';
-					content += '		<h5 class="fw-bold text-dark">' + rest.name +'</h5>';
-					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + rest.reviewPoint.toFixed(1) + '</span><strong class="ms-2">' +' (' + rest.reviewCount  +')</strong>';
-					content += '		</p>';
-					content += '		<p>'
-					content += '			<small>' + rest.district + '</small>'
-					content += '		</p>'
-					content += '	</td>';
-					content += '	<td class="align-bottom p-3">';
-					content += '		<p class="text-end text-dark fs-5 fw-bold">' + rest.tel + '</p>';
-					content += '	</td>';
+					// 숙소 정보 html컨텐츠 생성
+					let content = '';
+					content += '<div id="card-acco-' + rest.no +'" class="card text-bg-light p-0 rounded-0">';
+					// content += '	<img src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName +'" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">';
+					content += '	<div class="p-3 rounded-0">';
+					content += '		<div class="my-auto">';
+					content += '		<h5 class="fw-semibold">' + rest.name + '</h5>';
+					content += '			<p class="text-warning">';
+					content += '				<span class="badge bg-warning">' + rest.reviewPoint.toFixed(1) + '</span><strong class="ms-2"> (' + rest.reviewCount  +')</strong>';
+					content += '			</p>';
+					content += '			<small>' + rest.district + '</small>';
+					content += '			<small>' + rest.tel + '</small>';
+					content += '			<small>' + rest.cityId + '</small>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '</div>';
 					
 					
 					$tbody.append(content);
@@ -405,13 +405,14 @@ $("#locationButton").click(function() {
 	 */
 	 $("input[name=sort]").click(function() {
 		 searchRestaurants();
-	 });
+		});
 	
 	$("select[name=city]").change(function() {
 		searchRestaurants();
 		changeMapCenter(map);
 	});
-
+	
+	
 </script>
 </body>
 </html>

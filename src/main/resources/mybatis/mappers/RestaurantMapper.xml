@@ -135,7 +135,7 @@
 	<select id="getRestaurantByCriteria" parameterType="kr.co.nc.criteria.RestaurantCriteria" resultMap="RestaurantResultMap">
 		select distinct res.RESTAURANT_NO,res.RESTAURANT_NAME, res.RESTAURANT_LOCATION,res.RESTAURANT_IMGNAME,
 				res.RESTAURANT_LIKE_COUNT,res.RESTAURANT_REVIEW_COUNT,res.RESTAURANT_REVIEW_POINT,res.RESTAURANT_LATITUD,
-				res.RESTAURANT_LONGITUDE,res.CITY_ID,
+				res.RESTAURANT_LONGITUDE,res.CITY_ID,res.RESTAURANT_TEL,res.RESTAURANT_DISTRICT,
 				ROUND(DISTANCE_WGS84(37, 128, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),3) as distance
 		
 		FROM
@@ -158,7 +158,7 @@
 			<if test="city != null and city != ''">
 				and res.CITY_ID = #{city}
 			</if>
-			<if test="tags != null and tags !=''">
+			<if test="tags != null">
 				and res.restaurant_no (select restaurant_no
 										from restaurant_tag
 										where RESTAURANT_TAG in 
@@ -172,13 +172,13 @@
 				order by res.RESTAURANT_REVIEW_POINT desc
 			</when>
 			<when test="sort == 'count'">
-				order by res.RESTAURANT_REVIEW_COUNT desc
+				order by RESTAURANT_REVIEW_COUNT desc
 			</when>
 			<when test="sort == 'like'">
-				order by res.RESTAURANT_LIKE_COUNT desc
+				order by RESTAURANT_LIKE_COUNT desc
 			</when>
 			<when test="sort == 'dist'">
-				order by res.RESTAURANT_DISTRICT asc
+				order by distance asc
 			</when>
 		</choose>
 	</select>
