@@ -25,8 +25,8 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.AdminService;
 import kr.co.nc.service.RestaurantService;
+import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.CommonFacility;
-import kr.co.nc.vo.Restaurant;
 import kr.co.nc.web.form.AccommodationRegisterForm;
 import kr.co.nc.web.form.AccommodationRoomRegisterForm;
 import kr.co.nc.web.form.RestaurantRegisterForm;
@@ -123,7 +123,7 @@ public class AdminController {
 		
 		sessionStatus.setComplete();
 		
-		return "/admin/restauCompleted";
+		return "/admin/restaucompleted";
 	}
 	
 	// 숙소 입력폼1(지역선택 및 숙소 소개) 요청 
@@ -253,7 +253,6 @@ public class AdminController {
 		return "admin/accommodationregister3";
 	}
 	
-	
 	// 숙소 최종 입력
 	@PostMapping(path = "/insert")
 	public String AccommodationInsert(
@@ -266,6 +265,21 @@ public class AdminController {
 
 		sessionStatus.setComplete();
 		
-		return "admin/accoCompleted";
+		return "admin/accocompleted";
+	}
+	
+	// 관리자 숙소 검색 페이지
+	@GetMapping(path = "/accosearch")
+	public String AccommodationSearchPage(Model model) throws IOException {
+		
+		return "admin/search";
+	}
+
+	// 검색 조건에 맞는 숙소 리스트 반환
+	@GetMapping("/searchAccommodation")
+	@ResponseBody
+	public List<Accommodation> adminAccommodationSearch(@RequestParam("keyword") String keyword) {
+		
+		return adminService.searchAccommodation(keyword);
 	}
 }
