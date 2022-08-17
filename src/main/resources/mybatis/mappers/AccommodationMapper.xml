@@ -281,7 +281,7 @@
 	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(Map<String, Object> param); -->
 	<select id="getRoomsByAccoIdwithPagination" parameterType="map" resultMap="RoomResultMap">
 		select *
-		from (select row_number() over(order by a.room_capacity) row_num, a.* from acco_rooms a where acco_id = #{accoId})
+		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.* from acco_rooms a where acco_id = #{accoId})
 		where row_num between #{beginIndex} and #{endIndex}
 	</select>
 	

@@ -696,7 +696,7 @@ function addRoomCardEventListener() {
 function addReserveBtnEventListener() {
 	$(".btn-room-reserve").click(function() {
 		let roomNo = $(this).attr("data-room-no");
-		location.href="../reservation?id=" + ${param.id} + "&roomno=" + roomNo + "&checkin=" + startDayString + "&checkout=" +endDayString;
+		location.href="../reservation?id=" + ${param.id} + "&roomno=" + roomNo + "&checkin=" + $(":hidden[name=startDate]").val() + "&checkout=" +$(":hidden[name=endDate]").val();
 	});
 }
 	
