@@ -62,7 +62,7 @@
 			</div>
 			<!-- 로그인 상태 -->
 			<li class="nav-item" style="width:80px;height:auto"><a class="nav-link ${menu eq 'login' ? 'active' : '' }" href="/near">내주변</a></li>
-			<li class="nav-item ${empty LOGIN_USER ? 'd-none' : ''}" style="width:90px;height:auto"><a class="nav-link ${menu eq 'register' ? 'active' : '' } " href="/reservation">예약내역</a></li>
+			<li class="nav-item ${empty LOGIN_USER ? 'd-none' : ''}" style="width:90px;height:auto"><a class="nav-link ${menu eq 'register' ? 'active' : '' } " href="/reservationList">예약내역</a></li>
 			<li class="nav-item dropdown" style="width:90px;height:auto">
    			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">더보기</a>
    				<ul class="dropdown-menu">

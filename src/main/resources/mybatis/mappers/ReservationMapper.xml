@@ -9,7 +9,7 @@
 		(reservation_id, reservation_check_in, reservation_check_out, 
 		 reservation_name, reservation_tel, user_no, room_no, acco_id)
 	values
-		(#{reservationNo}, #{checkIn}, #{checkOut}, #{reserName}, #{reserTel}, #{user.No}, #{roomNo}, #{accoId} )		
+		(#{reservationNo}, #{checkIn}, #{checkOut}, #{reserName}, #{reserTel}, #{user.no}, #{roomNo}, #{accoId} )		
 </insert>
 
 
@@ -64,5 +64,21 @@
 	order by r.reservation_check_in
 </select>
 
+
+<!-- AccommodationRoom getRoomDetailByroomNo(int roomNo); -->
+<select id="getRoomDetailByroomNo" parameterType="Integer" resultType="AccommodationRoom">
+		select 	
+			room_no as no,
+			room_name as name,
+			room_numbers as numbers,
+			room_capacity as capacity,
+			room_day_price as dayPrice,
+			room_description as description,
+			room_thumbnail_image as thumbnailImage
+		from 
+			acco_rooms
+		where 
+			room_no = #{value}
+</select>
 
 </mapper>

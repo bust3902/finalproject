@@ -8,8 +8,10 @@ import org.springframework.stereotype.Service;
 
 import kr.co.nc.mapper.PaymentMapper;
 import kr.co.nc.mapper.ReservationMapper;
+import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.Payment;
 import kr.co.nc.vo.Reservation;
+import kr.co.nc.vo.User;
 import kr.co.nc.web.form.PaymentRequest;
 
 @Service
@@ -28,8 +30,11 @@ public class ReservationService {
 		return reservationMapper.getAllReserveInfo(userNo);
 	}
 	
-	public List<Payment> getPaymentInfo(int userNo){
-		return paymentMapper.getPaymentInfo(userNo);
+	public List<Payment> getAllPaymentInfo(int userNo){
+		return paymentMapper.getAllPaymentInfo(userNo);
+	}
+	public Payment getPaymentInfo(String reservationNo){
+		return paymentMapper.getPaymentInfo(reservationNo);
 	}
 	
 	/**
@@ -37,7 +42,7 @@ public class ReservationService {
 	 * @param uid_imp 예약번호
 	 */
 	//모든리스트
-	public Reservation  getReserveInfoByReserveId(int reservationNo){
+	public Reservation  getReserveInfoByReserveId(String reservationNo){
 		return reservationMapper.getReserveInfoByReserveId(reservationNo);
 	}
 	// 예약완료
@@ -60,8 +65,9 @@ public class ReservationService {
 	/*
 	 * 예약정보 저장
 	 */
-	public void insertReservate(PaymentRequest paymentRequest) {
+	public void insertReservate(PaymentRequest paymentRequest, User user) {
 		Reservation reservation = new Reservation();
+		reservation.setUser(user);
 		reservation.setReserName(paymentRequest.getReserName());
 		reservation.setReserTel(paymentRequest.getReserTel());
 		reservation.setCheckIn(paymentRequest.getCheckIn());
@@ -81,4 +87,10 @@ public class ReservationService {
 		
 	}
 	
+	/**
+	 * roomDetail 정보 차후 acco서비스로 이동
+	 */
+	public AccommodationRoom getRoomDetailByroomNo(int roomNo){
+		return reservationMapper.getRoomDetailByroomNo(roomNo);
+	}
 }

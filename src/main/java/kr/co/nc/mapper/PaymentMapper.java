@@ -13,7 +13,9 @@ public interface PaymentMapper {
 	void updatePaymentStatuts(Payment payment);
 	
 	// 결제정보 가져오기
-	List<Payment> getPaymentInfo(int userNo);
+	List<Payment> getAllPaymentInfo(int userNo);
+	
+	Payment getPaymentInfo(String reservationNo);
 	// 예약완료된
 	List<Payment> getReadytoReserveInfoByReserveId(int userNo);
 	// 예약취소된 예약정보가져오기
