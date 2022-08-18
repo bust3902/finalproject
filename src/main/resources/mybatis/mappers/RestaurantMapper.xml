@@ -133,29 +133,35 @@
 	
 	<!-- List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria); -->
 	<select id="getRestaurantByCriteria" parameterType="kr.co.nc.criteria.RestaurantCriteria" resultMap="RestaurantResultMap">
-		select distinct res.RESTAURANT_NO,res.RESTAURANT_NAME, res.RESTAURANT_LOCATION,res.RESTAURANT_IMGNAME,
-				res.RESTAURANT_LIKE_COUNT,res.RESTAURANT_REVIEW_COUNT,res.RESTAURANT_REVIEW_POINT,res.RESTAURANT_LATITUD,
-				res.RESTAURANT_LONGITUDE,res.CITY_ID,res.RESTAURANT_TEL,res.RESTAURANT_DISTRICT,
+		select distinct res.RESTAURANT_NO, res.RESTAURANT_NAME, res.RESTAURANT_LOCATION, res.RESTAURANT_IMGNAME,
+				res.RESTAURANT_LIKE_COUNT, res.RESTAURANT_REVIEW_COUNT, res.RESTAURANT_REVIEW_POINT, res.RESTAURANT_LATITUD,
+				res.RESTAURANT_LONGITUDE, res.CITY_ID, res.RESTAURANT_TEL, res.RESTAURANT_DISTRICT,
 				ROUND(DISTANCE_WGS84(37, 128, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),3) as distance
 		
 		FROM
-		   restaurant res, restaurant_tag rtag, restaurant_menu rmenu,RESTAURANT_CAT rcat,RESTAURANT_CAT_NAME rcatname
+		   restaurant res, restaurant_tag rtag, restaurant_menu rmenu, RESTAURANT_CAT rcat, RESTAURANT_CAT_NAME rcatname
 		            
 		<where>
 			res.RESTAURANT_DELETE = 'N'
+			and res.RESTAURANT_LATITUD >= #{minLat} and res.RESTAURANT_LATITUD &lt; #{maxLat}
+			and res.RESTAURANT_LONGITUDE >= #{minLon} and res.RESTAURANT_LONGITUDE &lt; #{maxLon}
 			<if test="keyword != null">
 					AND res.restaurant_no = rtag.restaurant_no (+)
 		            AND res.restaurant_no = rmenu.restaurant_no (+)
                     AND res.restaurant_no = rcat.restaurant_no(+)
                     AND rcat.restaurant_cat_id =  rcatname.restaurant_cat_id (+)
-		            AND (res.restaurant_name like '%' || #{keyword} || '%' or res.restaurant_district like '%' || #{keyword} || '%' or rcatname.restaurant_cat_name like '%' || #{keyword} || '%'  or rtag.restaurant_tag like '%' || #{keyword} || '%' or rmenu.restaurant_menu_name like '%' || #{keyword} || '%' )
+		            AND (res.restaurant_name like '%' || #{keyword} || '%' 
+		                 or res.restaurant_district like '%' || #{keyword} || '%' 
+		                 or rcatname.restaurant_cat_name like '%' || #{keyword} || '%'  
+		                 or rtag.restaurant_tag like '%' || #{keyword} || '%' 
+		                 or rmenu.restaurant_menu_name like '%' || #{keyword} || '%' )
 			</if>
 			<if test="categoryId != null">
 				and res.restaurant_no in (select restaurant_no
 										from RESTAURANT_CAT
 										where RESTAURANT_CAT_ID = #{categoryId})
 			</if>
-			<if test="city != null and city != ''">
+			<if test='city != null and city != ""'>
 				and res.CITY_ID = #{city}
 			</if>
 			<if test="tags != null">
@@ -172,10 +178,10 @@
 				order by res.RESTAURANT_REVIEW_POINT desc
 			</when>
 			<when test="sort == 'count'">
-				order by RESTAURANT_REVIEW_COUNT desc
+				order by res.RESTAURANT_REVIEW_COUNT desc
 			</when>
 			<when test="sort == 'like'">
-				order by RESTAURANT_LIKE_COUNT desc
+				order by res.RESTAURANT_LIKE_COUNT desc
 			</when>
 			<when test="sort == 'dist'">
 				order by distance asc

@@ -24,4 +24,12 @@ public class RestaurantCriteria {
 	private List<String> tags;
 	// 정렬기준
 	private String sort;
+	
+	private String minLat;
+	
+	private String maxLat;
+	
+	private String minLon;
+	
+	private String maxLon;
 }
