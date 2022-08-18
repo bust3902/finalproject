@@ -17,16 +17,15 @@
 </head>
 <body>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
+<form id="form-search-restaurant" >
 	<div class="position-relative">
 		<form id="form-search" class="d-flex" role="search" action="searchlist">
-	        <input class="form-control me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
-	        <button class="btn btn-secondary my-2 my-sm-0" type="submit">
+	        <input class="form-control me-sm-2" type="text" name="keyword" value="${param.keyword }" id="search" placeholder="지역,음식을 검색하세요">
+	        <button class="btn btn-secondary my-2 my-sm-0" type="button" onclick="searchRestaurants();">
 	        	<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
   					<path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
 				</svg>
 			</button>
-			<input type="hidden" name="currentLat" value="" />
-			<input type="hidden" name="currentLong" value="" />
 			<div id="box-keywords" class="position-absolute w-100 d-none" style="top:44px; left:0; z-index: 1000;">
 				<ul class="list-group" id="fix-grop-keywords">
 					<li class="list-group-item list-group-flush border">
@@ -58,104 +57,106 @@
 					</li>
 				</ul>
 			</div>
-	    </form>
 	</div>
-	<form id="form-search-restaurant">
-		<div class="row px-3 pt-5 pb-3">
-		</div>
-		<div class="row">
-			<div class="col-4">
-				<div class="card p-1">
-					<ul class="list-group list-group-flush">
-						<li class="list-group-item py-3">
-							<div class="fw-bold mb-3">카테고리</div>
-							<!-- 음식 카테고리만큼 내용이 출력되게 하기 -->
-							<div class="row p-3">
-								<c:forEach var="category" items="${categories }">
-									<div class="form-check">
-								        <input class="form-check-input" type="radio" name="optionsRadios" value="${category.id }">
-								        <label class="form-check-label" for="optionsRadios1">
-								          ${category.name }
-								        </label>
-							      	</div>
-								</c:forEach>
-							</div>
-						</li>
-						<li class="list-group-item py-3">
-							<div class="fw-bold mb-3">음식점 태그</div>
-							<!-- 음식 태그만큼 내용이 출력되게 하기 -->
-							<c:forEach var="tag" items="${tags }">
-								 <div class="form-check">
-								     <input class="form-check-input" type="checkbox" value="${tag }">
-								     <label class="form-check-label" for="flexCheckDefault">${tag }</label>
-							     </div>
+	<div class="row px-3 pt-5 pb-3">
+	</div>
+	<div class="row">
+		<div class="col-4">
+			<div class="card p-1">
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item py-3">
+						<div class="fw-bold mb-3">카테고리</div>
+						<!-- 음식 카테고리만큼 내용이 출력되게 하기 -->
+						<div class="row p-3">
+							<c:forEach var="category" items="${categories }">
+								<div class="form-check">
+							        <input class="form-check-input" type="radio" name="categorys" onchange="searchRestaurants()" value="${category.id }">
+							        <label class="form-check-label" for="optionsRadios1">
+							          ${category.name }
+							        </label>
+						      	</div>
 							</c:forEach>
-						</li>
-						<li class="list-group-item py-3">
-							<div class="row p-3">
-								<select class="form-select w-80" name="city">
-									<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
-									<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
-									<c:forEach var="city" items="${cities }">
-										<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
-									</c:forEach>
-								</select>
-							</div>
-						</li>
-					</ul>
-				</div>
-			</div>
-			<div class="col-8">
-				<div class="d-flex flex-wrap mx-3 mb-3">
-					<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
-						<input type="radio" class="btn-check" id="btnradio11" name="sort" value="point" checked>
-						<label class="btn btn-secondary" for="btnradio11">평점 순</label>
-		
-						<input type="radio" class="btn-check" id="btnradio22" name="sort" value="count">
-						<label class="btn btn-secondary" for="btnradio22">리뷰 많은 순</label>
-						
-						<input type="radio" class="btn-check" id="btnradio33" name="sort" value="like">
-						<label class="btn btn-secondary" for="btnradio33">좋아요 많은 순</label>
-						
-						<input type="radio" class="btn-check" id="btnradio44" name="sort" value="dist">
-					  	<label class="btn btn-secondary" for="btnradio44">거리 순</label>
-					</div>
-				</div>
-				<div class="row mb-3">
-					<h3>내주변 맛집<button class="btn btn-outline-secondary btn-lg border-0 float-end"><i class="bi bi-share"></i></button></h3>
-					<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio1" autocomplete="off" checked="">
-					  <label class="btn btn-outline-secondary" for="btnradio1">500m</label>
-					
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio2" autocomplete="off">
-					  <label class="btn btn-outline-secondary" for="btnradio2">1km</label>
-					
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio3" autocomplete="off">
-					  <label class="btn btn-outline-secondary" for="btnradio3">2km</label>
-					
-					  <input type="radio" class="btn-check" name="btnradio" id="btnradio4" autocomplete="off">
-					  <label class="btn btn-outline-secondary" for="btnradio4">3km</label>
-					</div>
-				</div>
-					<div>
-						<div class="row mb-3" id="map" style="width:100%;height:350px;"></div>
-					</div>
-				<!-- 검색 결과 조회 리스트 -->
-				<div class="row mx-auto">
-					<table class="table">
-						<colgroup>
-							<col width="30%">
-							<col width="*">
-							<col width="20%">
-						</colgroup>
-						<tbody id="tbody-rests">
-							<!-- 숙소 검색결과가 script를 통해 출력됨-->
-						</tbody>
-					</table>
-				</div>
+						</div>
+					</li>
+					<li class="list-group-item py-3">
+						<div class="fw-bold mb-3">음식점 태그</div>
+						<!-- 음식 태그만큼 내용이 출력되게 하기 -->
+						<c:forEach var="tag" items="${tags }">
+							 <div class="form-check">
+							     <input class="form-check-input" type="checkbox" name="tags" value="${tag }" onchange="searchRestaurants()">
+							     <label class="form-check-label" for="flexCheckDefault">${tag }</label>
+						     </div>
+						</c:forEach>
+					</li>
+					<li class="list-group-item py-3">
+						<div class="row p-3">
+							<select class="form-select w-80" name="city" onchange="searchRestaurants()">
+								<option value="" data-city-lat="37.5666805" data-city-long="126.9784147" selected>서울 전체</option>
+								<!-- 모든 지역정보를 받아와 반복문으로 출력 -->
+								<c:forEach var="city" items="${cities }">
+									<option value="${city.id }" data-city-lat="${city.latitude }" data-city-long="${city.longitude }">${city.name }</option>
+								</c:forEach>
+							</select>
+						</div>
+					</li>
+				</ul>
 			</div>
 		</div>
-	</form>
+		<div class="col-8">
+			<div class="d-flex flex-wrap mx-3 mb-3">
+				<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
+					<input type="radio" class="btn-check" id="btnradio11" name="sort" value="point" checked onchange="searchRestaurants()">
+					<label class="btn btn-secondary" for="btnradio11">평점 순</label>
+	
+					<input type="radio" class="btn-check" id="btnradio22" name="sort" value="count"  onchange="searchRestaurants()">
+					<label class="btn btn-secondary" for="btnradio22">리뷰 많은 순</label>
+					
+					<input type="radio" class="btn-check" id="btnradio33" name="sort" value="like"  onchange="searchRestaurants()">
+					<label class="btn btn-secondary" for="btnradio33">좋아요 많은 순</label>
+					
+					<input type="radio" class="btn-check" id="btnradio44" name="sort" value="dist"  onchange="searchRestaurants()">
+				  	<label class="btn btn-secondary" for="btnradio44">거리 순</label>
+				</div>
+			</div>
+			<div class="row mb-3">
+				<h3>내주변 맛집<button class="btn btn-outline-secondary btn-lg border-0 float-end"><i class="bi bi-share"></i></button></h3>
+				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio1" autocomplete="off" checked=""  onchange="searchRestaurants()">
+				  <label class="btn btn-outline-secondary" for="btnradio1">500m</label>
+				
+				  <input type="radio" class="btn-check" name="distance" id="btnradio2" autocomplete="off" onchange="searchRestaurants()">
+				  <label class="btn btn-outline-secondary" for="btnradio2">1km</label>
+				
+				  <input type="radio" class="btn-check" name="distance" id="btnradio3" autocomplete="off" onchange="searchRestaurants()">
+				  <label class="btn btn-outline-secondary" for="btnradio3">2km</label>
+				
+				  <input type="radio" class="btn-check" name="distance" id="btnradio4" autocomplete="off" onchange="searchRestaurants()">
+				  <label class="btn btn-outline-secondary" for="btnradio4">3km</label>
+				</div>
+			</div>
+				<div>
+					<div class="row mb-3" id="map" style="width:100%;height:350px;"></div>
+				</div>
+			<!-- 검색 결과 조회 리스트 -->
+			<div class="row mx-auto">
+				<table class="table">
+					<colgroup>
+						<col width="30%">
+						<col width="*">
+						<col width="20%">
+					</colgroup>
+					<tbody id="tbody-rests">
+						<!-- 음식 검색결과가 script를 통해 출력됨-->
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<input type="hidden" name="minLat">
+	<input type="hidden" name="maxLat">
+	<input type="hidden" name="minLon">
+	<input type="hidden" name="maxLon">
+</form>	
 </div>
 
 <!-- 현재 위치를 확인할 수 있는 버튼입니다. -->
@@ -281,7 +282,7 @@ $("#locationButton").click(function() {
 	function searchKeyword(keyword) {
 		//alert(keyword);
 		
-		location.href="/searchlist.jsp?keyword=" + keyword;
+		location.href="searchlist?keyword=" + keyword;
 	};
 	
 	// 카카오 맵 api를 이용한 지도 구현
@@ -339,7 +340,9 @@ $("#locationButton").click(function() {
 	let restMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
 	
 	function searchRestaurants() {
-		let queryString = $("#form-search").serialize();
+		let queryString = $("#form-search-restaurant").serialize();
+		
+		
 		
 		let $tbody = $("#tbody-rests").empty();
 		// 기존 지도에 표시된 마커를 모두 삭제하고 배열을 비운다.
@@ -359,31 +362,33 @@ $("#locationButton").click(function() {
 				$tbody.append(content);
 			} else {
 				$.each(rests, function(index, rest) {
-					let content = '<tr id="row-rest-' + rest.no +'" style="cursor: pointer;"/>';
-					content += '		<td class="align-middle p-3">';
-					// content += '			<img class="img-thumbnail list-image" alt="thumbnail" src="' + rest.imgname + '" />';
-					content += '		</td>'
-					content += '		<td class="p-3">';
-					content += '		<h5 class="fw-bold text-dark">' + rest.name +'</h5>';
-					content += '		<p class="text-warning">';
-					content += '			<span class="badge bg-warning">' + rest.reviewPoint.toFixed(1) + '</span><strong class="ms-2">' +' (' + rest.reviewCount  +')</strong>';
-					content += '		</p>';
-					content += '		<p>'
-					content += '			<small>' + rest.district + '</small>'
-					content += '		</p>'
-					content += '	</td>';
-					content += '	<td class="align-bottom p-3">';
-					content += '		<p class="text-end text-dark fs-5 fw-bold">' + rest.tel + '</p>';
-					content += '	</td>';
+					// 음식점 정보 html컨텐츠 생성
+					let content = '';
+					content += '<div id="card-rest-' + rest.no +'" class="card text-bg-light p-0 rounded-0">';
+					// content += '	<img src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName +'" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">';
+					content += '	<div class="p-3 rounded-0">';
+					content += '		<div class="my-auto">';
+					content += '		<h5 class="fw-semibold">' + rest.name + '</h5>';
+					content += '			<p class="text-warning">';
+					content += '				<span class="badge bg-warning">' + rest.reviewPoint.toFixed(1) + '</span><strong class="ms-2"> (' + rest.reviewCount  +')</strong>';
+					content += '			</p>';
+					content += '			<small>' + rest.district + '</small>';
+					content += '			<small>' + rest.tel + '</small>';
+					content += '			<small>' + rest.cityId + '</small>';
+					content += '		<p class="text-end fs-4 fw-semibold mt-auto">' + rest.tel + '<span class="fs-5"></span></p>';
+					content += '		</div>';
+					content += '	</div>';
+					content += '</div>';
 					
 					
 					$tbody.append(content);
-					$("#row-rest-"+rest.no).click(function() {
+					$("#card-rest-"+rest.no).click(function() {
 						location.href = "detail?no=" + rest.no;
 					});
 					
 					let markerPosition = new kakao.maps.LatLng(rest.latitude, rest.longitude);
 					let marker = new kakao.maps.Marker({
+						map: map,
 					    position: markerPosition,
 					    image: restMarkerImage
 					});
@@ -393,25 +398,33 @@ $("#locationButton").click(function() {
 						// 상세조회 페이지로 이동
 						location.href="restaurant/detail?no=" + rest.no;
 					});
-					restaurantMakers.push(marker);
+					//restaurantMakers.push(marker);
 				});
-				setMarker(map);
+				//setMarker(map);
 			}
 		});
 	}
 	
-	/*
-	 * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
-	 */
-	 $("input[name=sort]").click(function() {
-		 searchRestaurants();
-	 });
-	
-	$("select[name=city]").change(function() {
-		searchRestaurants();
-		changeMapCenter(map);
+	// 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
+	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
+	    
+	    // 지도 영역정보를 얻어옵니다 
+	    var bounds = map.getBounds();
+	    
+	    // 영역정보의 남서쪽 정보를 얻어옵니다 
+	    var swLatlng = bounds.getSouthWest();
+	    
+	    // 영역정보의 북동쪽 정보를 얻어옵니다 
+	    var neLatlng = bounds.getNorthEast();
+	    
+	    var message = '<p>영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString() + '이고 <br>'; 
+	    message += '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 </p>'; 
+	    
+	    var resultDiv = document.getElementById('result');   
+	    resultDiv.innerHTML = message;
+	    
 	});
-
+	
 </script>
 </body>
 </html>
