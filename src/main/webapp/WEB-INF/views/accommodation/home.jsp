@@ -35,7 +35,7 @@
 </head>
 <body>
 <!-- 
-	요청 URL : localhost/acco/search?type= 또는 ?keyword=
+	요청 URL : localhost/acco?type= 또는 ?keyword=
 	1. 해당 페이지를 요청한 방식에 따라 카드의 상세조건 옵션 다르게 보이게 하기 : 각 태그 클래스에 EL 삼항연산자 적용함
 	* 요청 시 전달받는 Criteria를 통해 요청한 방식 판별, 숙소정보리스트와 요청한 방식에 따른 상세 옵션내용 출력(공용시설, 객실시설, 기타 태그)
 	2. 초기화 버튼을 누르면 사용자가 변경한 옵션을 모두 초기화시키기
@@ -90,7 +90,6 @@
 							<li class="list-group-item py-3">
 								<div class="fw-bold mt-3 mb-1 fs-5">날짜</div>
 								<div class="text-small mt-1 mb-3 text-muted">최대 7박까지 조회 가능</div>
-								<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
 								<input type="text" id="datepicker" class="form-control" value="" />
 								<input type="hidden" name="startDate" value="" />
 								<input type="hidden" name="endDate" value="" />
@@ -126,11 +125,19 @@
 								<div id="slider-range"></div>
 							</li>
 							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-								<div class="fw-bold mb-3">공용 시설</div>
-								<div class="row">
+								<div class="label-option fw-bold pb-3 border-bottom" style="cursor: pointer;">
+									공용 시설
+									<i class="bi bi-chevron-double-down float-end"></i>
+									<i class="bi bi-chevron-double-up float-end d-none"></i>
+								</div>
+								<div class="checks-option row d-none">
+									<div class="col-12 text-end my-3">
+										<label class="form-check-label small">전체 선택/해제</label>
+										<input id="toggle-cofa" class="form-check-input toggle" type="checkbox"/>
+									</div>
 									<!-- 선택한 숙소 유형에 맞는 공용시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 									<c:forEach var="facility" items="${cofacilities }">
-										<div class="col-6 mb-3">
+										<div class="col-6 mb-1">
 											<input class="form-check-input" type="checkbox" name="commonFacilities" value="${facility.id }">
 											<label class="form-check-label small">${facility.name }</label>
 										</div>
@@ -138,23 +145,39 @@
 								</div>
 							</li>
 							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-								<div class="fw-bold mb-3">객실 시설</div>
-								<div class="row">
+								<div class="label-option fw-bold pb-3 border-bottom" style="cursor: pointer;">
+									객실 시설
+									<i class="bi bi-chevron-double-down float-end"></i>
+									<i class="bi bi-chevron-double-up float-end d-none"></i>
+								</div>
+								<div class="checks-option row d-none">
+									<div class="col-12 text-end my-3">
+										<label class="form-check-label small">전체 선택/해제</label>
+										<input id="toggle-rofa" class="form-check-input toggle" type="checkbox"/>
+									</div>
 									<!-- 모든 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 									<c:forEach var="facility" items="${rofacilities }">
-										<div class="col-6 mb-3">
+										<div class="col-6 mb-1">
 											<input class="form-check-input" type="checkbox" name="roomFacilities" value="${facility.id }">
 											<label class="form-check-label small">${facility.name }</label>
 										</div>
 									</c:forEach>
 								</div>
 							</li>
-							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-								<div class="fw-bold mb-3">기타</div>
-								<div class="row">
+							<li class="list-group-item py-3 border-bottom-0 text-muted ${(empty param.type) or (empty tags) ? 'd-none' : '' }">
+								<div class="label-option fw-bold pb-3 border-bottom" style="cursor: pointer;">
+									태그
+									<i class="bi bi-chevron-double-down float-end"></i>
+									<i class="bi bi-chevron-double-up float-end d-none"></i>
+								</div>
+								<div class="checks-option row d-none">
+									<div class="col-12 text-end my-3">
+										<label class="form-check-label small">전체 선택/해제</label>
+										<input id="toggle-tag" class="form-check-input toggle" type="checkbox"/>
+									</div>
 									<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 									<c:forEach var="tag" items="${tags }">
-										<div class="col-6 mb-3">
+										<div class="col-6 mb-1">
 											<input class="form-check-input" type="checkbox" name="tags" value="${tag }">
 											<label class="form-check-label small">${tag }</label>
 										</div>
@@ -176,6 +199,9 @@
 							</li>
 						</ul>
 					</div>
+					<div class="fixed-bottom p-5">
+						<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
+					</div>
 				</div>
 				<!-- 정렬기준, 지도버튼, 숙소 리스트 -->
 				<div class="col-8">
@@ -184,13 +210,10 @@
 						<div id="btn-group-sort" class="btn-group flex-fill pe-2 my-auto" role="group" aria-label="Basic radio toggle button group">
 							<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
 							<label class="btn btn-secondary" for="btnradio1">평점 순</label>
-			
 							<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
 							<label class="btn btn-secondary" for="btnradio2">거리 순</label>
-							
 							<input type="radio" class="btn-check" id="btnradio3" name="sort" value="lowprice">
 							<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
-							
 							<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
 						  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
 						</div>
@@ -452,8 +475,9 @@ $(function () {
  	let accoContents = [];
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
-		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
+		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지우고, 배열을 비운다.
 		let $div = $("#accos-wrapper").empty();
+		accoContents = [];
 		// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
 		setMarker(null);
 		accoMarkers = [];
@@ -466,22 +490,25 @@ $(function () {
 				`;
 				$div.append(content);
 			} else {
+				console.log("전체 검색결과 배열 길이:" + accos.length);
 				let count = 0;
 				$.each(accos, function(index, acco) {
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
 					content += '<div id="card-acco-' + acco.id +'" class="card text-bg-light p-0 rounded-0">';
 					content += '	<img src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName +'" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">';
-					content += '	<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
-					content += '		<div class="my-auto">';
-					content += '		<h5 class="fw-semibold">' + acco.name + '</h5>';
-					content += '			<p class="text-warning">';
-					content += '				<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
-					content += '			</p>';
-					content += '			<small>' + acco.district + '</small>';
+					content += '	<a href="acco/detail?id=' + acco.id + '">';
+					content += '		<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
+					content += '			<div class="my-auto">';
+					content += '			<h5 class="fw-semibold">' + acco.name + '</h5>';
+					content += '				<p class="text-warning">';
+					content += '					<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
+					content += '				</p>';
+					content += '				<small>' + acco.district + '</small>';
+					content += '			</div>';
+					content += '			<p class="text-end fs-4 fw-semibold mt-auto">' + acco.minPrice.toLocaleString() + '<span class="fs-5"> 원 ~</span></p>';
 					content += '		</div>';
-					content += '		<p class="text-end fs-4 fw-semibold mt-auto">' + acco.minPrice.toLocaleString() + '<span class="fs-5"> 원 ~</span></p>';
-					content += '	</div>';
+					content += '	</a>';
 					content += '</div>';
 					count ++;
 					
@@ -492,10 +519,6 @@ $(function () {
 					} else {
 						accoContents.push(content);
 					}
-					
-					$("#card-acco-"+acco.id).click(function() {
-						location.href = "acco/detail?id=" + acco.id;
-					});
 					
 					// 지도에 표시할 마커 객체 생성
 					let markerPosition = new kakao.maps.LatLng(acco.latitude, acco.longitude);
@@ -542,17 +565,19 @@ $(function () {
 				// 배열에 새로 담긴 마커 객체를 모두 지도에 표시한다.
 				setMarker(map);
 			}
+			console.log("화면에 출력할 배열 길이:" + accoContents.length);
+			
 		});
 	}
  	
 /**
  * 화면을 아래로 스크롤하면 검색결과를 추가로 더 보여주는 스크롤링 기능 
  */
-//  let isEmpty = false; 
  // 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
  window.onscroll = function(e) {
  	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
  	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
+ 	console.log(accoContents.length);
  	$("#footer").addClass("d-none");
  	if (accoContents.length == 0) {
  		$("#footer").removeClass("d-none");
@@ -573,10 +598,26 @@ $(function () {
  */
 	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
 	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
-	//		TO DO: 적용 버튼의 필요 유무? 다른 거 눌러도 다 현 상태로 폼 제출되는데
 	$("#btn-apply").click(function() {
 		searchAccos();
 	});
+ 	// 상세조건 중 공용시설/객실시설/태그 란에서 전체선택/해제를 눌렀을 때 체크박스 토글
+ 	$(".toggle").change(function() {
+ 		let toggleId = $(this).attr("id");
+ 		let isToggleChecked = $(this).prop("checked");
+ 		
+ 		let $target = '';
+ 		if (toggleId === "toggle-cofa") {
+ 			$target = $("input[name=commonFacilities]");
+ 		} else if (toggleId === "toggle-rofa") {
+ 			$target = $("input[name=roomFacilities]");
+ 		} else if (toggleId === "toggle-tag") {
+ 			$target = $("input[name=tags]");
+ 		}
+ 		$target.prop("checked", function() {
+ 			return isToggleChecked;
+ 		});
+ 	});
 	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
 	$("input[name=sort]").click(function() {
@@ -602,6 +643,13 @@ $(function () {
 		$(":checkbox[name=roomFacilities]").prop("checked", false);
 		// 기타
 		$(":checkbox[name=tags]").prop("checked", false);
+		// 토글체크박스
+		$(".toggle").prop("checked", false);
+	});
+	// 상세조건 공용시설, 객실시설, 태그 옵션 열고 닫기, 아이콘 토글
+	$(".label-option").click(function() {
+		$(this).next().toggleClass("d-none");
+		$(this).find(".bi").toggleClass("d-none");
 	});
 	// 나침반 아이콘을 눌렀을 때 내 위치 정보를 다시 조회하고, 검색결과도 갱신
 	$("#icon-refresh-location").click(function(){

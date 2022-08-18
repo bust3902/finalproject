@@ -45,18 +45,20 @@
 		</div>
 		<!-- 숙소 검색결과 -->
 		<c:forEach var="acco" items="${bests }">
-			<div data-acco-id="${acco.id }" class="card-acco card text-bg-light p-0 rounded-0">
-				<img src="/resources/images/acco/thumbnail/${acco.thumbnailImageName }" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">
-				<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">
-					<div class="my-auto">
-						<h5 class="fw-semibold"> ${acco.name } </h5>
-						<p class="text-warning">
-							<span class="badge bg-warning"><fmt:formatNumber value="${acco.reviewRate }" pattern=".0" /></span><strong class="ms-2">${acco.reviewRateKeyword }(${acco.reviewCount })</strong>
-						</p>
-						<small>${acco.district }</small>
-						<!-- TODO: 대표 리뷰 출력? -->
+			<div class="card-acco card text-bg-light p-0 rounded-0">
+				<a href="detail?id=${acco.id }">
+					<img src="/resources/images/acco/thumbnail/${acco.thumbnailImageName }" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">
+					<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">
+						<div class="my-auto">
+							<h5 class="fw-semibold"> ${acco.name } </h5>
+							<p class="text-warning">
+								<span class="badge bg-warning"><fmt:formatNumber value="${acco.reviewRate }" pattern=".0" /></span><strong class="ms-2">${acco.reviewRateKeyword }(${acco.reviewCount })</strong>
+							</p>
+							<small>${acco.district }</small>
+							<!-- TODO: 대표 리뷰 출력? -->
+						</div>
 					</div>
-				</div>
+				</a>
 			</div>
 		</c:forEach>
 	</div>
@@ -64,14 +66,6 @@
 <%@ include file="../common/footer.jsp" %>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <script type="text/javascript">
-$(function () {
-	
-	// 카드에 클릭이벤트 연결
-	$(".card-acco").click(function() {
-		location.href = "detail?id=" + $(this).attr("data-acco-id");
-	});
-	
-});
 </script>
 </body>
 </html>
