@@ -222,6 +222,7 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <script type="text/javascript">
 $(function () {
@@ -549,21 +550,20 @@ $(function () {
  */
 //  let isEmpty = false; 
  // 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
- let count = 0; 
  window.onscroll = function(e) {
  	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
  	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
  	$("#footer").addClass("d-none");
- 	if (accoContents.length == count) {
+ 	if (accoContents.length == 0) {
  		$("#footer").removeClass("d-none");
  		return false;
  	}
  	
  	// 숙소 콘텐츠 추가하기
- 	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 배열에서 꺼내 콘텐츠를 추가시킨다.
+	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 가장 앞에 있는 값을 꺼내 콘텐츠를 추가시킨다.
+	// 화면에 제공한 콘텐츠는 배열에서 삭제된다.
  	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
- 		let addContent = accoContents[count];
- 		count++;
+ 		let addContent = accoContents.shift();
  		$("#accos-wrapper").append(addContent);
  	}
  };

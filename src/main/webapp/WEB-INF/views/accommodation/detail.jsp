@@ -353,6 +353,10 @@ $(function () {
 			} else {
 				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
 			}
+		  	// 사용자가 리뷰를 스크롤링으로 조회하다가 다른 탭을 눌렀을 때 footer를 다시 보여주기
+			if ($(this).attr('id') != "review-tab") {
+				$("#footer").removeClass('d-none');
+			}
 		});
 	});
 	
@@ -756,10 +760,12 @@ $.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
 	reviewChartData = data.chartData;
 	let reviews = data.reviews
 	if (reviews.length == 0) {
-		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
-		reviewArray.push(content);
 		isEmpty = true;
+		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
+		// 배열에 담지 않고 바로 append시킨다.
+		$("#review-tab-pane").append(content);
 	} else {
+		let count = 0;
 		for (let review of reviews) {
 			let content = '';
 			content += '<div class="row p-5 border-bottom">';
@@ -790,13 +796,19 @@ $.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
 			content += '        <small class="elapsedTime">' + getElapsedTime(review.createdDate) + '</small>';
 			content += '    </div>';
 			content += '</div>';
-			reviewArray.push(content);
+			count++;
+			
+			// 3개까지는 화면에 바로 출력시키고, 나머지는 스크롤링으로 제공한다.
+			if (count < 4) {
+				$("#review-tab-pane").append(content);
+			} else {
+				reviewArray.push(content);
+			}
 		}
 	}
 });
  
 // 2. 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
-let count = 0; 
 window.onscroll = function(e) {
 	// 리뷰 탭 눌렀을 때만 스크롤링 실행되게 하기
 	if (!$("#review-tab").hasClass("active")) {
@@ -805,17 +817,18 @@ window.onscroll = function(e) {
 	
 	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
 	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
+	// 탭 버튼에 대한 클릭 이벤트핸들러 함수에 리뷰를 끝까지 보기 전에 다른 탭을 누르면, footer를 보여주도록 되어있다. 
 	$("#footer").addClass("d-none");
-	if (reviewArray.length == count) {
+	if (reviewArray.length == 0) {
 		$("#footer").removeClass("d-none");
 		return false;
 	}
 	
 	// 임시 콘텐츠(리뷰정보) 추가하기
-	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 꺼내 콘텐츠를 추가시킨다.
+	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 가장 앞에 있는 값을 꺼내 콘텐츠를 추가시킨다.
+	// 화면에 제공한 콘텐츠는 배열에서 삭제된다.
 	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-		let addContent = reviewArray[count];
-		count++;
+		let addContent = reviewArray.shift();
 		$("#review-tab-pane").append(addContent);
 	}
 };
