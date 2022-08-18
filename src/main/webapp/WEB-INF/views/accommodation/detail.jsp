@@ -204,20 +204,40 @@
 						</h2>
 						<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3">
-							<!-- DB에서 조회한 공용시설, 태그 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
-								<div id="cofas-wrapper" class="d-flex flex-wrap mb-3">
-									<c:forEach var="fac" items="${detail.commonFacilities }">
-										<div id="icon-wrapper-${fac.id }" class="text-center">
-											<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
-											<small>${fac.name }</small>
-										</div>
-									</c:forEach>
-								</div>
-								<div id="tags-wrapper" class="d-flex flex-wrap">
-									<c:forEach var="tag" items="${detail.tags }">
-										<span class="mx-1 badge bg-primary">${tag }</span>
-									</c:forEach>
-								</div>
+							<!-- DB에서 조회한 공용시설, 객실 편의시설 태그 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
+								<c:if test="${not empty detail.commonFacilities }">
+									<div class="mb-3 small fw-bold ps-3">공용시설</div>
+									<div id="cofas-wrapper" class="d-flex flex-wrap justify-content-start mb-5">
+										<c:forEach var="fac" items="${detail.commonFacilities }">
+											<div id="icon-wrapper-${fac.id }" class="text-center">
+												<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
+												<small>${fac.name }</small>
+											</div>
+										</c:forEach>
+									</div>
+								</c:if>
+								<c:if test="${not empty detail.roomFacilities }">
+									<div class="mb-3 small fw-bold ps-3">객실 편의시설<span class="fw-normal"> (객실 별 제공 여부는 객실안내 탭의 이용정보를 확인하세요)</span></div>
+									<div id="cofas-wrapper" class="d-flex flex-wrap justify-content-start mb-5">
+										<c:forEach var="fac" items="${detail.roomFacilities }">
+											<div id="icon-wrapper-${fac.id }" class="text-center">
+												<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
+												<small>${fac.name }</small>
+											</div>
+										</c:forEach>
+									</div>
+								</c:if>
+								<c:if test="${not empty detail.tags }">
+									<div class="mb-3 small fw-bold ps-3">태그</div>
+									<div id="tags-wrapper" class="d-flex flex-wrap">
+										<c:forEach var="tag" items="${detail.tags }">
+											<span class="mx-1 badge bg-primary">${tag }</span>
+										</c:forEach>
+									</div>
+								</c:if>
+								<c:if test="${(empty detail.commonFacilities) and (empty detail.roomFacilities) and (empty detail.tags)}">
+									<div class="small text-center">제공 정보가 없습니다.</div>
+								</c:if>
 							</div>
 						</div>
 					</div>
