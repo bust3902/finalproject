@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
+import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.Reservation;
 
 @Mapper
@@ -13,12 +14,13 @@ public interface ReservationMapper {
 	void insertReservation(Reservation reservation);
 	
 	
-	// 예약번호로 모든 예약정보 가져오기.
+	// 로그인번호 모든 예약정보 가져오기.
 	List<Reservation> getAllReserveInfo(int userNo);
 	
 
 	// 예약번호로 예약정보 가져오기
-	Reservation getReserveInfoByReserveId(int reservationNo);
+	Reservation getReserveInfoByReserveId(String reservationNo);
 
+	AccommodationRoom getRoomDetailByroomNo(int roomNo);
 
 }

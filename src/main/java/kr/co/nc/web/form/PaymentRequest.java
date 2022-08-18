@@ -4,6 +4,10 @@ package kr.co.nc.web.form;
 
 
 
+import java.util.Date;
+
+import org.springframework.format.annotation.DateTimeFormat;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -14,12 +18,14 @@ import lombok.ToString;
 public class PaymentRequest {
 
 	private String impUid;
-	private int merchantUid;
+	private String merchantUid;
 	private int amount;
 	private String reserName;
 	private String reserTel;
-	private String checkIn;
-	private String checkOut;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date checkIn;
+	@DateTimeFormat(pattern = "yyyy-MM-dd")
+	private Date checkOut;
 	private int roomNo;
 	private int accoId;
 }

@@ -30,7 +30,7 @@
 					<div class="input-group">
 						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel" id="reserTel">
 						<span class="input-group-btn">
-						<button class="btn btn-outline-secondary mx-2" name="phoneCheck" type="button" onclick="phoneCheck()" disabled>인증번호 전송</button>
+						<button class="btn btn-outline-secondary mx-2" type="button" onclick="phoneCheck()" disabled>인증번호 전송</button>
 						</span>
 					</div>
 				<p id="phoneCheck" class="text-danger"></p>			
@@ -46,25 +46,25 @@
 					</select>	
 				</div>
 				<div class="form-check">
-					<input class="form-check-input" type="checkbox" value="" id="checkboxAll" name="checkboxAll">
+					<input class="form-check-input" type="checkbox" value="" id="checkboxAll" name='checkboxAll' >
 					<label class="form-text" for="checkboxAll">
 					 	전체동의
 					</label>
 				</div>
 				<div class="form-check mb-2">
-					<input class="form-check-input" type="checkbox" value="" id="checkboxRefundprovision" name="checkbox">
+					<input class="form-check-input" type="checkbox" value="" id="checkboxRefundprovision" name=checkbox>
 					<label class="form-text" for="checkboxRefund" ><a onclick="openRefundModal()" style="text-decoration: underline; color: gray">
 					  숙소이용규칙 및 취소/환불규정 동의</a><strong class="text-danger">(필수)</strong>
 					</label>
 				</div>
 				<div class="form-check mb-2">
-					<input class="form-check-input" type="checkbox" value="" id="checkboxInfo1provision" name="checkbox">
+					<input class="form-check-input" type="checkbox" value="" id="checkboxInfo1provision" name=checkbox>
 					<label class="form-text" for="checkboxInfo1"><a onclick="openinfo1Modal()" style="text-decoration: underline; color: gray">
 					  개인정보 수집 및 이용 동의</a><strong class="text-danger">(필수)</strong>
 					</label>
 				</div>
 				<div class="form-check mb-2">
-					<input class="form-check-input" type="checkbox" value="" id="checkboxInfo2provision" name="checkbox">
+					<input class="form-check-input" type="checkbox" value="" id="checkboxInfo2provision" name=checkbox >
 					<label class="form-text" for="checkboxInfo2"><a onclick="openinfo2Modal()"  style="text-decoration: underline; color: gray">
 					  개인정보 제 3자 제공 동의</a> <strong class="text-danger">(필수)</strong>
 					</label>
@@ -75,23 +75,27 @@
 					<div class="col mx-2">
 						<div class="my-5 mx-3">
 							<dl>
-								<dt id="accoName">보코 서울 강남</dt>
-								<dd id="accoType">디럭스 싱글 </dd><span id="days">1박</span>
+								<dt id="accoName">${acco.name }
+								<dd id="accoType">${room.name } / <span id="days">1박</span>
 								<dt class="col-3 form-text">체크인</dt>
-								<dd id="checkIn">22.07.28 15:00</dd>
+								<dd id="checkIn" >${param.checkin } 15:00</dd>
 								<dd class="form-text">체크아웃</dd>
-								<dd id="checkOut">22.07.29 12:00</dd>
+								<dd id="checkOut">${param.checkout } 12:00</dd>
 							</dl>
-							<input type="hidden" id="accoId" name="accoId" value="54329">
-							<input type="hidden" id="roomNo" name="roomNo" value="251844">
-							<input type="hidden" id="checkIn" name="checkIn" value="22.07.28 15:00">
-							<input type="hidden" id="checkOut" name="checkOut" value="22.07.29 12:00">
+							<input type="hidden" id="accoId" name="impUid">
+							<input type="hidden" id="accoId" name="merchantUid" >
+							
+							<input type="hidden" id="accoId" name="accoId" value="${param.id }">
+							<input type="hidden" id="roomNo" name="roomNo" value="${param.roomno }">
+							<input type="hidden" id="checkIn" name="checkIn" value="${param.checkin }">
+							<input type="hidden" id="checkOut" name="checkOut" value="${param.checkout } ">
+							<input type="hidden" id="amount" name="amount" value="${room.dayPrice }">
 						</div>
 					<hr>
 					</div>
 					<div class="my-3 mx-3">
 						<p><strong>총 결제 금액</strong><small>(VAT포함)</small></p>
-						<h4><strong class="text-danger" name="amount">99000원</strong></h4>
+						<h4><strong class="text-danger" id="dayPrice">${room.dayPrice }</strong></h4>
 						<label><small>
 							<li class="mx-2">해당 객실가는세금, 봉사료가 포함된 금액입니다.</li>
 							<li class="mx-2">결제완료 후 <span class="text-danger">예약자</span> 이름으로 바로 <span class="text-danger">체크인</span> 하시면 됩니다.</li>
@@ -133,13 +137,13 @@
 	      		<div class="row">
 					<div class="col-5">
 						<dt class="form-text mt-3">숙소이름</dt>
-						<dd>보코 서울 강남</dd>
+						<dd>${acco.name }</dd>
 						<dt class="form-text mt-3">객실 타입/기간</dt>
-						<dd>디럭스 싱글 / 1박</dd>
+						<dd>${room.name } / 1박</dd>
 						<dt class="form-text mt-3">체크인</dt>
-						<dd >07.28 목 15:00</dd>
+						<dd >${param.checkin } 15:00</dd>
 						<dt class="form-text mt-3">체크아웃</dt>
-						<dd>07.29 금 12:00</dd>
+						<dd>${param.checkout } 12:00</dd>
 					</div>
 					<div class="col">
 						<ul class="form-text mb-3"><small><strong class="text-danger">당일예약</strong>은 체크인 시간 기준 <strong class="text-danger">3시간 전</strong>까지 취소 가능합니다</small></ul>
@@ -277,10 +281,6 @@ let info2Modal = new bootstrap.Modal(document.getElementById("checkboxInfo2"));
 
 let reserName = document.getElementById("reserName");
 let reserTel = document.getElementById("reserTel");
-let checkIn = document.getElementById("checkIn");
-let checkOut = document.getElementById("checkOut");
-let roomNo = document.getElementById("roomNo");
-let accoId = document.getElementById("accoId");
 
 // 필수 규정 모달
 function openRefundModal() {
@@ -303,9 +303,9 @@ function startPay(){
 		pg: $("#payType option:selected").val(), // 셀렉트창에서 pg사를 선택 
 	    pay_method: "card", 
 		merchant_uid : new Date().getTime(),
-		name : '보코 서울 강남',
+		name : '${acco.name}',
 		// 숙소명 : accoName.value
-		amount : 99000,
+		amount : ${room.dayPrice},
 		// 가격 : accoPrice.value
 		buyer_name : reserName.value,
 		buyer_tel : reserTel.value,
@@ -316,12 +316,6 @@ function startPay(){
 				$("input[name=impUid]").val(rsp.imp_uid);
 				$("input[name=merchantUid]").val(rsp.merchant_uid);
 				$("input[name=amount]").val(rsp.paid_amount);
-				$("input[name=reserName]").val(reserName.value);
-				$("input[name=reserTel]").val(reserTel.value);
-				$("input[name=checkIn]").val(checkIn.value);
-				$("input[name=checkOut]").val(checkOut.value);
-				$("input[name=accoId]").val(accoId.value);
-				$("input[name=roomNo]").val(roomNo.value);
 				
 				document.getElementById("form-reserv").submit();
 	      } else {
