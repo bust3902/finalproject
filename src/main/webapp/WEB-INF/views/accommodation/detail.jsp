@@ -44,7 +44,7 @@
 		object-fit: cover;
 	}
 
- 	.room-swiper-wrapper .mySwiper2 img {
+ 	.room-swiper-wrapper .roomSwiper img {
  		width: 100%;
 		height: 400px;
 		object-fit: cover;
@@ -298,6 +298,29 @@
 $(function () {
 	
 /**
+ * 숙소 이미지 swiper를 위한 Swiper 객체 생성
+ */
+	let swiper = new Swiper(".mySwiper", {
+		loop : true,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+	});
+	
+	let swiper2 = new Swiper(".mySwiper2", {
+		loop : true,
+		spaceBetween : 10,
+		navigation : {
+			nextEl : ".swiper-button-next",
+			prevEl : ".swiper-button-prev"
+		},
+		thumbs : {
+			swiper : swiper
+		},
+	});
+	
+/**
  * 선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
  * 해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
  * (active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
@@ -313,74 +336,49 @@ $(function () {
 		});
 	});
 	
-	
 /**
  * 리뷰 탭을 누르면, id='chart'인 div엘리먼트에 리뷰평점에 대한 차트 그래프를 출력하는 이벤트핸들러 등록
  * (그냥 dom 출력 시 같이 그래프를 draw하도록 하면, 해당 div가 display:none 상태이기 때문에 오류가 발생함)
  * ajax 리뷰데이터 요청 시 획득한 reviewChartData 객체 사용
  */
- $("#review-tab").click(function() {
-	 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
-	 if (isEmpty) {
-		 $("#chart").addClass("d-none");
-		 return false;
-	 }
-     google.charts.load("current", {packages:["corechart"]});
-     google.charts.setOnLoadCallback(drawChart);
-     function drawChart() {
-       var data = google.visualization.arrayToDataTable([
-         ['review point', 'out of 5'],
-         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
-         ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
-         ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
-         ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
-         ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
-       ]);
+	 $("#review-tab").click(function() {
+		 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+		 if (isEmpty) {
+			 $("#chart").addClass("d-none");
+			 return false;
+		 }
+	     google.charts.load("current", {packages:["corechart"]});
+	     google.charts.setOnLoadCallback(drawChart);
+	     function drawChart() {
+	       var data = google.visualization.arrayToDataTable([
+	         ['review point', 'out of 5'],
+	         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
+	         ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
+	         ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
+	         ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
+	         ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
+	       ]);
+	
+	       var options = {
+	         title: '평점 분포',
+	         pieHole: 0.4,
+	       };
+	
+	       var chart = new google.visualization.PieChart(document.getElementById('chart'));
+	       chart.draw(data, options);
+	     };
+	 })
 
-       var options = {
-         title: '평점 분포',
-         pieHole: 0.4,
-       };
-
-       var chart = new google.visualization.PieChart(document.getElementById('chart'));
-       chart.draw(data, options);
-     };
- })
-
-/*
- * 숙소 이미지 swiper 생성
- * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
+/**
+ * input태그에서 daterangepicker 통해 숙박일정 선택하기
+ * TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
  */
-	let swiper = new Swiper(".mySwiper", {
-		loop : true,
-		spaceBetween : 10,
-		slidesPerView : 4,
-		freeMode : true,
-		watchSlidesProgress : true,
-	});
-	let swiper2 = new Swiper(".mySwiper2", {
-		loop : true,
-		spaceBetween : 10,
-		navigation : {
-			nextEl : ".swiper-button-next",
-			prevEl : ".swiper-button-prev",
-		},
-		thumbs : {
-			swiper : swiper,
-		},
-	});
-
-/*
-	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
-*/
 	// 화면 로드 시 날짜 및 기간 초기화
 	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
 	// * 이 변수의 값이 hidden태그, 로컬스토리지, daterangepicker 에서 관리된다.
 	let startDayString = getDateValues().start
 	let endDayString = getDateValues().end;
 	let duration = 1;
-	
 	// daterangepicker 생성 설정
     $('#datepicker').daterangepicker({
     	// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
@@ -454,7 +452,7 @@ $(function () {
     	return selectedDate;
     }
 	
-/*
+/**
  * 숙소 위치 카카오 openAPI로 지도에 표현하기
  */
  	// html에서 jstl로 출력한 숙소 좌표를 받아온다.
@@ -482,7 +480,7 @@ $(function () {
 		map.relayout(); 
 		map.setCenter(mapcenter);
 	});
-
+	
 });
 
 //////////////////////////////////////////// DOM 생성 전에 정의되는 내용
@@ -540,22 +538,6 @@ function searchRooms(currentPage) {
 			let content = '<p class="py-5">조회된 결과가 없습니다.</p>'
 			$wrapper.append(content);
 		} else {
-			// 객실별 이미지 박스 콘텐츠 생성 시 사용할 html 태그를 미리 생성
-			let imageBoxHTML =	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
-									<span>
-										<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
-									</span>
-									<div class="room-swiper-wrapper w-75 mx-auto">
-										<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
-											<div class="swiper-wrapper">
-											</div>
-											<div class="swiper-button-next"></div>
-											<div class="swiper-button-prev"></div>
-										</div>
-									</div>
-								</div>
-							</div>`;
-			
 			// 반복 처리로 객실 별 정보를 보여주는 카드 html콘텐츠 생성, 모달에 정보를 전달하는 이벤트핸들러 등록
 			$.each(rooms, function(index, room) {
 				// 1. 기본 카드 본문 콘텐츠
@@ -602,7 +584,7 @@ function searchRooms(currentPage) {
 										<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
 									</span>
 									<div class="room-swiper-wrapper w-75 mx-auto">
-										<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+										<div class="swiper roomSwiper" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 											<div class="swiper-wrapper">`;
 				imageBox += imageSlides;
 				imageBox +=				`</div>
@@ -621,6 +603,8 @@ function searchRooms(currentPage) {
 				content += '</div>'
 				// 생성한 컨텐츠 화면에 추가
 				$wrapper.append(content);
+				
+				
 				
 				// '객실 이용안내' 링크를 눌러서 모달을 열때마다 해당 객실의 정보를 모달에 저장하도록 한다.
 				// * 클릭한 링크에 대한 익명함수 등록 : content를 append하기 전에는 a태그가 아직 DOM객체가 아니어서 할 수가 없으므로, 그 이후에 등록한다.
@@ -642,6 +626,16 @@ function searchRooms(currentPage) {
 					$("#modal-content-enddate").text($(":hidden[name=endDate]").val());
 				});
 			});
+			
+			// 이미지 swiper 기능을 제공하는 Swiper 객체를 생성한다. (dom객체 생성 후 생성해야 함)
+			 new Swiper(".roomSwiper", {
+					loop : true,
+					spaceBetween : 10,
+					navigation : {
+						nextEl : ".roomSwiper-button-next",
+						prevEl : ".roomSwiper-button-prev"
+					}
+				});
 			
 			// 화면에 추가한 모든 객실카드에 대하여 이벤트핸들러 등록
 			addRoomCardEventListener();
