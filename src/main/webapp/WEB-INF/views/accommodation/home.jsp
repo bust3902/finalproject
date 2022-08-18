@@ -447,6 +447,8 @@ $(function () {
  	
  	// 마커에서 사용할 이미지 객체를 만든다.
  	let accoMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+ 	// 스크롤링 시 컨텐츠를 꺼낼 배열을 정의한다.
+ 	let accoContents = [];
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
 		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
@@ -463,6 +465,7 @@ $(function () {
 				`;
 				$div.append(content);
 			} else {
+				let count = 0;
 				$.each(accos, function(index, acco) {
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
@@ -479,9 +482,16 @@ $(function () {
 					content += '		<p class="text-end fs-4 fw-semibold mt-auto">' + acco.minPrice.toLocaleString() + '<span class="fs-5"> 원 ~</span></p>';
 					content += '	</div>';
 					content += '</div>';
+					count ++;
 					
 					// 숙소 정보 html컨텐츠를 tbody에 추가
-					$div.append(content);
+					// 7번째 컨텐츠 부터는 화면에 바로 출력하지 않고 스크롤링 시 사용하는 배열 accoContents에 담는다.
+					if (count < 7) {
+						$div.append(content);
+					} else {
+						accoContents.push(content);
+					}
+					
 					$("#card-acco-"+acco.id).click(function() {
 						location.href = "acco/detail?id=" + acco.id;
 					});
@@ -533,6 +543,30 @@ $(function () {
 			}
 		});
 	}
+ 	
+/**
+ * 화면을 아래로 스크롤하면 검색결과를 추가로 더 보여주는 스크롤링 기능 
+ */
+//  let isEmpty = false; 
+ // 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
+ let count = 0; 
+ window.onscroll = function(e) {
+ 	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
+ 	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
+ 	$("#footer").addClass("d-none");
+ 	if (accoContents.length == count) {
+ 		$("#footer").removeClass("d-none");
+ 		return false;
+ 	}
+ 	
+ 	// 숙소 콘텐츠 추가하기
+ 	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 배열에서 꺼내 콘텐츠를 추가시킨다.
+ 	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+ 		let addContent = accoContents[count];
+ 		count++;
+ 		$("#accos-wrapper").append(addContent);
+ 	}
+ };
 	
 /*
  * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
