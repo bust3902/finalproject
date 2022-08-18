@@ -77,6 +77,7 @@
 		<result column="acco_updated_date" property="updatedDate"/>
 		<result column="acco_deleted" property="deleted"/>
 		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
+		<collection column="acco_id" property="roomFacilities" select="getRoomFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
 		<collection column="acco_id" property="images" select="getImagesByAccoId"></collection>
 	</resultMap>
@@ -169,6 +170,14 @@
 		from acco_common_facilities a, common_facilities c
 		where a.co_facility_id = c.co_facility_id
 			and a.acco_id = #{value}
+	</select>
+	
+	<!-- List<RoomFacility> getRoomFacilitiesByAccoId(int accoId); -->
+	<select id="getRoomFacilitiesByAccoId" parameterType="int" resultType="RoomFacility">
+		select distinct r.ro_facility_id as id, r.ro_facility_name as name, r.ro_facility_icon_name as iconName
+		from acco_room_facilities a, room_facilities r
+		where a.room_no in (select room_no from acco_rooms where acco_id = #{value})
+			and a.ro_facility_id = r.ro_facility_id
 	</select>
 	
 	<!-- List<String> getAccoTagsByAccoId(int accoId); -->

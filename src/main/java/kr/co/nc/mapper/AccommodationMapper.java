@@ -38,6 +38,8 @@ public interface AccommodationMapper {
 	Accommodation getAccommodationdDetailById(int accoId);
 	// 숙소번호에 따른 공용시설 조회
 	List<CommonFacility> getCommonFacilitiesByAccoId(int accoId);
+	// 숙소번호에 따른 객실시설 조회(중복 제외)
+	List<RoomFacility> getRoomFacilitiesByAccoId(int accoId);
 	// 숙소번호에 따른 태그 조회
 	List<String> getAccoTagsByAccoId(int accoId);
 	// 숙소번호에 따른 이미지(파일명) 조회
