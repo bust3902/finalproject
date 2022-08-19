@@ -121,9 +121,11 @@
 						<li class="list-group-item list-group-flush border-0">
 							<span>매일</span><span class="float-end">${restaurant.opening }</span>
 						</li>
-						<li class="list-group-item list-group-flush border-0">
-							<span>휴게시간</span><span class="float-end">${restaurant.breakTime }</span>
-						</li>
+						<c:if test='${restaurant.breakTime != null and restaurant.breakTime != "" }'>
+							<li class="list-group-item list-group-flush border-0">
+								<span>휴게시간</span><span class="float-end">${restaurant.breakTime }</span>
+							</li>
+						</c:if>
 						<li class="list-group-item list-group-flush border-0">
 							<span>영업종료시간</span><span class="float-end">${restaurant.close }</span>
 						</li>

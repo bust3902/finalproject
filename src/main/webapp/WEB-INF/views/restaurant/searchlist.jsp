@@ -167,13 +167,19 @@
 
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=49a6f0504323df1e2fbc06bfac690d78"></script>
 <script type="text/javascript">
-$(function () {
 	
-
-let currentLat = '';
-let currentLong = '';
-refreshLocation();
-
+/*
+ * 현재 위치 좌표 갱신하고, 숙소 검색 결과 갱신하기 : 최초 화면 출력시에 실행하고, 사용자가 내 위치 버튼 클릭 시에도 실행한다.
+ */
+	// 현재 위치 좌표를 저장하는 변수
+	let currentLat = '';
+	let currentLong = '';
+	refreshLocation();
+	
+	// geolocation.getCurrentPosition은 비동기 통신으로 이루어지므로 반드시 이 통신이 완료되고 숙소 검색 요청을 보내야 한다.
+	// 아래 함수를 실행하면 현재 위치 좌표를 새로 조회하고, 전역변수 currentLat, currentLong와 hidden 태그에 값이 저장된다.
+	// 현재 위치 좌표를 새로 조회하지 못하면 서울 중심 좌표를 대신 저장한다.
+	// 위 수행을 완료하면 숙소 검색 결과를 새로 요청해 화면에 출력한다.
 	function refreshLocation() {
 		// navigator.geolocation에서 지원하는 메소드를 사용해 사용자의 현재 위치 좌표값을 획득한다.
 		// 받아온 좌표값은 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
@@ -188,7 +194,7 @@ refreshLocation();
 				$(":hidden[name=currentLong]").val(currentLong);
 				// 화면, 모달창에 현재 위치 주소를 출력한다.
 				getLocationAddress();
-				searchAccos();
+				searchRestaurants();
 	    	}, function(position) {
 				// 실패 시 콜백함수
 				// 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
@@ -199,7 +205,7 @@ refreshLocation();
 				// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
 				    	$("#modal-current-location-address").text('(정보 없음)');
 				 	  	$("#home-current-location-address").text('(정보 없음)');
-				searchAccos();
+				searchRestaurants();
 			});
 		}
 	}
@@ -313,19 +319,26 @@ refreshLocation();
 	
 	//지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 	let map = new kakao.maps.Map(mapContainer, mapOption);
+
+	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
+	    
+	    // 지도 영역정보를 얻어옵니다 
+	    let bounds = map.getBounds();
+	  
+	    $("input[name=minLat]").val(bounds.ha);
+	    $("input[name=maxLat]").val(bounds.oa);
+	    $("input[name=minLon]").val(bounds.qa);
+	    $("input[name=maxLon]").val(bounds.pa);
+	    
+	    searchRestaurants();
+	    //let resultDiv = document.getElementById('result');   
+	    //resultDiv.innerHTML = message;
+	    
+	});
 	
 	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
 	changeMapCenter(map);
-	// 내 위치 마커 생성하기
-	// 내 위치 마커 이미지 만들기
-	let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
-	let myLocationMarker = new kakao.maps.Marker({
-	    position: new kakao.maps.LatLng(currentLat, currentLong),
-	    image: myLocaMarkerImage
-	});
-	// 내 위치 마커 지도에 표시하기
-	myLocationMarker.setMap(map);
-	
+
 	/*
 	* 선택한 지역에 따라 지도의 중심좌표 변경하기
 	*/
@@ -345,27 +358,11 @@ refreshLocation();
 	/*
 		ajax로 검색 조건에 따른 음식점 정보 조회하기
 	*/
-	// 현재 지도에 표시된 마커를 관리하기 위한 배열을 정의하기
-	let restaurantMakers = [];
-	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수
-	// * 인자값이 null이면 마커를 삭제하고, 지도 객체면 그 지도에 마커를 표시한다.
-	function setMarker(map) {
-		for(let i = 0; i < restaurantMakers.length; i++) {
-			restaurantMakers[i].setMap(map);
-		}
-	}
-	// 마커에서 사용할 이미지 객체를 만들기
-	let restMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
 	
 	function searchRestaurants() {
 		let queryString = $("#form-search-restaurant").serialize();
 		
-		
-		
 		let $tbody = $("#tbody-rests").empty();
-		// 기존 지도에 표시된 마커를 모두 삭제하고 배열을 비운다.
-		setMarker(null);
-		restaurantMakers = [];
 		
 		// ajax로 검색조건에 따른 숙소정보를 요청해 응답 데이터로 받는다.
 		$.getJSON("/restaurants", queryString).done(function(rests) {
@@ -404,46 +401,11 @@ refreshLocation();
 						location.href = "detail?no=" + rest.no;
 					});
 					
-					let markerPosition = new kakao.maps.LatLng(rest.latitude, rest.longitude);
-					let marker = new kakao.maps.Marker({
-						map: map,
-					    position: markerPosition,
-					    image: restMarkerImage
-					});
-					
-					// 마커에 click 이벤트를 등록
-					kakao.maps.event.addListener(marker, 'click', function() {
-						// 상세조회 페이지로 이동
-						location.href="restaurant/detail?no=" + rest.no;
-					});
-					//restaurantMakers.push(marker);
 				});
-				//setMarker(map);
 			}
 		});
 	}
-	
-	// 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
-	    
-	    // 지도 영역정보를 얻어옵니다 
-	    let bounds = map.getBounds();
-	    
-	    // 영역정보의 남서쪽 정보를 얻어옵니다 
-	    let swLatlng = bounds.getSouthWest();
-	    
-	    // 영역정보의 북동쪽 정보를 얻어옵니다 
-	  	let neLatlng = bounds.getNorthEast();
-	    
-	    let message = '<p>영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString() + '이고 <br>'; 
-	    message += '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 </p>'; 
-	    
-	    let resultDiv = document.getElementById('result');   
-	    resultDiv.innerHTML = message;
-	    
-	});
-	
-});	
+
 </script>
 </body>
 </html>
