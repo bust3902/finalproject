@@ -170,5 +170,5 @@ public class AccommodationService {
 		pagination.init();
 		return pagination;
 	}
-	
+
 }

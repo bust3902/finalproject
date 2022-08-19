@@ -49,6 +49,8 @@
 		<result column="review_image" property="image"/>
 		<result column="review_point" property="point"/>
 		<result column="user_nickname" property="user.nickname"/>
+		<result column="acco_id" property="acco.id"/>
+		<result column="acco_name" property="acco.name"/>
 		<result column="room_name" property="room.name"/>
 		<collection column="restaurant_no" property="reviewRestaurantTags" select="getAllReviewTagsByRestaurantNo"></collection>
 	</resultMap>
@@ -97,6 +99,21 @@
 		    (select review_point, count(*) cnt from review where acco_id=#{value} group by review_point) x
 		where x.review_point (+) = p.review_point
 		order by p.review_point
+	</select>
+	
+	<!-- List<Review> getLatestReviewsByAccos(List<Integer> accoIds); -->
+	<select id="getLatestReviewsByAccos" parameterType="list" resultMap="reviewResultMap">
+		select *
+		from (select r.review_title, r.review_content, a.acco_id, a.acco_name
+		    from review r, accommodations a, cities c
+		    where r.acco_id = a.acco_id
+		    and a.city_id = c.city_id
+		    and r.acco_id in
+				<foreach item="accoId" collection="list" open="(" close=")" separator=",">
+					#{accoId}
+				</foreach>
+		    order by r.review_created_date)
+		where rownum &lt;= 10
 	</select>
 	
 </mapper>

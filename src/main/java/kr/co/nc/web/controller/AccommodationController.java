@@ -1,5 +1,7 @@
 package kr.co.nc.web.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,6 +12,8 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.service.AccommodationService;
+import kr.co.nc.service.ReviewService;
+import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.User;
 
 @Controller
@@ -19,6 +23,8 @@ public class AccommodationController {
 	
 	@Autowired
 	private AccommodationService accommodationService;
+	@Autowired
+	private ReviewService reviewService;
 
 	// 숙소 검색 페이지 뷰 반환
 	@GetMapping(path = "")
@@ -76,7 +82,10 @@ public class AccommodationController {
 	@GetMapping(path = "/best")
 	public String best(Model model) {
 		// 가장 평점이 높은 숙소 상위 5건 조회
-		model.addAttribute("bests", accommodationService.getBestAccommodations(5));
+		List<Accommodation> bestAccos = accommodationService.getBestAccommodations(5);
+		model.addAttribute("bests", bestAccos);
+		// 위에서 조회한 숙소의 최신 리뷰 최대 10건 조회
+		model.addAttribute("reviews", reviewService.getLatestReviewsByAccos(bestAccos));
 		return "/accommodation/best";
 	}
 	

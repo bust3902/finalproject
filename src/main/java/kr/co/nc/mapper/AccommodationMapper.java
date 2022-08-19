@@ -74,4 +74,5 @@ public interface AccommodationMapper {
 	int getTotalRowsOfRoomsByAccoId(RoomCriteria criteria);
 	// 특정 숙소의 객실정보를 특정 페이지번호에 맞게 조회
 	List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria);
+	
 }
