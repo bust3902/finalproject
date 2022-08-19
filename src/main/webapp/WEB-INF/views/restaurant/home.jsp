@@ -328,6 +328,13 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				// 식당 찜하기 클릭하면 관련 ajax 요청 함수 실행 // 로그인 상태일 경우 하트 채워지는 여부 다르게 출력
 				content += '			<i id="icon-heart-' + item.no +'" class="text-primary fs-5 float-end bi ' + (item.liked ? 'bi-heart-fill' : 'bi-heart') + '" onclick="toggleRestaurantLike(' + item.no + ');"></i>';
 				content += '		</p>';
+				content += '	    <p class="text-warning m-0">'
+				content += '			<i class="bi ' + item.reviewRateIcon.star1 + '"></i>';
+				content += '			<i class="bi ' + item.reviewRateIcon.star2 + '"></i>';
+				content += '			<i class="bi ' + item.reviewRateIcon.star3 + '"></i>';
+				content += '			<i class="bi ' + item.reviewRateIcon.star4 + '"></i>';
+				content += '			<i class="bi ' + item.reviewRateIcon.star5 + '"></i>';
+				content += '		</p>';
 				content += '	    <p class="card-text m-0">' + Math.round(item.distance*1000/1000) + 'm</p>';
 				content += '	    <p class="card-text m-0">'
 				if (item.menus != null) {
