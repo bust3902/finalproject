@@ -64,6 +64,8 @@ public class AccommodationController {
 		
 		// 숙소 정보
 		model.addAttribute("detail", accommodationService.getAccommodationDetailById(accoId));
+		// 객실정원 옵션 정보
+		model.addAttribute("capacities", accommodationService.getAllCapacityOptionsByAccoId(accoId));
 		// 로그인 상태일 경우 찜하기 여부를 조회해서 그 값을 전달하고, 로그아웃 상태일 경우 무조건 false를 전달한다.
 		User loginUser = (User) model.getAttribute("LOGIN_USER");
 		model.addAttribute("isLiked", (loginUser != null ? accommodationService.isLikedAcco(new LikeCriteria(loginUser.getNo(), accoId)) : false));

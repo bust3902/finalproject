@@ -47,8 +47,8 @@ public class AccommodationRestController {
 	
 	// 객실 정보에 대한 pagination 객체 반환
 	@GetMapping(path = "/pagination")
-	public Pagination pagination(int accoId, int currentPage) {
-		return accommodationService.generatePagination(accoId, currentPage);
+	public Pagination pagination(RoomCriteria criteria) {
+		return accommodationService.generatePagination(criteria);
 	}
 	
 	// 해당 숙소에 대한 리뷰 리스트, 평점분포 집계결과 반환

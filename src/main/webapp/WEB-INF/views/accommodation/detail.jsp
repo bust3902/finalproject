@@ -123,7 +123,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장됨-->
+		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장되어 아이콘 상태에도 반영됨(비로그인 상태일 경우 무조건 빈 하트)-->
 		<div class="col-6">
 			<div class="d-flex justify-content-between">
 				<h4 id="acco-name" class="fw-semibold text-dark p-1 me-3" style="word-break: keep-all;">${detail.name } </h4>
@@ -161,12 +161,19 @@
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
 				<div class="my-3">
-					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
-					<form id="form-search-rooms">
+					<form id="form-search-rooms" class="d-flex flex-wrap justify-content-between">
+						<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
 						<input type="text" id="datepicker" class="form-control w-50" value="" />
 						<input type="hidden" name="startDate" value="">
 						<input type="hidden" name="endDate" value="">
 						<input type="hidden" name="accoId" value="${param.id }">
+						<!-- 정원 선택 : DB에서 이 숙소의 모든 인원 수 범위를 조회해서 출력한다. -->
+						<select id="select-capacity" class="form-control w-25 text-end" name="capacity">
+							<option value="0">객실 정원</option>
+							<c:forEach var="capacity" items="${capacities }">
+								<option value="${capacity }">${capacity }인</option>
+							</c:forEach>
+						</select>
 					</form>
 				</div>
 				<div id="room-list-wraper" class="mx-0">
@@ -394,6 +401,13 @@ $(function () {
 	 })
 
 /**
+ * 객실정원 선택해서 조회하기 : select 태그의 change 이벤트에 객실정보 갱신하는 함수를 등록한다. 
+ */
+	$("#select-capacity").change(function() {
+		changeCurrentPage(1);
+	});
+	 
+/**
  * input태그에서 daterangepicker 통해 숙박일정 선택하기
  * TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
  */
@@ -509,9 +523,10 @@ $(function () {
 
 //////////////////////////////////////////// DOM 생성 전에 정의되는 내용
 /**
- * 페이징 버튼을 누르면 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
+ * 페이징 버튼을 누르면 객실정보를 갱신하면서 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
  */
 function changeCurrentPage(num) {
+	console.log('test');
 	$("#pagination-wrapper .page-item").removeClass("active");
 	$('li[data-page-num="' + num +'"]').addClass("active");
 	// num을 currentPage로 하는 객실 정보 출력
@@ -526,7 +541,8 @@ function changeCurrentPage(num) {
  * 검색날짜를 변경해서, 객실 데이터 행 수가 변경될 때 실행한다.
  */
 function refreshPaginationButton(currentPage) {
-	$.getJSON("/pagination", "accoId=" + ${param.id} +"&currentPage=" + currentPage).done(function(pagination) {
+	let queryString = $("#form-search-rooms").serialize() + "&currentPage=" + currentPage;
+	$.getJSON("/pagination", queryString).done(function(pagination) {
 		let $wrapper = $("#ul-item-wrapper").empty();
 		let content = '';
 		content += '<li class="page-item">';
@@ -761,7 +777,7 @@ $.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
 	let reviews = data.reviews
 	if (reviews.length == 0) {
 		isEmpty = true;
-		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
+		let content = '<div class="p-5 text-center">등록된 리뷰가 없습니다.</div>';
 		// 배열에 담지 않고 바로 append시킨다.
 		$("#review-tab-pane").append(content);
 	} else {
