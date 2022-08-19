@@ -17,4 +17,8 @@ public class QaController {
 		return "qa/qaform";
 	}
 	
+	@GetMapping(path = "/qacomplete")
+	public String qaCompleted() {
+		return "qa/qacomplete";
+	}
 }

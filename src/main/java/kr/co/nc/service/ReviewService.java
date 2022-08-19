@@ -31,7 +31,10 @@ public class ReviewService {
 		review.setContent(review.getContent());
 		review.setLikeCount(review.getLikeCount());
 		review.setImage(review.getImage());
+		review.setPoint(review.getPoint());
 		review.setUser(loginUser);
+		review.setAccoId(review.getAccoId());
+		review.setRestaurantNo(review.getRestaurantNo());
 		reviewMapper.insertReview(review);
 		
 		// 리뷰 카테고리 정보 저장
@@ -62,8 +65,7 @@ public class ReviewService {
 		// 생성자메소드에서 countResults를 이용해 hashMap 구현객체인 ReviewPointChart에 각 평점의 개수를 저장한다.
 		return new ReviewPointChart(countResults);
 	}
-	
-	
+		
 	/**
 	 * 특정 숙소들이 담겨있는 리스트를 전달받아서, 해당 숙소들의 리뷰 중 가장 최근에 작성된 리뷰를 최대 10건 반환한다.
 	 * @return
@@ -84,4 +86,7 @@ public class ReviewService {
 		return reviewMapper.getLatestRestaurantReviews();
 	}
 	
+	public List<Review> getAllReviews(Review review) {
+		return reviewMapper.getAllReviews();
+	}
 }

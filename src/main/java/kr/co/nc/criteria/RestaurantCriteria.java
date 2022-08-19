@@ -32,4 +32,6 @@ public class RestaurantCriteria {
 	private String minLon;
 	
 	private String maxLon;
+	
+	private String distance;
 }

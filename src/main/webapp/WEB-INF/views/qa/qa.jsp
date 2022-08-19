@@ -12,6 +12,7 @@
 <title>문의사항</title>
 </head>
 <body>
+<c:set var="review" value="reveiw">
 <%@ include file="../common/nav.jsp" %>
 <div class="container my-3">
 	<div class="row mb-3">
@@ -31,24 +32,27 @@
 			<table class="table text-center" style="width:1000px;">
 				<thead>
 					<tr>
+						<th></th>
+						<th>제목</th>
 						<th>카테고리</th>
 						<th>문의 유형</th>
 						<th>이미지</th>
 						<th>내용</th>
 						<th>등록일</th>
+						<th>답변현황</th>
 					</tr>
 				</thead>
 				<tbody>
 				<c:choose>
 					<c:when test="${empty qa }">
 						<tr>
-							<td colspan="5" class="text-center">등록된 1:1 문의가 없습니다.</td>
+							<td colspan="8" class="text-center">등록된 1:1 문의가 없습니다.</td>
 						</tr>
 					</c:when>
 					<c:otherwise>
 						<c:forEach var="qa" items="${qa }">
 							<tr class="align-middle">
-								<td>
+								<td><a href="/detail?no=${qa.no }">${qa.title }</a></td>
 								<c:forEach var="qaCat" items="${qaCategories }">
 									<div>${qaCat.category.name }</div>
 								</c:forEach>

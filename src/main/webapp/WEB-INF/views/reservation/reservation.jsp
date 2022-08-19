@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../common/tags.jsp" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -95,7 +97,7 @@
 					</div>
 					<div class="my-3 mx-3">
 						<p><strong>총 결제 금액</strong><small>(VAT포함)</small></p>
-						<h4><strong class="text-danger" id="dayPrice">${room.dayPrice }</strong></h4>
+						<h4><strong class="text-danger" id="dayPrice"><fmt:formatNumber> ${room.dayPrice }</fmt:formatNumber>원</strong></h4>
 						<label><small>
 							<li class="mx-2">해당 객실가는세금, 봉사료가 포함된 금액입니다.</li>
 							<li class="mx-2">결제완료 후 <span class="text-danger">예약자</span> 이름으로 바로 <span class="text-danger">체크인</span> 하시면 됩니다.</li>

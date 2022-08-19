@@ -21,6 +21,7 @@ public interface ReservationMapper {
 	// 예약번호로 예약정보 가져오기
 	Reservation getReserveInfoByReserveId(String reservationNo);
 
+	// 객실번호로 객실정보 가져오기.
 	AccommodationRoom getRoomDetailByroomNo(int roomNo);
 
 }
