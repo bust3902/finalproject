@@ -142,7 +142,7 @@
 			    	</c:if>
 				  <div class="mt-3">
 				  	<button type="button" class="btn btn-outline-secondary">공감(1)</button>
-				  	<a href="/reveiwform?restaurantNo=${review.restaurant.no }" class="btn btn-outline-secondary float-end">나도평가하기</a>
+				  	<a href="/reviewform?restaurantNo=${review.restaurant.no }" class="btn btn-outline-secondary float-end">나도평가하기</a>
 				  </div>
 			  </div>
 			</div>
@@ -346,7 +346,7 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				}
 				content += '		</p>';
 				content += '	    <div class="row mt-3">';
-				content += '	    	<a href="/registerform?restaurantNo='+ item.no +'" class="btn btn-outline-primary">평가하기</a>';
+				content += '	    	<a href="/reviewform?restaurantNo='+ item.no +'" class="btn btn-outline-primary">평가하기</a>';
 				content += '	  	</div>';
 				content += '	  </div>';
 				content += '	</div>';
