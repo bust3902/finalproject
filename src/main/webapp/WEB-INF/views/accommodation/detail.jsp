@@ -727,7 +727,7 @@ function toggleAccoLike(accoId) {
 	}
 	
 	// 숙소아이디 전달해서 ajax로 like 저장 요청
-	$.getJSON("/changelike", "accoId=" + accoId).done(function(result) {
+	$.getJSON("/changelike/acco", "accoId=" + accoId).done(function(result) {
 		if (result === true) {
 			// 아이콘 표현 토글 처리
 			$icon.toggleClass("bi-heart-fill");

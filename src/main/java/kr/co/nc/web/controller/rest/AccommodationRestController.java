@@ -65,7 +65,7 @@ public class AccommodationRestController {
 	}
 	
 	// 숙소 찜하기 토글
-	@GetMapping(path = "/changelike")
+	@GetMapping(path = "/changelike/acco")
 	public boolean like(@LoginUser User loginUser, int accoId) {
 		try {
 			// 서비스에서 비즈니스 로직 수행 : service에서는 user_accommodation_like 테이블에 일치하는 정보가 존재하면 삭제하고, 존재하지 않으면 저장한다.
