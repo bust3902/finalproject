@@ -530,7 +530,6 @@ $(function () {
  * 페이징 버튼을 누르면 객실정보를 갱신하면서 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
  */
 function changeCurrentPage(num) {
-	console.log('test');
 	$("#pagination-wrapper .page-item").removeClass("active");
 	$('li[data-page-num="' + num +'"]').addClass("active");
 	// num을 currentPage로 하는 객실 정보 출력
