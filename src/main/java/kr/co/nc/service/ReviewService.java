@@ -76,4 +76,12 @@ public class ReviewService {
 		return reviewMapper.getLatestReviewsByAccos(accoIds);
 	}
 	
+	/**
+	 * 모든 식당 리뷰 중 가장 최신의 리뷰를 최대 3건 반환한다.
+	 * @return
+	 */
+	public List<Review> getLatestRestaurantReviews() {
+		return reviewMapper.getLatestRestaurantReviews();
+	}
+	
 }

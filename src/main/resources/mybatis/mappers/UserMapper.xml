@@ -11,6 +11,25 @@
 		values
 			(user_seq.nextval, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address}, #{loginType})
 	</insert>
+		
+	<select id="getUserByNo" parameterType="int" resultType="User">
+		select 
+			user_no as no,
+			user_id as id,
+			user_password password,
+			user_nickname nickname,
+			user_name name,
+			user_email email,
+			user_tel tel,
+			user_login_type loginType,
+			user_disabled disabled,
+			user_updated_date updatedDate,
+			user_created_date createdDate
+		from 
+			users
+		where
+			user_no = #{value}	
+	</select>
 	
 	<select id="getUserById" parameterType="string" resultType="kr.co.nc.vo.User">
 		select 

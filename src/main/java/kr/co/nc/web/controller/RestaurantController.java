@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.co.nc.service.RestaurantService;
+import kr.co.nc.service.ReviewService;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -19,6 +20,8 @@ public class RestaurantController {
 
 	@Autowired
 	private RestaurantService restaurantService;
+	@Autowired
+	private ReviewService reviewService; 
 	
 	@GetMapping(path="/searchlist")
 	public String searchList(@RequestParam(name="keyword",required=false) String keyword,Model model ) {
@@ -41,8 +44,7 @@ public class RestaurantController {
 	
 	@GetMapping()
 	public String home(Model model) {
-		model.addAttribute("reviews",restaurantService.getAllRestaurantReview());
-		
+		model.addAttribute("reviews", reviewService.getLatestRestaurantReviews());
 		return "restaurant/home";
 	}
 }
