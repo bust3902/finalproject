@@ -51,13 +51,16 @@
 		r.room_no as "AccommodationRoom.no",
 		u.user_name as "users.name",
 		a.acco_name as "acco.name",
-		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName"
+		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName",
+		p.payment_total_price as "payment.paymentTotalPrice"
 	from
 		reservation r
 	INNER join users u
 	on r.user_no = u.user_no
 	INNER join ACCOMMODATIONS a
 	on r.acco_id = a.acco_id
+	Inner join payment p
+	on r.reservation_id = p.reservation_id
 	where r.user_no = u.user_no
 	and r.acco_id = a.acco_id
 	and r.reservation_id = #{value}

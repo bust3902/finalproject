@@ -26,5 +26,5 @@ public class Reservation {
 	
 	private User user;
 	private Accommodation acco;
-	private AccommodationRoom Room;
+	private AccommodationRoom room;
 }

@@ -58,8 +58,8 @@ public class ReservationService {
 	 * 결재상태 변경하기 (결제대기 -> 결제완료)
 	 * @param payment 결제정보
 	 */
-	public void updatePaymentStatus(Payment payment) {
-		paymentMapper.updatePaymentStatuts(payment);
+	public void updatePaymentStatus(String reservationNo) {
+		paymentMapper.updatePaymentStatuts(reservationNo);
 	}
 	
 	/*
