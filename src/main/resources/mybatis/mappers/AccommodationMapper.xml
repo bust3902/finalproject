@@ -303,9 +303,16 @@
 		select *
 		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.*
 				from acco_rooms a
-				where acco_id = #{accoId}
+				<if test="onlyAvailable == 'yes'">
+					, (<include refid="getReservedCountByRoomNo" />) rc
+				</if>
+				where a.acco_id = #{accoId}
+				<if test="onlyAvailable == 'yes'">
+					and a.room_no = rc.room_no (+)
+					and (a.room_numbers - NVL(rc.cnt,0)) > 0
+				</if>
 				<if test="capacity != 0">
-					and room_capacity = #{capacity}
+					and a.room_capacity = #{capacity}
 				</if>)
 		where row_num between #{beginIndex} and #{endIndex}
 	</select>

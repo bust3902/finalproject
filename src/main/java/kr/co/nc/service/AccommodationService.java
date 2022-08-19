@@ -165,7 +165,6 @@ public class AccommodationService {
 	 */
 	public Pagination generatePagination(RoomCriteria criteria) {
 		int totalRows = accommodationMapper.getTotalRowsOfRoomsByAccoId(criteria);
-		System.out.println(totalRows);
 		Pagination pagination = new Pagination(totalRows, criteria.getCurrentPage());
 		// 페이징에 필요한 값들 초기화
 		pagination.init();

@@ -161,23 +161,31 @@
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
 				<div class="my-3">
-					<form id="form-search-rooms" class="d-flex flex-wrap justify-content-between">
+					<form id="form-search-rooms" class="row d-flex flex-wrap">
 						<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
-						<input type="text" id="datepicker" class="form-control w-50" value="" />
-						<input type="hidden" name="startDate" value="">
-						<input type="hidden" name="endDate" value="">
-						<input type="hidden" name="accoId" value="${param.id }">
-						<!-- 정원 선택 : DB에서 이 숙소의 모든 인원 수 범위를 조회해서 출력한다. -->
-						<select id="select-capacity" class="form-control w-25 text-end" name="capacity">
-							<option value="0">객실 정원</option>
-							<c:forEach var="capacity" items="${capacities }">
-								<option value="${capacity }">${capacity }인</option>
-							</c:forEach>
-						</select>
+						<div class="col">
+							<input type="text" id="datepicker" class="form-control w-100" value="" />
+							<input type="hidden" name="startDate" value="">
+							<input type="hidden" name="endDate" value="">
+							<input type="hidden" name="accoId" value="${param.id }">
+						</div>
+						<div class="col d-flex justify-content-end">
+							<p class="small align-middle my-auto me-3">
+								예약가능한 객실만 보기
+								<input type="checkbox" id="checkbox-onlyAvailable" name="onlyAvailable" value="yes">
+							</p>
+							<!-- 정원 선택 : DB에서 이 숙소의 모든 인원 수 범위를 조회해서 출력한다. -->
+							<select id="select-capacity" class="form-control w-25 text-end" name="capacity">
+								<option value="0">객실 정원</option>
+								<c:forEach var="capacity" items="${capacities }">
+									<option value="${capacity }">${capacity }인</option>
+								</c:forEach>
+							</select>
+						</div>
 					</form>
 				</div>
 				<div id="room-list-wraper" class="mx-0">
-					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
+					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 조건의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
 				</div>
 				<!-- 페이징 버튼 : 버튼을 누르면, 해당 값을 currentPage로 해서 숙소정보를 다시 출력한다. -->
 				<div id="pagination-wrapper" class="d-flex justify-content-center">
@@ -401,9 +409,12 @@ $(function () {
 	 })
 
 /**
- * 객실정원 선택해서 조회하기 : select 태그의 change 이벤트에 객실정보 갱신하는 함수를 등록한다. 
+ * 예약가능여부, 객실정원 옵션 선택하기 : 각 input 태그의 이벤트에 객실정보 갱신하는 함수를 등록한다. 
  */
 	$("#select-capacity").change(function() {
+		changeCurrentPage(1);
+	});
+	$("#checkbox-onlyAvailable").change(function() {
 		changeCurrentPage(1);
 	});
 	 
