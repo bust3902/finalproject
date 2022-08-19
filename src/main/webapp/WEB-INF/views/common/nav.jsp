@@ -101,7 +101,7 @@
 	$("#nav-search").click(function() {
 		// 최근 검색어 출력 토글
 		$navBoxKeywords.toggleClass("d-none");
-		refreshKeywordList();
+		refreshNavKeywordList();
 	});
 	
 	// 최근 검색어를 저장하는 기능
@@ -121,14 +121,14 @@
 		
 	});
 	
-	// 최근 검색어 전체 삭제하는 기능
+	// 최근 검색어 전체 삭제하는 기능 
 	$("#nav-delete-all-keyword").click(function() {
 		localStorage.setItem("accoKeywords",[]);
-		refreshKeywordList();
+		refreshNavKeywordList();
 	});
 	
 	// 최근 검색어를 최신화 하는 기능
-	function refreshKeywordList() {
+	function refreshNavKeywordList() {
 		let text = localStorage.getItem("accoKeywords") || '[]';
 		let array = JSON.parse(text);
 		
@@ -151,7 +151,7 @@
 	}
 	
 	// 최근 검색어를 하나씩 삭제하는 기능
-	function deleteKeyword(index) {
+	function deleteNavKeyword(index) {
 		let text = localStorage.getItem("accoKeywords") || '[]';
 		let array = JSON.parse(text);
 		
@@ -159,12 +159,12 @@
 		text = JSON.stringify(array);
 		localStorage.setItem("accoKeywords", text);
 		
-		refreshKeywordList();
+		refreshNavKeywordList();
 	};
 	
 	// 최근 검색어 클릭시 검색되게 하는 기능
 	// index를 주고 받지 말고 쉽게 keyword를 주고 받기
-	function searchKeyword(keyword) {
+	function searchNavKeyword(keyword) {
 		location.href="/acco?keyword=" + keyword;
 	};
 	
