@@ -19,6 +19,8 @@
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 <form id="form-search-restaurant" >
 	<div class="position-relative">
+	<input type="hidden" name="currentLat" value="" />
+	<input type="hidden" name="currentLong" value="" />
 		<form id="form-search" class="d-flex" role="search" action="searchlist">
 	        <input class="form-control me-sm-2" type="text" name="keyword" value="${param.keyword }" id="search" placeholder="지역,음식을 검색하세요">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="button" onclick="searchRestaurants();">
@@ -127,16 +129,16 @@
 			<div class="row mb-3">
 				<h3>내주변 맛집<button class="btn btn-outline-secondary btn-lg border-0 float-end"><i class="bi bi-share"></i></button></h3>
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-				  <input type="radio" class="btn-check" name="distance" id="btnradio1" autocomplete="off" checked=""  onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio1" value="meter" autocomplete="off" checked=""  onchange="searchRestaurants()" onclick="">
 				  <label class="btn btn-outline-secondary" for="btnradio1">500m</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio2" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio2" value="oneKilometer" autocomplete="off" onchange="searchRestaurants()">
 				  <label class="btn btn-outline-secondary" for="btnradio2">1km</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio3" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio3" value="twoKilometer" autocomplete="off" onchange="searchRestaurants()">
 				  <label class="btn btn-outline-secondary" for="btnradio3">2km</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio4" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio4" value="threeKilometer" autocomplete="off" onchange="searchRestaurants()">
 				  <label class="btn btn-outline-secondary" for="btnradio4">3km</label>
 				</div>
 			</div>
@@ -311,9 +313,9 @@
 	};
 	
 	// 카카오 맵 api를 이용한 지도 구현
-	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+	let mapContainer = document.getElementById('map'), // 지도를 표시할 div 
 	mapOption = { 
-	    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
+	    center: new kakao.maps.LatLng(currentLat,currentLong ), // 지도의 중심좌표
 	    level: 3 // 지도의 확대 레벨
 	};
 	
@@ -336,6 +338,7 @@
 	    
 	});
 	
+	
 	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
 	changeMapCenter(map);
 
@@ -349,11 +352,15 @@
 		map.setCenter(new kakao.maps.LatLng(cityLat, cityLong));
 		// 전체 조회 / 지역 조회에 따라 확대 레벨이 달라진다. '서울전체' 항목은 value 값이 ""이다.
 		if ($("select[name=city] :selected").val() == "") {
-			map.setLevel(8);
+			map.setLevel(3);
 		} else {
 			map.setLevel(7);
 		}
 	}
+	
+	$("select[name=city]").change(function() {
+		changeMapCenter(map);
+	});
 	
 	/*
 		ajax로 검색 조건에 따른 음식점 정보 조회하기
@@ -405,6 +412,8 @@
 			}
 		});
 	}
+	
+	
 
 </script>
 </body>
