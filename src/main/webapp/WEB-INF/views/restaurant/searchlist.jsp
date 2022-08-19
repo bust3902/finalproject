@@ -103,6 +103,12 @@
 			</div>
 		</div>
 		<div class="col-8">
+				<div class="col d-flex justify-content-end align-items-center my-auto">
+					<small>
+						현재 내 위치는 <strong id="home-current-location-address"></strong>
+					</small>
+					<i id="icon-refresh-location" class="bi bi-compass fs-4 text-primary ps-2" style="cursor: pointer;"></i>
+				</div>
 			<div class="d-flex flex-wrap mx-3 mb-3">
 				<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
 					<input type="radio" class="btn-check" id="btnradio11" name="sort" value="point" checked onchange="searchRestaurants()">
@@ -159,50 +165,63 @@
 </form>	
 </div>
 
-<!-- 현재 위치를 확인할 수 있는 버튼입니다. -->
-<div class="position-absolute" style="top:60px; left:1200px;" >
-	<button id="locationButton" class="float-end border-0"><i class="bi bi-geo"></i>현재위치 확인</button>
-	<p id="demo"></p>
-</div>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=49a6f0504323df1e2fbc06bfac690d78"></script>
 <script type="text/javascript">
+$(function () {
+	
 
 let currentLat = '';
 let currentLong = '';
+refreshLocation();
 
-$("#locationButton").click(function() {
-	let x = document.getElementById("demo");
-	// 위도와 경도 값을 가져오는 코드입니다.
-	if (navigator.geolocation) {
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	    	let latitude = position.coords.latitude;
-	        let longitude = position.coords.longitude;
-	        //alert(latitude + ", " + longitude);
-	        
-	        // 구글 map api를 이용해서 위도 경도 값을 통해 해당하는 주소값 가져오기
-	        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
-	        		  {sensor:false, 
-	        	       language:"ko",
-	        	       latlng: latitude+","+longitude, 
-	        	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
-	        .done(function(data) {
-	        	console.log(data);
-	        	let location = data.results[0];
-	        	//let address = location.formatted_address.replace("대한민국 ", " ");
-	        	let address2 = location.formatted_address.split(' ');
-	        	//alert(address2[2]+' '+address2[3]);
-	        	//alert(address);
-	        	$("#locationButton").text(address2[2]+' '+address2[3]);
-	        })
-	    });
-	  } else { 
-		// 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
-	    	currentLat = 37.564214;
-	    	currentLong = 127.0016985;
-			$(":hidden[name=currentLat]").val(currentLat);
-			$(":hidden[name=currentLong]").val(currentLong);
-	  }
-});
+	function refreshLocation() {
+		// navigator.geolocation에서 지원하는 메소드를 사용해 사용자의 현재 위치 좌표값을 획득한다.
+		// 받아온 좌표값은 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				// 성공 시 콜백함수
+				console.log(currentLat);
+				console.log(currentLong);
+		    	currentLat = position.coords.latitude;
+		    	currentLong = position.coords.longitude;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
+				// 화면, 모달창에 현재 위치 주소를 출력한다.
+				getLocationAddress();
+				searchAccos();
+	    	}, function(position) {
+				// 실패 시 콜백함수
+				// 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
+				  	currentLat = 37.564214;
+				  	currentLong = 127.0016985;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
+				// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
+				    	$("#modal-current-location-address").text('(정보 없음)');
+				 	  	$("#home-current-location-address").text('(정보 없음)');
+				searchAccos();
+			});
+		}
+	}
+	
+	$("#icon-refresh-location").click(function(){
+		refreshLocation();
+	});
+	
+	function getLocationAddress() {
+	    $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+	  		  {sensor:false, 
+	  	       language:"ko",
+	  	       latlng: currentLat+","+currentLong, 
+	  	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+	  .done(function(data) {
+	  	let location = data.results[0];
+	  	let address = location.formatted_address.split(' ');
+	  	$("#modal-current-location-address").text(address[2]+' '+address[3]);
+	  	$("#home-current-location-address").text(address[2]+' '+address[3]);
+	  })
+	}
+
 	let $boxKeywords = $("#box-keywords");
 	
 	$("#search").click(function() {
@@ -323,7 +342,6 @@ $("#locationButton").click(function() {
 		}
 	}
 	
-	
 	/*
 		ajax로 검색 조건에 따른 음식점 정보 조회하기
 	*/
@@ -409,22 +427,23 @@ $("#locationButton").click(function() {
 	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
 	    
 	    // 지도 영역정보를 얻어옵니다 
-	    var bounds = map.getBounds();
+	    let bounds = map.getBounds();
 	    
 	    // 영역정보의 남서쪽 정보를 얻어옵니다 
-	    var swLatlng = bounds.getSouthWest();
+	    let swLatlng = bounds.getSouthWest();
 	    
 	    // 영역정보의 북동쪽 정보를 얻어옵니다 
-	    var neLatlng = bounds.getNorthEast();
+	  	let neLatlng = bounds.getNorthEast();
 	    
-	    var message = '<p>영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString() + '이고 <br>'; 
+	    let message = '<p>영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString() + '이고 <br>'; 
 	    message += '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 </p>'; 
 	    
-	    var resultDiv = document.getElementById('result');   
+	    let resultDiv = document.getElementById('result');   
 	    resultDiv.innerHTML = message;
 	    
 	});
 	
+});	
 </script>
 </body>
 </html>
