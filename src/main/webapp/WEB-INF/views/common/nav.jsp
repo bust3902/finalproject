@@ -96,11 +96,11 @@
 /*
  * 검색창 최근검색어 기능 (restaurant/searchlist 페이지와 동일한 로직의 스크립트 코드를 사용함)
  */
-	let $boxKeywords = $("#box-keywords");
+	let $navBoxKeywords = $("#box-keywords");
 	
 	$("#search").click(function() {
 		// 최근 검색어 출력 토글
-		$boxKeywords.toggleClass("d-none");
+		$navBoxKeywords.toggleClass("d-none");
 		refreshKeywordList();
 	});
 	
@@ -170,8 +170,8 @@
 	
 	// 최근 검색어 외부 영역 클릭 시 최근 검색어 팝업 닫기
 	$(document).mouseup(function (e) {
-		if ($boxKeywords.has(e.target).length === 0) {
-			$boxKeywords.addClass("d-none");
+		if ($navBoxKeywords.has(e.target).length === 0) {
+			$navBoxKeywords.addClass("d-none");
 		}
 	});
 </script>
