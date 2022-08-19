@@ -59,7 +59,10 @@
 	<!-- List<Review> getAllReviewsById(ReviewCriteria criteria); -->
 	<select id="getReviewsByCriteria" parameterType="kr.co.nc.criteria.ReviewCriteria" resultMap="reviewResultMap">
 		select *
-			from review rv, users u, restaurant rs
+			from review rv, users u
+			<if test="restaurantNo != 0">
+				, restaurant rs
+			</if>
 			<if test="accoId != 0">
 				, acco_rooms ar
 			</if>
@@ -125,11 +128,12 @@
 		    where restaurant_no is not null
 		    order by review_created_date, restaurant_no desc)
 		where rownum &lt;=3
+	</select>
 
-  <!-- List<Review> getAllReviews(); -->
-  <select id="getAllReviews" resultType="Review">
-    select *
-    from review
-    where review_created_date desc
-  </select>
+	<!-- List<Review> getAllReviews(); -->
+	<select id="getAllReviews" resultType="Review">
+		select *
+		from review
+		where review_created_date desc
+	</select>
 </mapper>
