@@ -27,8 +27,8 @@
     	</a>
 		<ul class="navbar-nav">			
 			<div class="container-fluid position-relative" style="width:700px;height:auto">
-   				<form id="form-search" class="d-flex justify-content-center my-auto" action="/acco" autocomplete="off">
-     					<input class="form-control me-2" type="text" id="search" name="keyword" placeholder="지역, 숙소명" style="max-width:600px;height:auto">
+   				<form id="nav-form-search" class="d-flex justify-content-center my-auto" action="/acco" autocomplete="off">
+     					<input class="form-control me-2" type="text" id="nav-search" name="keyword" placeholder="지역, 숙소명" style="max-width:600px;height:auto">
      					<button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
      					<!-- 최근 검색어 box -->
 						<ul id="box-keywords" class="position-absolute list-group w-100 d-none" style="top:50px; left:0; z-index: 1000;">
@@ -68,7 +68,7 @@
    				<ul class="dropdown-menu">
     				<li><a class="dropdown-item" href="">1:1 문의</a></li>
      				<li><a class="dropdown-item" href="/acco/best">핫한 숙소</a></li>
-     				<li><a class="dropdown-item" href="/restaurant">인기 맛집</a></li>
+     				<li><a class="dropdown-item" href="">인기 맛집</a></li>
    				</ul>
 			</li>
 			<li class="nav-item dropdown ${empty LOGIN_USER ? 'd-none' : ''}" style="width:80px;height:auto">
@@ -96,16 +96,16 @@
 /*
  * 검색창 최근검색어 기능 (restaurant/searchlist 페이지와 동일한 로직의 스크립트 코드를 사용함)
  */
-	let $boxKeywords = $("#box-keywords");
+	let $navBoxKeywords = $("#box-keywords");
 	
-	$("#search").click(function() {
+	$("#nav-search").click(function() {
 		// 최근 검색어 출력 토글
-		$boxKeywords.toggleClass("d-none");
+		$navBoxKeywords.toggleClass("d-none");
 		refreshKeywordList();
 	});
 	
 	// 최근 검색어를 저장하는 기능
-	$("#form-search").submit(function() {
+	$("#nav-form-search").submit(function() {
 		let keyword = $(":input[name=keyword]").val();
 		let text = localStorage.getItem("accoKeywords") || '[]';
 		let array = JSON.parse(text);
@@ -170,8 +170,8 @@
 	
 	// 최근 검색어 외부 영역 클릭 시 최근 검색어 팝업 닫기
 	$(document).mouseup(function (e) {
-		if ($boxKeywords.has(e.target).length === 0) {
-			$boxKeywords.addClass("d-none");
+		if ($navBoxKeywords.has(e.target).length === 0) {
+			$navBoxKeywords.addClass("d-none");
 		}
 	});
 </script>

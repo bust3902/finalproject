@@ -236,7 +236,7 @@
 	function searchKeyword(keyword) {
 		//alert(keyword);
 		
-		location.href="/searchlist.jsp?keyword=" + keyword;
+		location.href="searchlist?keyword=" + keyword;
 	};
 	
 	// 카카오 map api를 이용해서 지도 불러오기
@@ -248,6 +248,10 @@
 
 	// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
+	
+	let accoMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+	
+	// 지도에 마커 표시
 </script>
 </body>
 </html>

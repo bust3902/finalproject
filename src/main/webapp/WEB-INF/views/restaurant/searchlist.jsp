@@ -129,10 +129,10 @@
 			<div class="row mb-3">
 				<h3>내주변 맛집<button class="btn btn-outline-secondary btn-lg border-0 float-end"><i class="bi bi-share"></i></button></h3>
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-				  <input type="radio" class="btn-check" name="distance" id="btnradio1" value="meter" autocomplete="off" checked=""  onchange="searchRestaurants()" onclick="">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio1" value="meter" autocomplete="off" checked=""  onchange="searchRestaurants()" >
 				  <label class="btn btn-outline-secondary" for="btnradio1">500m</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio2" value="oneKilometer" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio2" value="oneKilometer" autocomplete="off" onchange="searchRestaurants()" onclick="changeMap1()">
 				  <label class="btn btn-outline-secondary" for="btnradio2">1km</label>
 				
 				  <input type="radio" class="btn-check" name="distance" id="btnradio3" value="twoKilometer" autocomplete="off" onchange="searchRestaurants()">
@@ -313,15 +313,64 @@
 	};
 	
 	// 카카오 맵 api를 이용한 지도 구현
-	let mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-	mapOption = { 
-	    center: new kakao.maps.LatLng(currentLat,currentLong ), // 지도의 중심좌표
-	    level: 3 // 지도의 확대 레벨
-	};
+	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+    mapOption = { 
+        center: new kakao.maps.LatLng("37.5666805", "126.9784147"), // 지도의 중심좌표
+        level: 4 // 지도의 확대 레벨 
+    }; 
 	
 	//지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 	let map = new kakao.maps.Map(mapContainer, mapOption);
+	// 내 위치를 마커로 표시합니다.
+	
+	if (navigator.geolocation) {
+	    
+    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+    navigator.geolocation.getCurrentPosition(function(position) {
+        
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+        
+        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+            message = '<div style="padding:5px;">현재위치</div>'; // 인포윈도우에 표시될 내용입니다
+        
+        // 마커와 인포윈도우를 표시합니다
+        displayMarker(locPosition, message);
+            
+      });
+    
+	} else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+    
+    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),    
+        message = 'geolocation을 사용할수 없어요..'
+        
+    	displayMarker(locPosition, message);
+	}
+	
+	function displayMarker(locPosition, message) {
 
+	    // 마커를 생성합니다
+	    var marker = new kakao.maps.Marker({  
+	        map: map, 
+	        position: locPosition
+	    }); 
+	    
+	    var iwContent = message, // 인포윈도우에 표시할 내용
+	        iwRemoveable = true;
+
+	    // 인포윈도우를 생성합니다
+	    var infowindow = new kakao.maps.InfoWindow({
+	        content : iwContent,
+	        removable : iwRemoveable
+	    });
+	    
+	    // 인포윈도우를 마커위에 표시합니다 
+	    infowindow.open(map, marker);
+	    
+	    // 지도 중심좌표를 접속위치로 변경합니다
+	    map.setCenter(locPosition);      
+	}    
+	
 	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
 	    
 	    // 지도 영역정보를 얻어옵니다 
@@ -338,10 +387,16 @@
 	    
 	});
 	
-	
-	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
-	changeMapCenter(map);
+	/*
+	*	선택한 옵션에 따라 지도 확대/축소 하기
+	*/
 
+	// 지도 시점 변화 완료 이벤트를 등록한다
+	function changeMap1() {
+		
+	}       
+	
+	
 	/*
 	* 선택한 지역에 따라 지도의 중심좌표 변경하기
 	*/
@@ -412,7 +467,6 @@
 			}
 		});
 	}
-	
 	
 
 </script>
