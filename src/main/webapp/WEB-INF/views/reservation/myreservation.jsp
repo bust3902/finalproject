@@ -47,7 +47,7 @@
 				<h6 class="mb-3">결제정보</h6>
 				<dl>
 					<dt>총 결제금액</dt>
-					<h4 class="text-danger"><strong>${payment.paymentTotalPrice }</strong></h4>
+					<h4 class="text-danger"><strong><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber> 원</strong></h4>
 				</dl>			
 			</div>
 			<hr>
@@ -94,7 +94,7 @@
 								<p>ㄴ 현금에서 차감</p>	
 							</div>
 							<div class="text-end col">
-								<p>${payment.paymentTotalPrice }원</p>
+								<p><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber>원</p>
 								<p>0원</p>
 								<p>0원</p>
 								<p>0P</p>
@@ -112,7 +112,7 @@
 								<p>0P</p>
 								<p>0원</p>
 								<p>카카오페이 환불</p>
-								<p>${payment.paymentTotalPrice }원</p>
+								<p><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber>원</p>
 							</div>
 						</div>
 		     		</div>

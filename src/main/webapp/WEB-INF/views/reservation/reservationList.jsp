@@ -26,10 +26,10 @@
 						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
 								<div class="card col-4 m-2 " >
-										<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+										<img class="card-img-top" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
+												<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
 												<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
 												<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
 												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
@@ -64,10 +64,10 @@
 						<c:otherwise>
 							<c:forEach var="Readyreservation" items="${Readyreservation }" >
 								<div class="card col-4 m-2 " >
-										<img class="img-fluid" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
+										<img class="card-img-top" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${Readyreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge rounded-pill ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${Readyreservation.paymentStatus }</span></p>
+												<p class="text-center"><span class="badge rounded-pill ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Readyreservation.paymentStatus }</span></p>
 												<p class="text-center"><strong>${Readyreservation.reservation.acco.name }</strong></p>
 												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Readyreservation.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
 												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Readyreservation.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
@@ -95,10 +95,10 @@
 						<c:otherwise>
 								<c:forEach var="Refundreservation" items="${Refundreservation }" >
 									<div class="card col-4 m-2 " >
-										<img class="img-fluid" src="/resources/images/acco/thumbnail/${Refundreservation.reservation.acco.thumbnailImageName}"><br>
+										<img class="card-img-top" src="/resources/images/acco/thumbnail/${Refundreservation.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${Refundreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge rounded-pill ${Refundreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${Refundreservation.paymentStatus }</span></p>
+												<p class="text-center"><span class="badge rounded-pill ${Refundreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Refundreservation.paymentStatus }</span></p>
 												<p class="text-center"><strong>${Refundreservation.reservation.acco.name }</strong></p>
 												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Refundreservation.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
 												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Refundreservation.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
