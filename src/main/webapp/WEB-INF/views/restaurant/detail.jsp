@@ -121,9 +121,11 @@
 						<li class="list-group-item list-group-flush border-0">
 							<span>매일</span><span class="float-end">${restaurant.opening }</span>
 						</li>
-						<li class="list-group-item list-group-flush border-0">
-							<span>휴게시간</span><span class="float-end">${restaurant.breakTime }</span>
-						</li>
+						<c:if test='${restaurant.breakTime != null and restaurant.breakTime != "" }'>
+							<li class="list-group-item list-group-flush border-0">
+								<span>휴게시간</span><span class="float-end">${restaurant.breakTime }</span>
+							</li>
+						</c:if>
 						<li class="list-group-item list-group-flush border-0">
 							<span>영업종료시간</span><span class="float-end">${restaurant.close }</span>
 						</li>
@@ -234,7 +236,7 @@
 	function searchKeyword(keyword) {
 		//alert(keyword);
 		
-		location.href="/searchlist.jsp?keyword=" + keyword;
+		location.href="searchlist?keyword=" + keyword;
 	};
 	
 	// 카카오 map api를 이용해서 지도 불러오기
@@ -246,6 +248,10 @@
 
 	// 지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 	var map = new kakao.maps.Map(mapContainer, mapOption); 
+	
+	let accoMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+	
+	// 지도에 마커 표시
 </script>
 </body>
 </html>

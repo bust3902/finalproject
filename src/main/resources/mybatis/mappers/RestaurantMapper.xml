@@ -173,6 +173,26 @@
 											#{tag}
 										</foreach>)
 			</if>
+			<if test="distance == 'meter'">
+				<!-- and res.restaurant_no (SELECT restaurant_no , 
+										( 6371 * acos ( cos ( radians(37) )* 
+										cos( radians( RESTAURANT_LATITUD ) )* 
+										cos( radians( RESTAURANT_LONGITUDE) - radians(128) ) + 
+										sin ( radians(37) ) * sin( radians( RESTAURANT_LATITUD ) ))) AS distance
+										FROM RESTAURANT
+										HAVING distance &lt; 2
+										ORDER BY distance;
+										) -->
+			</if>
+			<if test="distance == 'oneKilometer'">
+			
+			</if>
+			<if test="distance == 'twoKilometer'">
+			
+			</if>
+			<if test="distance == 'threeKilometer'">
+			
+			</if>
 		</where>
 		<choose>
 			<when test="sort == 'point'">

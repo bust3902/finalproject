@@ -19,6 +19,8 @@
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 <form id="form-search-restaurant" >
 	<div class="position-relative">
+	<input type="hidden" name="currentLat" value="" />
+	<input type="hidden" name="currentLong" value="" />
 		<form id="form-search" class="d-flex" role="search" action="searchlist">
 	        <input class="form-control me-sm-2" type="text" name="keyword" value="${param.keyword }" id="search" placeholder="지역,음식을 검색하세요">
 	        <button class="btn btn-secondary my-2 my-sm-0" type="button" onclick="searchRestaurants();">
@@ -103,6 +105,12 @@
 			</div>
 		</div>
 		<div class="col-8">
+				<div class="col d-flex justify-content-end align-items-center my-auto">
+					<small>
+						현재 내 위치는 <strong id="home-current-location-address"></strong>
+					</small>
+					<i id="icon-refresh-location" class="bi bi-compass fs-4 text-primary ps-2" style="cursor: pointer;"></i>
+				</div>
 			<div class="d-flex flex-wrap mx-3 mb-3">
 				<div id="btn-group-sort" class="btn-group flex-fill pe-2" role="group" aria-label="Basic radio toggle button group">
 					<input type="radio" class="btn-check" id="btnradio11" name="sort" value="point" checked onchange="searchRestaurants()">
@@ -121,16 +129,16 @@
 			<div class="row mb-3">
 				<h3>내주변 맛집<button class="btn btn-outline-secondary btn-lg border-0 float-end"><i class="bi bi-share"></i></button></h3>
 				<div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-				  <input type="radio" class="btn-check" name="distance" id="btnradio1" autocomplete="off" checked=""  onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio1" value="meter" autocomplete="off" checked=""  onchange="searchRestaurants()" >
 				  <label class="btn btn-outline-secondary" for="btnradio1">500m</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio2" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio2" value="oneKilometer" autocomplete="off" onchange="searchRestaurants()" onclick="changeMap1()">
 				  <label class="btn btn-outline-secondary" for="btnradio2">1km</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio3" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio3" value="twoKilometer" autocomplete="off" onchange="searchRestaurants()">
 				  <label class="btn btn-outline-secondary" for="btnradio3">2km</label>
 				
-				  <input type="radio" class="btn-check" name="distance" id="btnradio4" autocomplete="off" onchange="searchRestaurants()">
+				  <input type="radio" class="btn-check" name="distance" id="btnradio4" value="threeKilometer" autocomplete="off" onchange="searchRestaurants()">
 				  <label class="btn btn-outline-secondary" for="btnradio4">3km</label>
 				</div>
 			</div>
@@ -159,50 +167,69 @@
 </form>	
 </div>
 
-<!-- 현재 위치를 확인할 수 있는 버튼입니다. -->
-<div class="position-absolute" style="top:60px; left:1200px;" >
-	<button id="locationButton" class="float-end border-0"><i class="bi bi-geo"></i>현재위치 확인</button>
-	<p id="demo"></p>
-</div>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=49a6f0504323df1e2fbc06bfac690d78"></script>
 <script type="text/javascript">
+	
+/*
+ * 현재 위치 좌표 갱신하고, 숙소 검색 결과 갱신하기 : 최초 화면 출력시에 실행하고, 사용자가 내 위치 버튼 클릭 시에도 실행한다.
+ */
+	// 현재 위치 좌표를 저장하는 변수
+	let currentLat = '';
+	let currentLong = '';
+	refreshLocation();
+	
+	// geolocation.getCurrentPosition은 비동기 통신으로 이루어지므로 반드시 이 통신이 완료되고 숙소 검색 요청을 보내야 한다.
+	// 아래 함수를 실행하면 현재 위치 좌표를 새로 조회하고, 전역변수 currentLat, currentLong와 hidden 태그에 값이 저장된다.
+	// 현재 위치 좌표를 새로 조회하지 못하면 서울 중심 좌표를 대신 저장한다.
+	// 위 수행을 완료하면 숙소 검색 결과를 새로 요청해 화면에 출력한다.
+	function refreshLocation() {
+		// navigator.geolocation에서 지원하는 메소드를 사용해 사용자의 현재 위치 좌표값을 획득한다.
+		// 받아온 좌표값은 hidden태그에 저장해서 숙소 검색 시 거리계산 조건에 사용할 수 있게 한다.
+		if (navigator.geolocation) {
+			navigator.geolocation.getCurrentPosition(function(position) {
+				// 성공 시 콜백함수
+				console.log(currentLat);
+				console.log(currentLong);
+		    	currentLat = position.coords.latitude;
+		    	currentLong = position.coords.longitude;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
+				// 화면, 모달창에 현재 위치 주소를 출력한다.
+				getLocationAddress();
+				searchRestaurants();
+	    	}, function(position) {
+				// 실패 시 콜백함수
+				// 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
+				  	currentLat = 37.564214;
+				  	currentLong = 127.0016985;
+				$(":hidden[name=currentLat]").val(currentLat);
+				$(":hidden[name=currentLong]").val(currentLong);
+				// 화면, 모달창에 (정보없음)을 출력한다. (위치는 서울 중심으로 되어있지만 정보가 없음을 알려주기)
+				    	$("#modal-current-location-address").text('(정보 없음)');
+				 	  	$("#home-current-location-address").text('(정보 없음)');
+				searchRestaurants();
+			});
+		}
+	}
+	
+	$("#icon-refresh-location").click(function(){
+		refreshLocation();
+	});
+	
+	function getLocationAddress() {
+	    $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
+	  		  {sensor:false, 
+	  	       language:"ko",
+	  	       latlng: currentLat+","+currentLong, 
+	  	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
+	  .done(function(data) {
+	  	let location = data.results[0];
+	  	let address = location.formatted_address.split(' ');
+	  	$("#modal-current-location-address").text(address[2]+' '+address[3]);
+	  	$("#home-current-location-address").text(address[2]+' '+address[3]);
+	  })
+	}
 
-let currentLat = '';
-let currentLong = '';
-
-$("#locationButton").click(function() {
-	let x = document.getElementById("demo");
-	// 위도와 경도 값을 가져오는 코드입니다.
-	if (navigator.geolocation) {
-	    navigator.geolocation.getCurrentPosition(function(position) {
-	    	let latitude = position.coords.latitude;
-	        let longitude = position.coords.longitude;
-	        //alert(latitude + ", " + longitude);
-	        
-	        // 구글 map api를 이용해서 위도 경도 값을 통해 해당하는 주소값 가져오기
-	        $.getJSON('https://maps.googleapis.com/maps/api/geocode/json', 
-	        		  {sensor:false, 
-	        	       language:"ko",
-	        	       latlng: latitude+","+longitude, 
-	        	       key: "AIzaSyCLpyfe2_7Lvws3-UCb2qAtTouxy1xzCJo"})
-	        .done(function(data) {
-	        	console.log(data);
-	        	let location = data.results[0];
-	        	//let address = location.formatted_address.replace("대한민국 ", " ");
-	        	let address2 = location.formatted_address.split(' ');
-	        	//alert(address2[2]+' '+address2[3]);
-	        	//alert(address);
-	        	$("#locationButton").text(address2[2]+' '+address2[3]);
-	        })
-	    });
-	  } else { 
-		// 현재 위치를 받을 수 없으면 서울 중심 위경도를 저장
-	    	currentLat = 37.564214;
-	    	currentLong = 127.0016985;
-			$(":hidden[name=currentLat]").val(currentLat);
-			$(":hidden[name=currentLong]").val(currentLong);
-	  }
-});
 	let $boxKeywords = $("#box-keywords");
 	
 	$("#search").click(function() {
@@ -287,25 +314,91 @@ $("#locationButton").click(function() {
 	
 	// 카카오 맵 api를 이용한 지도 구현
 	var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-	mapOption = { 
-	    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-	    level: 3 // 지도의 확대 레벨
-	};
+    mapOption = { 
+        center: new kakao.maps.LatLng("37.5666805", "126.9784147"), // 지도의 중심좌표
+        level: 4 // 지도의 확대 레벨 
+    }; 
 	
 	//지도를 표시할 div와  지도 옵션으로  지도를 생성합니다
 	let map = new kakao.maps.Map(mapContainer, mapOption);
+	// 내 위치를 마커로 표시합니다.
 	
-	// 현재 선택한 지역에 따른 지도의 중심좌표와 확대 레벨 재설정
-	changeMapCenter(map);
-	// 내 위치 마커 생성하기
-	// 내 위치 마커 이미지 만들기
-	let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
-	let myLocationMarker = new kakao.maps.Marker({
-	    position: new kakao.maps.LatLng(currentLat, currentLong),
-	    image: myLocaMarkerImage
+	if (navigator.geolocation) {
+	    
+    // GeoLocation을 이용해서 접속 위치를 얻어옵니다
+    navigator.geolocation.getCurrentPosition(function(position) {
+        
+        var lat = position.coords.latitude, // 위도
+            lon = position.coords.longitude; // 경도
+        
+        var locPosition = new kakao.maps.LatLng(lat, lon), // 마커가 표시될 위치를 geolocation으로 얻어온 좌표로 생성합니다
+            message = '<div style="padding:5px;">현재위치</div>'; // 인포윈도우에 표시될 내용입니다
+        
+        // 마커와 인포윈도우를 표시합니다
+        displayMarker(locPosition, message);
+            
+      });
+    
+	} else { // HTML5의 GeoLocation을 사용할 수 없을때 마커 표시 위치와 인포윈도우 내용을 설정합니다
+    
+    var locPosition = new kakao.maps.LatLng(33.450701, 126.570667),    
+        message = 'geolocation을 사용할수 없어요..'
+        
+    	displayMarker(locPosition, message);
+	}
+	
+	function displayMarker(locPosition, message) {
+
+	    // 마커를 생성합니다
+	    // 내 위치만 특별하게 홈화면
+	    let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
+	    let marker = new kakao.maps.Marker({  
+	        map: map, 
+	        position: locPosition,
+	        image: myLocaMarkerImage
+	    }); 
+	    
+	    var iwContent = message, // 인포윈도우에 표시할 내용
+	        iwRemoveable = true;
+
+	    // 인포윈도우를 생성합니다
+	    var infowindow = new kakao.maps.InfoWindow({
+	        content : iwContent,
+	        removable : iwRemoveable
+	    });
+	    
+	    // 인포윈도우를 마커위에 표시합니다 
+	    // infowindow.open(map, marker);
+	    
+	    // 지도 중심좌표를 접속위치로 변경합니다
+	    map.setCenter(locPosition);      
+	}    
+	
+	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
+	    
+	    // 지도 영역정보를 얻어옵니다 
+	    let bounds = map.getBounds();
+	  
+	    $("input[name=minLat]").val(bounds.ha);
+	    $("input[name=maxLat]").val(bounds.oa);
+	    $("input[name=minLon]").val(bounds.qa);
+	    $("input[name=maxLon]").val(bounds.pa);
+	    
+	    searchRestaurants();
+	    //let resultDiv = document.getElementById('result');   
+	    //resultDiv.innerHTML = message;
+	    
 	});
-	// 내 위치 마커 지도에 표시하기
-	myLocationMarker.setMap(map);
+	
+	/*
+	*	선택한 옵션에 따라 지도 확대/축소 하기
+	*/
+
+	// 지도 시점 변화 완료 이벤트를 등록한다
+	function changeMap1() {
+		
+	}       
+	
 	
 	/*
 	* 선택한 지역에 따라 지도의 중심좌표 변경하기
@@ -317,37 +410,24 @@ $("#locationButton").click(function() {
 		map.setCenter(new kakao.maps.LatLng(cityLat, cityLong));
 		// 전체 조회 / 지역 조회에 따라 확대 레벨이 달라진다. '서울전체' 항목은 value 값이 ""이다.
 		if ($("select[name=city] :selected").val() == "") {
-			map.setLevel(8);
+			map.setLevel(3);
 		} else {
 			map.setLevel(7);
 		}
 	}
 	
+	$("select[name=city]").change(function() {
+		changeMapCenter(map);
+	});
 	
 	/*
 		ajax로 검색 조건에 따른 음식점 정보 조회하기
 	*/
-	// 현재 지도에 표시된 마커를 관리하기 위한 배열을 정의하기
-	let restaurantMakers = [];
-	// 배열에 추가된 마커들을 지도에 표시하거나 삭제하는 함수
-	// * 인자값이 null이면 마커를 삭제하고, 지도 객체면 그 지도에 마커를 표시한다.
-	function setMarker(map) {
-		for(let i = 0; i < restaurantMakers.length; i++) {
-			restaurantMakers[i].setMap(map);
-		}
-	}
-	// 마커에서 사용할 이미지 객체를 만들기
-	let restMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
 	
 	function searchRestaurants() {
 		let queryString = $("#form-search-restaurant").serialize();
 		
-		
-		
 		let $tbody = $("#tbody-rests").empty();
-		// 기존 지도에 표시된 마커를 모두 삭제하고 배열을 비운다.
-		setMarker(null);
-		restaurantMakers = [];
 		
 		// ajax로 검색조건에 따른 숙소정보를 요청해 응답 데이터로 받는다.
 		$.getJSON("/restaurants", queryString).done(function(rests) {
@@ -386,45 +466,12 @@ $("#locationButton").click(function() {
 						location.href = "detail?no=" + rest.no;
 					});
 					
-					let markerPosition = new kakao.maps.LatLng(rest.latitude, rest.longitude);
-					let marker = new kakao.maps.Marker({
-						map: map,
-					    position: markerPosition,
-					    image: restMarkerImage
-					});
-					
-					// 마커에 click 이벤트를 등록
-					kakao.maps.event.addListener(marker, 'click', function() {
-						// 상세조회 페이지로 이동
-						location.href="restaurant/detail?no=" + rest.no;
-					});
-					//restaurantMakers.push(marker);
 				});
-				//setMarker(map);
 			}
 		});
 	}
 	
-	// 지도가 이동, 확대, 축소로 인해 지도영역이 변경되면 마지막 파라미터로 넘어온 함수를 호출하도록 이벤트를 등록합니다
-	kakao.maps.event.addListener(map, 'bounds_changed', function() {             
-	    
-	    // 지도 영역정보를 얻어옵니다 
-	    var bounds = map.getBounds();
-	    
-	    // 영역정보의 남서쪽 정보를 얻어옵니다 
-	    var swLatlng = bounds.getSouthWest();
-	    
-	    // 영역정보의 북동쪽 정보를 얻어옵니다 
-	    var neLatlng = bounds.getNorthEast();
-	    
-	    var message = '<p>영역좌표는 남서쪽 위도, 경도는  ' + swLatlng.toString() + '이고 <br>'; 
-	    message += '북동쪽 위도, 경도는  ' + neLatlng.toString() + '입니다 </p>'; 
-	    
-	    var resultDiv = document.getElementById('result');   
-	    resultDiv.innerHTML = message;
-	    
-	});
-	
+
 </script>
 </body>
 </html>
