@@ -40,6 +40,8 @@ select
     r.reservation_check_in as "reservation.checkIn",
 	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationNo",
+    r.reservation_tel as "reservation.reserTel",
+    r.reservation_name as "reservation.reserName",
     a.acco_id as "reservation.Accommodation.id",
     r.room_no as "reservation.AccommodationRoom.no",
     u.user_name as "reservation.users.name",

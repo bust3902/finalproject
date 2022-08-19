@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../common/tags.jsp" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,21 +25,21 @@
 		<div class="col-4 bg-light">
 		</div>
 		<div class="col-8">
-			<p class="badge rounded-pill bg-danger">예약확정</p>
+			<p class="text"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
 			<h5>${payment.reservation.acco.name }</h5>
 			<h6>${payment.reservation.room.name } / 1박</h6>
 			<dl>
 				<dt class="form-text col-3">체크인</dt>
-				<dd class="form-text col-7">${reservation.checkIn } 15:00</dd>
+				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd"/> 15:00 </dd>
 				<dt class="form-text col-3">체크아웃</dt>
-				<dd class="form-text col-7">${reservation.checkIn } 15:00</dd>
+				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd"/> 14:00 </dd>
 				<dt class="form-text col-3 mt-2">예약번호</dt>
 				<dd class="form-text col-7">${param.reservationNo }</dd> <!-- 난수생성 -->
 				<dt class="form-text col-3">예약자이름</dt>
-				<dd class="form-text col-7">${reservation.reserName }</dd>
+				<dd class="form-text col-7">${payment.reservation.reserName }</dd>
 				<dt class="form-text col-3">안심번호</dt>
 				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
-				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${reservation.reserTel }은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${payment.reservation.reserTel }은(는)<p>안심번호로 숙소에 전송되며, 퇴실 후 7일간 보관됩니다. </p></small></dd>
 			</dl>
 	
 			<hr>
@@ -45,13 +47,16 @@
 				<h6 class="mb-3">결제정보</h6>
 				<dl>
 					<dt>총 결제금액</dt>
-					<dd class="text-danger"><strong>${payment.paymentTotalPrice }</strong></dd>
+					<h4 class="text-danger"><strong>${payment.paymentTotalPrice }</strong></h4>
 				</dl>			
 			</div>
 			<hr>
+			<!--  여기 c:when 달아서 예약완료일때 예약취소 / 예약취소일땐 / disabled 설정하기.
+					or 삼항연산자로 그냥 disable 처리하기? 
+			 -->
 			<div class="row">
 				<div class="col">
-					<p class="text-danger"><small>2022년 07월 28일 23:59까지 무료취소 가능합니다.</small></p>
+					<p class="text-danger"><small> * <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy년MM월dd일"/> 전 까지 무료취소 가능합니다.</small></p>
 					<div class="row">
 						<button type="button" id="modal-button" class="btn btn-danger" onclick="openReservationConfirm()" > 예약취소</button>
 					</div>

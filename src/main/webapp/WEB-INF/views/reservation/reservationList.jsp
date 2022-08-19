@@ -15,7 +15,7 @@
 <div class="col-12">
 	<jsp:include page="../common/nav.jsp" />
 </div>
-<div class="container m-3">
+<div class="container-flex m-3">
 	<div class="row">
 		<div class="col-4 bg-light">
 		</div>
@@ -25,16 +25,16 @@
 					<c:choose >
 						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
-								<div class="border col-4 m-2 " >
-									<form id="reservationNoForm" action="/myreservation">
+								<div class="card col-4 m-2 " >
 										<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
-										<a href="#" onclick="reservationNoSubmit()" style="text-decoration: none; color:black;">
-										<input type="hidden" id="reservationNo" name="reservationNo" value="${payment.reservation.reservationNo }">
-											<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
-											<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-											<p class="form-text text-center">체크인 : ${payment.reservation.checkIn } -<br>  체크아웃 : ${payment.reservation.checkOut } </p>
-										</a>
-									</form>
+										<div class="card-body">
+											<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
+												<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
+												<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
+											</a>
+										</div>
 									<div class="row">
 										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
 									</div>
@@ -55,7 +55,7 @@
 				<div class="row" >
 					<c:choose>
 						<c:when test="${empty Readyreservation }">
-							<div class="border col m-2 " >
+							<div class="card col m-2 " >
 								<tr>
 									<td colspan="5" class="text-center">예약내역이 없습니다.</td>
 								</tr>
@@ -63,13 +63,16 @@
 						</c:when>
 						<c:otherwise>
 							<c:forEach var="Readyreservation" items="${Readyreservation }" >
-								<div class="border col-5 m-2 " >
-									<img class="img-fluid" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
-									<a href="myreservation" style="text-decoration: none; color:black;">
-										<p class="text-center"><span class="badge rounded-pill ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${Readyreservation.paymentStatus }</span></p>
-										<p class="text-center"><strong>${Readyreservation.reservation.acco.name }</strong></p>
-										<p class="form-text text-center">체크인 : ${Readyreservation.reservation.checkIn } -<br>  체크아웃 : ${Readyreservation.reservation.checkOut } </p>
-									</a>
+								<div class="card col-4 m-2 " >
+										<img class="img-fluid" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
+										<div class="card-body">
+											<a href="/myreservation?reservationNo=${Readyreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
+												<p class="text-center"><span class="badge rounded-pill ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${Readyreservation.paymentStatus }</span></p>
+												<p class="text-center"><strong>${Readyreservation.reservation.acco.name }</strong></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Readyreservation.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Readyreservation.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
+											</a>
+										</div>
 									<div class="row">
 										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
 									</div>
@@ -91,17 +94,20 @@
 						</c:when>
 						<c:otherwise>
 								<c:forEach var="Refundreservation" items="${Refundreservation }" >
-									<div class="border col-5 m-2 " >
+									<div class="card col-4 m-2 " >
 										<img class="img-fluid" src="/resources/images/acco/thumbnail/${Refundreservation.reservation.acco.thumbnailImageName}"><br>
-										<a href="myreservation?reservationNo="+${reservation.no } style="text-decoration: none; color:black;">
-											<p class="text-center"><span class="badge rounded-pill ${Refundreservation.paymentStatus eq '결재완료' ? 'bg-danger' : 'bg-info' } mt-3">${Refundreservation.paymentStatus }</span></p>
-											<p class="text-center"><strong>${Refundreservation.reservation.acco.name }</strong></p>
-											<p class="form-text text-center">체크인 : ${Refundreservation.reservation.checkIn } -<br>  체크아웃 : ${Refundreservation.reservation.checkOut } </p>
-										</a>
-										<div class="row">
-											<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<div class="card-body">
+											<a href="/myreservation?reservationNo=${Refundreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
+												<p class="text-center"><span class="badge rounded-pill ${Refundreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${Refundreservation.paymentStatus }</span></p>
+												<p class="text-center"><strong>${Refundreservation.reservation.acco.name }</strong></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Refundreservation.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Refundreservation.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
+											</a>
 										</div>
+									<div class="row">
+										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
 									</div>
+								</div>
 								</c:forEach>
 						</c:otherwise>
 					</c:choose>
@@ -118,6 +124,9 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
 function reservationNoSubmit(){
+	
+	
+	
 	document.getElementById('reservationNoForm').submit();
 }
 
