@@ -25,13 +25,16 @@
 					<c:choose >
 						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
-								<div class="border col-5 m-2 " >
-									<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
-									<a href="/myreservation?reservationNo=${payment.reservationNo }" style="text-decoration: none; color:black;">
-										<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
-										<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-										<p class="form-text text-center">체크인 : ${payment.reservation.checkIn } -<br>  체크아웃 : ${payment.reservation.checkOut } </p>
-									</a>
+								<div class="border col-4 m-2 " >
+									<form id="reservationNoForm" action="/myreservation">
+										<img class="img-fluid" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+										<a href="#" onclick="reservationNoSubmit()" style="text-decoration: none; color:black;">
+										<input type="hidden" id="reservationNo" name="reservationNo" value="${payment.reservation.reservationNo }">
+											<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
+											<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
+											<p class="form-text text-center">체크인 : ${payment.reservation.checkIn } -<br>  체크아웃 : ${payment.reservation.checkOut } </p>
+										</a>
+									</form>
 									<div class="row">
 										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
 									</div>
@@ -114,7 +117,9 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
-
+function reservationNoSubmit(){
+	document.getElementById('reservationNoForm').submit();
+}
 
 
 </script>

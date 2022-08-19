@@ -24,20 +24,20 @@
 		</div>
 		<div class="col-8">
 			<p class="badge rounded-pill bg-danger">예약확정</p>
-			<h5>천안 호텔 소설 스미스</h5>
-			<h6>비즈니스 (공기청정기, 스타일러) / 1박</h6>
+			<h5>${payment.reservation.acco.name }</h5>
+			<h6>${payment.reservation.room.name } / 1박</h6>
 			<dl>
 				<dt class="form-text col-3">체크인</dt>
 				<dd class="form-text col-7">${reservation.checkIn } 15:00</dd>
 				<dt class="form-text col-3">체크아웃</dt>
-				<dd class="form-text col-7">>${reservation.checkIn } 15:00</dd>
+				<dd class="form-text col-7">${reservation.checkIn } 15:00</dd>
 				<dt class="form-text col-3 mt-2">예약번호</dt>
-				<dd class="form-text col-7">${reservation.reservationNo }</dd> <!-- 난수생성 -->
+				<dd class="form-text col-7">${param.reservationNo }</dd> <!-- 난수생성 -->
 				<dt class="form-text col-3">예약자이름</dt>
-				<dd class="form-text col-7">${reservation.resername }</dd>
+				<dd class="form-text col-7">${reservation.reserName }</dd>
 				<dt class="form-text col-3">안심번호</dt>
 				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
-				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${reservation.resertel }은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${reservation.reserTel }은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
 			</dl>
 	
 			<hr>
@@ -45,7 +45,7 @@
 				<h6 class="mb-3">결제정보</h6>
 				<dl>
 					<dt>총 결제금액</dt>
-					<dd class="text-danger"><strong>${payment.amount }</strong></dd>
+					<dd class="text-danger"><strong>${payment.paymentTotalPrice }</strong></dd>
 				</dl>			
 			</div>
 			<hr>
@@ -89,7 +89,7 @@
 								<p>ㄴ 현금에서 차감</p>	
 							</div>
 							<div class="text-end col">
-								<p>60000원</p>
+								<p>${payment.paymentTotalPrice }원</p>
 								<p>0원</p>
 								<p>0원</p>
 								<p>0P</p>
@@ -107,7 +107,7 @@
 								<p>0P</p>
 								<p>0원</p>
 								<p>카카오페이 환불</p>
-								<p>60000원</p>
+								<p>${payment.paymentTotalPrice }원</p>
 							</div>
 						</div>
 		     		</div>
@@ -166,8 +166,11 @@
 				예약취소 되었습니다.
 			</div>
       		<div class="modal-footer">
-  				<!-- 환불창으로 정보전달. -->
-	        	<a class="btn btn-danger" data-bs-toggle="modal" onclick="cancelPay()" role="button">확인</a>
+	      		<form action="/reservation/refund" id="reservationNoForm">
+	  				<!-- 환불창으로 정보전달. -->
+		        	<a class="btn btn-danger" data-bs-toggle="modal" onclick="reservationNoSubmit()" role="button">확인</a>
+					<input type="hidden" id="reservationNo" name="reservationNo" value="${payment.reservation.reservationNo }">
+	      		</form>
       		</div>
    		</div>
  	</div>
@@ -193,11 +196,8 @@ function openReservationConfirm() {
 
 function openCancelModal() {
 	reservationConfirmModal.hide();
-	cancelPay();
 	cancelModal.show();
 }
-
-
 
 // 툴팁
 var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
@@ -205,6 +205,9 @@ var collapseList = collapseElementList.map(function (collapseEl) {
   return new bootstrap.Collapse(collapseEl)
 })
 
+function reservationNoSubmit(){
+	document.getElementById('reservationNoForm').submit();
+}
 
 
 
