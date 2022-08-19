@@ -25,7 +25,7 @@
 			user_disabled disabled,
 			user_updated_date updatedDate,
 			user_created_date createdDate
-		from 
+		from
 			users
 		where
 			user_id = #{value}
@@ -48,6 +48,25 @@
 			users
 		where
 			user_email = #{value}
+	</select>
+	
+	<select id="getUserByName" parameterType="string" resultType="kr.co.nc.vo.User">
+		select 
+			user_no as no,
+			user_id as id,
+			user_password password,
+			user_nickname nickname,
+			user_name name,
+			user_email email,
+			user_tel tel,
+			user_login_type loginType,
+			user_disabled disabled,
+			user_updated_date updatedDate,
+			user_created_date createdDate
+		from
+			users
+		where
+			user_name = #{value}
 	</select>
 	
 	<update id="update" parameterType="kr.co.nc.vo.User">
