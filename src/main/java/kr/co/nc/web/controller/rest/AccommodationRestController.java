@@ -12,11 +12,11 @@ import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.criteria.RoomCriteria;
+import kr.co.nc.dto.Pagination;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
-import kr.co.nc.vo.Pagination;
 import kr.co.nc.vo.User;
 
 /**
@@ -47,8 +47,8 @@ public class AccommodationRestController {
 	
 	// 객실 정보에 대한 pagination 객체 반환
 	@GetMapping(path = "/pagination")
-	public Pagination pagination(int accoId, int currentPage) {
-		return accommodationService.generatePagination(accoId, currentPage);
+	public Pagination pagination(RoomCriteria criteria) {
+		return accommodationService.generatePagination(criteria);
 	}
 	
 	// 해당 숙소에 대한 리뷰 리스트, 평점분포 집계결과 반환
@@ -65,7 +65,7 @@ public class AccommodationRestController {
 	}
 	
 	// 숙소 찜하기 토글
-	@GetMapping(path = "/changelike")
+	@GetMapping(path = "/changelike/acco")
 	public boolean like(@LoginUser User loginUser, int accoId) {
 		try {
 			// 서비스에서 비즈니스 로직 수행 : service에서는 user_accommodation_like 테이블에 일치하는 정보가 존재하면 삭제하고, 존재하지 않으면 저장한다.

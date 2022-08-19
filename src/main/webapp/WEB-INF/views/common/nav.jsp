@@ -31,14 +31,14 @@
      					<input class="form-control me-2" type="text" id="nav-search" name="keyword" placeholder="지역, 숙소명" style="max-width:600px;height:auto">
      					<button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
      					<!-- 최근 검색어 box -->
-						<ul id="box-keywords" class="position-absolute list-group w-100 d-none" style="top:50px; left:0; z-index: 1000;">
+						<ul id="nav-box-keywords" class="position-absolute list-group w-100 d-none" style="top:50px; left:0; z-index: 1000;">
 							<li class="list-group-item list-group-flush border">
 								<div class="d-flex justify-content-between py-1 align-items-middle">
 									<span class="fw-lighter">최근검색어</span>
-									<button id="delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
+									<button id="nav-delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
 								</div>
 							</li>
-							<div id="list-group-keywords">
+							<div id="nav-list-group-keywords">
 					  			<li class="list-group-item list-group-flush border">
 									<a href="" class="border-bottom">내주변 검색</a>
 										<hr style="display: block;">
@@ -96,12 +96,12 @@
 /*
  * 검색창 최근검색어 기능 (restaurant/searchlist 페이지와 동일한 로직의 스크립트 코드를 사용함)
  */
-	let $navBoxKeywords = $("#box-keywords");
+	let $navBoxKeywords = $("#nav-box-keywords");
 	
 	$("#nav-search").click(function() {
 		// 최근 검색어 출력 토글
 		$navBoxKeywords.toggleClass("d-none");
-		refreshKeywordList();
+		refreshNavKeywordList();
 	});
 	
 	// 최근 검색어를 저장하는 기능
@@ -121,19 +121,19 @@
 		
 	});
 	
-	// 최근 검색어 전체 삭제하는 기능
-	$("#delete-all-keyword").click(function() {
+	// 최근 검색어 전체 삭제하는 기능 
+	$("#nav-delete-all-keyword").click(function() {
 		localStorage.setItem("accoKeywords",[]);
-		refreshKeywordList();
+		refreshNavKeywordList();
 	});
 	
 	// 최근 검색어를 최신화 하는 기능
-	function refreshKeywordList() {
+	function refreshNavKeywordList() {
 		let text = localStorage.getItem("accoKeywords") || '[]';
 		let array = JSON.parse(text);
 		
 		// empty를 사용해서 기존의 검색했던 최근 검색어를 지웁니다.
-		let $listGroup = $("#list-group-keywords").empty();
+		let $listGroup = $("#nav-list-group-keywords").empty();
 		
 		$.each(array, function(index, keyword) {
 			let content = '';
@@ -151,7 +151,7 @@
 	}
 	
 	// 최근 검색어를 하나씩 삭제하는 기능
-	function deleteKeyword(index) {
+	function deleteNavKeyword(index) {
 		let text = localStorage.getItem("accoKeywords") || '[]';
 		let array = JSON.parse(text);
 		
@@ -159,12 +159,12 @@
 		text = JSON.stringify(array);
 		localStorage.setItem("accoKeywords", text);
 		
-		refreshKeywordList();
+		refreshNavKeywordList();
 	};
 	
 	// 최근 검색어 클릭시 검색되게 하는 기능
 	// index를 주고 받지 말고 쉽게 keyword를 주고 받기
-	function searchKeyword(keyword) {
+	function searchNavKeyword(keyword) {
 		location.href="/acco?keyword=" + keyword;
 	};
 	

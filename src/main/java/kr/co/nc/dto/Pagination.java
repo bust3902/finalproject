@@ -1,4 +1,4 @@
-package kr.co.nc.vo;
+package kr.co.nc.dto;
 
 import lombok.Getter;
 import lombok.ToString;

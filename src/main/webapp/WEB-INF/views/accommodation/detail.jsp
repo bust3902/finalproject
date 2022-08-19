@@ -85,11 +85,7 @@
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<!-- 숙소 이미지 - 큰이미지 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 					<div class="swiper-wrapper">
-						<!-- 썸네일 이미지 : DB에서 NOT NULL이므로 별도로 empty는 체크하지 않음 -->
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/acco/thumbnail/${detail.thumbnailImageName }">
-						</div>
-						<!-- 상세이미지 -->
+						<!-- 이미지 (상세이미지 중 첫번째로 저장된 이미지가 썸네일이미지와 동일하다) -->
 						<c:forEach var="image" items="${detail.images }">
 							<div class="swiper-slide">
 								<img alt="accommodation expanded image" src="/resources/images/acco/detail/${image }">
@@ -102,17 +98,14 @@
 				<!-- 숙소 이미지 - 미리보기 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<!-- 이미지 미리보기 : 썸네일 이미지, 상세 이미지 3장 총 4장이 첫 화면 가장 먼저 보인다. -->
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/acco/thumbnail/${detail.thumbnailImageName }">
-						</div>
+						<!-- 이미지 미리보기 : 이미지 중 3장이 첫 화면 가장 먼저 보인다. -->
 						<c:forEach var="image" items="${detail.images }">
 							<div class="swiper-slide">
 								<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
 							</div>
 						</c:forEach>
 						<!-- 이미지 정보가 3개 미만일 경우, 미리 보기에는 부족한 개수만큼 로고 이미지 출력  -->
-						<c:if test="${fn:length(detail.images) < 3 }">
+						<c:if test="${fn:length(detail.images) < 4 }">
 							<c:forEach begin="0" end="${2 - fn:length(detail.images) }">
 								<div class="swiper-slide">
 									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
@@ -123,7 +116,7 @@
 				</div>
 			</div>
 		</div>
-		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장됨-->
+		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장되어 아이콘 상태에도 반영됨(비로그인 상태일 경우 무조건 빈 하트)-->
 		<div class="col-6">
 			<div class="d-flex justify-content-between">
 				<h4 id="acco-name" class="fw-semibold text-dark p-1 me-3" style="word-break: keep-all;">${detail.name } </h4>
@@ -161,16 +154,31 @@
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
 				<div class="my-3">
-					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
-					<form id="form-search-rooms">
-						<input type="text" id="datepicker" class="form-control w-50" value="" />
-						<input type="hidden" name="startDate" value="">
-						<input type="hidden" name="endDate" value="">
-						<input type="hidden" name="accoId" value="${param.id }">
+					<form id="form-search-rooms" class="row d-flex flex-wrap">
+						<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
+						<div class="col">
+							<input type="text" id="datepicker" class="form-control w-100" value="" />
+							<input type="hidden" name="startDate" value="">
+							<input type="hidden" name="endDate" value="">
+							<input type="hidden" name="accoId" value="${param.id }">
+						</div>
+						<div class="col d-flex justify-content-end">
+							<p class="small align-middle my-auto me-3">
+								예약가능한 객실만 보기
+								<input type="checkbox" id="checkbox-onlyAvailable" name="onlyAvailable" value="yes">
+							</p>
+							<!-- 정원 선택 : DB에서 이 숙소의 모든 인원 수 범위를 조회해서 출력한다. -->
+							<select id="select-capacity" class="form-control w-25 text-end" name="capacity">
+								<option value="0">객실 정원</option>
+								<c:forEach var="capacity" items="${capacities }">
+									<option value="${capacity }">${capacity }인</option>
+								</c:forEach>
+							</select>
+						</div>
 					</form>
 				</div>
 				<div id="room-list-wraper" class="mx-0">
-					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
+					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 조건의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
 				</div>
 				<!-- 페이징 버튼 : 버튼을 누르면, 해당 값을 currentPage로 해서 숙소정보를 다시 출력한다. -->
 				<div id="pagination-wrapper" class="d-flex justify-content-center">
@@ -394,6 +402,16 @@ $(function () {
 	 })
 
 /**
+ * 예약가능여부, 객실정원 옵션 선택하기 : 각 input 태그의 이벤트에 객실정보 갱신하는 함수를 등록한다. 
+ */
+	$("#select-capacity").change(function() {
+		changeCurrentPage(1);
+	});
+	$("#checkbox-onlyAvailable").change(function() {
+		changeCurrentPage(1);
+	});
+	 
+/**
  * input태그에서 daterangepicker 통해 숙박일정 선택하기
  * TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
  */
@@ -509,7 +527,7 @@ $(function () {
 
 //////////////////////////////////////////// DOM 생성 전에 정의되는 내용
 /**
- * 페이징 버튼을 누르면 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
+ * 페이징 버튼을 누르면 객실정보를 갱신하면서 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
  */
 function changeCurrentPage(num) {
 	$("#pagination-wrapper .page-item").removeClass("active");
@@ -526,7 +544,8 @@ function changeCurrentPage(num) {
  * 검색날짜를 변경해서, 객실 데이터 행 수가 변경될 때 실행한다.
  */
 function refreshPaginationButton(currentPage) {
-	$.getJSON("/pagination", "accoId=" + ${param.id} +"&currentPage=" + currentPage).done(function(pagination) {
+	let queryString = $("#form-search-rooms").serialize() + "&currentPage=" + currentPage;
+	$.getJSON("/pagination", queryString).done(function(pagination) {
 		let $wrapper = $("#ul-item-wrapper").empty();
 		let content = '';
 		content += '<li class="page-item">';
@@ -708,7 +727,7 @@ function toggleAccoLike(accoId) {
 	}
 	
 	// 숙소아이디 전달해서 ajax로 like 저장 요청
-	$.getJSON("/changelike", "accoId=" + accoId).done(function(result) {
+	$.getJSON("/changelike/acco", "accoId=" + accoId).done(function(result) {
 		if (result === true) {
 			// 아이콘 표현 토글 처리
 			$icon.toggleClass("bi-heart-fill");
@@ -761,7 +780,7 @@ $.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
 	let reviews = data.reviews
 	if (reviews.length == 0) {
 		isEmpty = true;
-		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
+		let content = '<div class="p-5 text-center">등록된 리뷰가 없습니다.</div>';
 		// 배열에 담지 않고 바로 append시킨다.
 		$("#review-tab-pane").append(content);
 	} else {

@@ -47,6 +47,8 @@ public interface AccommodationMapper {
 	
 	// 숙소번호에 따른 모든 객실정보 조회 (예약 가능 여부 제외)
 	List<AccommodationRoom> getAllRoomsByAccoId(int accoId);
+	// 숙소번호에 따른 모든 객실정원 정보 조회
+	List<Integer> getAllRoomCapacitiesByAccoId(int accoId);
 	// 객실번호에 따른 객실시설 조회
 	List<RoomFacility> getRoomFacilitiesByRoomNo(int roomNo);
 	// 객실번호에 따른 이미지(파일명) 조회
@@ -69,7 +71,8 @@ public interface AccommodationMapper {
 	
 	//// 페이징 관련
 	// 해당 숙소의 객실정보 행 수 조회
-	int getTotalRowsOfRoomsByAccoId(int accoId);
+	int getTotalRowsOfRoomsByAccoId(RoomCriteria criteria);
 	// 특정 숙소의 객실정보를 특정 페이지번호에 맞게 조회
 	List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria);
+	
 }

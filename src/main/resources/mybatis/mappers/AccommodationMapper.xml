@@ -39,18 +39,21 @@
 		select co_facility_id as id, co_facility_name as name, co_facility_icon_name as iconName
 		from common_facilities
 		where co_facility_id in (select co_facility_id from acco_type_cofa where acco_type_id = #{value})
+		order by co_facility_id
 	</select>
 	
 	<!-- List<RoomFacility> getAllRoomFacilities(); -->	
 	<select id="getAllRoomFacilities" resultType="RoomFacility">
 		select ro_facility_id as id, ro_facility_name as name, ro_facility_icon_name as iconName
 		from room_facilities
+		order by ro_facility_id
 	</select>
 	
 	<!-- List<String> getAllAccoTags(); -->
 	<select id="getAllAccoTags" resultType="string">
 		select acco_tag
 		from acco_tags
+		order by acco_tag
 	</select>
 	
 	<!-- AccoResultMap, AccoDetailResultMap -->
@@ -170,6 +173,7 @@
 		from acco_common_facilities a, common_facilities c
 		where a.co_facility_id = c.co_facility_id
 			and a.acco_id = #{value}
+		order by c.co_facility_id
 	</select>
 	
 	<!-- List<RoomFacility> getRoomFacilitiesByAccoId(int accoId); -->
@@ -178,6 +182,7 @@
 		from acco_room_facilities a, room_facilities r
 		where a.room_no in (select room_no from acco_rooms where acco_id = #{value})
 			and a.ro_facility_id = r.ro_facility_id
+		order by r.ro_facility_id
 	</select>
 	
 	<!-- List<String> getAccoTagsByAccoId(int accoId); -->
@@ -185,6 +190,7 @@
 		select acco_tag
 		from acco_tags
 		where acco_id = #{value}
+		order by acco_tag
 	</select>
 	
 	<!-- List<String> getImagesByAccoId(int accoId); -->
@@ -192,6 +198,7 @@
 		select image_file_name
 		from acco_detail_images
 		where acco_id = #{value}
+		order by image_file_name
 	</select>
 	
 	<!-- 객실 정보 관련 -->
@@ -209,9 +216,17 @@
 		<collection column="room_no" property="images" select="getImagesByRoomNo"></collection>
 	</resultMap>
 	
-	<!-- List<AccommodationRoom> getAllRoomsByAccoId(RoomCriteria criteria); -->
+	<!-- List<AccommodationRoom> getAllRoomsByAccoId(int accoId); -->
 	<select id="getAllRoomsByAccoId" parameterType="int" resultMap="RoomResultMap">
 		select *
+		from acco_rooms
+		where acco_id = #{value}
+		order by room_capacity asc
+	</select>
+	
+	<!-- List<Integer> getAllRoomCapacitiesByAccoId(int accoId); -->
+	<select id="getAllRoomCapacitiesByAccoId" parameterType="int" resultType="int">
+		select distinct room_capacity
 		from acco_rooms
 		where acco_id = #{value}
 		order by room_capacity asc
@@ -223,6 +238,7 @@
 		from acco_room_facilities a, room_facilities r
 		where a.room_no = #{value}
 			and a.ro_facility_id = r.ro_facility_id
+		order by r.ro_facility_id
 	</select>
 	
 	<!-- List<String> getImagesByRoomNo(int roomNo); -->
@@ -230,6 +246,7 @@
 		select room_image_file_name
 		from acco_room_detail_images
 		where room_no = #{value}
+		order by room_image_file_name
 	</select>
 	
 	<!-- int getAvailableRoomStock(RoomCriteria criteria); -->
@@ -280,17 +297,32 @@
 		where rownum &lt;= #{value}
 	</select>
 	
-	<!-- int getTotalRowOfRoomsByAccoId(int accoId); -->
-	<select id="getTotalRowsOfRoomsByAccoId" parameterType="int" resultType="int">
+	<!-- int getTotalRowOfRoomsByAccoId(RoomCriteria criteria); -->
+	<select id="getTotalRowsOfRoomsByAccoId" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="int">
 		select count(*)
 		from acco_rooms
-		where acco_id = #{value}
+		where acco_id = #{accoId}
+		<if test="capacity != 0">
+			and room_capacity = #{capacity}
+		</if>
 	</select>
 	
-	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(Map<String, Object> param); -->
+	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria); -->
 	<select id="getRoomsByAccoIdwithPagination" parameterType="kr.co.nc.criteria.RoomCriteria" resultMap="RoomResultMap">
 		select *
-		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.* from acco_rooms a where acco_id = #{accoId})
+		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.*
+				from acco_rooms a
+				<if test="onlyAvailable == 'yes'">
+					, (<include refid="getReservedCountByRoomNo" />) rc
+				</if>
+				where a.acco_id = #{accoId}
+				<if test="onlyAvailable == 'yes'">
+					and a.room_no = rc.room_no (+)
+					and (a.room_numbers - NVL(rc.cnt,0)) > 0
+				</if>
+				<if test="capacity != 0">
+					and a.room_capacity = #{capacity}
+				</if>)
 		where row_num between #{beginIndex} and #{endIndex}
 	</select>
 	

@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RoomCriteria;
+import kr.co.nc.dto.Pagination;
 import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
-import kr.co.nc.vo.Pagination;
 import kr.co.nc.vo.RoomFacility;
 import kr.co.nc.vo.User;
 
@@ -95,9 +95,8 @@ public class AccommodationService {
 	 */
 	public List<AccommodationRoom> getRoomDetailsByAccoIdwithPagination(RoomCriteria criteria) {
 		// 요청파라미터로 획득하는 값: 숙소아이디, 검색기간(시작날짜, 종료날짜), 현재페이지번호
-		int accoId = criteria.getAccoId();
 		// pagination 객체 획득
-		Pagination pagination = generatePagination(accoId, criteria.getCurrentPage());
+		Pagination pagination = generatePagination(criteria);
 		// pagination의 beginIndex, endIndex 값 사용해서 해당 페이지에 맞는 정보만 조회
 		criteria.setBeginIndex(pagination.getBeginIndex());
 		criteria.setEndIndex(pagination.getEndIndex());
@@ -111,6 +110,15 @@ public class AccommodationService {
 			room.setStock(stock);
 		}
 		return rooms;
+	}
+	
+	/**
+	 * 해당 번호를 가진 숙소의 모든 객실정원 옵션을 반환한다.
+	 * @param accoId
+	 * @return
+	 */
+	public List<Integer> getAllCapacityOptionsByAccoId(int accoId) {
+		return accommodationMapper.getAllRoomCapacitiesByAccoId(accoId);
 	}
 	
 	/**
@@ -155,12 +163,12 @@ public class AccommodationService {
 	 * @param currentPage
 	 * @return
 	 */
-	public Pagination generatePagination(int accoId, int currentPage) {
-		int totalRows = accommodationMapper.getTotalRowsOfRoomsByAccoId(accoId);
-		Pagination pagination = new Pagination(totalRows, currentPage);
+	public Pagination generatePagination(RoomCriteria criteria) {
+		int totalRows = accommodationMapper.getTotalRowsOfRoomsByAccoId(criteria);
+		Pagination pagination = new Pagination(totalRows, criteria.getCurrentPage());
 		// 페이징에 필요한 값들 초기화
 		pagination.init();
 		return pagination;
 	}
-	
+
 }

@@ -144,8 +144,12 @@
 		            
 		<where>
 			res.RESTAURANT_DELETE = 'N'
-			and res.RESTAURANT_LATITUD >= #{minLat} and res.RESTAURANT_LATITUD &lt; #{maxLat}
-			and res.RESTAURANT_LONGITUDE >= #{minLon} and res.RESTAURANT_LONGITUDE &lt; #{maxLon}
+			<if test="minLat != null">
+				and res.RESTAURANT_LATITUD >= #{minLat} and res.RESTAURANT_LATITUD &lt; #{maxLat}
+			</if>
+			<if test="minLon != null">
+				and res.RESTAURANT_LONGITUDE >= #{minLon} and res.RESTAURANT_LONGITUDE &lt; #{maxLon}
+			</if>
 			<if test="keyword != null">
 					AND res.restaurant_no = rtag.restaurant_no (+)
 		            AND res.restaurant_no = rmenu.restaurant_no (+)
@@ -210,4 +214,25 @@
 		</choose>
 	</select>
 	
+	<!-- 찜하기 기능 관련 -->
+	<!-- int isExistUserLikeByRestaurantNo(LikeCriteria criteria); -->
+	<select id="isExistUserLikeByRestaurantNo" parameterType="kr.co.nc.criteria.LikeCriteria" resultType="int">
+		select count(*)
+		from user_restaurant_likes
+		where user_no = #{userNo}
+			and restaurant_no = #{id}
+	</select>
+	
+	<!-- void insertUserLikeByRestaurantNo(LikeCriteria criteria); -->
+	<insert id="insertUserLikeByRestaurantNo" parameterType="kr.co.nc.criteria.LikeCriteria">
+		insert into user_restaurant_likes (user_no, restaurant_no)
+		values (#{userNo}, #{id})
+	</insert>
+	
+	<!-- void deleteUserLikeByRestaurantNo(LikeCriteria criteria); -->
+	<delete id="deleteUserLikeByRestaurantNo" parameterType="kr.co.nc.criteria.LikeCriteria">
+		delete from user_restaurant_likes
+		where user_no = #{userNo}
+			and restaurant_no = #{id}
+	</delete>
 </mapper>
