@@ -8,13 +8,13 @@ import org.springframework.stereotype.Service;
 import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RoomCriteria;
+import kr.co.nc.dto.Pagination;
 import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.AccommodationType;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.CommonFacility;
-import kr.co.nc.vo.Pagination;
 import kr.co.nc.vo.RoomFacility;
 import kr.co.nc.vo.User;
 

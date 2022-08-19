@@ -12,11 +12,11 @@ import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.criteria.RoomCriteria;
+import kr.co.nc.dto.Pagination;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
-import kr.co.nc.vo.Pagination;
 import kr.co.nc.vo.User;
 
 /**
