@@ -25,5 +25,8 @@ public interface ReviewMapper {
 	// 해당 숙소 번호를 가지는 숙소의 리뷰 평점 분포 집계 
 	// list에는 {POINT=1, COUNT=0}, {POINT=2, COUNT=7}, ... , {POINT=5, COUNT=3} 과 같이 map 객체들이 담겨서 반환된다.
 	List<Map<String, Integer>> countReviewPointsByAccoId(int accoId);
+	
+	// 사용자가 작성한 모든 리뷰를 조회한다.
+	List<Review> getAllReviews();
 
 }

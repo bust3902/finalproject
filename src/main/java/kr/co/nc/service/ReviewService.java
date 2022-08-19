@@ -12,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.dto.ReviewPointChart;
 import kr.co.nc.mapper.ReviewMapper;
+import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.Review;
 import kr.co.nc.vo.ReviewCategory;
 import kr.co.nc.vo.User;
@@ -29,7 +30,10 @@ public class ReviewService {
 		review.setContent(review.getContent());
 		review.setLikeCount(review.getLikeCount());
 		review.setImage(review.getImage());
+		review.setPoint(review.getPoint());
 		review.setUser(loginUser);
+		review.setAccoId(review.getAccoId());
+		review.setRestaurantNo(review.getRestaurantNo());
 		reviewMapper.insertReview(review);
 		
 		// 리뷰 카테고리 정보 저장
@@ -52,5 +56,8 @@ public class ReviewService {
 		// 생성자메소드에서 countResults를 이용해 hashMap 구현객체인 ReviewPointChart에 각 평점의 개수를 저장한다.
 		return new ReviewPointChart(countResults);
 	}
-
+	
+	public List<Review> getAllReviews(Review review) {
+		return reviewMapper.getAllReviews();
+	}
 }
