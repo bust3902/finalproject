@@ -9,8 +9,7 @@
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<!-- 페이스북 로그인 버튼 -->
-	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v14.0&appId=2878645332429159&autoLogAppEvents=1" nonce="1yOhxJkM"></script>
-
+	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v14.0&appId=1236926960491051&autoLogAppEvents=1" nonce="WOnf17HA"></script>
 <style type="text/css">
 .login #content {
     width: 336px;
@@ -46,19 +45,20 @@ li {
 <div id="fb-root"></div>
 <!-- 로그인 양식 -->
 <div class="login">
-	<div id="content">   
+	<div id="content">
+		<!-- 로고 -->
         <div id="logo">
             <a class="navbar-brand" href="/">
-      			<img src="/resources/images/logo.png" alt="서울어때" width="80" height="auto">
+      			<img src="/resources/images/logo(pink).png" alt="서울어때" width="80" height="auto">
     		</a>
         </div>
             
         <!-- 카카오톡 로그인 -->
         <div class="kakao">
-    		<ul>
+    		<ul style="height: 50px;">
 				<li onclick="kakaoLogin();">
       				<a href="javascript:void(0)">
-          				<img src="/resources/images/login/kakaoLogin.png" alt="카카오톡 로그인" width="329px;" height="50px;">
+          				<img src="/resources/images/login/kakaoLogin.png" alt="카카오톡 로그인" width="336px;">
       				</a>
 				</li>
 				<li onclick="kakaoLogout();">
@@ -74,7 +74,7 @@ li {
     		
     	<!-- 페이스북 로그인 -->
     	<div class="facebook">
-    		<fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
+    		<div class="fb-login-button" data-width="336" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState()"></div>
 			<div id="fb-root"></div>
 
 			<form id="form-facebook" method="post" action="facebook-login">
@@ -85,6 +85,14 @@ li {
 			
         <!-- 네이버 로그인 -->
         <div class="naver">
+        	<!-- 네이버 로그인 버튼 -->
+        	<div id="naver_id_login"></div>
+        	
+			<form id="form-naver" method="post" action="naver-login">
+				<input type="hidden" name="name">
+				<input type="hidden" name="email">
+				<input type="hidden" name="nickname">
+			</form>   
  		</div>
             
         <!-- 일반 로그인 -->
@@ -116,11 +124,11 @@ li {
     </div>
 </div>
 
-<%-- 카카오 로그인 --%>
+<%-- 카카오 스크립트 --%>
 <script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
 <script>
 Kakao.init('1c64be084ffd66ec4e090f13f7ff9ac8'); //발급받은 키 중 javascript키를 사용해준다.
-console.log(Kakao.isInitialized()); // sdk초기화여부판단
+
 //카카오로그인
 function kakaoLogin() {
     Kakao.Auth.login({
@@ -144,6 +152,7 @@ function kakaoLogin() {
       },
     })
   }
+
 //카카오로그아웃  
 function kakaoLogout() {
     if (Kakao.Auth.getAccessToken()) {
@@ -160,16 +169,16 @@ function kakaoLogout() {
         },
       })
       Kakao.Auth.setAccessToken(undefined)
-    }
-  }  
+	}
+}  
 </script>
 
-<%-- 페이스북 로그인 --%>
+<%-- 페이스북 스크립트 --%>
 <script async defer crossorigin="anonymous" src="https://connect.facebook.net/en_US/sdk.js"></script>
 <script>
 	window.fbAsyncInit = function() {
 		FB.init({
-			appId : '2878645332429159',
+			appId : '1236926960491051',
 			cookie : true,
 			xfbml : true,
 			version : 'v14.0'
@@ -208,6 +217,35 @@ function kakaoLogout() {
 			document.getElementById('status').innerHTML = 'Please log ' + 'into this webpage.';
 		}
 	}
+</script>
+
+<%-- 네이버 스크립트 --%>
+<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+	<%-- 네이버 로그인 버튼--%>
+	<script type="text/javascript">
+  		var naver_id_login = new naver_id_login("iHN5BdpjdVVavFwk_Qfg", "https://localhost/"); <%-- naver_id_login라는 함수가 없다함... navar에서 api를 잘못 만든 것 같습니다...--%>
+  		var state = naver_id_login.getUniqState();
+  		naver_id_login.setButton("white", 2,40);
+  		naver_id_login.setDomain("https://localhost/login");
+  		naver_id_login.setState(state);
+  		naver_id_login.setPopup();
+  		naver_id_login.init_naver_id_login();
+	</script>
+  		
+  	<%-- 네이버 로그인 응답 --%>
+  	<script type="text/javascript">
+  		var naver_id_login = new naver_id_login("iHN5BdpjdVVavFwk_Qfg", "https://localhost/");
+  		// 접근 토큰 값 출력
+  		alert(naver_id_login.oauthParams.access_token);
+  		// 네이버 사용자 프로필 조회
+  		naver_id_login.get_naver_userprofile("naverSignInCallback()");
+  		// 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
+  		function naverSignInCallback() {
+    		alert(naver_id_login.getProfileData('name'));
+    		alert(naver_id_login.getProfileData('email'));
+    		alert(naver_id_login.getProfileData('nickname'));
+  		}
+	</script>
 </script>
 </body>
 </html>

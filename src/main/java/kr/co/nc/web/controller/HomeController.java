@@ -14,6 +14,7 @@ import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.User;
 import kr.co.nc.web.form.FacebookLoginForm;
 import kr.co.nc.web.form.KakaoLoginForm;
+import kr.co.nc.web.form.NaverLoginForm;
 import kr.co.nc.web.form.UserRegisterForm;
 import lombok.extern.slf4j.Slf4j;
 
@@ -24,6 +25,7 @@ public class HomeController {
 	private static final String NORMAL_LOGIN_TYPE = "normal";
 	private static final String KAKAO_LOGIN_TYPE = "kakao";
 	private static final String FACEBOOK_LOGIN_TYPE = "facebook";
+	private static final String NAVER_LOGIN_TYPE = "naver";
 	
 	@Autowired
 	private UserService userService;
@@ -174,7 +176,7 @@ public class HomeController {
 						.loginType(FACEBOOK_LOGIN_TYPE)
 						.build();
 		
-		User savedUser = userService.loginWithfacebook(user);
+		User savedUser = userService.loginWithFacebook(user);
 		
 		if (savedUser != null) {
 			SessionUtils.addAttribute("LOGIN_USER", savedUser);
@@ -182,6 +184,30 @@ public class HomeController {
 			SessionUtils.addAttribute("LOGIN_USER", user);
 		}
 		log.info("페이스북 로그인 완료");
+
+		return "redirect:/";
+	}
+	
+	// 네이버 로그인 요청을 처리한다.
+	@PostMapping("/naver-login")
+	public String NaverLoginForm (NaverLoginForm form) {
+		log.info("네이버 로그인 인증정보: " + form);
+			
+		User user = User.builder()
+						.name(form.getName())
+						.email(form.getEmail())
+						.nickname(form.getNickname())
+						.loginType(NAVER_LOGIN_TYPE)
+						.build();
+			
+		User savedUser = userService.loginWithNaver(user);
+			
+		if (savedUser != null) {
+			SessionUtils.addAttribute("LOGIN_USER", savedUser);
+		} else {
+			SessionUtils.addAttribute("LOGIN_USER", user);
+		}
+		log.info("네이버 로그인 완료");
 
 		return "redirect:/";
 	}

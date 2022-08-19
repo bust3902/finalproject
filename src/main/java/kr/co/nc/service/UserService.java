@@ -42,14 +42,34 @@ public class UserService {
 	 * @param user 페이스북 로그인한 사용자 정보
 	 * @return 사용자 정보
 	 */
-	public User loginWithfacebook(User user) {
-		User savedUser = userMapper.getUserByEmail(user.getEmail());
-		log.info("페이스북 로그인 아이디로 조회한 유저 정보: " + savedUser);
+	public User loginWithFacebook(User user) {
+		User savedUser = userMapper.getUserById(user.getId());
+		log.info("페이스북 로그인 이름으로 조회한 유저 정보: " + savedUser);
 		
 		if (savedUser == null) {
 			user.setId(UUID.randomUUID().toString());
 			userMapper.insert(user);// User의 no
 			log.info("페이스북 로그인 신규 사용자 정보 등록 완료: " + user.getId() + ", " + user.getName());
+		}
+		
+		return savedUser;
+	}
+	
+	/**
+	 * 네이버 로그인으로 획득한 사용자정보로 로그인처리를 수행한다.
+	 * 네이버 로그인은 회원가입 절차없이 페이스북 로그인 API로 획득한 정보가 데이터베이스에 저장된다.
+	 * 네이버 로그인으로 서비스를 한 번이라도 사용한 사용자는 사용자 정보가 데이터베이스에 이미 저장되어 있다.
+	 * @param user 네이버 로그인한 사용자 정보
+	 * @return 사용자 정보
+	 */
+	public User loginWithNaver(User user) {
+		User savedUser = userMapper.getUserByEmail(user.getEmail());
+		log.info("네이버 로그인 아이디로 조회한 유저 정보: " + savedUser);
+		
+		if (savedUser == null) {
+			user.setId(UUID.randomUUID().toString());
+			userMapper.insert(user);// User의 no
+			log.info("네이버 로그인 신규 사용자 정보 등록 완료: " + user.getId() + ", " + user.getName());
 		}
 		
 		return savedUser;
@@ -110,6 +130,7 @@ public class UserService {
 		}
 		return savedUser;
 	}
+
 	
 	
 }
