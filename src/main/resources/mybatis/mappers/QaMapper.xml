@@ -32,4 +32,5 @@
 		select *
 		from qa_type
 	</select>
+	
 </mapper>

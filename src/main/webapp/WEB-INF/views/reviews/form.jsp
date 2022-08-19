@@ -8,8 +8,15 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<title>리뷰작성</title>
+<title>서울어때</title>
 </head>
+<style>
+	#review {
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	}
+</style>
 <body>
 <%@ include file="../common/nav.jsp" %>
 <div id="review" class="container my-3">
@@ -17,20 +24,20 @@
 		<div class="col-8">
 			<form action="">
 				<div class="my-3">
-					<p><strong>리뷰 작성하기</strong></p>
-					<label type="title-field" class="form-label">제목</label>
-					<input type="text" class="form-control" name="title" id="title-field" placeholder="제목을 작성해주세요.">
+					<h4 class="text-center"><strong>리뷰 작성하기</strong></h4>
+				</div>
+				<div class="my-3">
+					<p><strong>제목</strong></p>
+					<input class="form-control" type="text" name="title" style="width:800px;" placeholder="제목을 작성해주세요."/>
 				</div>
 				<div class="my-3">
 					<p><strong>카테고리</strong></p>
-					<div class="form-check form-check-inline">
-						<select class="form-select" name="category" id="category">
-							<option value="selectCategory">카테고리를 선택해주세요.</option>
-							<option value="rooms">객실</option>
-							<option value="accommodations">숙소</option>
-							<option value="restaurant">음식점</option>
-						</select>
-					</div>
+					<select class="form-select" name="category" id="category" style="width:800px;">
+						<option value="selectCategory">카테고리를 선택해주세요.</option>
+						<option value="rooms">객실</option>
+						<option value="accommodations">숙소</option>
+						<option value="restaurant">음식점</option>
+					</select>
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
@@ -57,14 +64,14 @@
 				</div>
 				<div class="my-3">
 					<label type="image-field" class="form-label">이미지첨부</label>
-					<input type="file" class="form-control" name="imageFile" id="image-field">
+					<input type="file" class="form-control" name="imageFile" id="image-field" style="width:800px;">
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
-					<textarea class="form-control" rows="13" name="content" placeholder="내용을 10자 이상 작성해주세요."></textarea>
+					<textarea class="form-control" rows="13" name="content" placeholder="내용을 10자 이상 작성해주세요." style="width:800px;"></textarea>
 				</div>
 				<div class="text-end">
-					<a href="#" class="btn btn-secondary px-3">취소</a>
+					<a href="/" class="btn btn-secondary px-3">취소</a>
 					<button type="submit" class="btn btn-primary px-3" id="modal-button" data-bs-target="reviewConfirm">등록</button>
 				</div>
 			</form>
@@ -72,7 +79,7 @@
 	</div>
 </div>
 <!-- 리뷰 제목/카테고리/평점/내용을 입력 및 선택하지 않을 시 경고창을 출력하는 모달창 -->
-<div id="modal-danger" class="modal fade">
+<div id="modal-danger" class="modal fade" >
 	<div class="modal-dialog modal-dialog-centered">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -80,6 +87,9 @@
 			</div>
 			<div class="modal-body">
 				<p class="text-center" id="modal-message-box">미입력</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
 			</div>
 		</div>
 	</div>
@@ -97,7 +107,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-primary">등록</button>
+				<button type="submit" class="btn btn-primary">등록</button>
 			</div>
 		</div>
 	</div>

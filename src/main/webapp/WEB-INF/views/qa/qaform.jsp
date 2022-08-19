@@ -1,5 +1,4 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,28 +8,27 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<title>문의사항 작성</title>
+<title>서울어때</title>
 </head>
+<style>
+	#content {
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
+	}
+</style>
 <body>
 <%@ include file="../common/nav.jsp" %>
 <div id="content" class="container my-3">
-	<div class="row mb-3">
-		<div class="col-3">
-			<div clss="p-5">
-				<ul class="list-group list-group-flush">
-					<li class="list-group-item"><a href="#">공지사항</a></li>
-					<li class="list-group-item"><a href="#">이벤트</a></li>
-					<li class="list-group-item"><a href="#">자주 묻는 질문</a></li>
-					<li class="list-group-item"><a href="#">1:1 문의</a></li>
-					<li class="list-group-item"><a href="#">약관 및 정책</a></li>
-					<li class="list-group-item"><a href="#">채용 약관</a></li>
-				</ul>
-			</div>
-		</div>
-		<div class="col">
+	<div class="row mb-6">
+		<div class="col-10">
 			<form action="">
 				<div class="alter-top">
-					<p class="text-center">서울어때 이용 중 불편하신 점을 문의해주시면 빠른 시일내에 답변 드리겠습니다.</p>
+					<p class="text-center"><strong>서울어때 이용 중 불편하신 점을 문의해주시면 빠른 시일내에 답변 드리겠습니다.</strong></p>
+				</div>
+				<div class="my-3">
+					<p><strong>제목</strong></p>
+					<input class="form-control" name="title" type="text" style="width:800px;height:40px;" placeholder="제목을 작성해주세요."/>
 				</div>
 				<div class="my-3">
 				<p><strong>카테고리 유형</strong></p>
@@ -98,7 +96,7 @@
 					<input type="file" class="form-control" name="image" style="width:800px;">
 				</div>
 				<div class="text-center">
-					<button id="modal-button" class="btn btn-primary" type="button" data-bs-target="#completeQa">작성 완료</button>
+					<button id="modal-button" class="btn btn-primary" type="submit" data-bs-target="#completeQa">작성 완료</button>
 				</div>
 			</form>
 		</div>
@@ -113,7 +111,7 @@
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body">
-				<p class="text-center" id="modal-message-box">카테고리/문의 유형 선택은 필수입니다.</p>
+				<p class="text-center" id="modal-message-box">미입력</p>
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-primary" data-bs-dismiss="modal">확인</button>
@@ -134,7 +132,7 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
-				<button type="button" class="btn btn-primary">확인</button>
+				<button type="submit" class="btn btn-primary">확인</button>
 			</div>
 		</div>
 	</div>
@@ -179,6 +177,11 @@ $(document).ready(function() {
 	// 카테고리/문의 유형을 선택하지 않을 시
 	var unselectedTypeModal = new bootstrap.Modal(document.getElementById('modal-danger'));
 	$("#modal-button").click(function() {
+		if($("input[name=title]").val() === "") {
+			$("#modal-message-box").text("제목을 입력해주세요.");
+			unselectedTypeModal.show();
+			return false;
+		}			
 		if($("select[name=categoryType]").val() === "1") {
 			$("#modal-message-box").text("카테고리 선택은 필수입니다.");
 			unselectedTypeModal.show();

@@ -5,9 +5,9 @@
 	<!-- void insertReview(Review review); -->
 	<insert id="insertReview" parameterType="Review">
 		insert into review
-		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_like_count, review_image)
+		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_like_count, review_image, review_point)
 		values
-		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{likeCount}, #{image})
+		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{likeCount}, #{image} #{point})
 	</insert>
 	
 	<!-- void updateReview(Review review); -->
@@ -99,4 +99,10 @@
 		order by p.review_point
 	</select>
 	
+	<!-- List<Review> getAllReviews(); -->
+	<select id="getAllReviews" resultType="Review">
+		select *
+		from review
+		where review_created_date desc
+	</select>
 </mapper>

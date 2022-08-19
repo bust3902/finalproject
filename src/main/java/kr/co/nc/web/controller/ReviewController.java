@@ -36,6 +36,6 @@ public class ReviewController {
 	
 	@GetMapping(path = "/reviewcomplete")
 	public String reviewCompleted() {
-		return "reviews/complete";
+		return "reviews/reviewcomplete";
 	}
 }
