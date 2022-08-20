@@ -631,8 +631,8 @@ function searchRooms(currentPage) {
 											<div class="swiper-wrapper">`;
 				imageBox += imageSlides;
 				imageBox +=				`</div>
-											<div class="swiper-button-next"></div>
-											<div class="swiper-button-prev"></div>
+											<div class="roomSwiper-button swiper-button-next"></div>
+											<div class="roomSwiper-button swiper-button-prev"></div>
 										</div>
 									</div>
 								</div>
@@ -675,8 +675,8 @@ function searchRooms(currentPage) {
 					loop : true,
 					spaceBetween : 10,
 					navigation : {
-						nextEl : ".roomSwiper-button-next",
-						prevEl : ".roomSwiper-button-prev"
+						nextEl : ".roomSwiper-button",
+						prevEl : ".roomSwiper-button"
 					}
 				});
 			
