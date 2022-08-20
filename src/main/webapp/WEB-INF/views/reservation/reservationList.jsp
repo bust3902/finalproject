@@ -29,14 +29,14 @@
 										<img class="card-img-top" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
+												<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
 												<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-												<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
-												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
 											</a>
 										</div>
 									<div class="row">
-										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
 								</div>
 							</c:forEach>
@@ -67,14 +67,14 @@
 										<img class="card-img-top" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${Readyreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge rounded-pill ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Readyreservation.paymentStatus }</span></p>
+												<p class="text-center"><span class="badge ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Readyreservation.paymentStatus }</span></p>
 												<p class="text-center"><strong>${Readyreservation.reservation.acco.name }</strong></p>
-												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Readyreservation.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
-												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Readyreservation.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Readyreservation.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Readyreservation.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
 											</a>
 										</div>
 									<div class="row">
-										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${Readyreservation.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
 								</div>
 							</c:forEach>
@@ -98,14 +98,14 @@
 										<img class="card-img-top" src="/resources/images/acco/thumbnail/${Refundreservation.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${Refundreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge rounded-pill ${Refundreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Refundreservation.paymentStatus }</span></p>
+												<p class="text-center"><span class="badge ${Refundreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Refundreservation.paymentStatus }</span></p>
 												<p class="text-center"><strong>${Refundreservation.reservation.acco.name }</strong></p>
-												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Refundreservation.reservation.checkIn }" pattern="yyyy-MM-dd"/></p>
-												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Refundreservation.reservation.checkOut }" pattern="yyyy-MM-dd"/></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Refundreservation.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Refundreservation.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
 											</a>
 										</div>
 									<div class="row">
-										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${Refundreservation.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
 								</div>
 								</c:forEach>
