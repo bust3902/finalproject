@@ -69,16 +69,15 @@
 		<result column="acco_review_count" property="reviewCount"/>
 		<result column="acco_like_count" property="likeCount"/>
 		<result column="city_id" property="cityId"/>
+		<result column="acco_introduce_comment" property="introduceComment"/>
+		<result column="acco_detail_description" property="detailDescription"/>
+		<result column="acco_updated_date" property="updatedDate"/>
+		<result column="acco_deleted" property="deleted"/>
 		<result column="distance" property="currentDistance" />
 		<result column="minPrice" property="minPrice"/>
 	</resultMap>
 	
 	<resultMap type="Accommodation" id="AccoDetailResultMap" extends="AccoResultMap">
-		<result column="acco_introduce_comment" property="introduceComment"/>
-		<result column="acco_detail_description" property="detailDescription"/>
-		<result column="acco_created_date" property="createdDate"/>
-		<result column="acco_updated_date" property="updatedDate"/>
-		<result column="acco_deleted" property="deleted"/>
 		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="roomFacilities" select="getRoomFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>

@@ -132,39 +132,31 @@ public class AccommodationService {
 	 */
 	@Transactional
 	public void changeMyAccoLikeStatus(User loginUser, int accoId) {
-//		int userNo = loginUser.getNo();
-//		LikeCriteria criteria = new LikeCriteria(userNo, accoId);
-//		
-//		// 숙소 찜 개수 정보를 업데이트 하기 위해 숙소 객체 획득 
-//		Accommodation acco = accommodationMapper.getAccommodationById(accoId);
-//		int likeCount = acco.getLikeCount();
-//		
-//		// isExistUserLikeByAccoId(param)는 존재하면 1을, 존재하지 않으면 0을 반환한다.
-//		if (isLikedAcco(criteria)) {
-//			 accommodationMapper.deleteUserLikeByAccoId(criteria);
-//			 likeCount--;
-//		} else {
-//			accommodationMapper.insertUserLikeByAccoId(criteria);
-//			likeCount++;
-//		}
-//		
-//		if (likeCount < 0) {
-//			//값을 변경한 likeCount가 음수이면 잘못된 정보가 들어가게 되므로 예외를 발생시킨다.
-//			throw new RuntimeException("숙소의 찜 개수는 음수가 될 수 없습니다.");
-//		}
-//		
-//		// 찜하기 상태 변경을 반영한 숙소 정보 업데이트
-//		acco.setLikeCount(likeCount);
-//		accommodationMapper.updateAccommodation(acco);
 		int userNo = loginUser.getNo();
 		LikeCriteria criteria = new LikeCriteria(userNo, accoId);
+		
+		// 숙소 찜 개수 정보를 업데이트 하기 위해 숙소 객체 획득
+		// **** update할 때 다른 컬럼에 null값 들어가지 않도록 할 것!! **** 
+		Accommodation acco = accommodationMapper.getAccommodationById(accoId);
+		int likeCount = acco.getLikeCount();
 		
 		// isExistUserLikeByAccoId(param)는 존재하면 1을, 존재하지 않으면 0을 반환한다.
 		if (isLikedAcco(criteria)) {
 			 accommodationMapper.deleteUserLikeByAccoId(criteria);
+			 likeCount--;
 		} else {
 			accommodationMapper.insertUserLikeByAccoId(criteria);
+			likeCount++;
 		}
+		
+		if (likeCount < 0) {
+			//값을 변경한 likeCount가 음수이면 잘못된 정보가 들어가게 되므로 예외를 발생시킨다.
+			throw new RuntimeException("숙소의 찜 개수는 음수가 될 수 없습니다.");
+		}
+		
+		// 찜하기 상태 변경을 반영한 숙소 정보 업데이트
+		acco.setLikeCount(likeCount);
+		accommodationMapper.updateAccommodation(acco);
 	}
 	
 	/**
@@ -205,6 +197,7 @@ public class AccommodationService {
 	 * @return
 	 */
 	public List<Accommodation> getAllLikedItemsByUser(int userNo) {
+		System.out.println(accommodationMapper.getAllLikedAccoByUserNo(userNo).toString());
 		return accommodationMapper.getAllLikedAccoByUserNo(userNo);
 	}
 }
