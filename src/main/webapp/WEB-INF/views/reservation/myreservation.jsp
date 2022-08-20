@@ -25,14 +25,14 @@
 		<div class="col-4 bg-light">
 		</div>
 		<div class="col-8">
-			<p class="text"><span class="badge rounded-pill ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
+			<p class="text"><span class="badge ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
 			<h5>${payment.reservation.acco.name }</h5>
 			<h6>${payment.reservation.room.name } / 1박</h6>
 			<dl>
 				<dt class="form-text col-3">체크인</dt>
-				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd"/> 15:00 </dd>
+				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/> 15:00 </dd>
 				<dt class="form-text col-3">체크아웃</dt>
-				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd"/> 14:00 </dd>
+				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/> 14:00 </dd>
 				<dt class="form-text col-3 mt-2">예약번호</dt>
 				<dd class="form-text col-7">${param.reservationNo }</dd> <!-- 난수생성 -->
 				<dt class="form-text col-3">예약자이름</dt>
@@ -41,10 +41,9 @@
 				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
 				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${payment.reservation.reserTel }은(는)<p>안심번호로 숙소에 전송되며, 퇴실 후 7일간 보관됩니다. </p></small></dd>
 			</dl>
-	
 			<hr>
 			<div class="row">
-				<h6 class="mb-3">결제정보</h6>
+				<h5 class="mb-3"><strong>결제정보</strong></h5>
 				<dl>
 					<dt>총 결제금액</dt>
 					<h4 class="text-danger"><strong><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber> 원</strong></h4>
