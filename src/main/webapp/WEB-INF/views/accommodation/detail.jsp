@@ -120,7 +120,12 @@
 		<div class="col-6">
 			<div class="d-flex justify-content-between">
 				<h4 id="acco-name" class="fw-semibold text-dark p-1 me-3" style="word-break: keep-all;">${detail.name } </h4>
-				<a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi fs-4 ${isLiked ? 'bi-heart-fill' : 'bi-heart'  }"></i></a>
+				<div class="row">
+					<a href="javascript:toggleAccoLike(${detail.id })" class="text-center mx-auto">
+						<i id="icon-heart" class="bi fs-4 ${isLiked ? 'bi-heart-fill' : 'bi-heart'  }"></i>
+					</a>
+					<small class="text-center text-primary">(<span id="likeCount">${detail.likeCount }</span>)</small>
+				</div>
 			</div>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
@@ -732,10 +737,14 @@ function toggleAccoLike(accoId) {
 			// 아이콘 표현 토글 처리
 			$icon.toggleClass("bi-heart-fill");
 			$icon.toggleClass("bi-heart");
+			let likeCount = Number($("#likeCount").text());
+			let change = $icon.hasClass("bi-heart") ? -1 : 1;
+			$("#likeCount").text(likeCount + change);
 		} else {
 			alert("오류가 발생했습니다. 다시 시도해주세요.");
 		}
 	});
+	
 }
 
 /**

@@ -301,7 +301,7 @@
 		select *
 		from (select *
 		    from accommodations
-		    order by acco_review_rate desc, acco_review_count desc)
+		    order by acco_review_rate desc, acco_like_count desc)
 		where rownum &lt;= #{value}
 	</select>
 	
