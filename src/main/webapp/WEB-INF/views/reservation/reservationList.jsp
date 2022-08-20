@@ -36,7 +36,7 @@
 											</a>
 										</div>
 									<div class="row">
-										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
 								</div>
 							</c:forEach>
@@ -74,7 +74,7 @@
 											</a>
 										</div>
 									<div class="row">
-										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${Readyreservation.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
 								</div>
 							</c:forEach>
@@ -105,7 +105,7 @@
 											</a>
 										</div>
 									<div class="row">
-										<button class="btn btn-success" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${Refundreservation.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
 								</div>
 								</c:forEach>

@@ -54,14 +54,27 @@
 			<!--  여기 c:when 달아서 예약완료일때 예약취소 / 예약취소일땐 / disabled 설정하기.
 					or 삼항연산자로 그냥 disable 처리하기? 
 			 -->
-			<div class="row">
-				<div class="col">
-					<p class="text-danger"><small> * <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy년MM월dd일"/> 전 까지 무료취소 가능합니다.</small></p>
+			<c:choose>
+				<c:when test="${payment.paymentStatus eq '예약완료' }">
 					<div class="row">
-						<button type="button" id="modal-button" class="btn btn-danger" onclick="openReservationConfirm()" > 예약취소</button>
+						<div class="col">
+							<p class="text-danger"><small> * <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy년MM월dd일"/> 전 까지 무료취소 가능합니다.</small></p>
+							<div class="row">
+								<button type="button" id="modal-button" class="btn btn-danger" onclick="openReservationConfirm()" > 예약취소</button>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
+				</c:when>
+				<c:otherwise>
+					<div class="row">
+						<div class="col">
+							<div class="row">
+								<button type="button" id="modal-button" class="btn btn-success" onclick="location.href='/acco/detail?id=${payment.reservation.acco.id }'" > 재예약</button>
+							</div>
+						</div>
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 </div>
