@@ -63,12 +63,13 @@ select
     p.payment_status as paymentStatus,
     p.payment_total_price as paymentTotalPrice,
     r.reservation_check_in as "reservation.checkIn",
-		r.reservation_check_out as "reservation.checkOut",
+	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationId",
     a.acco_id as "reservation.Accommodation.id",
     r.room_no as "reservation.AccommodationRoom.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
+    r.reservation_id as "reservation.reservationNo",
     a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
 from reservation r, payment p, users u, ACCOMMODATIONS a
 where p.reservation_Id = r.reservation_id
@@ -85,12 +86,13 @@ select
     p.payment_status as paymentStatus,
     p.payment_total_price as paymentTotalPrice,
     r.reservation_check_in as "reservation.checkIn",
-		r.reservation_check_out as "reservation.checkOut",
+	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationId",
     a.acco_id as "reservation.Accommodation.id",
     r.room_no as "reservation.AccommodationRoom.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
+    r.reservation_id as "reservation.reservationNo",
     a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
 from reservation r, payment p, users u, ACCOMMODATIONS a
 where p.reservation_Id = r.reservation_id
