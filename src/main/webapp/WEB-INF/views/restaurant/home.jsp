@@ -30,7 +30,7 @@
 	<div class="position-relative">
 		<form id="form-search" class="row d-flex" role="search" action="restaurant/searchlist">
 			<div class="col-6">
-				<!-- 숙소 검색창 -->
+				<!-- 식당 검색창 -->
 				<div class="d-flex">
 			        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
 					<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
@@ -320,23 +320,26 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 					return;
 				}
 				content += '<div class="col-3">';
-				content += '	<div class="card mb-3 p-1" style="max-width: 20rem;">';
-				content += '	<img src="/resources/images/restaurant/' + item.imgname +'" class="card-img-top" alt="...">';
-				content += '	  <div class="card-body">';
-				content += '	   <p class="card-title my-auto">';
-				content += '			<strong class="text-dark fw-light fs-5">' + item.name + '</strong>';
+				content += '	<div class="card mb-3 p-1 h-100" style="max-width: 20rem;">';
+				content += '	  <img src="/resources/images/restaurant/' + item.imgname +'" class="card-img-top" alt="...">';
+				content += '	  <div class="card-body d-flex flex-column justify-content-between my-auto">';
+				content += '		<div class="row">';
+				content += '	   		<div class="d-flex my-auto">';
+				content += '				<strong class="flex-fill text-dark fw-light fs-5 pe-2">' + item.name + '</strong>';
 				// 식당 찜하기 클릭하면 관련 ajax 요청 함수 실행 // 로그인 상태일 경우 하트 채워지는 여부 다르게 출력
-				content += '			<i id="icon-heart-' + item.no +'" class="text-primary fs-5 float-end bi ' + (item.liked ? 'bi-heart-fill' : 'bi-heart') + '" onclick="toggleRestaurantLike(' + item.no + ');"></i>';
-				content += '		</p>';
-				content += '	    <p class="text-warning m-0">'
-				content += '			<i class="bi ' + item.reviewRateIcon.star1 + '"></i>';
-				content += '			<i class="bi ' + item.reviewRateIcon.star2 + '"></i>';
-				content += '			<i class="bi ' + item.reviewRateIcon.star3 + '"></i>';
-				content += '			<i class="bi ' + item.reviewRateIcon.star4 + '"></i>';
-				content += '			<i class="bi ' + item.reviewRateIcon.star5 + '"></i>';
-				content += '		</p>';
-				content += '	    <p class="card-text m-0">' + Math.round(item.distance*1000/1000) + 'm</p>';
-				content += '	    <p class="card-text m-0">'
+				content += '				<i id="icon-heart-' + item.no +'" class="text-primary fs-5 float-end bi ' + (item.liked ? 'bi-heart-fill' : 'bi-heart') + '" onclick="toggleRestaurantLike(' + item.no + ');"></i>';
+				content += '			</div>';
+				content += '		</div>';
+				content += '	    <div class="row mt-3 border-top">';
+				content += '	        <p class="text-warning my-1">'
+				content += '		    	<i class="bi ' + item.reviewRateIcon.star1 + '"></i>';
+				content += '		    	<i class="bi ' + item.reviewRateIcon.star2 + '"></i>';
+				content += '		    	<i class="bi ' + item.reviewRateIcon.star3 + '"></i>';
+				content += '		    	<i class="bi ' + item.reviewRateIcon.star4 + '"></i>';
+				content += '		    	<i class="bi ' + item.reviewRateIcon.star5 + '"></i>';
+				content += '		    </p>';
+				content += '	        <p class="card-text mb-1">' + Math.round(item.distance*1000/1000) + 'm</p>';
+				content += '	        <p class="card-text mb-3">'
 				if (item.menus != null) {
 					for (let i = 0; i < item.menus.length; i++) {
 						content += menus[i].menuName + (i - 1 == item.menus.length ? '' : ', ');
@@ -344,8 +347,7 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				} else {
 					content += '메뉴 정보가 없습니다.'
 				}
-				content += '		</p>';
-				content += '	    <div class="row mt-3">';
+				content += '			</p>';
 				content += '	    	<a href="/reviewform?restaurantNo='+ item.no +'" class="btn btn-outline-primary">평가하기</a>';
 				content += '	  	</div>';
 				content += '	  </div>';
