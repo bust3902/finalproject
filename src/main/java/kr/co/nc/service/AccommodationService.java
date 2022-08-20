@@ -197,7 +197,6 @@ public class AccommodationService {
 	 * @return
 	 */
 	public List<Accommodation> getAllLikedItemsByUser(int userNo) {
-		System.out.println(accommodationMapper.getAllLikedAccoByUserNo(userNo).toString());
 		return accommodationMapper.getAllLikedAccoByUserNo(userNo);
 	}
 }

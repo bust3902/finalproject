@@ -246,4 +246,27 @@
 			and l.restaurant_no = r.restaurant_no
 	</select>
 	
+	<!-- void updateRestaurant(Restaurant restaurant); -->
+	<update id="updateRestaurant" parameterType="Restaurant">
+		update restaurant
+		set
+			restaurant_name = #{name},
+			restaurant_location = #{location},
+			restaurant_imgname = #{imgname},
+			restaurant_tel = #{tel},
+			restaurant_like_count = #{likeCount},
+			restaurant_review_count = #{reviewCount},
+			restaurant_review_point = #{reviewPoint},
+			restaurant_update_date = sysdate,
+			restaurant_latitud = #{latitud},
+			restaurant_longitude = #{longitude},
+			restaurant_delete = #{delete},
+			city_id = #{cityId},
+			restaurant_opening = #{opening},
+			restaurant_break_time = #{breakTime},
+			restaurant_close = #{close},
+			restaurant_district = #{district}
+		where restaurant_no = #{no}
+	</update>
+	
 </mapper>

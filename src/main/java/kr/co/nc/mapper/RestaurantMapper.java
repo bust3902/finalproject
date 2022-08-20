@@ -50,6 +50,9 @@ public interface RestaurantMapper {
 	// 해당 사용자의, 해당 번호의 식당에 대한 찜하기 정보 삭제
 	void deleteUserLikeByRestaurantNo(LikeCriteria criteria);
 	// 사용자가 찜하기 누른 모든 식당 정보 반환
-	List<Accommodation> getAllLikedRestaurantByUserNo(int no); 
+	List<Accommodation> getAllLikedRestaurantByUserNo(int no);
+	
+	// 식당정보 업데이트
+	void updateRestaurant(Restaurant restaurant);
 	
 }
