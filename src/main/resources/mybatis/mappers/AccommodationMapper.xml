@@ -160,6 +160,13 @@
 		</choose>
 	</select>
 	
+	<!-- Accommodation getAccommodationById(int accoId); -->
+	<select id="getAccommodationById" parameterType="int" resultMap="AccoResultMap">
+		select *
+		from accommodations
+		where acco_id = #{value}
+	</select>
+	
 	<!-- Accommodation getAccommodationdDetailById(int accoId); -->
 	<select id="getAccommodationdDetailById" parameterType="int" resultMap="AccoDetailResultMap">
 		select *
@@ -298,6 +305,7 @@
 		where rownum &lt;= #{value}
 	</select>
 	
+	<!-- 페이징 관련 -->
 	<!-- int getTotalRowOfRoomsByAccoId(RoomCriteria criteria); -->
 	<select id="getTotalRowsOfRoomsByAccoId" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="int">
 		select count(*)
@@ -326,5 +334,26 @@
 				</if>)
 		where row_num between #{beginIndex} and #{endIndex}
 	</select>
+	
+	<!-- void updateAccommodation(Accommodation accommodation); -->
+	<update id="updateAccommodation" parameterType="Accommodation">
+		update accommodations
+		set
+			acco_name = #{name},
+			acco_district = #{district},
+			acco_address = #{address},
+			acco_latitude = #{latitude},
+			acco_longitude = #{longitude},
+			acco_introduce_comment = #{introduceComment},
+			acco_thumbnail_image = #{thumbnailImageName},
+			acco_detail_description = #{detailDescription},
+			acco_review_rate = #{reviewRate},
+			acco_review_count = #{reviewCount},
+			acco_like_count = #{likeCount},
+			acco_deleted = #{deleted},
+			city_id = #{cityId},
+			acco_updated_date = sysdate
+		where acco_id = #{id}
+	</update>
 	
 </mapper>

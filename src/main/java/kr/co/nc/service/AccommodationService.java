@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.nc.criteria.AccoCriteria;
 import kr.co.nc.criteria.LikeCriteria;
@@ -124,10 +125,37 @@ public class AccommodationService {
 	/**
 	 * 해당 번호를 가진 사용자의, 해당 아이디를 가진 숙소에 대한 찜하기 상태를 변경한다.
 	 * USER_ACCOMMODATION_LIKES 테이블에 해당사용자의 해당숙소 찜하기 정보가 있으면 삭제하고, 없으면 추가한다.
+	 * 변경에 따라 해당 숙소의 찜하기 개수 정보를 업데이트 한다.
+	 * 트랜잭션 처리를 통해 중간에 오류가 발생하면 모든 DB 변경사항을 롤백시킨다.
 	 * @param userNo
 	 * @param accoId
 	 */
+	@Transactional
 	public void changeMyAccoLikeStatus(User loginUser, int accoId) {
+//		int userNo = loginUser.getNo();
+//		LikeCriteria criteria = new LikeCriteria(userNo, accoId);
+//		
+//		// 숙소 찜 개수 정보를 업데이트 하기 위해 숙소 객체 획득 
+//		Accommodation acco = accommodationMapper.getAccommodationById(accoId);
+//		int likeCount = acco.getLikeCount();
+//		
+//		// isExistUserLikeByAccoId(param)는 존재하면 1을, 존재하지 않으면 0을 반환한다.
+//		if (isLikedAcco(criteria)) {
+//			 accommodationMapper.deleteUserLikeByAccoId(criteria);
+//			 likeCount--;
+//		} else {
+//			accommodationMapper.insertUserLikeByAccoId(criteria);
+//			likeCount++;
+//		}
+//		
+//		if (likeCount < 0) {
+//			//값을 변경한 likeCount가 음수이면 잘못된 정보가 들어가게 되므로 예외를 발생시킨다.
+//			throw new RuntimeException("숙소의 찜 개수는 음수가 될 수 없습니다.");
+//		}
+//		
+//		// 찜하기 상태 변경을 반영한 숙소 정보 업데이트
+//		acco.setLikeCount(likeCount);
+//		accommodationMapper.updateAccommodation(acco);
 		int userNo = loginUser.getNo();
 		LikeCriteria criteria = new LikeCriteria(userNo, accoId);
 		

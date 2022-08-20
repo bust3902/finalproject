@@ -34,6 +34,8 @@ public interface AccommodationMapper {
 	// 검색조건에 따른 숙소정보 조회
 	List<Accommodation> getAccommodationsByCriteria(AccoCriteria criteria);
 	
+	// 숙소번호에 따른 숙소정보 기본 조회 (업데이트할 때 사용)
+	Accommodation getAccommodationById(int accoId);
 	// 숙소번호에 따른 숙소정보 상세 조회
 	Accommodation getAccommodationdDetailById(int accoId);
 	// 숙소번호에 따른 공용시설 조회
@@ -74,5 +76,8 @@ public interface AccommodationMapper {
 	int getTotalRowsOfRoomsByAccoId(RoomCriteria criteria);
 	// 특정 숙소의 객실정보를 특정 페이지번호에 맞게 조회
 	List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria);
+	
+	// 숙소정보 업데이트
+	void updateAccommodation(Accommodation accommodation);
 	
 }

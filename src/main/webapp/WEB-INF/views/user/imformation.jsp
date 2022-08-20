@@ -180,7 +180,7 @@
 														<span class="badge bg-warning fw-bold">${item.reviewRate }</span>
 													</div>
 													<!-- 해당 아이디의 숙소 상세페이지로 이동 -->
-													<a href="/acco/detail?id=${item.id }" class="btn btn-outline-danger small">예약하기</a>
+													<a href="/acco/detail?id=${item.id }" class="btn btn-outline-danger small">예약가능객실 보기</a>
 												</div>
 											 </div>
 										</div>
@@ -198,7 +198,7 @@
 								<c:forEach var="item" items="${likedRestaurants }">
 									<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
 										<div class="card p-1 h-100" style="max-width: 20rem;">
-											<img src="/resources/images/acco/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+											<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
 											<div class="card-body d-flex flex-column justify-content-between my-auto">
 												<div class="row pb-3 border-bottom">
 													<div class="d-flex my-auto">
@@ -232,8 +232,6 @@
 				<!-- CAT_004 내 리뷰 보기 -->
 				<c:if test="${param.cat eq 'CAT_004' }">
 				</c:if>
-				
-				
 			</div>						
 		</div>
 	</div>
