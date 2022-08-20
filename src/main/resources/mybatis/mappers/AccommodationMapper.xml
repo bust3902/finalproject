@@ -57,6 +57,7 @@
 	</select>
 	
 	<!-- AccoResultMap, AccoDetailResultMap -->
+	<!-- 현재 update하기 위한 객체 획득 시에 AccoResultMap을 사용하므로 update 대상 컬럼은 모두 조회할 것 -->
 	<resultMap type="Accommodation" id="AccoResultMap">
 		<id column="acco_id" property="id"/>
 		<result column="acco_name" property="name"/>
