@@ -159,14 +159,14 @@
 						<div class="swiper like-acco-swiper" style="--swiper-navigation-color: gray;">
 							<div class="swiper-wrapper" style="height: auto;">
 								<c:forEach var="item" items="${likedAccommodations }">
-									<div class="swiper-slide" style="height: auto;">
+									<div id="slide-${item.id }" class="swiper-slide" style="height: auto;">
 										<div class="card p-1 h-100" style="max-width: 20rem;">
 											<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
 											<div class="card-body d-flex flex-column justify-content-between my-auto">
 												<div class="row pb-3 border-bottom">
 													<div class="d-flex my-auto">
 														<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
-														<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteLike(${item.id});"></i>
+														<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteAccoLike(${item.id});"></i>
 													</div>
 												</div>
 												<div class="row mt-3 mb-0">
@@ -196,14 +196,14 @@
 						<div class="swiper like-restaurant-swiper" style="--swiper-navigation-color: gray;">
 							<div class="swiper-wrapper" style="height: auto;">
 								<c:forEach var="item" items="${likedRestaurants }">
-									<div class="swiper-slide" style="height: auto;">
+									<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
 										<div class="card p-1 h-100" style="max-width: 20rem;">
 											<img src="/resources/images/acco/thumbnail/${item.imgname }" class="card-img-top" alt="...">
 											<div class="card-body d-flex flex-column justify-content-between my-auto">
 												<div class="row pb-3 border-bottom">
 													<div class="d-flex my-auto">
 														<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
-														<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteLike(${item.no});"></i>
+														<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteRestaurantLike(${item.no});"></i>
 													</div>
 												</div>
 												<div class="row mt-3 mb-0">
@@ -299,6 +299,31 @@ $("#btn-hide-tel-form").click(function() {
 	$("#box-tel-update").addClass('d-none');
 	$("#box-tel-btn").removeClass('d-none');
 })
+
+/**
+ * 찜 목록에서 하트를 클릭하면, 해당 카드가 화면에서 사라지고 DB정보에서 찜 정보를 삭제시킨다.
+ */
+ function deleteAccoLike(id) {
+	$.getJSON('/changelike/acco', 'accoId=' + id).done(function(result) {
+		if (result === true) {
+			// ajax로 DB작업이 정상 완료되면 엘리먼트를 삭제
+			$("#slide-" + id).remove();
+		} else {
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
+		}
+	});
+}
+
+ function deleteRestaurantLike(id) {
+	$.getJSON('/changelike/restaurant', 'restaurantNo=' + id).done(function(result) {
+		if (result === true) {
+			// ajax로 DB작업이 정상 완료되면 엘리먼트를 삭제
+			$("#slide-" + id).remove();
+		} else {
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
+		}
+	});
+}
 
 /**
  * 내가 찜한 목록 페이지의 카드 슬라이더 기능을 제공하는 Swiper 객체를 생성한다.
