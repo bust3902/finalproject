@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RestaurantCriteria;
 import kr.co.nc.mapper.RestaurantMapper;
+import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.Restaurant;
@@ -103,5 +104,14 @@ public class RestaurantService {
 	 */
 	public boolean isLikedRestaurant(LikeCriteria criteria) {
 		return restaurantMapper.isExistUserLikeByRestaurantNo(criteria) == 1 ? true : false;
+	}
+	
+	/**
+	 * 해당 사용자가 찜하기를 누른 모든 식당을 반환한다.
+	 * @param userNo
+	 * @return
+	 */
+	public List<Accommodation> getAllLikedItemsByUser(int userNo) {
+		return restaurantMapper.getAllLikedRestaurantByUserNo(userNo);
 	}
 }

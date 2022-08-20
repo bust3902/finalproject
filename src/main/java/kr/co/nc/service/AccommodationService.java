@@ -170,5 +170,13 @@ public class AccommodationService {
 		pagination.init();
 		return pagination;
 	}
-
+	
+	/**
+	 * 해당 사용자가 찜하기를 누른 모든 숙소를 반환한다.
+	 * @param userNo
+	 * @return
+	 */
+	public List<Accommodation> getAllLikedItemsByUser(int userNo) {
+		return accommodationMapper.getAllLikedAccoByUserNo(userNo);
+	}
 }

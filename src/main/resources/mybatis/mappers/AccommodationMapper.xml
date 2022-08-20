@@ -67,6 +67,7 @@
 		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
 		<result column="acco_review_rate" property="reviewRate"/>
 		<result column="acco_review_count" property="reviewCount"/>
+		<result column="acco_like_count" property="likeCount"/>
 		<result column="city_id" property="cityId"/>
 		<result column="distance" property="currentDistance" />
 		<result column="minPrice" property="minPrice"/>
@@ -75,7 +76,6 @@
 	<resultMap type="Accommodation" id="AccoDetailResultMap" extends="AccoResultMap">
 		<result column="acco_introduce_comment" property="introduceComment"/>
 		<result column="acco_detail_description" property="detailDescription"/>
-		<result column="acco_like_count" property="likeCount"/>
 		<result column="acco_created_date" property="createdDate"/>
 		<result column="acco_updated_date" property="updatedDate"/>
 		<result column="acco_deleted" property="deleted"/>
@@ -281,11 +281,12 @@
 	
 	<!-- List<Accommodation> getAllLikedAccoByUserNo(int no); -->
 	<select id="getAllLikedAccoByUserNo" parameterType="int" resultMap="AccoResultMap">
-		select *
+		select a.acco_id, a.acco_name, a.acco_district, a.acco_latitude, a.acco_longitude, a.acco_thumbnail_image,
+		        a.acco_review_rate, a.acco_like_count
 		from user_accommodation_likes l, accommodations a
-		where l.user_no = #{value}
-			and a.acco_deleted = 'N'
+		where a.acco_deleted = 'N'
 			and l.acco_id = a.acco_id
+			and l.user_no = #{value}
 	</select>
 	
 	<!-- List<Accommodation> getBestAccommodations(int count); -->

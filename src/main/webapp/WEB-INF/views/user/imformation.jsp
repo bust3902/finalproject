@@ -8,6 +8,8 @@
 <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- swiper css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
 <style>
 	#yeseok {
 		width: 100%;
@@ -154,54 +156,76 @@
 				<c:if test="${param.cat eq 'CAT_003' }">
 					<div class="mb-5">
 						<h5 class="fw-bold pb-3 border-bottom mb-3">숙소 찜 목록</h5>
-						<div class="col-3">
-							<div class="card mb-3 p-1" style="max-width: 20rem;">
-							<img src="/resources/images/logo-bg.png" class="card-img-top" alt="...">
-							  <div class="card-body">
-							   <p class="card-title my-auto">
-									<strong class="text-dark fw-light fs-5">숙소명</strong>
-									<i id="icon-heart-" class="text-primary fs-5 float-end bi bi-heart" onclick="toggleLike(22);"></i>
-								</p>
-							    <p class="text-warning m-0">
-							    <!-- 
-									<i class="bi ' + item.reviewRateIcon.star1 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star2 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star3 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star4 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star5 + '"></i>
-							     -->
-								</p>
-							    <div class="row mt-3">
-							    	<a href="/acco/detail?id=" class="btn btn-outline-danger">예약하기</a>
-							  	</div>
-							  </div>
+						<div class="swiper like-acco-swiper" style="--swiper-navigation-color: gray;">
+							<div class="swiper-wrapper" style="height: auto;">
+								<c:forEach var="item" items="${likedAccommodations }">
+									<div class="swiper-slide" style="height: auto;">
+										<div class="card p-1 h-100" style="max-width: 20rem;">
+											<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+											<div class="card-body d-flex flex-column justify-content-between my-auto">
+												<div class="row pb-3 border-bottom">
+													<div class="d-flex my-auto">
+														<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+														<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteLike(${item.id});"></i>
+													</div>
+												</div>
+												<div class="row mt-3 mb-0">
+													<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+													<div class="text-warning text-center small mb-3">
+														<i class="bi ${item.reviewRateIcon.star1 }"></i>
+														<i class="bi ${item.reviewRateIcon.star2 }"></i>
+														<i class="bi ${item.reviewRateIcon.star3 }"></i>
+														<i class="bi ${item.reviewRateIcon.star4 }"></i>
+														<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
+														<span class="badge bg-warning fw-bold">${item.reviewRate }</span>
+													</div>
+													<!-- 해당 아이디의 숙소 상세페이지로 이동 -->
+													<a href="/acco/detail?id=${item.id }" class="btn btn-outline-danger small">예약하기</a>
+												</div>
+											 </div>
+										</div>
+									</div>
+								</c:forEach>
 							</div>
+							<div class="swiper-button-next acco-swiper-button"></div>
+							<div class="swiper-button-prev acco-swiper-button"></div>
 						</div>
 					</div>
-					<div>
+					<div class="mb-5">
 						<h5 class="fw-bold pb-3 border-bottom mb-3">식당 찜 목록</h5>
-						<div class="col-3">
-							<div class="card mb-3 p-1" style="max-width: 20rem;">
-							<img src="/resources/images/logo-bg.png" class="card-img-top" alt="...">
-							  <div class="card-body">
-							   <p class="card-title my-auto">
-									<strong class="text-dark fw-light fs-5">식당이름</strong>
-									<i id="icon-heart-' + item.no +'" class="text-primary fs-5 float-end bi bi-heart" onclick="toggleLike(22);"></i>
-								</p>
-							    <p class="text-warning m-0">
-							    <!-- 
-									<i class="bi ' + item.reviewRateIcon.star1 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star2 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star3 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star4 + '"></i>
-									<i class="bi ' + item.reviewRateIcon.star5 + '"></i>
-							     -->
-								</p>
-							    <div class="row mt-3">
-							    	<a href="/reviewform?restaurantNo=1" class="btn btn-outline-primary">평가하기</a>
-							  	</div>
-							  </div>
+						<div class="swiper like-restaurant-swiper" style="--swiper-navigation-color: gray;">
+							<div class="swiper-wrapper" style="height: auto;">
+								<c:forEach var="item" items="${likedRestaurants }">
+									<div class="swiper-slide" style="height: auto;">
+										<div class="card p-1 h-100" style="max-width: 20rem;">
+											<img src="/resources/images/acco/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+											<div class="card-body d-flex flex-column justify-content-between my-auto">
+												<div class="row pb-3 border-bottom">
+													<div class="d-flex my-auto">
+														<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+														<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteLike(${item.no});"></i>
+													</div>
+												</div>
+												<div class="row mt-3 mb-0">
+													<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+													<div class="text-warning text-center small mb-3">
+														<i class="bi ${item.reviewRateIcon.star1 }"></i>
+														<i class="bi ${item.reviewRateIcon.star2 }"></i>
+														<i class="bi ${item.reviewRateIcon.star3 }"></i>
+														<i class="bi ${item.reviewRateIcon.star4 }"></i>
+														<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
+														<span class="badge bg-warning fw-bold">${item.reviewPoint }</span>
+													</div>
+													<!-- 리뷰폼 페이지로 이동, 식당번호 전달 -->
+													<a href="/reviewform?restaurantNo=${item.no }" class="btn btn-outline-danger small">평가하기</a>
+												</div>
+											 </div>
+										</div>
+									</div>
+								</c:forEach>
 							</div>
+							<div class="swiper-button-next restaurant-swiper-button"></div>
+							<div class="swiper-button-prev restaurant-swiper-button"></div>
 						</div>
 					</div>
 				</c:if>
@@ -215,6 +239,8 @@
 	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
+<!-- swiper js -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
 
 $("#form-nickname").submit(function() {
@@ -274,7 +300,33 @@ $("#btn-hide-tel-form").click(function() {
 	$("#box-tel-btn").removeClass('d-none');
 })
 
-
+/**
+ * 내가 찜한 목록 페이지의 카드 슬라이더 기능을 제공하는 Swiper 객체를 생성한다.
+ */
+ new Swiper(".like-acco-swiper", {
+		loop : true,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+		navigation : {
+			nextEl : ".acco-swiper-button",
+			prevEl : ".acco-swiper-button"
+		}
+	});
+	
+ new Swiper(".like-restaurant-swiper", {
+		loop : true,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+		navigation : {
+			nextEl : ".restaurant-swiper-button",
+			prevEl : ".restaurant-swiper-button"
+		}
+	});
+ 
 </script>
 </body>
 </html>
