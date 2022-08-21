@@ -46,7 +46,7 @@
  -->
 <%@ include file="../common/nav.jsp" %>
 <form id="form-search-accos">
-	<div class="row bg-secondary" style="height:13vh;">
+	<div class="row bg-secondary m-0" style="height:13vh;">
 		<input type="hidden" name="currentLat" value="" />
 		<input type="hidden" name="currentLong" value="" />
 		<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
