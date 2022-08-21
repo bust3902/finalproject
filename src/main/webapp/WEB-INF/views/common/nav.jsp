@@ -28,19 +28,19 @@
 		<ul class="navbar-nav">			
 			<div class="container-fluid position-relative" style="width:700px;height:auto">
    				<form id="nav-form-search" class="d-flex justify-content-center my-auto" action="/acco" autocomplete="off">
-     					<input class="form-control me-2" type="text" id="nav-search" name="keyword" placeholder="지역, 숙소명" style="max-width:600px;height:auto">
-     					<button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
-     					<!-- 최근 검색어 box -->
-						<ul id="nav-box-keywords" class="position-absolute list-group w-100 d-none" style="top:50px; left:0; z-index: 1000;">
-							<li class="list-group-item list-group-flush border">
-								<div class="d-flex justify-content-between py-1 align-items-middle">
-									<span class="fw-lighter">최근검색어</span>
-									<button id="nav-delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
-								</div>
-							</li>
-							<div id="nav-list-group-keywords">
+   					<input class="form-control me-2" type="text" id="nav-search" name="keyword" placeholder="지역, 숙소명" style="max-width:600px;height:auto">
+   					<button class="btn btn-primary" type="submit"><i class="bi bi-search"></i></button>
+   					<!-- 최근 검색어 box -->
+					<ul id="nav-box-keywords" class="position-absolute list-group w-100 d-none" style="top:50px; left:0; z-index: 1000;">
+						<li class="list-group-item list-group-flush border">
+							<div class="d-flex justify-content-between py-1 align-items-middle">
+								<span class="fw-lighter">최근검색어</span>
+								<button id="nav-delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
 							</div>
-						</ul>
+						</li>
+						<div id="nav-list-group-keywords">
+						</div>
+					</ul>
    				</form>
 			</div>
 			<!-- 로그인 상태 -->

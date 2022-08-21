@@ -500,7 +500,7 @@ $(function () {
 					content += '	<a href="acco/detail?id=' + acco.id + '">';
 					content += '		<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
 					content += '			<div class="my-auto">';
-					content += '			<h5 class="fw-semibold">' + acco.name + '</h5>';
+					content += '				<h5 class="fw-semibold">' + acco.name + '</h5>';
 					content += '				<p class="text-warning">';
 					content += '					<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
 					content += '				</p>';
