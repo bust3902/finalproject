@@ -211,5 +211,12 @@ public class HomeController {
 
 		return "redirect:/";
 	}
-	
+
+	/*
+	 * 내주변 통합검색 페이지 요청을 처리한다.
+	 */
+	@GetMapping("/near")
+	public String near() {
+		return "near";
+	}
 }
