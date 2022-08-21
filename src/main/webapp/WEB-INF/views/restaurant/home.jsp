@@ -21,7 +21,7 @@
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
-<div class="row bg-secondary" style="height:13vh;">
+<div class="row bg-secondary m-0" style="height:13vh;">
 	<div class="px-3 pt-5 pb-3 mx-auto my-auto" style="min-width:992px; max-width:992px;">
 		<h4 class="text-white ps-0 mb-3">서울의 맛집을 찾아보세요 !</h4>
 	</div>
