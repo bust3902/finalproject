@@ -105,7 +105,7 @@
 									</div>
 								</div>
 							</li>
-							<li class=" list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<li class=" list-group-item py-3 border-bottom-0 text-muted">
 								<div class="row d-flex justify-content-center">
 									<div class="col-3 fw-bold text-muted my-auto">인원</div>
 									<!-- 인원 수 표시 input 대신 span 태그 사용, 이벤트 script에서 설정하는 것으로 변경 예정 -->

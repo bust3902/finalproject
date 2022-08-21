@@ -39,23 +39,6 @@
 								</div>
 							</li>
 							<div id="nav-list-group-keywords">
-					  			<li class="list-group-item list-group-flush border">
-									<a href="" class="border-bottom">내주변 검색</a>
-										<hr style="display: block;">
-									<div class="d-flex justify-content-between">
-										<span>최근검색어</span>
-										<button type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
-									</div>
-								</li>
-								<li class="list-group-item list-group-flush ">
-									<div class="d-flex justify-content-between">
-										<button type="button" class="float-end btn text-dark border-0 btn-sm">
-											<i class="bi bi-clock"></i>
-											<span class="ms-4">맛있는 맛집</span>
-										</button>
-										<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
-									</div>
-								</li>
 							</div>
 						</ul>
    				</form>
@@ -111,6 +94,10 @@
 		let array = JSON.parse(text);
 		if (keyword != "") {
 			array.unshift(keyword);
+			// 최근 검색어 5개까지만 유지하기
+			if (array.length == 6) {
+				array.pop();
+			}
 			text = JSON.stringify(array);
 			localStorage.setItem("accoKeywords", text);
 			return true;
@@ -141,9 +128,9 @@
 			content += '	<div class="d-flex justify-content-between">'
 			content += '		<button type="button" class="float-end btn text-dark border-0 btn-sm">'
 			content += '			<i class="bi bi-clock"></i>'
-			content += '			<span class="ms-4" onclick="searchKeyword(\''+keyword+'\')">'+keyword+'</span>'
+			content += '			<span class="ms-4" onclick="searchNavKeyword(\''+keyword+'\')">'+keyword+'</span>'
 			content += '		</button>'
-			content += '		<button type="button" class="float-end btn text-danger border-0 btn-sm" onclick="deleteKeyword('+index+')"+ keylass="bi bi-trash"></i></button>'
+			content += '		<button type="button" class="float-end btn text-danger border-0 btn-sm" onclick="deleteNavKeyword('+index+')"><i class="bi bi-trash"></i></button>';
 			content += '	</div>'
 			content += '</li>'
 			$listGroup.append(content);
@@ -162,7 +149,7 @@
 		refreshNavKeywordList();
 	};
 	
-	// 최근 검색어 클릭시 검색되게 하는 기능
+	// 최근 검색어 클릭시 검색되게 하는 기능a
 	// index를 주고 받지 말고 쉽게 keyword를 주고 받기
 	function searchNavKeyword(keyword) {
 		location.href="/acco?keyword=" + keyword;
