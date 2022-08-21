@@ -19,7 +19,7 @@
 		max-width: inherit;
 	}
 	
-	#title {
+/* 	#title {
 		width: 100%;
 	}
 	
@@ -32,7 +32,7 @@
 		width: 100%;
     	padding: 41px 0px 61px 355px;
     	margin: 0px;
-	}
+	} */
 	
 /* 	#yeseok2 {
 		padding: 41px 0px 61px 250px;
@@ -84,8 +84,10 @@
 <body>
 <%@ include file="../common/nav.jsp" %>
 <div id="yeseok">
-	<div id="title" class="bg-secondary">
-		<h2>내정보</h2>
+	<div class="row bg-secondary" style="height:13vh;">
+		<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
+			<h3 class="text-white ps-0 mb-3">내 정보</h3>
+		</div>
 	</div>
 		<div id="all-content" class="mt-5 mx-auto">
 			<!-- 카테고리 리스트 -->	
