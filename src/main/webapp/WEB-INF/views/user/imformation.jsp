@@ -34,10 +34,10 @@
     	margin: 0px;
 	}
 	
-	#yeseok2 {
+/* 	#yeseok2 {
 		padding: 41px 0px 61px 250px;
-		margin: 0px 105px;		
-	}
+ 		margin: 0px 105px;		 
+	} */
 	
 	#all-content {
 		width: 1000px;
@@ -87,8 +87,7 @@
 	<div id="title" class="bg-secondary">
 		<h2>내정보</h2>
 	</div>
-	<div id="yeseok2">
-		<div id="all-content">
+		<div id="all-content" class="mt-5 mx-auto">
 			<!-- 카테고리 리스트 -->	
 			<div id="category-box">
 				<c:forEach var="category" items="${categories }">
@@ -248,7 +247,6 @@
 				</c:if>
 			</div>						
 		</div>
-	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
 <!-- swiper js -->
