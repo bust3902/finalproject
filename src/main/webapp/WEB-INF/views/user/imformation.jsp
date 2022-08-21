@@ -13,7 +13,7 @@
 <style>
 	#yeseok {
 		width: 100%;
-		height: 900px;
+/* 		height: 900px; */
 		padding: 0;
 		margin: 0;
 		max-width: inherit;
@@ -85,170 +85,170 @@
 <%@ include file="../common/nav.jsp" %>
 <div id="yeseok">
 	<div class="row bg-secondary" style="height:13vh;">
-		<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
+		<div class="px-3 pt-5 pb-3 mx-auto my-auto" style="min-width:992px; max-width:992px;">
 			<h3 class="text-white ps-0 mb-3">내 정보</h3>
 		</div>
 	</div>
-		<div id="all-content" class="mt-5 mx-auto">
-			<!-- 카테고리 리스트 -->	
-			<div id="category-box">
-				<c:forEach var="category" items="${categories }">
-					<a href="imformation?cat=${category.id }" data-category="${category.id }" class="list-group-item list-group-item-action py-3 ${param.cat eq category.id ? 'active' : '' }"> ${category.name }</a>
-				</c:forEach>
-			</div>
-			<!-- 메뉴 클릭 후 재요청마다 parameter에 따라 다른 내용을 보여준다. -->
-			<div id="content">
-				<!-- CAT_001 내 정보 수정 -->
-				<c:if test="${param.cat eq 'CAT_001'}">
-					<strong><h3>내 정보 수정</h3></strong>
-					<div class="col-10">"${LOGIN_USER.loginType}" 회원으로 로그인</div>
-					<div class="col-2 mt-5" id="nickname"><h3>닉네임</h3></div>
-					<div class="col-10">${LOGIN_USER.nickname}</div>
-					<div class="row mb-3" id="box-nickname-btn">
-						<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-nickname-form">수정</button></div>
-					</div>
-					<div class="row mb-3 d-none" id="box-nickname-update">
-						<div class="col-6">
-							<form id="form-nickname" action="updateNickname">
-								<input type="text" name="nickname" class="form-control" />
-								<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
-								<button type="button" class="btn btn-secondary" id="btn-hide-nickname-form">수정취소 </button> 
-							</form>
-						</div>
-					</div>
-					<div class="col-2 mt-5" id="name"><h3>예약자 이름</h3></div>
-					<div class="col-10">${LOGIN_USER.name}</div>
-					<div class="row mb-3" id="box-name-btn">
-						<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-name-form">수정</button></div>
-					</div>
-					<div class="row mb-3 d-none" id="box-name-update">
-						<div class="col-6">
-							<form id="form-name" action="updateName">
-								<input type="text" name="name" class="form-control" />
-								<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
-								<button type="button" class="btn btn-secondary" id="btn-hide-name-form">수정취소 </button> 
-							</form>
-						</div>
-					</div>
-					<div class="col-2 mt-5" id="tel"><h3>휴대폰 번호</h3></div>
-					<div class="col-10">${LOGIN_USER.tel}</div>
-					<div class="row mb-3" id="box-tel-btn">
-						<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-tel-form">수정</button></div>
-					</div>
-					<div class="row mb-3 d-none" id="box-tel-update">
-						<div class="col-6">
-							<form id="form-tel" action="updateTel">
-								<input type="text" name="tel" class="form-control" />
-								<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
-								<button type="button" class="btn btn-secondary" id="btn-hide-tel-form">수정취소 </button> 
-							</form>
-						</div>
-					</div>
-					<div class="col mb-5" id="user">
-						<div class="col mt-5"<p>서울어때를 이용하고 싶지 않으신가요?</p></div>
-						<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
-						<button type="button" class="btn btn-link"><a href="">회원탈퇴</a></button>
-					</div>
-				</c:if>
-				<!-- CAT_002 예약 내역 -->
-				<c:if test="${param.cat eq 'CAT_002'}">
-				</c:if>
-				<!-- CAT_003 내가 찜한 목록 -->
-				<c:if test="${param.cat eq 'CAT_003' }">
-					<div class="mb-5">
-						<h5 class="fw-bold pb-3 border-bottom mb-3">숙소 찜 목록</h5>
-						<c:choose>
-							<c:when test="${not empty likedAccommodations }">
-								<div class="swiper like-acco-swiper" style="--swiper-navigation-color: gray;">
-									<div class="swiper-wrapper" style="height: auto;">
-										<c:forEach var="item" items="${likedAccommodations }">
-											<div id="slide-${item.id }" class="swiper-slide" style="height: auto;">
-												<div class="card p-1 h-100" style="max-width: 20rem;">
-													<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
-													<div class="card-body d-flex flex-column justify-content-between my-auto">
-														<div class="row pb-3 border-bottom">
-															<div class="d-flex my-auto">
-																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
-																<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteAccoLike(${item.id});"></i>
-															</div>
-														</div>
-														<div class="row mt-3 mb-0">
-															<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
-															<div class="text-warning text-center small mb-3">
-																<i class="bi ${item.reviewRateIcon.star1 }"></i>
-																<i class="bi ${item.reviewRateIcon.star2 }"></i>
-																<i class="bi ${item.reviewRateIcon.star3 }"></i>
-																<i class="bi ${item.reviewRateIcon.star4 }"></i>
-																<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
-																<span class="badge bg-warning fw-bold">${item.reviewRate }</span>
-															</div>
-															<!-- 해당 아이디의 숙소 상세페이지로 이동 -->
-															<a href="/acco/detail?id=${item.id }" class="btn btn-outline-danger small">예약가능객실 보기</a>
-														</div>
-													 </div>
-												</div>
-											</div>
-										</c:forEach>
-									</div>
-									<div class="swiper-button-next acco-swiper-button"></div>
-									<div class="swiper-button-prev acco-swiper-button"></div>
-								</div>
-							</c:when>
-							<c:otherwise>
-								<div class="text-center py-5">찜한 숙소가 없습니다.</div>
-							</c:otherwise>
-						</c:choose>
-					</div>
-					<div class="mb-5">
-						<h5 class="fw-bold pb-3 border-bottom mb-3">맛집 찜 목록</h5>
-						<c:choose>
-							<c:when test="${not empty likedRestaurants }">
-								<div class="swiper like-restaurant-swiper" style="--swiper-navigation-color: gray;">
-									<div class="swiper-wrapper" style="height: auto;">
-										<c:forEach var="item" items="${likedRestaurants }">
-											<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
-												<div class="card p-1 h-100" style="max-width: 20rem;">
-													<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
-													<div class="card-body d-flex flex-column justify-content-between my-auto">
-														<div class="row pb-3 border-bottom">
-															<div class="d-flex my-auto">
-																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
-																<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteRestaurantLike(${item.no});"></i>
-															</div>
-														</div>
-														<div class="row mt-3 mb-0">
-															<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
-															<div class="text-warning text-center small mb-3">
-																<i class="bi ${item.reviewRateIcon.star1 }"></i>
-																<i class="bi ${item.reviewRateIcon.star2 }"></i>
-																<i class="bi ${item.reviewRateIcon.star3 }"></i>
-																<i class="bi ${item.reviewRateIcon.star4 }"></i>
-																<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
-																<span class="badge bg-warning fw-bold">${item.reviewPoint }</span>
-															</div>
-															<!-- 리뷰폼 페이지로 이동, 식당번호 전달 -->
-															<a href="/reviewform?restaurantNo=${item.no }" class="btn btn-outline-danger small">평가하기</a>
-														</div>
-													 </div>
-												</div>
-											</div>
-										</c:forEach>
-									</div>
-									<div class="swiper-button-next restaurant-swiper-button"></div>
-									<div class="swiper-button-prev restaurant-swiper-button"></div>
-								</div>
-							</c:when>
-							<c:otherwise>
-								<div class="text-center py-5">찜한 맛집이 없습니다.</div>
-							</c:otherwise>
-						</c:choose>
-					</div>
-				</c:if>
-				<!-- CAT_004 내 리뷰 보기 -->
-				<c:if test="${param.cat eq 'CAT_004' }">
-				</c:if>
-			</div>						
+	<div id="all-content" class="mt-5 mx-auto">
+		<!-- 카테고리 리스트 -->	
+		<div id="category-box">
+			<c:forEach var="category" items="${categories }">
+				<a href="imformation?cat=${category.id }" data-category="${category.id }" class="list-group-item list-group-item-action py-3 ${param.cat eq category.id ? 'active' : '' }"> ${category.name }</a>
+			</c:forEach>
 		</div>
+		<!-- 메뉴 클릭 후 재요청마다 parameter에 따라 다른 내용을 보여준다. -->
+		<div id="content">
+			<!-- CAT_001 내 정보 수정 -->
+			<c:if test="${param.cat eq 'CAT_001'}">
+				<strong><h3>내 정보 수정</h3></strong>
+				<div class="col-10">"${LOGIN_USER.loginType}" 회원으로 로그인</div>
+				<div class="col-2 mt-5" id="nickname"><h3>닉네임</h3></div>
+				<div class="col-10">${LOGIN_USER.nickname}</div>
+				<div class="row mb-3" id="box-nickname-btn">
+					<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-nickname-form">수정</button></div>
+				</div>
+				<div class="row mb-3 d-none" id="box-nickname-update">
+					<div class="col-6">
+						<form id="form-nickname" action="updateNickname">
+							<input type="text" name="nickname" class="form-control" />
+							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
+							<button type="button" class="btn btn-secondary" id="btn-hide-nickname-form">수정취소 </button> 
+						</form>
+					</div>
+				</div>
+				<div class="col-2 mt-5" id="name"><h3>예약자 이름</h3></div>
+				<div class="col-10">${LOGIN_USER.name}</div>
+				<div class="row mb-3" id="box-name-btn">
+					<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-name-form">수정</button></div>
+				</div>
+				<div class="row mb-3 d-none" id="box-name-update">
+					<div class="col-6">
+						<form id="form-name" action="updateName">
+							<input type="text" name="name" class="form-control" />
+							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
+							<button type="button" class="btn btn-secondary" id="btn-hide-name-form">수정취소 </button> 
+						</form>
+					</div>
+				</div>
+				<div class="col-2 mt-5" id="tel"><h3>휴대폰 번호</h3></div>
+				<div class="col-10">${LOGIN_USER.tel}</div>
+				<div class="row mb-3" id="box-tel-btn">
+					<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-tel-form">수정</button></div>
+				</div>
+				<div class="row mb-3 d-none" id="box-tel-update">
+					<div class="col-6">
+						<form id="form-tel" action="updateTel">
+							<input type="text" name="tel" class="form-control" />
+							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
+							<button type="button" class="btn btn-secondary" id="btn-hide-tel-form">수정취소 </button> 
+						</form>
+					</div>
+				</div>
+				<div class="col mb-5" id="user">
+					<div class="col mt-5"<p>서울어때를 이용하고 싶지 않으신가요?</p></div>
+					<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
+					<button type="button" class="btn btn-link"><a href="">회원탈퇴</a></button>
+				</div>
+			</c:if>
+			<!-- CAT_002 예약 내역 -->
+			<c:if test="${param.cat eq 'CAT_002'}">
+			</c:if>
+			<!-- CAT_003 내가 찜한 목록 -->
+			<c:if test="${param.cat eq 'CAT_003' }">
+				<div class="mb-5">
+					<h5 class="fw-bold pb-3 border-bottom mb-3">숙소 찜 목록</h5>
+					<c:choose>
+						<c:when test="${not empty likedAccommodations }">
+							<div class="swiper like-acco-swiper" style="--swiper-navigation-color: gray;">
+								<div class="swiper-wrapper" style="height: auto;">
+									<c:forEach var="item" items="${likedAccommodations }">
+										<div id="slide-${item.id }" class="swiper-slide" style="height: auto;">
+											<div class="card p-1 h-100" style="max-width: 20rem;">
+												<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+												<div class="card-body d-flex flex-column justify-content-between my-auto">
+													<div class="row pb-3 border-bottom">
+														<div class="d-flex my-auto">
+															<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteAccoLike(${item.id});"></i>
+														</div>
+													</div>
+													<div class="row mt-3 mb-0">
+														<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+														<div class="text-warning text-center small mb-3">
+															<i class="bi ${item.reviewRateIcon.star1 }"></i>
+															<i class="bi ${item.reviewRateIcon.star2 }"></i>
+															<i class="bi ${item.reviewRateIcon.star3 }"></i>
+															<i class="bi ${item.reviewRateIcon.star4 }"></i>
+															<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
+															<span class="badge bg-warning fw-bold">${item.reviewRate }</span>
+														</div>
+														<!-- 해당 아이디의 숙소 상세페이지로 이동 -->
+														<a href="/acco/detail?id=${item.id }" class="btn btn-outline-danger small">예약가능객실 보기</a>
+													</div>
+												 </div>
+											</div>
+										</div>
+									</c:forEach>
+								</div>
+								<div class="swiper-button-next acco-swiper-button"></div>
+								<div class="swiper-button-prev acco-swiper-button"></div>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="text-center py-5">찜한 숙소가 없습니다.</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+				<div class="mb-5">
+					<h5 class="fw-bold pb-3 border-bottom mb-3">맛집 찜 목록</h5>
+					<c:choose>
+						<c:when test="${not empty likedRestaurants }">
+							<div class="swiper like-restaurant-swiper" style="--swiper-navigation-color: gray;">
+								<div class="swiper-wrapper" style="height: auto;">
+									<c:forEach var="item" items="${likedRestaurants }">
+										<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
+											<div class="card p-1 h-100" style="max-width: 20rem;">
+												<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+												<div class="card-body d-flex flex-column justify-content-between my-auto">
+													<div class="row pb-3 border-bottom">
+														<div class="d-flex my-auto">
+															<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteRestaurantLike(${item.no});"></i>
+														</div>
+													</div>
+													<div class="row mt-3 mb-0">
+														<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+														<div class="text-warning text-center small mb-3">
+															<i class="bi ${item.reviewRateIcon.star1 }"></i>
+															<i class="bi ${item.reviewRateIcon.star2 }"></i>
+															<i class="bi ${item.reviewRateIcon.star3 }"></i>
+															<i class="bi ${item.reviewRateIcon.star4 }"></i>
+															<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
+															<span class="badge bg-warning fw-bold">${item.reviewPoint }</span>
+														</div>
+														<!-- 리뷰폼 페이지로 이동, 식당번호 전달 -->
+														<a href="/reviewform?restaurantNo=${item.no }" class="btn btn-outline-danger small">평가하기</a>
+													</div>
+												 </div>
+											</div>
+										</div>
+									</c:forEach>
+								</div>
+								<div class="swiper-button-next restaurant-swiper-button"></div>
+								<div class="swiper-button-prev restaurant-swiper-button"></div>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<div class="text-center py-5">찜한 맛집이 없습니다.</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</c:if>
+			<!-- CAT_004 내 리뷰 보기 -->
+			<c:if test="${param.cat eq 'CAT_004' }">
+			</c:if>
+		</div>						
+	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
 <!-- swiper js -->
