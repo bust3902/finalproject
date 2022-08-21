@@ -105,7 +105,7 @@
 									</div>
 								</div>
 							</li>
-							<li class=" list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<li class=" list-group-item py-3 border-bottom-0 text-muted">
 								<div class="row d-flex justify-content-center">
 									<div class="col-3 fw-bold text-muted my-auto">인원</div>
 									<!-- 인원 수 표시 input 대신 span 태그 사용, 이벤트 script에서 설정하는 것으로 변경 예정 -->
@@ -500,7 +500,7 @@ $(function () {
 					content += '	<a href="acco/detail?id=' + acco.id + '">';
 					content += '		<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
 					content += '			<div class="my-auto">';
-					content += '			<h5 class="fw-semibold">' + acco.name + '</h5>';
+					content += '				<h5 class="fw-semibold">' + acco.name + '</h5>';
 					content += '				<p class="text-warning">';
 					content += '					<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
 					content += '				</p>';

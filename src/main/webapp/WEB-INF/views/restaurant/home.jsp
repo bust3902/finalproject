@@ -22,66 +22,47 @@
 <body>
 <%@ include file="../common/nav.jsp" %>
 <div class="row bg-secondary" style="height:13vh;">
-	<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
-		<h3 class="text-white ps-0 mb-3">서울의 맛집을 찾아보세요 !</h3>
+	<div class="px-3 pt-5 pb-3 mx-auto my-auto" style="min-width:992px; max-width:992px;">
+		<h4 class="text-white ps-0 mb-3">서울의 맛집을 찾아보세요 !</h4>
 	</div>
 </div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
-	<div class="position-relative">
-		<form id="form-search" class="row d-flex" role="search" action="restaurant/searchlist">
-			<div class="col-6">
-				<!-- 식당 검색창 -->
-				<div class="d-flex">
-			        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요">
-					<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
-					<input type="hidden" name="currentLat" value="" />
-					<input type="hidden" name="currentLong" value="" />
-				</div>
-				<div id="box-keywords" class="position-absolute w-25 d-none" style="top:44px; left:0; z-index: 1000;">
-					<ul class="list-group" id="fix-grop-keywords">
-						<li class="list-group-item list-group-flush border">
-							<a href="" class="border-bottom" >내주변 검색</a>
-								<hr style="display: block;">
-							<div class="d-flex justify-content-between">
-								<span>최근검색어</span>
-								<button id="delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
-							</div>
-						</li>
-					</ul>
-					<ul class="list-group" id="list-group-keywords">
-			  			<li class="list-group-item list-group-flush border">
-							<a href="" class="border-bottom">내주변 검색</a>
-								<hr style="display: block;">
-							<div class="d-flex justify-content-between">
-								<span>최근검색어</span>
-								<button type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
-							</div>
-						</li>
-						<li class="list-group-item list-group-flush ">
-							<div class="d-flex justify-content-between">
-								<button type="button" class="float-end btn text-dark border-0 btn-sm">
-									<i class="bi bi-clock"></i>
-									<span class="ms-4">맛있는 맛집</span>
-								</button>
-								<button type="button" class="float-end btn text-danger border-0 btn-sm"><i class="bi bi-trash"></i></button>
-							</div>
-						</li>
-					</ul>
-				</div>
+	<form id="form-search" class="row d-flex position-relative my-5" role="search" action="restaurant/searchlist">
+		<div class="col-6">
+			<!-- 식당 검색창 -->
+			<div class="d-flex">
+		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요" autocomplete="off">
+				<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+				<input type="hidden" name="currentLat" value="" />
+				<input type="hidden" name="currentLong" value="" />
 			</div>
-			<!-- 내 위치 출력, 좌표값 hidden태그에 저장 -->
-			<div class="col-6 d-flex justify-content-end my-auto">
-				<small class="my-auto">
-					현재 내 위치는 <strong id="home-current-location-address"></strong>
-				</small>
-				<a id="locationButton">
-					<i id="icon-refresh-location" class="bi bi-compass fs-4 text-primary ps-2" style="cursor: pointer;"></i>
-				</a>
+			<div id="box-keywords" class="position-absolute w-25 d-none" style="top:44px; left:0; z-index: 1000;">
+				<ul class="list-group" id="fix-grop-keywords">
+					<li class="list-group-item list-group-flush border">
+						<a href="" class="border-bottom" >내주변 검색</a>
+							<hr style="display: block;">
+						<div class="d-flex justify-content-between">
+							<span>최근검색어</span>
+							<button id="delete-all-keyword" type="button" class="float-end btn text-danger border-0 btn-sm">모두 지우기</button>
+						</div>
+					</li>
+				</ul>
+				<ul class="list-group" id="list-group-keywords">
+				</ul>
 			</div>
-	    </form>
-	</div>
+		</div>
+		<!-- 내 위치 출력, 좌표값 hidden태그에 저장 -->
+		<div class="col-6 d-flex justify-content-end my-auto">
+			<small class="my-auto">
+				현재 내 위치는 <strong id="home-current-location-address"></strong>
+			</small>
+			<a id="locationButton">
+				<i id="icon-refresh-location" class="bi bi-compass fs-4 text-primary ps-2" style="cursor: pointer;"></i>
+			</a>
+		</div>
+    </form>
 	<!-- 한식집 추천 -->
-	<div class="row mt-5 mb-3">
+	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 한식집 추천</h5>
 		<div id="CAT_004-wrapper" class="row">
 		</div>

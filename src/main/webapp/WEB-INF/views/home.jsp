@@ -74,8 +74,8 @@
 			</c:forEach>
 			<!-- TODO : 내 주변 조회 - 추후 가능하면 구현, 아니면 삭제하기  -->
 			<div class="text-center my-auto">
-				<a href="#"><img class="img-fluid" src="/resources/images/homeicons/near.png" style="width:100px;height:auto;"></a><br/>
-		    	<a href="#" class="text-decoration-none text-dark fw-light">내주변</a>
+				<a href="near"><img class="img-fluid" src="/resources/images/homeicons/near.png" style="width:100px;height:auto;"></a><br/>
+		    	<a href="near" class="text-decoration-none text-dark fw-light">내주변</a>
 			</div>
 			<div class="text-center my-auto">
 				<a href="restaurant"><img class="img-fluid" src="/resources/images/homeicons/restaurant.png" style="width:100px;height:auto;"></a><br/>
