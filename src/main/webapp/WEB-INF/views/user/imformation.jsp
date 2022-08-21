@@ -8,6 +8,8 @@
 <link href="../resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- swiper css -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.css" />
 <style>
 	#yeseok {
 		width: 100%;
@@ -27,7 +29,6 @@
 		font-weight: normal;
 		letter-spacing: -4px;
     	color: #fff;
-    	background-color: #ff9999;
 		width: 100%;
     	padding: 41px 0px 61px 355px;
     	margin: 0px;
@@ -72,13 +73,18 @@
 		margin: 50px -12px 48px -12px;
 		border-top: 1px solid rgba(0,0,0,0.08);
 	}
+	
+	.card-img-top {
+		height: 150px;
+		object-fit: cover;
+	}
 </style>
 <title>내 정보</title>
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
 <div id="yeseok">
-	<div id="title">
+	<div id="title" class="bg-secondary">
 		<h2>내정보</h2>
 	</div>
 	<div id="yeseok2">
@@ -89,69 +95,164 @@
 					<a href="imformation?cat=${category.id }" data-category="${category.id }" class="list-group-item list-group-item-action py-3 ${param.cat eq category.id ? 'active' : '' }"> ${category.name }</a>
 				</c:forEach>
 			</div>
-			<c:choose>
-			<c:when test="${param.cat eq 'CAT_001'}">
-			<!-- 내용 -->
+			<!-- 메뉴 클릭 후 재요청마다 parameter에 따라 다른 내용을 보여준다. -->
 			<div id="content">
-				<strong><h3>내 정보 수정</h3></strong>
-				<div class="col-10">"${LOGIN_USER.loginType}" 회원으로 로그인</div>
-				<div class="col-2 mt-5" id="nickname"><h3>닉네임</h3></div>
-				<div class="col-10">${LOGIN_USER.nickname}</div>
-				<div class="row mb-3" id="box-nickname-btn">
-					<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-nickname-form">수정</button></div>
-				</div>
-				<div class="row mb-3 d-none" id="box-nickname-update">
-					<div class="col-6">
-						<form id="form-nickname" action="updateNickname">
-							<input type="text" name="nickname" class="form-control" />
-							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
-							<button type="button" class="btn btn-secondary" id="btn-hide-nickname-form">수정취소 </button> 
-						</form>
+				<!-- CAT_001 내 정보 수정 -->
+				<c:if test="${param.cat eq 'CAT_001'}">
+					<strong><h3>내 정보 수정</h3></strong>
+					<div class="col-10">"${LOGIN_USER.loginType}" 회원으로 로그인</div>
+					<div class="col-2 mt-5" id="nickname"><h3>닉네임</h3></div>
+					<div class="col-10">${LOGIN_USER.nickname}</div>
+					<div class="row mb-3" id="box-nickname-btn">
+						<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-nickname-form">수정</button></div>
 					</div>
-				</div>
-				<div class="col-2 mt-5" id="name"><h3>예약자 이름</h3></div>
-				<div class="col-10">${LOGIN_USER.name}</div>
-				<div class="row mb-3" id="box-name-btn">
-					<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-name-form">수정</button></div>
-				</div>
-				<div class="row mb-3 d-none" id="box-name-update">
-					<div class="col-6">
-						<form id="form-name" action="updateName">
-							<input type="text" name="name" class="form-control" />
-							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
-							<button type="button" class="btn btn-secondary" id="btn-hide-name-form">수정취소 </button> 
-						</form>
+					<div class="row mb-3 d-none" id="box-nickname-update">
+						<div class="col-6">
+							<form id="form-nickname" action="updateNickname">
+								<input type="text" name="nickname" class="form-control" />
+								<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
+								<button type="button" class="btn btn-secondary" id="btn-hide-nickname-form">수정취소 </button> 
+							</form>
+						</div>
 					</div>
-				</div>
-				<div class="col-2 mt-5" id="tel"><h3>휴대폰 번호</h3></div>
-				<div class="col-10">${LOGIN_USER.tel}</div>
-				<div class="row mb-3" id="box-tel-btn">
-					<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-tel-form">수정</button></div>
-				</div>
-				<div class="row mb-3 d-none" id="box-tel-update">
-					<div class="col-6">
-						<form id="form-tel" action="updateTel">
-							<input type="text" name="tel" class="form-control" />
-							<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
-							<button type="button" class="btn btn-secondary" id="btn-hide-tel-form">수정취소 </button> 
-						</form>
+					<div class="col-2 mt-5" id="name"><h3>예약자 이름</h3></div>
+					<div class="col-10">${LOGIN_USER.name}</div>
+					<div class="row mb-3" id="box-name-btn">
+						<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-name-form">수정</button></div>
 					</div>
-				</div>
-				<div class="col mb-5" id="user">
-					<div class="col mt-5"<p>서울어때를 이용하고 싶지 않으신가요?</p></div>
-					<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
-					<button type="button" class="btn btn-link"><a href="">회원탈퇴</a></button>
-				</div>
+					<div class="row mb-3 d-none" id="box-name-update">
+						<div class="col-6">
+							<form id="form-name" action="updateName">
+								<input type="text" name="name" class="form-control" />
+								<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
+								<button type="button" class="btn btn-secondary" id="btn-hide-name-form">수정취소 </button> 
+							</form>
+						</div>
+					</div>
+					<div class="col-2 mt-5" id="tel"><h3>휴대폰 번호</h3></div>
+					<div class="col-10">${LOGIN_USER.tel}</div>
+					<div class="row mb-3" id="box-tel-btn">
+						<div class="col-2"><button class="btn btn-outline-secondary" id="btn-show-tel-form">수정</button></div>
+					</div>
+					<div class="row mb-3 d-none" id="box-tel-update">
+						<div class="col-6">
+							<form id="form-tel" action="updateTel">
+								<input type="text" name="tel" class="form-control" />
+								<button type="submit" class="btn btn-primary" id="complete">수정완료 </button>
+								<button type="button" class="btn btn-secondary" id="btn-hide-tel-form">수정취소 </button> 
+							</form>
+						</div>
+					</div>
+					<div class="col mb-5" id="user">
+						<div class="col mt-5"<p>서울어때를 이용하고 싶지 않으신가요?</p></div>
+						<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
+						<button type="button" class="btn btn-link"><a href="">회원탈퇴</a></button>
+					</div>
+				</c:if>
+				<!-- CAT_002 예약 내역 -->
+				<c:if test="${param.cat eq 'CAT_002'}">
+				</c:if>
+				<!-- CAT_003 내가 찜한 목록 -->
+				<c:if test="${param.cat eq 'CAT_003' }">
+					<div class="mb-5">
+						<h5 class="fw-bold pb-3 border-bottom mb-3">숙소 찜 목록</h5>
+						<c:choose>
+							<c:when test="${not empty likedAccommodations }">
+								<div class="swiper like-acco-swiper" style="--swiper-navigation-color: gray;">
+									<div class="swiper-wrapper" style="height: auto;">
+										<c:forEach var="item" items="${likedAccommodations }">
+											<div id="slide-${item.id }" class="swiper-slide" style="height: auto;">
+												<div class="card p-1 h-100" style="max-width: 20rem;">
+													<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+													<div class="card-body d-flex flex-column justify-content-between my-auto">
+														<div class="row pb-3 border-bottom">
+															<div class="d-flex my-auto">
+																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+																<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteAccoLike(${item.id});"></i>
+															</div>
+														</div>
+														<div class="row mt-3 mb-0">
+															<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+															<div class="text-warning text-center small mb-3">
+																<i class="bi ${item.reviewRateIcon.star1 }"></i>
+																<i class="bi ${item.reviewRateIcon.star2 }"></i>
+																<i class="bi ${item.reviewRateIcon.star3 }"></i>
+																<i class="bi ${item.reviewRateIcon.star4 }"></i>
+																<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
+																<span class="badge bg-warning fw-bold">${item.reviewRate }</span>
+															</div>
+															<!-- 해당 아이디의 숙소 상세페이지로 이동 -->
+															<a href="/acco/detail?id=${item.id }" class="btn btn-outline-danger small">예약가능객실 보기</a>
+														</div>
+													 </div>
+												</div>
+											</div>
+										</c:forEach>
+									</div>
+									<div class="swiper-button-next acco-swiper-button"></div>
+									<div class="swiper-button-prev acco-swiper-button"></div>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="text-center py-5">찜한 숙소가 없습니다.</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+					<div class="mb-5">
+						<h5 class="fw-bold pb-3 border-bottom mb-3">맛집 찜 목록</h5>
+						<c:choose>
+							<c:when test="${not empty likedRestaurants }">
+								<div class="swiper like-restaurant-swiper" style="--swiper-navigation-color: gray;">
+									<div class="swiper-wrapper" style="height: auto;">
+										<c:forEach var="item" items="${likedRestaurants }">
+											<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
+												<div class="card p-1 h-100" style="max-width: 20rem;">
+													<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+													<div class="card-body d-flex flex-column justify-content-between my-auto">
+														<div class="row pb-3 border-bottom">
+															<div class="d-flex my-auto">
+																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+																<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteRestaurantLike(${item.no});"></i>
+															</div>
+														</div>
+														<div class="row mt-3 mb-0">
+															<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+															<div class="text-warning text-center small mb-3">
+																<i class="bi ${item.reviewRateIcon.star1 }"></i>
+																<i class="bi ${item.reviewRateIcon.star2 }"></i>
+																<i class="bi ${item.reviewRateIcon.star3 }"></i>
+																<i class="bi ${item.reviewRateIcon.star4 }"></i>
+																<i class="bi ${item.reviewRateIcon.star5 }"></i></br>
+																<span class="badge bg-warning fw-bold">${item.reviewPoint }</span>
+															</div>
+															<!-- 리뷰폼 페이지로 이동, 식당번호 전달 -->
+															<a href="/reviewform?restaurantNo=${item.no }" class="btn btn-outline-danger small">평가하기</a>
+														</div>
+													 </div>
+												</div>
+											</div>
+										</c:forEach>
+									</div>
+									<div class="swiper-button-next restaurant-swiper-button"></div>
+									<div class="swiper-button-prev restaurant-swiper-button"></div>
+								</div>
+							</c:when>
+							<c:otherwise>
+								<div class="text-center py-5">찜한 맛집이 없습니다.</div>
+							</c:otherwise>
+						</c:choose>
+					</div>
+				</c:if>
+				<!-- CAT_004 내 리뷰 보기 -->
+				<c:if test="${param.cat eq 'CAT_004' }">
+				</c:if>
 			</div>						
 		</div>
 	</div>
 </div>
-</c:when>
-<c:otherwise>
-dddd
-</c:otherwise>
-</c:choose>
 <%@ include file="../common/footer.jsp" %>
+<!-- swiper js -->
+<script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
 
 $("#form-nickname").submit(function() {
@@ -211,7 +312,58 @@ $("#btn-hide-tel-form").click(function() {
 	$("#box-tel-btn").removeClass('d-none');
 })
 
+/**
+ * 찜 목록에서 하트를 클릭하면, 해당 카드가 화면에서 사라지고 DB정보에서 찜 정보를 삭제시킨다.
+ */
+ function deleteAccoLike(id) {
+	$.getJSON('/changelike/acco', 'accoId=' + id).done(function(result) {
+		if (result === true) {
+			// ajax로 DB작업이 정상 완료되면 엘리먼트를 삭제
+			$("#slide-" + id).remove();
+		} else {
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
+		}
+	});
+}
 
+ function deleteRestaurantLike(id) {
+	$.getJSON('/changelike/restaurant', 'restaurantNo=' + id).done(function(result) {
+		if (result === true) {
+			// ajax로 DB작업이 정상 완료되면 엘리먼트를 삭제
+			$("#slide-" + id).remove();
+		} else {
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
+		}
+	});
+}
+
+/**
+ * 내가 찜한 목록 페이지의 카드 슬라이더 기능을 제공하는 Swiper 객체를 생성한다.
+ */
+ new Swiper(".like-acco-swiper", {
+		loop : false,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+		navigation : {
+			nextEl : ".acco-swiper-button",
+			prevEl : ".acco-swiper-button"
+		}
+	});
+	
+ new Swiper(".like-restaurant-swiper", {
+		loop : false,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+		navigation : {
+			nextEl : ".restaurant-swiper-button",
+			prevEl : ".restaurant-swiper-button"
+		}
+	});
+ 
 </script>
 </body>
 </html>

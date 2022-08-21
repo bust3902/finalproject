@@ -34,10 +34,10 @@ public class AccommodationController {
 		// 그 외의 화면에서 필요한 정보를 이 요청핸들러에서 모두 전달한다. 
 		
 		// type, keyword를 동시에 전달받은 경우 오류화면으로 이동한다.
-		if (!type.isBlank() && !keyword.isBlank()) {
-			// TODO : 오류화면 구현해서 연결시키기 (현재는 임시로 홈화면으로 연결함)
-			return "home";
-		}
+//		if (!type.isBlank() && !keyword.isBlank()) {
+//			// TODO : 오류화면 구현해서 연결시키기 (현재는 임시로 홈화면으로 연결함)
+//			return "home";
+//		}
 		
 		// TODO URL에 잘못된 type명을 적은 경우?
 		

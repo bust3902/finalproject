@@ -57,6 +57,7 @@
 	</select>
 	
 	<!-- AccoResultMap, AccoDetailResultMap -->
+	<!-- 현재 update하기 위한 객체 획득 시에 AccoResultMap을 사용하므로 update 대상 컬럼은 모두 조회할 것 -->
 	<resultMap type="Accommodation" id="AccoResultMap">
 		<id column="acco_id" property="id"/>
 		<result column="acco_name" property="name"/>
@@ -67,18 +68,17 @@
 		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
 		<result column="acco_review_rate" property="reviewRate"/>
 		<result column="acco_review_count" property="reviewCount"/>
+		<result column="acco_like_count" property="likeCount"/>
 		<result column="city_id" property="cityId"/>
+		<result column="acco_introduce_comment" property="introduceComment"/>
+		<result column="acco_detail_description" property="detailDescription"/>
+		<result column="acco_updated_date" property="updatedDate"/>
+		<result column="acco_deleted" property="deleted"/>
 		<result column="distance" property="currentDistance" />
 		<result column="minPrice" property="minPrice"/>
 	</resultMap>
 	
 	<resultMap type="Accommodation" id="AccoDetailResultMap" extends="AccoResultMap">
-		<result column="acco_introduce_comment" property="introduceComment"/>
-		<result column="acco_detail_description" property="detailDescription"/>
-		<result column="acco_like_count" property="likeCount"/>
-		<result column="acco_created_date" property="createdDate"/>
-		<result column="acco_updated_date" property="updatedDate"/>
-		<result column="acco_deleted" property="deleted"/>
 		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="roomFacilities" select="getRoomFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
@@ -158,6 +158,13 @@
 				order by minPrice asc
 			</when>
 		</choose>
+	</select>
+	
+	<!-- Accommodation getAccommodationById(int accoId); -->
+	<select id="getAccommodationById" parameterType="int" resultMap="AccoResultMap">
+		select *
+		from accommodations
+		where acco_id = #{value}
 	</select>
 	
 	<!-- Accommodation getAccommodationdDetailById(int accoId); -->
@@ -281,11 +288,12 @@
 	
 	<!-- List<Accommodation> getAllLikedAccoByUserNo(int no); -->
 	<select id="getAllLikedAccoByUserNo" parameterType="int" resultMap="AccoResultMap">
-		select *
+		select a.acco_id, a.acco_name, a.acco_district, a.acco_latitude, a.acco_longitude, a.acco_thumbnail_image,
+		        a.acco_review_rate, a.acco_like_count
 		from user_accommodation_likes l, accommodations a
-		where l.user_no = #{value}
-			and a.acco_deleted = 'N'
+		where a.acco_deleted = 'N'
 			and l.acco_id = a.acco_id
+			and l.user_no = #{value}
 	</select>
 	
 	<!-- List<Accommodation> getBestAccommodations(int count); -->
@@ -293,10 +301,11 @@
 		select *
 		from (select *
 		    from accommodations
-		    order by acco_review_rate desc, acco_review_count desc)
+		    order by acco_review_rate desc, acco_like_count desc)
 		where rownum &lt;= #{value}
 	</select>
 	
+	<!-- 페이징 관련 -->
 	<!-- int getTotalRowOfRoomsByAccoId(RoomCriteria criteria); -->
 	<select id="getTotalRowsOfRoomsByAccoId" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="int">
 		select count(*)
@@ -325,5 +334,26 @@
 				</if>)
 		where row_num between #{beginIndex} and #{endIndex}
 	</select>
+	
+	<!-- void updateAccommodation(Accommodation accommodation); -->
+	<update id="updateAccommodation" parameterType="Accommodation">
+		update accommodations
+		set
+			acco_name = #{name},
+			acco_district = #{district},
+			acco_address = #{address},
+			acco_latitude = #{latitude},
+			acco_longitude = #{longitude},
+			acco_introduce_comment = #{introduceComment},
+			acco_thumbnail_image = #{thumbnailImageName},
+			acco_detail_description = #{detailDescription},
+			acco_review_rate = #{reviewRate},
+			acco_review_count = #{reviewCount},
+			acco_like_count = #{likeCount},
+			acco_deleted = #{deleted},
+			city_id = #{cityId},
+			acco_updated_date = sysdate
+		where acco_id = #{id}
+	</update>
 	
 </mapper>

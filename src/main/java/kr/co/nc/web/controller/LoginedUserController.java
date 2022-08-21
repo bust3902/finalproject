@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import kr.co.nc.annotation.LoginUser;
+import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.LoginedUserService;
+import kr.co.nc.service.RestaurantService;
 import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.User;
@@ -22,6 +25,10 @@ public class LoginedUserController {
    
    @Autowired
    private LoginedUserService loginedService;
+   @Autowired
+   private AccommodationService accommodationService;
+   @Autowired
+   private RestaurantService restaurantService;
    
    /*
     * @RequestParam
@@ -32,9 +39,15 @@ public class LoginedUserController {
     *       defaultValue: 요청파라미터값이 존재하지 않을 때 변수에 저장될 기본값을 지정한다.
     */
    @GetMapping(path = "/imformation")
-   public String home(@RequestParam(name ="cat", required = false) String categoryId, Model model) {
+   public String home(@LoginUser User user, @RequestParam(name ="cat", required = false) String categoryId, Model model) {
       List<Category> categories = loginedService.getAllCategories();
       model.addAttribute("categories",categories);
+      
+      if ("CAT_003".equals(categoryId)) {
+    	  int userNo = user.getNo();
+    	  model.addAttribute("likedAccommodations", accommodationService.getAllLikedItemsByUser(userNo));
+    	  model.addAttribute("likedRestaurants", restaurantService.getAllLikedItemsByUser(userNo));
+      }
       
       return "user/imformation";
    }
