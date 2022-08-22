@@ -1,10 +1,14 @@
 package kr.co.nc.web.controller;
 
+import javax.validation.Valid;
+
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -55,7 +59,8 @@ public class HomeController {
 	 * 뷰 페이지 : /WEB-INF/views/registerform.jsp
 	 */
 	@GetMapping("/register")
-	public String registerform() {
+	public String registerform(Model model) {
+		model.addAttribute("form", new UserRegisterForm());
 		return "registerform";
 	}
 	
@@ -66,16 +71,20 @@ public class HomeController {
 	 * 재요청 URI : 성공 - /completed, 실패 - /register
 	 */
 	@PostMapping("/register") 
-	public String register(UserRegisterForm form, RedirectAttributes redirectAttributes) {
+	public String register(@ModelAttribute("form") @Valid UserRegisterForm form, BindingResult errors, RedirectAttributes redirectAttributes) {
 		log.info("일반 회원가입 정보: " + form);
+		
+		if (errors.hasErrors()) {
+			return "registerform";
+		}
+		
 		User user = User.builder()
 				.id(form.getId())
 				.password(form.getPassword())
 				.nickname(form.getNickname())
 				.name(form.getName())
-				.email(form.getEmail())
 				.tel(form.getTel())
-				.address(form.getAddress())
+				.email(form.getEmail())
 				.loginType(NORMAL_LOGIN_TYPE)	// 일반회원 가입은 로그인타입을 "normal"로 설정한다.
 				.build();
 		try {
@@ -85,8 +94,8 @@ public class HomeController {
 			
 			return "redirect:/completed";
 		} catch (RuntimeException e) {
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/register";
+			errors.rejectValue("email", null, e.getMessage());
+			return "registerform";
 		}
 	}
 	
