@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -154,7 +155,7 @@ public class AdminController {
 			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
 			Model model
 	) throws IOException {
-
+		
 		// 객실시설 옵션 출력을 위한 list 전달
 		model.addAttribute("rofacilities", accommodationService.getRoomFacilityOptions());
 		
@@ -249,7 +250,7 @@ public class AdminController {
 
 		sessionStatus.setComplete();
 		
-		return "admin/accocompleted";
+		return "admin/accommodationcompleted";
 	}
 	
 	// 관리자 숙소 검색 페이지

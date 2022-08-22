@@ -36,7 +36,6 @@
 					<img src="/resources/images/acco/thumbnail/${accommodations.thumbnailImageName }" class="card-img rounded-0">
 					<div class="card-img-overlay text-end">
 						<p class="card-title fs-3 fw-bold">${accommodations.name }</p>
-						<p class="card-text fw-bold">${accommodations.adminId }</p>
 						<p class="card-text fw-bold">${accommodations.address }</p>
 						<a class="btn btn-outline-light" href="/admin/modifyAccommodation?id=${accommodations.id }">수정</a>
 						<a class="btn btn-outline-light" href="/admin/delete?id=${accommodations.id }">삭제</a>
@@ -45,7 +44,7 @@
 				<c:forEach var="accommodationroom" items="${accommodationrooms }">
 					<div class="p-0">
 						<div class="card text-white p-0 rounded-0" style="height:200px">
-							<img src="/resources/images/acco/detail/${accommodationroom.thumbnailImageName }" class="card-img rounded-0">
+							<img src="/resources/images/acco/room/thumbnail/${accommodationroom.thumbnailImageName }" class="card-img rounded-0">
 							<div class="card-img-overlay text-end">
 								<p class="card-title fs-3 fw-bold">${accommodationroom.name }</p>
 								<a class="btn btn-outline-light" href="/admin/modifyAccommodationRoom?no=${accommodationroom.no }">수정</a>
@@ -95,7 +94,6 @@ $(document).ready(function(){
 					content += '	<img src="/resources/images/acco/thumbnail/'+accommodation.thumbnailImageName+'" class="card-img rounded-0">';
 					content += '	<div class="card-img-overlay text-end">';
 					content += '		<p class="card-title fs-3 fw-bold">'+accommodation.name+'</p>';
-					content += '		<p class="card-text fw-bold">'+accommodation.adminId+'</p>';
 					content += '		<p class="card-text fw-bold">'+accommodation.address+'</p>';
 					content += '		<a class="btn btn-outline-light" href="/admin/modifyAccommodation?id='+accommodation.id+' ">수정</a>';
 					content += '		<a class="btn btn-outline-light" href="/admin/delete?id='+accommodation.id+' ">삭제</button>';

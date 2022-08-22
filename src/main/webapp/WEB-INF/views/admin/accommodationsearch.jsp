@@ -82,7 +82,6 @@ $(document).ready(function(){
 					content += '	<img src="/resources/images/acco/thumbnail/'+accommodation.thumbnailImageName+'" class="card-img rounded-0">';
 					content += '	<div class="card-img-overlay text-end">';
 					content += '		<p class="card-title fs-3 fw-bold">'+accommodation.name+'</p>';
-					content += '		<p class="card-text fw-bold">'+accommodation.adminId+'</p>';
 					content += '		<p class="card-text fw-bold">'+accommodation.address+'</p>';
 					content += '		<a class="btn btn-outline-light" href="/admin/accommodationModifyMain?id='+accommodation.id+' ">수정</a>';
 					// content += '		<a class="btn btn-outline-light" href="/admin/delete?id='+accommodation.id+' ">삭제</a>';

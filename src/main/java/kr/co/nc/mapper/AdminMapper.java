@@ -59,7 +59,7 @@ public interface AdminMapper {
 	
 	// 키워드로 숙소 정보 검색
 	List<Accommodation> getSearchAccommodations(String keyword);
-	// 키워드로 숙소 정보 검색
+	// 키워드로 음식점 정보 검색
 	List<Restaurant> getSearchRestaurant(String keyword);
 	
 	// 숙소 아이디로 숙소 정보 검색
