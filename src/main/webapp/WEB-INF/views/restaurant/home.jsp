@@ -94,7 +94,7 @@
 			<div class="card mb-3 p-1">
 			  <div class="card-body">
 					<p class="m-0 mb-1">
-						${review.user.name } (89곳 평가,199개 공감받음)</br>
+						${review.user.nickname } </br>
 					</p>
 					<div class="d-flex flex-wrap justify-content-between">
 					    <div>
@@ -122,7 +122,6 @@
 					    </div>
 			    	</c:if>
 				  <div class="mt-3">
-				  	<button type="button" class="btn btn-outline-secondary">공감(1)</button>
 				  	<a href="/reviewform?restaurantNo=${review.restaurant.no }" class="btn btn-outline-secondary float-end">나도평가하기</a>
 				  </div>
 			  </div>
