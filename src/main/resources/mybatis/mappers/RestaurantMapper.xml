@@ -137,7 +137,7 @@
 		select distinct res.RESTAURANT_NO, res.RESTAURANT_NAME, res.RESTAURANT_LOCATION, res.RESTAURANT_IMGNAME,
 				res.RESTAURANT_LIKE_COUNT, res.RESTAURANT_REVIEW_COUNT, res.RESTAURANT_REVIEW_POINT, res.RESTAURANT_LATITUD,
 				res.RESTAURANT_LONGITUDE, res.CITY_ID, res.RESTAURANT_TEL, res.RESTAURANT_DISTRICT,
-				ROUND(DISTANCE_WGS84(37, 128, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),3) as distance
+				ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),2) as distance
 		
 		FROM
 		   restaurant res, restaurant_tag rtag, restaurant_menu rmenu, RESTAURANT_CAT rcat, RESTAURANT_CAT_NAME rcatname
@@ -176,26 +176,6 @@
 										<foreach collection="tags" item="tag" open="(" close=")" separator=",">
 											#{tag}
 										</foreach>)
-			</if>
-			<if test="distance == 'meter'">
-				<!-- and res.restaurant_no (SELECT restaurant_no , 
-										( 6371 * acos ( cos ( radians(37) )* 
-										cos( radians( RESTAURANT_LATITUD ) )* 
-										cos( radians( RESTAURANT_LONGITUDE) - radians(128) ) + 
-										sin ( radians(37) ) * sin( radians( RESTAURANT_LATITUD ) ))) AS distance
-										FROM RESTAURANT
-										HAVING distance &lt; 2
-										ORDER BY distance;
-										) -->
-			</if>
-			<if test="distance == 'oneKilometer'">
-			
-			</if>
-			<if test="distance == 'twoKilometer'">
-			
-			</if>
-			<if test="distance == 'threeKilometer'">
-			
 			</if>
 		</where>
 		<choose>

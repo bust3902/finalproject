@@ -319,7 +319,7 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				content += '		    	<i class="bi ' + item.reviewRateIcon.star4 + '"></i>';
 				content += '		    	<i class="bi ' + item.reviewRateIcon.star5 + '"></i>';
 				content += '		    </p>';
-				content += '	        <p class="card-text mb-1">' + Math.round(item.distance*1000/1000) + 'm</p>';
+				content += '	        <p class="card-text mb-1">' + item.distance + ' km</p>';
 				content += '	        <p class="card-text mb-3">'
 				if (item.menus != null) {
 					for (let i = 0; i < item.menus.length; i++) {
