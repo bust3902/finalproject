@@ -238,7 +238,7 @@
 	
 	<!-- List<Accommodation> getAllLikedRestaurantByUserNo(int no); -->
 	<select id="getAllLikedRestaurantByUserNo" parameterType="int" resultMap="RestaurantResultMap">
-		select r. restaurant_no, r.restaurant_name, r.restaurant_district, r.restaurant_imgname,
+		select r.restaurant_no, r.restaurant_name, r.restaurant_district, r.restaurant_imgname,
 				r.restaurant_like_count, r.restaurant_review_point, r.restaurant_latitud, r.restaurant_longitude
 		from user_restaurant_likes l, restaurant r
 		where r.restaurant_delete = 'N'
