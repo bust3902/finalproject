@@ -28,10 +28,10 @@
 		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName"
 	from
 		reservation r
-	INNER join users u
-	on r.user_no = u.user_no
-	INNER join ACCOMMODATIONS a
-	on r.acco_id = a.acco_id
+		INNER join users u
+			on r.user_no = u.user_no
+		INNER join ACCOMMODATIONS a
+			on r.acco_id = a.acco_id
 	where r.user_no = u.user_no
 	and r.acco_id = a.acco_id
 	and r.user_no = #{value}
@@ -55,12 +55,12 @@
 		p.payment_total_price as "payment.paymentTotalPrice"
 	from
 		reservation r
-	INNER join users u
-	on r.user_no = u.user_no
-	INNER join ACCOMMODATIONS a
-	on r.acco_id = a.acco_id
-	Inner join payment p
-	on r.reservation_id = p.reservation_id
+		INNER join users u
+			on r.user_no = u.user_no
+		INNER join ACCOMMODATIONS a
+			on r.acco_id = a.acco_id
+		Inner join payment p
+			on r.reservation_id = p.reservation_id
 	where r.user_no = u.user_no
 	and r.acco_id = a.acco_id
 	and r.reservation_id = #{value}

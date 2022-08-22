@@ -153,21 +153,21 @@
 			<!-- CAT_002 예약 내역 -->
 			<c:if test="${param.cat eq 'CAT_002'}">
 			<div class="m-3">
-				<h5 class="fw-bold pb-3 border-bottom mb-3">숙소 찜 목록</h5>
+				<h5 class="fw-bold pb-3 border-bottom mb-3">숙소내역</h5>
 				<div class="row">
 					<c:choose >
 						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
 								<div class="card col-4 m-2 " >
-										<img class="card-img-top" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
-										<div class="card-body">
-											<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
-												<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-												<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
-												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
-											</a>
-										</div>
+									<img class="card-img-top mt-1" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+									<div class="card-body">
+										<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
+											<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
+											<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
+											<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+											<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
+										</a>
+									</div>
 									<div class="row">
 										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
@@ -184,7 +184,8 @@
 					</c:choose>
 				</div>
 			</div>
-			<div class="m-3" style="color:black;"><strong>이용 내역</strong>
+			<div class="m-3" >
+				<h5 class="fw-bold pb-3 border-bottom mb-3">이용내역</h5>
 				<div class="row" >
 					<c:choose>
 						<c:when test="${empty Readyreservation }">
@@ -215,7 +216,8 @@
 					</c:choose>
 				</div>
 			</div>
-			<div class="m-3" style="color:black;"><strong>취소 내역</strong>
+			<div class="m-3">
+				<h5 class="fw-bold pb-3 border-bottom mb-3">취소내역</h5>
 				<div class="row">
 					<c:choose>
 						<c:when test="${empty Refundreservation }">
