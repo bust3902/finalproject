@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="kr.co.nc.mapper.PlaceMapper">
+
+	<!-- public List<Place> getAllPlacesByCriteria(PlaceCriteria criteria); -->
+	<select id="getAllPlacesByCriteria" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="kr.co.nc.dto.Place">
+		select
+			place_name as name,
+			review_count as reviewCount,
+			like_count as likeCount,
+			review_rate as reviewRate,
+			address as address,
+			distance as distance,
+			type as type
+		from
+		((select ROUND(DISTANCE_WGS84(37.5666805, 126.9784147, a.acco_latitude, a.acco_longitude),2) distance,
+		    a.acco_name place_name, a.acco_review_count review_count, a.acco_like_count like_count, a.acco_review_rate review_rate, a.acco_address address, x.type type
+		    from accommodations a, (select 'A' as type from dual) x
+		    where a.acco_name like '%' || #{keyword} || '%'
+		    	or a.acco_district like '%' || #{keyword} || '%'
+				or a.acco_address like '%' || #{keyword} || '%')
+		union
+		(select ROUND(DISTANCE_WGS84(37.5666805, 126.9784147, r.restaurant_latitud, r.restaurant_longitude),2) distance,
+		    r.restaurant_name place_name, r.restaurant_review_count review_count, r.restaurant_like_count like_count, r.restaurant_review_point review_rate, r.restaurant_location address, x.type type
+		    from restaurant r, (select 'R' as type from dual) x 
+		    where r.restaurant_name like '%' || #{keyword} || '%'
+		    	or r.restaurant_location like '%' || #{keyword} || '%'))
+		<where>
+			<if test='type != null and type != ""'>
+				type = #{type}
+			</if>
+		</where>
+		order by distance
+	</select>
+
+</mapper>
