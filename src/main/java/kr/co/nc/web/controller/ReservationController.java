@@ -94,9 +94,6 @@ public class ReservationController {
 		model.addAttribute("payment",reservationService.getAllPaymentInfo(user.getNo()));
 		model.addAttribute("reservation", reservationService.getReserveInfoByReserveId(reservationNo));
 
-		 List<Category> categories = loginedUserService.getAllCategories();
-	     model.addAttribute("categories",categories);
-	      
 		return "reservation/reservationList";
 	}
 
