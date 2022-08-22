@@ -73,7 +73,7 @@ li {
     	</form>
     		
     	<!-- 페이스북 로그인 -->
-    	<div class="facebook">
+    	<div class="facebook mb-1">
     		<div class="fb-login-button" data-width="336" data-size="large" data-button-type="login_with" data-layout="default" data-auto-logout-link="false" data-use-continue-as="false" onlogin="checkLoginState()"></div>
 			<div id="fb-root"></div>
 
@@ -115,12 +115,42 @@ li {
     					<button class="btn btn-primary btn-lg">로그인</button>
     				</div>
     				<div class="finish">
-    					<a href="#" class="btn btn-light" style="padding-left: 33px; padding-right:33px;">비밀번호 재설정</a>
-            			<a href="/register" class="btn btn-light" style="padding-left: 33px; padding-right:33px;">회원가입</a>
+						<button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#findId" style="padding-left: 33px; padding-right:33px;width: 190px;height: 42px;">아이디 찾기</button>
+            			<a href="/register" class="btn btn-light" style="padding-left: 33px; padding-right:33px;height: 41px;">회원가입</a>
     				</div>
     			</form>
     		</div>
 		</div>
+		
+		<!-- 아이디 찾기 -->
+		<div class="modal fade" id="findId" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel"><strong>아이디 찾기</strong></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table class="table findId">
+							<tr>
+                            	<td><label>이름</label></td>
+								<td><input type="text" class="form-control" id="name" name="name" placeholder="이름을 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '이름을 입력해주세요.'"></td>
+							</tr>
+							<tr>
+								<td><label>이메일</label></td>
+								<td><input type="text" class="form-control" id="email" name="email" placeholder="이메일을 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '이메일을 입력해주세요.'"></td>
+							</tr>
+						</table>
+						<div class="showId"></div>
+					</div>
+					<div class="modal-footer">
+                        <button type="button" class="btn btn-primary btnConfirm" onclick="findId()">확인</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
+		
     </div>
 </div>
 
@@ -170,7 +200,7 @@ function kakaoLogout() {
       })
       Kakao.Auth.setAccessToken(undefined)
 	}
-}  
+}
 </script>
 
 <%-- 페이스북 스크립트 --%>
@@ -219,33 +249,57 @@ function kakaoLogout() {
 	}
 </script>
 
-<%-- 네이버 스크립트 --%>
-<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
-	<%-- 네이버 로그인 버튼--%>
-	<script type="text/javascript">
-  		var naver_id_login = new naver_id_login("iHN5BdpjdVVavFwk_Qfg", "https://localhost/"); <%-- naver_id_login라는 함수가 없다함... navar에서 api를 잘못 만든 것 같습니다...--%>
-  		var state = naver_id_login.getUniqState();
-  		naver_id_login.setButton("white", 2,40);
-  		naver_id_login.setDomain("https://localhost/login");
-  		naver_id_login.setState(state);
-  		naver_id_login.setPopup();
-  		naver_id_login.init_naver_id_login();
-	</script>
+<%-- 네이버 로그인 버튼--%>
+<script type="text/javascript">
+  	var naver_id_login = new naver_id_login("iHN5BdpjdVVavFwk_Qfg", "https://localhost/"); <%-- naver_id_login라는 함수가 없다함... navar에서 api를 잘못 만든 것 같습니다...--%>
+  	var state = naver_id_login.getUniqState();
+  	naver_id_login.setButton("green", 3,45);
+  	naver_id_login.setDomain("https://localhost/login");
+  	naver_id_login.setState(state);
+  	naver_id_login.setPopup();
+  	naver_id_login.init_naver_id_login();
+</script>
   		
-  	<%-- 네이버 로그인 응답 --%>
-  	<script type="text/javascript">
-  		var naver_id_login = new naver_id_login("iHN5BdpjdVVavFwk_Qfg", "https://localhost/");
-  		// 접근 토큰 값 출력
-  		alert(naver_id_login.oauthParams.access_token);
-  		// 네이버 사용자 프로필 조회
-  		naver_id_login.get_naver_userprofile("naverSignInCallback()");
-  		// 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
-  		function naverSignInCallback() {
-    		alert(naver_id_login.getProfileData('name'));
-    		alert(naver_id_login.getProfileData('email'));
-    		alert(naver_id_login.getProfileData('nickname'));
-  		}
-	</script>
+<%-- 네이버 로그인 응답 --%>
+<script type="text/javascript">
+  	var naver_id_login = new naver_id_login("iHN5BdpjdVVavFwk_Qfg", "https://localhost/");
+  	// 접근 토큰 값 출력
+  	alert(naver_id_login.oauthParams.access_token);
+  	// 네이버 사용자 프로필 조회
+  	naver_id_login.get_naver_userprofile("naverSignInCallback()");
+  	// 네이버 사용자 프로필 조회 이후 프로필 정보를 처리할 callback function
+  	function naverSignInCallback() {
+    	alert(naver_id_login.getProfileData('name'));
+    	alert(naver_id_login.getProfileData('email'));
+    	alert(naver_id_login.getProfileData('nickname'));
+  	}
+</script>
+
+<%-- 아이디 찾기 --%>
+<script type="text/javascript">
+function findId() {
+   let name = document.getElementById('name').value;
+   let email = document.getElementById('email').value;
+   
+   $.ajax({
+      url: '/findId',
+      type: 'post',
+      data: {"name":name, "email":email},
+      success:function(data){
+         if(data == 0) {
+            alert("아이디가 존재하지 않습니다.");
+         } else {
+            $(".findId").css('display','none');
+            $(".btnConfirm").css('display','none');
+            let content = '<p class="text-center">아이디는 <strong>'+data+'</strong> 입니다.</p>';
+            $(".showId").append(content);
+         }
+      }, 
+      error:function(){
+         alert("에러입니다.");
+      }
+   })
+};
 </script>
 </body>
 </html>
