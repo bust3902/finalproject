@@ -6,31 +6,36 @@
 		    a.acco_id place_id, a.acco_latitude place_latitude, a.acco_longitude place_longitude, a.acco_name place_name,
 		    a.acco_review_count review_count, a.acco_like_count like_count, a.acco_review_rate review_rate, a.acco_address address, x.type type
 		    from accommodations a, (select 'A' as type from dual) x
-		    where a.acco_name like '%' || #{keyword} || '%'
+		    where a.acco_deleted = 'N'
+		    	and (a.acco_name like '%' || #{keyword} || '%'
 		    	or a.acco_district like '%' || #{keyword} || '%'
-				or a.acco_address like '%' || #{keyword} || '%')
+				or a.acco_address like '%' || #{keyword} || '%'))
 		union
 		(select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.restaurant_latitud, r.restaurant_longitude),2) distance,
 		    r.restaurant_no place_id, r.restaurant_latitud place_latitude, r.restaurant_longitude place_longitude, r.restaurant_name place_name,
 		    r.restaurant_review_count review_count, r.restaurant_like_count like_count, r.restaurant_review_point review_rate, r.restaurant_location address, x.type type
 		    from restaurant r, (select 'R' as type from dual) x 
-		    where r.restaurant_name like '%' || #{keyword} || '%'
-		    	or r.restaurant_location like '%' || #{keyword} || '%'))
+		    where r.restaurant_delete = 'N'
+		    	and (r.restaurant_name like '%' || #{keyword} || '%'
+		    	or r.restaurant_location like '%' || #{keyword} || '%')))
 	</sql>
 	
+	<resultMap type="kr.co.nc.dto.Place" id="placeResultMap">
+		<id column="place_id" property="id"/>
+		<result column="place_name" property="name" />
+		<result column="place_latitude" property="latitude"/>
+		<result column="place_longitude" property="longitude"/>
+		<result column="review_count" property="reviewCount"/>
+		<result column="like_count" property="likeCount"/>
+		<result column="review_rate" property="reviewRate"/>
+		<result column="address" property="address"/>
+		<result column="distance" property="distance"/>
+		<result column="type" property="type"/>
+	</resultMap>
+	
 	<!-- List<Place> getAllPlacesByCriteria(PlaceCriteria criteria); -->
-	<select id="getAllPlacesByCriteria" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="kr.co.nc.dto.Place">
-		select
-			place_id as id,
-			place_name as name,
-			place_latitude as latitude,
-			place_longitude as longitude,
-			review_count as reviewCount,
-			like_count as likeCount,
-			review_rate as reviewRate,
-			address as address,
-			distance as distance,
-			type as type
+	<select id="getAllPlacesByCriteria" parameterType="kr.co.nc.criteria.PlaceCriteria" resultMap="placeResultMap">
+		select *
 		from <include refid="unionSearchResults"></include> x
 		<where>
 			<if test='type != null and type != ""'>
@@ -52,19 +57,9 @@
 	</select>
 	
 	<!-- List<Place> getAllPlacesByCriteriaWithPagination(PlaceCriteria criteria); -->
-	<select id="getAllPlacesByCriteriaWithPagination" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="kr.co.nc.dto.Place">
+	<select id="getAllPlacesByCriteriaWithPagination" parameterType="kr.co.nc.criteria.PlaceCriteria" resultMap="placeResultMap">
 		select *
-		from (select row_number() over (order by distance, place_id) row_num,
-				place_id as id,
-				place_name as name,
-				place_latitude as latitude,
-				place_longitude as longitude,
-				review_count as reviewCount,
-				like_count as likeCount,
-				review_rate as reviewRate,
-				address as address,
-				distance as distance,
-				type as type
+		from (select row_number() over (order by distance, place_id) row_num, x.*
 			from <include refid="unionSearchResults"></include> x
 			<where>
 				<if test='type != null and type != ""'>
@@ -91,4 +86,50 @@
 			</otherwise>
 		</choose>
 	</select>
+	
+	<!-- List<Place> getMyLikePlacesWithPagination(PlaceCriteria criteria); -->
+	<select id="getMyLikePlacesWithPagination" parameterType="kr.co.nc.criteria.PlaceCriteria" resultMap="placeResultMap">
+		select *
+		from
+			(select row_number() over (order by distance, place_id) row_num, x.*
+			from
+				((select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude),2) distance,
+					    a.acco_id place_id, a.acco_latitude place_latitude, a.acco_longitude place_longitude, a.acco_name place_name,
+					    a.acco_review_count review_count, a.acco_like_count like_count, a.acco_review_rate review_rate, a.acco_address address, x.type type
+					from user_accommodation_likes l, accommodations a, (select 'A' as type from dual) x
+					where a.acco_deleted = 'N'
+					    and l.user_no = #{userNo}
+					    and l.acco_id = a.acco_id)
+					union
+					(select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.restaurant_latitud, r.restaurant_longitude),2) distance,
+							    r.restaurant_no place_id, r.restaurant_latitud place_latitude, r.restaurant_longitude place_longitude, r.restaurant_name place_name,
+							    r.restaurant_review_count review_count, r.restaurant_like_count like_count, r.restaurant_review_point review_rate, r.restaurant_location address, x.type type
+					from user_restaurant_likes l, restaurant r, (select 'R' as type from dual) x 
+					where r.restaurant_delete = 'N'
+					    and l.user_no = #{userNo}
+					    and l.restaurant_no = r.restaurant_no)) x)
+		where row_num between #{beginIndex} and #{endIndex}
+	</select>
+	
+	<!-- int getMyLikePlacesTotalRowsByCriteria(PlaceCriteria criteria) -->
+	<select id="getMyLikePlacesTotalRowsByCriteria" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="int">
+		select count(*)
+		from
+			((select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude),2) distance,
+				    a.acco_id place_id, a.acco_latitude place_latitude, a.acco_longitude place_longitude, a.acco_name place_name,
+				    a.acco_review_count review_count, a.acco_like_count like_count, a.acco_review_rate review_rate, a.acco_address address, x.type type
+				from user_accommodation_likes l, accommodations a, (select 'A' as type from dual) x
+				where a.acco_deleted = 'N'
+				    and l.user_no = #{userNo}
+				    and l.acco_id = a.acco_id)
+				union
+				(select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.restaurant_latitud, r.restaurant_longitude),2) distance,
+						    r.restaurant_no place_id, r.restaurant_latitud place_latitude, r.restaurant_longitude place_longitude, r.restaurant_name place_name,
+						    r.restaurant_review_count review_count, r.restaurant_like_count like_count, r.restaurant_review_point review_rate, r.restaurant_location address, x.type type
+				from user_restaurant_likes l, restaurant r, (select 'R' as type from dual) x 
+				where r.restaurant_delete = 'N'
+				    and l.user_no = #{userNo}
+				    and l.restaurant_no = r.restaurant_no)) x
+	</select>
+	
 </mapper>

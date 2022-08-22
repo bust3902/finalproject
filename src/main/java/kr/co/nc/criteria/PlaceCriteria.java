@@ -18,4 +18,6 @@ public class PlaceCriteria {
 	// 페이징을 위해 서비스에서 저장하는 값
 	private int beginIndex;
 	private int endIndex;
+	// 로그인한 경우에만 전달받는 값
+	private Integer userNo; 
 }

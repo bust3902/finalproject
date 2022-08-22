@@ -2,6 +2,7 @@ package kr.co.nc.dto;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 /**
  * 숙소, 식당 통합검색 시 사용하는 dto
@@ -10,6 +11,7 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@ToString
 public class Place {
 
 	private int id;

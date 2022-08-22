@@ -19,7 +19,9 @@ public interface PlaceMapper {
 	List<Place> getAllPlacesByCriteriaWithPagination(PlaceCriteria criteria);
 	// 해당 사용자의, 해당 번호의 장소에 대한 찜하기 정보가 존재하면 1을, 존재하지 않으면 0을 반환
 	int isExistUserLikeById(LikeCriteria criteria);
-	
-	
+	// 해당 사용자가 찜하기 누른 모든 숙소, 식당을 거리순으로 조회한 결과를 페이지번호에 맞게 반환
+	List<Place> getMyLikePlacesWithPagination(PlaceCriteria criteria);
+	// 해당 사용자가 찜하기 누른 모든 숙소, 식당을 거리순으로 조회한 결과의 행수 조회
+	int getMyLikePlacesTotalRowsByCriteria(PlaceCriteria criteria);
 	
 }
