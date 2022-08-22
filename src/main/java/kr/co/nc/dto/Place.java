@@ -26,14 +26,6 @@ public class Place {
 	private String type; // 숙소는 A, 식당은 R
 	private StarIconForRate reviewRateIcon;
 	private boolean liked; // 로그인사용자일 경우 service에서 찜 상태 여부를 확인해서 저장
-	
-	public void setType(String type) {
-		if ("A".equals(type)) {
-			this.type = "숙소";
-		} else if ("R".equals(type)) {
-			this.type = "맛집";
-		}
-	}
 
 	public void setReviewRate(double reviewRate) {
 		this.reviewRate = reviewRate;

@@ -31,7 +31,7 @@
 <div class="w-100 m-0">
 	<div class="row w-100 m-0">
 		<!-- 검색창, 결과 조회 -->
-		<div class="col-3 px-0">
+		<div class="col-3 d-flex flex-column px-0">
 			<div class="p-3 bg-light">
 	  			<form id="form-search" class="d-flex justify-content-center p-3 my-auto" action="javascript:changeCurrentPage(1);" autocomplete="off">
 					<input class="form-control me-2 type="text" id="search" name="keyword" placeholder="통합검색" style="max-width:600px;height:auto">
@@ -59,7 +59,7 @@
 			<div id="places-wrapper" class="p-3">
 				<!-- 검색결과가 이곳에 출력된다. -->
 			</div>
-			<div id="pagination-wrapper" class="d-flex justify-content-center mb-0">
+			<div id="pagination-wrapper" class="d-flex justify-content-center">
 				<ul id="ul-item-wrapper" class="pagination" class="mx-auto">
 					<!-- 페이징 번호 버튼이 이곳에 출력된다. -->
 				</ul>
@@ -152,6 +152,7 @@ function refreshLocation() {
 			map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
 		});
 	}
+	
 }
 
 // 내 위치 마커 표시하는 함수
@@ -215,8 +216,10 @@ function search(currentPage) {
 				}
 				content += '	<div class="row p-3 border-bottom">';
 				content += '		<p class="mb-1">';
-				content += '			<a class="fw-light text-muted" href="' + detailURL + '">' + place.name + '<small class="border-end mx-3"></small></a><small>' + place.type + '</small>';
-				content += '			<i class="bi ' + (place.liked ? 'bi-heart-fill' : 'bi-heart') + ' fs-5 text-primary float-end"></i>';
+				content += '			<a class="fw-light text-muted" href="' + detailURL + '">' + place.name + '</a>';
+				content += '			<small class="border-end mx-3"></small>';
+				content += '			<small>' + (place.type == "A" ? '숙소' : '맛집' ) + '</small>';
+				content += '			<i id="icon-heart-' + place.id + '" data-place-id="' + place.id +'" data-place-type="' + place.type +'" class="icon-heart bi ' + (place.liked ? 'bi-heart-fill' : 'bi-heart') + ' fs-5 text-primary float-end"></i>';
 				content += '		</p>';
 				content += '		<p class="text-warning small">';
 				content += '			<span class="badge bg-warning">' + place.reviewRate.toFixed(1) + '</span>';
@@ -228,7 +231,7 @@ function search(currentPage) {
 				content += '			<span class="border-end mx-1"></span>';
 				content += '			<span class="text-muted">리뷰 ' + place.reviewCount +'건</span>';
 				content += '			<span class="border-end mx-1"></span>';
-				content += '			<span class="text-muted"> 찜 ' + place.likeCount +'명</span>';
+				content += '			<span id="like-count-' + place.id +'" class="text-muted"> 찜 ' + place.likeCount +'명</span>';
 				content += '			<span class="badge bg-danger float-end">' + place.distance +'km</span>';
 				content += '		</p>';
 				content += '		<p class="small mb-1">';
@@ -236,7 +239,6 @@ function search(currentPage) {
 				content += '		</p>';
 				content += '	</div>';
 				
-				// 지도에 표시할 마커 객체 생성
 				let markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
 				let marker = new kakao.maps.Marker({
 				    position: markerPosition,
@@ -346,7 +348,7 @@ $("#tab-types button").click(function() {
 	let type = $(this).attr("data-type");
 	 if (type === "M") {
 		 if ("${LOGIN_USER }" === "") {
-			 alert("로그인이 필요한 기능입니다.");
+			 alert("내 찜목록은 로그인이 필요한 기능입니다.");
 			 location.reload();
 			 return;
 		 }
@@ -356,7 +358,6 @@ $("#tab-types button").click(function() {
 	 }
 	changeCurrentPage(1);
 });
-
 // 마이페이지를 선택한 상태에서 검색 시 전체검색으로 탭 변경
 $("#form-search").submit(function(){
 	let $mypageBtn = $("button[data-type='M']");
@@ -367,6 +368,48 @@ $("#form-search").submit(function(){
 		changeCurrentPage(1);
 	}
 });
+// 하트아이콘 눌렀을 때 찜하기 기능 구현
+$(document).on("click", ".icon-heart", function(){ toggleLike(event); });
+
+// 찜하기 토글, DB 반영
+function toggleLike(event) {
+	let id = event.target.getAttribute("data-place-id");
+	let type = event.target.getAttribute("data-place-type");
+	let $icon = $(event.target);
+	// 로그인 여부 체크
+	if ("${LOGIN_USER }" == "") {
+		alert("찜하기는 로그인이 필요한 기능입니다.");
+		return false;
+	}
+	
+	// 하트를 누른 장소의 유형에 따라 ajax 요청url이 달라진다.
+	let url = '';
+	let queryString = '';
+	if (type == "A") {
+		url = "/changelike/acco";
+		queryString = "accoId=" + id;
+	} else if (type == "R") {
+		url = "/changelike/restaurant";
+		queryString = "restaurantNo=" + id;
+	}
+	
+	// 숙소아이디 전달해서 ajax로 like 저장 요청
+	$.getJSON(url, queryString).done(function(result) {
+		if (result === true) {
+			console.log("test");
+			// 아이콘 표현 토글 처리
+			$icon.toggleClass("bi-heart-fill");
+			$icon.toggleClass("bi-heart");
+			// 찜한 사람 수를 반영하기 위해 페이지갱신
+			let currentPage = $("#ul-item-wrapper .active").find("a").text();
+			changeCurrentPage(currentPage);
+		} else {
+			console.log('fail');
+			alert("오류가 발생했습니다. 다시 시도해주세요.");
+		}
+	});
+	
+}
 
 window.onscroll = function() {
 	if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
