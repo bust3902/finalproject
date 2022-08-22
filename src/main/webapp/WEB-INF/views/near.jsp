@@ -285,8 +285,6 @@ function refreshPaginationButton(currentPage) {
 	});
 }
 
-// $(function(){}) 안이므로 이 함수는 외부에서 호출이 불가능하다. 따라서 widnow 바깥으로 빼준다
-// (다음에 html컨텐츠 만들때 href에 연결하지 말고 별도 이벤트등록할 것)
 function changeCurrentPage(num) {
 	$("#pagination-wrapper .page-item").removeClass("active");
 	$('li[data-page-num="' + num +'"]').addClass("active");
