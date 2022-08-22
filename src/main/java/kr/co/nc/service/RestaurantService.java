@@ -58,7 +58,9 @@ public class RestaurantService {
 	// 검색 조건에 따른 음식점 검색
 
 	public List<Restaurant> searchRestaurant(RestaurantCriteria criteria) {
-		return restaurantMapper.getRestaurantByCriteria(criteria);
+		
+		List<Restaurant> restaurant = restaurantMapper.getRestaurantByCriteria(criteria);
+		return restaurant;
 	}
 
 	
