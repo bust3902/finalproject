@@ -290,9 +290,9 @@ $(function() {
 			alert("폐점시간을 입력해주세요.");
 			return false;
 		}
-	
+	 	
 	 	// 숙소 메인 이미지가 설정되어있는지 체크하기
-	 	let thumbnailImageFileValue = $.trim( $(":file[name=thumbnailImageFile]").val() );
+	 	let thumbnailImageFileValue = $.trim( $(":file[name=imgfile]").val() );
 	 	if (!$('#div-mainimage').is(".visually-hidden") == true && thumbnailImageFileValue === '') {
 	 		alert("숙소 메인 이미지를 첨부해주세요");
 	 		return false;

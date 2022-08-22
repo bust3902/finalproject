@@ -67,7 +67,7 @@ public class AdminService {
 	private AdminMapper adminMapper;
 	
 	public void addNewAccommodation(AccommodationRegisterForm accommodationRegisterForm) throws IOException {
-		
+
 		// 숙소정보 저장
 		Accommodation accommodation = new Accommodation();
 		accommodation.setName(accommodationRegisterForm.getAccoName());

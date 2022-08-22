@@ -161,14 +161,14 @@
 			   acco_address as address, acco_latitude as latitude, acco_longitude as longitude,
 			   acco_thumbnail_image as thumbnailImageName, acco_deleted as deleted, 
 			   city_id as cityId, acco_introduce_comment as introduceComment,
-			   acco_detail_description as detailDescription, acco_admin_id as adminId
+			   acco_detail_description as detailDescription
 		from accommodations
 		where acco_deleted = 'N'
-		and acco_admin_id like '%' || #{value} || '%'
-		or acco_name like '%' || #{value} || '%'
+		and acco_name like '%' || #{value} || '%'
 		or acco_district like '%' || #{value} || '%'
 		or acco_address like '%' || #{value} || '%'
 	</select>
+
 	<!-- 
 		키워드로 레스토랑 정보 검색
 		List<Restaurant> getSearchRestaurant(String keyword);
@@ -196,7 +196,7 @@
 			   acco_latitude as latitude, acco_longitude as longitude,
 			   acco_thumbnail_image as thumbnailImageName, acco_deleted as deleted, 
 			   city_id as cityId, acco_introduce_comment as introduceComment,
-			   acco_detail_description as detailDescription, acco_admin_id as adminId
+			   acco_detail_description as detailDescription
 		from accommodations
 		where acco_id = #{value}
 	</select>
@@ -364,11 +364,9 @@
 			acco_thumbnail_image = #{thumbnailImageName},			
 		</if>
 			acco_updated_date = sysdate,
-			acco_deleted = #{deleted},
 			city_id = #{cityId},
 			acco_introduce_comment = #{introduceComment},
-			acco_detail_description = #{detailDescription},
-			acco_admin_id = #{adminId}
+			acco_detail_description = #{detailDescription}
 		where
 			acco_id = #{id}
 	</update>
