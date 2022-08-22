@@ -199,7 +199,9 @@
 	<input type="hidden" name="maxLon">
 </form>	
 </div>
-
+<div>
+	<%@ include file="../common/footer.jsp" %>
+</div>
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=49a6f0504323df1e2fbc06bfac690d78"></script>
 <script type="text/javascript">
 	
