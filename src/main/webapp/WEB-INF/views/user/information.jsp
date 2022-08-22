@@ -348,6 +348,22 @@
 <!-- swiper js -->
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){
+	// 취소
+	$(".cencle").on("click", function(){
+		
+		location.href = "/";
+				    
+	})
+
+	$("#submit").on("click", function(){
+		if($("#userPass").val()==""){
+			alert("비밀번호를 입력해주세요.");
+			$("#userPass").focus();
+			return false;
+		}	
+	});	
+})
 
 $("#form-nickname").submit(function() {
 	let inputValue = $("#form-nickname input[name='nickname']").val();
@@ -355,6 +371,12 @@ $("#form-nickname").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+
+	var nicknameRe = /^[가-힣]{2,4}$/;
+    if( !nicknameRe.test( $("#form-nickname input[name='nickname']").val())) {
+        alert("닉네임은 한글로 2글자 이상만 허용됩니다.");
+        return false;
+    }
 	return true;
 });
 
@@ -364,6 +386,11 @@ $("#form-name").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+	var nameRe = /^[가-힣]{2,4}$/;
+    if( !nameRe.test( $("#form-name input[name='name']").val())) {
+        alert("이름은 한글로 2글자 이상만 허용됩니다.");
+        return false;
+    }
 	return true;
 });
 
@@ -373,6 +400,11 @@ $("#form-tel").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+	var telRe = /^\d{3}-\d{3,4}-\d{4}$/;
+    if( !telRe.test( $("#form-tel input[name='tel']").val())) {
+        alert("유효한 전화번호 형식이 아닙니다.");
+        return false;
+    }
 	return true;
 });
 

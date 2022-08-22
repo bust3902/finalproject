@@ -98,8 +98,6 @@
 			user_disabled = #{disabled},
 			user_updated_date = sysdate
 		where
-			user_no = #{no}
-	
+			user_no = #{no}	
 	</update>
-	
 </mapper>

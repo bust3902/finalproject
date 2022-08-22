@@ -8,68 +8,81 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-<!-- 카카오 로그인지원 자바스크립트 라이브러리를 포함시킨다. -->
-<script src="https://developers.kakao.com/sdk/js/kakao.js"></script>
+<style type="text/css">
+.register #content {
+    width: 360px;
+    height: 850px;
+    margin: 30px auto 0 auto;
+}
+
+#logo{
+	text-align: center;
+}
+
+#logo img {
+	width: 180px;
+}
+
+#join {
+    width: 305px;
+}
+
+#join button {
+	width: 327px;
+}
+
+li {
+	display: inline-block;
+}
+
+</style>
 	<title>회원가입</title>
 </head>
 <body>
-<%@ include file="common/nav.jsp" %> 
-<div class="container mt-3">  
-	<c:set var="menu" value="register"></c:set>
-	<div class="row">
-		<div class="col">
-		</div>
-	</div> 
-    <div class="row mb-3">
-    	<div class="col">
-    		<p>사용자 정보를 입력해서 가입하세요</p>
-    		<%-- 
-    			회원가입 중 오류가 발생하면 아래 경고창에 표시된다.
-    			오류 메세지는 RequestAttributes의 addFlashAttribute(String name, Object value) 메소드를 사용해서 전달한다.
-    		 --%>
-    		<c:if test="${not empty error }">
-    			<div class="alert alert-danger">
-    				${error }
-    			</div>
-    		</c:if>
-    		<form class="border p-3" method="post" action="register">
-    			<div class="mb-3">
-    				<label class="form-label">아이디</label>
-    				<input type="text" class="form-control" name="id"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">비밀번호</label>
-    				<input type="password" class="form-control" name="password"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">닉네임</label>
-    				<input type="text" class="form-control" name="nickname"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">이름</label>
-    				<input type="text" class="form-control" name="name"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">이메일</label>
-    				<input type="text" class="form-control" name="email"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">전화번호</label>
-    				<input type="text" class="form-control" name="tel"/>
-    			</div>
-    			<div class="mb-3">
-    				<label class="form-label">주소</label>
-    				<input type="text" class="form-control" name="address"/>
-    			</div>
-    			<div class="mb-1 text-end">
-    				<a href="/" class="btn btn-secondary">취소</a>
-    				<button class="btn btn-primary">등록</button>
-    			</div>
-    		</form>
-    	</div>   	
+<div class="register">
+	<div id="content">
+		<!-- 로고 -->
+        <div id="logo">
+            <a class="navbar-brand" href="/">
+      			<img src="/resources/images/logo(pink).png" alt="서울어때" width="80" height="auto">
+    		</a>
+        </div>
+    	<form:form class="border p-3" method="post" action="register" modelAttribute="form">
+    		<div class="mb-3">
+    			<label class="form-label">아이디</label>
+    			<form:input class="form-control" path="id" placeholder="아이디를 입력해주세요."/>
+    			<form:errors path="id" class="text-danger small fst-italic"></form:errors>
+    		</div>
+    		<div class="mb-3">
+    			<label class="form-label">비밀번호</label>
+    			<form:password  class="form-control" path="password" placeholder="비밀번호를 입력해주세요."/>   			
+    			<form:errors path="password" class="text-danger small fst-italic"></form:errors>
+    		</div>
+    		<div class="mb-3">
+    			<label class="form-label">닉네임</label>
+    			<form:input  class="form-control" path="nickname" placeholder="닉네임을 입력해주세요."/>
+    			<form:errors path="nickname" class="text-danger small fst-italic"></form:errors>
+    		</div>
+    		<div class="mb-3">
+    			<label class="form-label">이름</label>
+    			<form:input  class="form-control" path="name" placeholder="이름을 입력해주세요."/>
+    			<form:errors path="name" class="text-danger small fst-italic"></form:errors>
+    		</div>
+    		<div class="mb-3">
+    			<label class="form-label">전화번호</label>
+    			<form:input  class="form-control" path="tel" placeholder="ex) 010-1234-5678"/>
+    			<form:errors path="tel" class="text-danger small fst-italic"></form:errors>
+    		</div>
+    		<div class="mb-3">
+    			<label class="form-label">이메일</label>
+    			<form:input class="form-control" path="email" placeholder="이메일을 입력해주세요."/>
+    			<form:errors path="email" class="text-danger small fst-italic"></form:errors>
+    		</div>
+    		<div class="mb-1 text-end" id="join">
+    			<button type="submit" class="btn btn-primary btn-lg">가입하기</button>
+    		</div>
+    	</form:form>
     </div>
 </div>
-<%@ include file="common/footer.jsp" %>
 </body>
 </html>

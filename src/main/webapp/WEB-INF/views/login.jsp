@@ -10,6 +10,7 @@
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 	<!-- 페이스북 로그인 버튼 -->
 	<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v14.0&appId=1236926960491051&autoLogAppEvents=1" nonce="WOnf17HA"></script>
+	<!-- 네이버 로그인 버튼 -->
 <style type="text/css">
 .login #content {
     width: 336px;
@@ -42,7 +43,6 @@ li {
 	<title>로그인</title>
 </head>
 <body>
-<div id="fb-root"></div>
 <!-- 로그인 양식 -->
 <div class="login">
 	<div id="content">
