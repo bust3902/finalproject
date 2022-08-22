@@ -65,7 +65,7 @@
 	<!-- 한식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 한식집 추천</h5>
-		<div id="CAT_004-wrapper" class="row">
+		<div id="CAT_004-wrapper" class="row mb-3">
 		</div>
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_004" class="text-decoration-none text-muted float-end"><strong>'한식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
@@ -74,7 +74,7 @@
 	<!-- 일식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 일식집 추천</h5>
-		<div id="CAT_005-wrapper" class="row">
+		<div id="CAT_005-wrapper" class="row mb-3">
 		</div>
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_005" class="text-decoration-none text-muted float-end"><strong>'일식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
@@ -83,7 +83,7 @@
 	<!-- 중식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 중국집 추천</h5>
-		<div id="CAT_006-wrapper" class="row">
+		<div id="CAT_006-wrapper" class="row mb-3">
 		</div>
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_006" class="text-decoration-none text-muted float-end"><strong>'중국집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
@@ -297,12 +297,12 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 			let content = '';
 			// 식당 정보 카드 컨텐츠 생성 (최대 4개만 출력)
 			$.each(restaurants, function(index, item) {
-				if (index > 4) {
+				if (index > 3) {
 					return;
 				}
 				content += '<div class="col-3">';
 				content += '	<div class="card mb-3 p-1 h-100" style="max-width: 20rem;">';
-				content += '	  <img src="/resources/images/restaurant/' + item.imgname +'" class="card-img-top" alt="...">';
+				content += '	  <img src="/resources/images/restaurant/thumbnail/' + item.imgname +'" class="card-img-top" alt="...">';
 				content += '	  <div class="card-body d-flex flex-column justify-content-between my-auto">';
 				content += '		<div class="row">';
 				content += '	   		<div class="d-flex my-auto">';
