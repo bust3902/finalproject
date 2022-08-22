@@ -1,36 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="kr.co.nc.mapper.PlaceMapper">
-
-	<!-- public List<Place> getAllPlacesByCriteria(PlaceCriteria criteria); -->
+	<sql id="unionSearchResults">
+		((select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, a.acco_latitude, a.acco_longitude),2) distance,
+		    a.acco_id place_id, a.acco_latitude place_latitude, a.acco_longitude place_longitude, a.acco_name place_name,
+		    a.acco_review_count review_count, a.acco_like_count like_count, a.acco_review_rate review_rate, a.acco_address address, x.type type
+		    from accommodations a, (select 'A' as type from dual) x
+		    where a.acco_name like '%' || #{keyword} || '%'
+		    	or a.acco_district like '%' || #{keyword} || '%'
+				or a.acco_address like '%' || #{keyword} || '%')
+		union
+		(select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.restaurant_latitud, r.restaurant_longitude),2) distance,
+		    r.restaurant_no place_id, r.restaurant_latitud place_latitude, r.restaurant_longitude place_longitude, r.restaurant_name place_name,
+		    r.restaurant_review_count review_count, r.restaurant_like_count like_count, r.restaurant_review_point review_rate, r.restaurant_location address, x.type type
+		    from restaurant r, (select 'R' as type from dual) x 
+		    where r.restaurant_name like '%' || #{keyword} || '%'
+		    	or r.restaurant_location like '%' || #{keyword} || '%'))
+	</sql>
+	
+	<!-- List<Place> getAllPlacesByCriteria(PlaceCriteria criteria); -->
 	<select id="getAllPlacesByCriteria" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="kr.co.nc.dto.Place">
 		select
+			place_id as id,
 			place_name as name,
+			place_latitude as latitude,
+			place_longitude as longitude,
 			review_count as reviewCount,
 			like_count as likeCount,
 			review_rate as reviewRate,
 			address as address,
 			distance as distance,
 			type as type
-		from
-		((select ROUND(DISTANCE_WGS84(37.5666805, 126.9784147, a.acco_latitude, a.acco_longitude),2) distance,
-		    a.acco_name place_name, a.acco_review_count review_count, a.acco_like_count like_count, a.acco_review_rate review_rate, a.acco_address address, x.type type
-		    from accommodations a, (select 'A' as type from dual) x
-		    where a.acco_name like '%' || #{keyword} || '%'
-		    	or a.acco_district like '%' || #{keyword} || '%'
-				or a.acco_address like '%' || #{keyword} || '%')
-		union
-		(select ROUND(DISTANCE_WGS84(37.5666805, 126.9784147, r.restaurant_latitud, r.restaurant_longitude),2) distance,
-		    r.restaurant_name place_name, r.restaurant_review_count review_count, r.restaurant_like_count like_count, r.restaurant_review_point review_rate, r.restaurant_location address, x.type type
-		    from restaurant r, (select 'R' as type from dual) x 
-		    where r.restaurant_name like '%' || #{keyword} || '%'
-		    	or r.restaurant_location like '%' || #{keyword} || '%'))
+		from <include refid="unionSearchResults"></include> x
 		<where>
 			<if test='type != null and type != ""'>
 				type = #{type}
 			</if>
 		</where>
-		order by distance
+		order by distance, place_id
+	</select>
+	
+	<!-- int getTotalRowsByCriteria(PlaceCriteria criteria); -->
+	<select id="getTotalRowsByCriteria" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="int">
+		select count(*)
+		from <include refid="unionSearchResults"></include> x
+		<where>
+			<if test='type != null and type != ""'>
+				type = #{type}
+			</if>
+		</where>
+	</select>
+	
+	<!-- List<Place> getAllPlacesByCriteriaWithPagination(PlaceCriteria criteria); -->
+	<select id="getAllPlacesByCriteriaWithPagination" parameterType="kr.co.nc.criteria.PlaceCriteria" resultType="kr.co.nc.dto.Place">
+		select *
+		from (select row_number() over (order by distance, place_id) row_num,
+				place_id as id,
+				place_name as name,
+				place_latitude as latitude,
+				place_longitude as longitude,
+				review_count as reviewCount,
+				like_count as likeCount,
+				review_rate as reviewRate,
+				address as address,
+				distance as distance,
+				type as type
+			from <include refid="unionSearchResults"></include> x
+			<where>
+				<if test='type != null and type != ""'>
+					type = #{type}
+				</if>
+			</where>
+			)
+		where row_num between #{beginIndex} and #{endIndex}
 	</select>
 
+	<!-- int isExistUserLikeById(LikeCriteria criteria); -->
+	<select id="isExistUserLikeById" parameterType="kr.co.nc.criteria.LikeCriteria" resultType="int">
+		select count(*)
+		<choose>
+			<when test='type == "A"'>
+				from user_accommodation_likes
+				where user_no = #{userNo}
+					and acco_id = #{id}
+			</when>
+			<otherwise>
+				from user_restaurant_likes
+				where user_no = #{userNo}
+					and restaurant_no = #{id}
+			</otherwise>
+		</choose>
+	</select>
 </mapper>
