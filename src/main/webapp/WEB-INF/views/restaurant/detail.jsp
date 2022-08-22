@@ -15,6 +15,9 @@
 <title>서울 맛어때</title>
 </head>
 <body>
+<div class="col-12">
+	<jsp:include page="../common/nav.jsp" />
+</div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<!-- 검색어를 가져왔습니다. -->
 	<div class="position-relative">
@@ -67,27 +70,29 @@
 			<div class="card p-1">
 			<div id="map" style="width:100%;height:250px;"></div>
 			<button type="button" class="float-end btn text-dark border-0 btn-sm">
-				<span><strong>'성북동'</strong><p>맛집 더 검색하기</p></span>
+				<span><strong>'${restaurant.district }'</strong><p>맛집 더 검색하기</p></span>
 			</button>
 			</div>
 		</div>
 		
 		<div class="col-9">
 			<div class="card p-1 mb-3">
-				<h1>${restaurant.name }</h1>
-				<p class="lead">성복동</p>
-				<p class="m-0">${restaurant.reviewCount }명의 평가
-					<i class="bi ${restaurant.reviewPoint gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
-					<i class="bi ${restaurant.reviewPoint gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
-					<i class="bi ${restaurant.reviewPoint gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
-					<i class="bi ${restaurant.reviewPoint gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
-					<i class="bi ${restaurant.reviewPoint gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
-				</p>
-				<hr style="display: block;">
-				<div class="mb-3">
-					<button type="button" class="btn btn-outline-secondary">좋아요(${restaurant.likeCount })</button>
-					<button type="button" class="btn btn-outline-secondary">공유</button>
-			  		<button type="button" class="btn btn-outline-secondary float-end">리뷰쓰기</button>
+				<div class="m-3">
+					<h3 style="color:black;">${restaurant.name }</h3>
+					<p class="lead" >${restaurant.district }</p>
+					<p class="m-0" style="color:black;">${restaurant.reviewCount }명의 평가
+						<i class="bi ${restaurant.reviewPoint gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
+						<i class="bi ${restaurant.reviewPoint gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
+						<i class="bi ${restaurant.reviewPoint gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
+						<i class="bi ${restaurant.reviewPoint gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
+						<i class="bi ${restaurant.reviewPoint gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
+					</p>
+						<hr class="mx-3" style="display: block;">
+					<div class="mb-3">
+						<button type="button" class="btn btn-outline-secondary mx-3">좋아요(${restaurant.likeCount })</button>
+						<button type="button" class="btn btn-outline-secondary">공유</button>
+				  		<button type="button" class="btn btn-outline-secondary float-end mx-3" onclick="/reviewform">리뷰쓰기</button>
+					</div>
 				</div>
 			</div>
 			
@@ -97,12 +102,13 @@
 						<i class="bi bi-geo-alt"></i><span>${restaurant.location }</span>
 					</li>
 					<li class="list-group-item list-group-flush border-0">
-						<span>${restaurant.tel }</span>
+						<i class="bi bi-telephone"></i><span>${restaurant.tel }</span>
 					</li>
 					<!-- 카테고리 -->
 					<li class="list-group-item list-group-flush border-0">
+					<i class="bi bi-tag"></i>
 						<c:forEach var="restaurantCategory" items="${restaurant.categories }">
-							<span class="badge bg-secondary">${restaurantCategory.category.name }</span>
+							<span class="badge bg-secondary" >${restaurantCategory.category.name }</span>
 						</c:forEach>
 					</li>
 					<!-- 방문목적 : 태그 -->
@@ -115,8 +121,8 @@
 			</div>
 			
 			<div class="mb-3 card p-1">
-				<div class="mb-3">
-					<h3>영업시간</h3>
+				<div class="m-3">
+					<h5 style="color:black;"><strong>영업시간</strong></h3>
 					<ul class="list-group">
 						<li class="list-group-item list-group-flush border-0">
 							<span>매일</span><span class="float-end">${restaurant.opening }</span>
@@ -131,8 +137,8 @@
 						</li>
 					</ul>
 				</div>
-				<div class="mb-3">
-					<h3>메뉴정보</h3>
+				<div class="m-3">
+					<h5 style="color:black;"><strong>메뉴</strong></h3>
 					<ul class="list-group">
 						<c:forEach var="restaurantMenue" items="${restaurant.menus }">
 							<li class="list-group-item list-group-flush border-0">
@@ -141,16 +147,40 @@
 						</c:forEach>
 					</ul>
 				</div>
-				<div class="mb-3">
-					<h3>맛집태그</h3>
+				<div class="m-3">
+					<h5 style="color:black;"><strong>맛집태그</strong></h5>
 					<!-- 리뷰에서 많이 언급된 태그일 수록 태그의 크기가 크게 출력하고 싶습니다. -->
+					<img class="img-fluid" alt="태그이미지" src="../resources/images/restaurant/tagImage.png">
 				</div>
 			</div>
-			
-			<div class="mb-3 card p-1">
-				<h3>${restaurant.reviewCount }건의 방문자 평가</h3>
-				<hr style="display: block;">
-			</div>
+				<div class="mb-3 card p-1">
+					<div class="m-3" style="color:black;">
+						<h5 style="color:black;">${restaurant.reviewCount }건의 방문자 평가</h5>
+						<hr style="display: block;">
+						<div class="row ">
+							<div class="col-2">
+								<img alt="" width="100px" src="../resources/images/homeicons/restaurant.png""> 
+							</div>
+							<div class="col">
+								<p>${reivew.user.name }형찬님</p>
+								<i class="bi ${restaurant.reviewPoint gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
+								<i class="bi ${restaurant.reviewPoint gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
+								<i class="bi ${restaurant.reviewPoint gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
+								<i class="bi ${restaurant.reviewPoint gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
+								<i class="bi ${restaurant.reviewPoint gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
+								(${review.likeCount } 4.0 점)
+							</div>
+							<p><strong>${review.title }리뷰제목</strong></p>
+							<p>${review.content }여기의 최고 메뉴는 메밀전이예요
+							바로 나와서 바삭바삭하고 양도 굉장히 푸짐합니다
+							그리고 곁들임 간장이 달달하고 전에 잘 어울립니다
+							아들 사장님만 계실때는 주문 불가 메뉴라서 매우 아쉬워요</p>
+						</div>
+						<img alt="" src="" width="200px" height="100px">
+						<img alt="" src="" width="200px" height="100px">
+						<img alt="" src="" width="200px" height="100px">
+					</div>
+				</div>
 		</div>
 	</div>
 </div>
