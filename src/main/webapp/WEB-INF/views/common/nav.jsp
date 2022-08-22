@@ -45,7 +45,7 @@
 			</div>
 			<!-- 로그인 상태 -->
 			<li class="nav-item" style="width:80px;height:auto"><a class="nav-link ${menu eq 'login' ? 'active' : '' }" href="/near">내주변</a></li>
-			<li class="nav-item ${empty LOGIN_USER ? 'd-none' : ''}" style="width:90px;height:auto"><a class="nav-link ${menu eq 'register' ? 'active' : '' } " href="/reservationList">예약내역</a></li>
+			<li class="nav-item ${empty LOGIN_USER ? 'd-none' : ''}" style="width:90px;height:auto"><a class="nav-link ${menu eq 'register' ? 'active' : '' } " href="/user/information?cat=CAT_002">예약내역</a></li>
 			<li class="nav-item dropdown" style="width:90px;height:auto">
    			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">더보기</a>
    				<ul class="dropdown-menu">
@@ -57,10 +57,10 @@
 			<li class="nav-item dropdown ${empty LOGIN_USER ? 'd-none' : ''}" style="width:80px;height:auto">
 				<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">내정보</a>
     			<ul class="dropdown-menu">
-      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_001">내 정보</a></li>
-      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_002">예약 내역</a></li>
-      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_003">내가 찜한 목록</a></li>
-      				<li><a class="dropdown-item" href="/user/imformation?cat=CAT_004">내 리뷰 보기</a></li>
+      				<li><a class="dropdown-item" href="/user/information?cat=CAT_001">내 정보</a></li>
+      				<li><a class="dropdown-item" href="/user/information?cat=CAT_002">예약 내역</a></li>
+      				<li><a class="dropdown-item" href="/user/information?cat=CAT_003">내가 찜한 목록</a></li>
+      				<li><a class="dropdown-item" href="/user/information?cat=CAT_004">내 리뷰 보기</a></li>
       				<li><hr class="dropdown-divider"></li>
 					<li class=" ${empty LOGIN_USER ? 'd-none' : ''}"><a class="dropdown-item" href="/logout">로그아웃</a></li>					
     			</ul>

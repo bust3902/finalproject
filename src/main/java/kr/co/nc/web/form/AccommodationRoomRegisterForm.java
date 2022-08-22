@@ -6,7 +6,6 @@ import java.util.List;
 import org.apache.ibatis.type.Alias;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.nc.vo.CommonFacility;
 import kr.co.nc.vo.RoomFacility;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,4 +37,6 @@ public class AccommodationRoomRegisterForm {
 	private List<MultipartFile> detailImageFiles = new ArrayList<>();	// 상세이미지 파일 리스트
 	private List<String> stringRoomFacilities = new ArrayList<>();		// 이 객실이 가지는 모든 객실시설 정보
 	private List<RoomFacility> roomFacilities = new ArrayList<>();		// 이 객실이 가지는 모든 공용시설 정보
+
+	private List<String> deleteDetailImageNames = new ArrayList<>();	// 삭제할 상세이미지 파일명 리스트
 }

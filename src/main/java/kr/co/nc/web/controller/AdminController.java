@@ -12,12 +12,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,8 +25,6 @@ import org.springframework.web.multipart.MultipartFile;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.AdminService;
 import kr.co.nc.service.RestaurantService;
-import kr.co.nc.vo.Accommodation;
-import kr.co.nc.vo.CommonFacility;
 import kr.co.nc.web.form.AccommodationRegisterForm;
 import kr.co.nc.web.form.AccommodationRoomRegisterForm;
 import kr.co.nc.web.form.RestaurantRegisterForm;
@@ -151,21 +149,13 @@ public class AdminController {
 		return "admin/accommodationregister2";
 	}
 	
-	// 숙소유형 선택시 공용시설 리스트 출력을 위한 데이터 전달
-	@GetMapping("/search")
-	@ResponseBody
-	public List<CommonFacility> search(@RequestParam("type") String type) {
-		// type에 따른 공용시설 옵션 list 전달
-		return accommodationService.getCommonFacilityOptions(type);
-	}
-	
 	// 숙소 입력폼3(객실 입력폼) 요청
 	@PostMapping(path = "/accommodation3")
 	public String accommodation(
 			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
 			Model model
 	) throws IOException {
-
+		
 		// 객실시설 옵션 출력을 위한 list 전달
 		model.addAttribute("rofacilities", accommodationService.getRoomFacilityOptions());
 		
@@ -199,11 +189,6 @@ public class AdminController {
 		}
 		
 		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
-		// System.out.println(accommodationRegisterForm.getAccommodationRooms().size());
-		
-		// System.out.println(accommodationRegisterForm.getDetailImageFiles().size());
-		
-		// model.addAttribute("accommodationRegisterForm", accommodationRegisterForm);
 		
 		return "admin/accommodationregister3";
 	}
@@ -246,7 +231,7 @@ public class AdminController {
 				FileCopyUtils.copy(in, out);
 			}
 			accommodationRoomRegisterForm.setDetailImageNames(filenames);
-		} 
+		}
 
 		model.addAttribute("rooms", accommodationRegisterForm.getAccommodationRooms().size());
 		
@@ -265,21 +250,141 @@ public class AdminController {
 
 		sessionStatus.setComplete();
 		
-		return "admin/accocompleted";
+		return "admin/accommodationcompleted";
 	}
 	
 	// 관리자 숙소 검색 페이지
 	@GetMapping(path = "/accosearch")
 	public String AccommodationSearchPage(Model model) throws IOException {
 		
-		return "admin/search";
+		return "admin/accommodationsearch";
 	}
-
-	// 검색 조건에 맞는 숙소 리스트 반환
-	@GetMapping("/searchAccommodation")
-	@ResponseBody
-	public List<Accommodation> adminAccommodationSearch(@RequestParam("keyword") String keyword) {
+	
+	// 관리자 음식점 검색 페이지
+	@GetMapping(path = "/restausearch")
+	public String RestaurantSearchPage(Model model) throws IOException {
 		
-		return adminService.searchAccommodation(keyword);
+		return "admin/restaurantsearch";
+	}
+	
+	// 수정폼 메인 페이지
+	@GetMapping(path = "/accommodationModifyMain")
+	public String AccommodationModifyMain(Model model, @RequestParam("id") int id) throws IOException {
+
+		// 숙소아이디로 숙소 검색
+		model.addAttribute("accommodations", adminService.getSearchAccommodationById(id));
+		// 숙소아이디로 객실 검색
+		model.addAttribute("accommodationrooms", adminService.getAccommodationRoomByaccoId(id));
+		return "admin/modifymain";
+	}
+	
+	// 숙소 수정폼 요청 
+	@GetMapping(path = "/modifyAccommodation")
+	public String AccommodationModify(Model model,AccommodationRegisterForm accommodationRegisterForm, @RequestParam("id") int id) {
+		
+		// 화면에 숙소유형을 출력시키기 위한 모든 숙소유형 정보 전달
+		model.addAttribute("types", accommodationService.getAllTypes());
+		// 화면에 지역정보를 출력시키기 위한 모든 지역 정보 전달
+		model.addAttribute("cities", accommodationService.getAllCities());
+		
+		// 수정폼에 숙소정보를 출력시키기 위해 숙소아이디로 검색
+		// 숙소 검색
+		model.addAttribute("accommodations", adminService.getSearchAccommodationById(id));
+		// 상세이미지 정보 검색
+		model.addAttribute("accommodationImages", adminService.getAccommodationImagesById(id));
+		// 태그 정보 검색
+		model.addAttribute("accommodationTags", adminService.getAccommodationTagsById(id));
+		// 숙소 타입 정보 검색
+		model.addAttribute("accommodationTypes", adminService.getAccommodationTypesById(id));
+		// 숙소 공용시설 정보 검색
+		model.addAttribute("accommodationCommonFacilities", adminService.getAccommodationCommonFacilitiesById(id));
+
+		// 모델객체에 숙소 저장폼 담기
+		model.addAttribute("accommodationRegisterForm", new AccommodationRegisterForm());
+
+		return "admin/accommodationmodify";
+	}
+	
+	// 수정된 숙소 정보 저장
+	@PostMapping(path = "/modifyAccommdation")
+	public String AccommodationModifyCompleted(
+			@ModelAttribute("accommodationRegisterForm") AccommodationRegisterForm accommodationRegisterForm,
+			Model model, SessionStatus sessionStatus) throws IOException {
+		System.out.println(accommodationRegisterForm);
+		// 객실 정보 수정
+		adminService.updateAccommodation(accommodationRegisterForm);
+
+		sessionStatus.setComplete();
+		
+		return "admin/modifycompleted";
+	}
+	
+	// 객실 수정폼 요청 
+	@GetMapping(path = "/modifyAccommodationRoom")
+	public String AccommodationRoomModify(Model model,AccommodationRoomRegisterForm accommodationRoomRegisterForm, @RequestParam("no") int no) {
+		// 객실번호로 객실 검색
+		model.addAttribute("accommodationRooms", adminService.getAccommodationRoomByroomNo(no));
+		// 객실번호로 객실 시설 검색 (페이지 로딩시 객실시설 체크용)
+		model.addAttribute("roomFacilities", adminService.getAccommodationRoomFacilitiesByroomNo(no));
+		// 객실번호로 객실 상세이미지 검색
+		// System.out.println(no);
+		// System.out.println(adminService.getAccommodationRoomImagesByroomNo(no));
+		model.addAttribute("roomImages", adminService.getAccommodationRoomImagesByroomNo(no));
+
+		// 객실시설 출력을 위한 list 전달
+		model.addAttribute("rofacilities", accommodationService.getRoomFacilityOptions());
+		
+		return "admin/accommodationroommodify";
+	}
+	// 수정된 객실 정보 저장
+	@PostMapping(path = "/roommodifycompleted")
+	public String AccommodationroomModifyCompleted(
+			@ModelAttribute("accommodationRoomRegisterForm") AccommodationRoomRegisterForm accommodationRoomRegisterForm,
+			SessionStatus sessionStatus) throws IOException {
+		// 객실 정보 수정
+		adminService.updateAccommodationRoom(accommodationRoomRegisterForm);
+
+		sessionStatus.setComplete();
+		
+		return "admin/modifycompleted";
+	}
+	
+	// 음식점 수정폼 요청 
+	@GetMapping(path = "/modifyRestaurant")
+	public String RestaurantModify(Model model,RestaurantRegisterForm restaurantRegisterForm, @RequestParam("no") int no) {
+
+		// 화면에 지역정보를 출력시키기 위한 모든 지역정보 전달
+		model.addAttribute("cities",restaurantService.getAllCity());
+		// 화면에 카테고리를 출력시키기 위한 모든 카테고리정보 전달
+		model.addAttribute("categories",restaurantService.getAllCategories());
+		
+		// 수정폼에 음식점 정보를 출력시키기 위해 음식점 번호로 검색
+		// 음식점 정보 검색
+		model.addAttribute("restaurant", adminService.getSearchRestaurantByNo(no));
+		// 음식점 카테고리 검색
+		model.addAttribute("restaurantCategories", adminService.getSearchRestaurantCategoriesByNo(no));
+		// 음식점 태그 검색
+		model.addAttribute("restaurantTags", adminService.getSearchRestaurantTagsByNo(no));
+		// 음식점 메뉴 검색
+		System.out.println(adminService.getSearchRestaurantMenusByNo(no));
+		model.addAttribute("restaurantMenus", adminService.getSearchRestaurantMenusByNo(no));
+
+		// 모델객체에 음식점 저장폼 담기
+		model.addAttribute("restaurantRegisterForm", new RestaurantRegisterForm());
+
+		return "admin/restaurantmodify";
+	}
+	// 수정된 음식점 정보 저장
+	@PostMapping(path = "/restaurantmodifycompleted")
+	public String RestaurantModifyCompleted(
+			@ModelAttribute("restaurantRegisterForm") RestaurantRegisterForm restaurantRegisterForm,
+			SessionStatus sessionStatus) throws IOException {
+		System.out.println(restaurantRegisterForm);
+		// 객실 정보 수정
+		adminService.updateRestaurant(restaurantRegisterForm);
+
+		sessionStatus.setComplete();
+		
+		return "admin/modifycompleted";
 	}
 }
