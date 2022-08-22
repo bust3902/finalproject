@@ -12,11 +12,11 @@
 			from dual
 		</selectKey>
 		insert into accommodations
-		(acco_id, acco_name, acco_district, acco_address, acco_latitude, acco_longitude,
-		 acco_thumbnail_image, city_id, acco_introduce_comment, acco_detail_description)
+			(acco_id, acco_name, acco_district, acco_address, acco_latitude, acco_longitude,
+			 acco_thumbnail_image, city_id, acco_introduce_comment, acco_detail_description)
 		values
-		(#{id}, #{name}, #{district}, #{address}, #{latitude}, #{longitude},
-		 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription})
+			(#{id}, #{name}, #{district}, #{address}, #{latitude}, #{longitude},
+			 #{thumbnailImageName}, #{cityId}, #{introduceComment}, #{detailDescription})
 	</insert>
 	
 	<!-- 
@@ -25,9 +25,9 @@
 	 -->
 	<insert id="insertAccommodationTypes" parameterType="AccoTypeRegisterForm">
 		insert into acco_types
-		(acco_id, acco_type_id)
+			(acco_id, acco_type_id)
 		values
-		(#{id}, #{typeId})
+			(#{id}, #{typeId})
 	</insert>	
 	
 	<!-- 
@@ -36,9 +36,9 @@
 	 -->
 	<insert id="insertAccommodationTags" parameterType="AccoTagRegisterForm">
 		insert into acco_tags
-		(acco_id, acco_tag)
+			(acco_id, acco_tag)
 		values
-		(#{id}, #{tag})
+			(#{id}, #{tag})
 	</insert>	
 	
 	<!-- 
@@ -47,9 +47,9 @@
 	 -->
 	<insert id="insertAccommodationCommonFacilities" parameterType="AccoCommonFacilityRegisterForm">
 		insert into acco_common_facilities
-		(acco_id, co_facility_id)
+			(acco_id, co_facility_id)
 		values
-		(#{id}, #{commonFacility})
+			(#{id}, #{commonFacility})
 	</insert>
 		
 	<!-- 
@@ -58,9 +58,9 @@
 	 -->
 	<insert id="insertAccommodationDetailImages" parameterType="AccoDetailImageNamesRegisterForm">
 		insert into acco_detail_images
-		(acco_id, image_file_name)
+			(acco_id, image_file_name)
 		values
-		(#{id}, #{detailImageName})
+			(#{id}, #{detailImageName})
 	</insert>
 	
 	<!-- 
@@ -73,11 +73,11 @@
 			from dual
 		</selectKey>
 		insert into acco_rooms
-		(room_no, room_name, room_numbers, room_capacity,
-		 room_day_price, room_description, acco_id, room_thumbnail_image)
+			(room_no, room_name, room_numbers, room_capacity,
+			 room_day_price, room_description, acco_id, room_thumbnail_image)
 		values
-		(#{no}, #{name}, #{numbers}, #{capacity},
-		 #{dayPrice}, #{description}, #{accoId}, #{thumbnailImageName})
+			(#{no}, #{name}, #{numbers}, #{capacity},
+			 #{dayPrice}, #{description}, #{accoId}, #{thumbnailImageName})
 	</insert>
 	
 	<!-- 
@@ -86,9 +86,9 @@
 	 -->
 	<insert id="insertAccoRoomFacilities" parameterType="AccoRoomFacilitiesRegisterForm">
 		insert into acco_room_facilities
-		(room_no, ro_facility_id)
+			(room_no, ro_facility_id)
 		values
-		(#{no}, #{roomFacilities})
+			(#{no}, #{roomFacilities})
 	</insert>
 	
 	<!-- 
@@ -97,9 +97,9 @@
 	 -->
 	<insert id="insertAccoRoomDetailImages" parameterType="AccoRoomDetailImageNamesRegisterForm">
 		insert into acco_room_detail_images
-		(room_no, room_image_file_name)
+			(room_no, room_image_file_name)
 		values
-		(#{no}, #{detailImageName})
+			(#{no}, #{detailImageName})
 	</insert>
 	
 	<!-- 
@@ -112,11 +112,11 @@
 			from dual
 		</selectKey>
 		insert into restaurant
-		(restaurant_no, restaurant_name, restaurant_location, restaurant_imgname, restaurant_tel, restaurant_latitud,
-		 restaurant_longitude, city_id, restaurant_opening, restaurant_break_time, restaurant_close, restaurant_district)
+			(restaurant_no, restaurant_name, restaurant_location, restaurant_imgname, restaurant_tel, restaurant_latitud,
+			 restaurant_longitude, city_id, restaurant_opening, restaurant_break_time, restaurant_close, restaurant_district)
 		values
-		(#{no}, #{name}, #{location}, #{imgname}, #{tel}, #{latitud},
-		 #{longitude}, #{cityId}, #{opening}, #{breakTime}, #{close}, #{district})
+			(#{no}, #{name}, #{location}, #{imgname}, #{tel}, #{latitud},
+			 #{longitude}, #{cityId}, #{opening}, #{breakTime}, #{close}, #{district})
 	</insert>
 
 	<!-- 
@@ -125,9 +125,9 @@
 	 -->
 	<insert id="insertRestaurantTags" parameterType="RestaurantTag">
 		insert into restaurant_tag
-		(restaurant_no, restaurant_tag)
+			(restaurant_no, restaurant_tag)
 		values
-		(#{restaurantNo}, #{tag})
+			(#{restaurantNo}, #{tag})
 	</insert>
 	 
 	 <!-- 
@@ -136,9 +136,9 @@
 	 -->
 	<insert id="insertRestaurantMenus" parameterType="RestaurantMenuRegisterForm">
 		insert into restaurant_menu
-		(restaurant_no, restaurant_menu_name, restaurant_price)
+			(restaurant_no, restaurant_menu_name, restaurant_price)
 		values
-		(#{no}, #{menuName}, #{price})
+			(#{no}, #{menuName}, #{price})
 	</insert>
 	 
 	 <!-- 
@@ -147,33 +147,10 @@
 	 -->
 	<insert id="insertRestaurantCategories" parameterType="RestaurantCategoryRegisterForm">
 		insert into restaurant_cat
-		(restaurant_no, restaurant_cat_id)
+			(restaurant_no, restaurant_cat_id)
 		values
-		(#{no}, #{category})
+			(#{no}, #{category})
 	</insert>
-	
-	<!-- 숙소 관련 resultMap -->
-	<resultMap type="Accommodation" id="AccommodationResultMap">
-		<id column="acco_id" property="id"/>
-		<result column="acco_name" property="name"/>
-		<result column="acco_district" property="district"/>
-		<result column="acco_address" property="address"/>
-		<result column="acco_latitude" property="latitude"/>
-		<result column="acco_longitude" property="longitude"/>
-		<result column="acco_introduce_comment" property="introduceComment"/>
-		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
-		<result column="acco_detail_description" property="detailDescription"/>
-		<result column="acco_deleted" property="deleted"/>
-		<result column="city_id" property="cityId"/>
-	</resultMap>
-	
-	<!-- 
-	<resultMap type="Accommodation" id="ExtendsAccommodationListResultMap" extends="AccommodationResultMap">
-		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
-		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
-		<collection column="acco_id" property="images" select="getImagesByAccoId"></collection>
-	</resultMap>
-	 -->
 	
 	<!-- 
 		List<Accommodation> getSearchAccommodations(String keyword);
@@ -184,11 +161,376 @@
 			   acco_address as address, acco_latitude as latitude, acco_longitude as longitude,
 			   acco_thumbnail_image as thumbnailImageName, acco_deleted as deleted, 
 			   city_id as cityId, acco_introduce_comment as introduceComment,
-			   acco_detail_description as detailDescription
+			   acco_detail_description as detailDescription, acco_admin_id as adminId
 		from accommodations
 		where acco_deleted = 'N'
-		and acco_name like '%' || #{value} || '%'
+		and acco_admin_id like '%' || #{value} || '%'
+		or acco_name like '%' || #{value} || '%'
 		or acco_district like '%' || #{value} || '%'
 		or acco_address like '%' || #{value} || '%'
 	</select>
+	<!-- 
+		키워드로 레스토랑 정보 검색
+		List<Restaurant> getSearchRestaurant(String keyword);
+	 -->
+	<select id="getSearchRestaurant" parameterType="string" resultType="Restaurant">
+		select restaurant_no as no, restaurant_name as name, restaurant_location as location,
+			   restaurant_imgname as imgname, restaurant_tel as tel, restaurant_latitud as latitud,
+			   restaurant_longitude as longitude, restaurant_delete as deleted, city_id as cityid,
+			   restaurant_opening as opening, restaurant_break_time as breaktime, restaurant_close as close,
+			   restaurant_district as district
+		from restaurant
+		where restaurant_delete = 'N'
+		and restaurant_no like '%' || #{value} || '%'
+		or restaurant_name like '%' || #{value} || '%'
+		or restaurant_district like '%' || #{value} || '%'
+		or restaurant_location like '%' || #{value} || '%'
+	</select>
+	
+	<!-- 
+		List<Accommodation> getSearchAccommodationById(int id);
+		숙소아이디로 숙소 정보 검색
+	 -->
+	<select id="getSearchAccommodationById" parameterType="int" resultType="Accommodation">
+		select acco_id as id, acco_name as name, acco_district as district, acco_address as address,
+			   acco_latitude as latitude, acco_longitude as longitude,
+			   acco_thumbnail_image as thumbnailImageName, acco_deleted as deleted, 
+			   city_id as cityId, acco_introduce_comment as introduceComment,
+			   acco_detail_description as detailDescription, acco_admin_id as adminId
+		from accommodations
+		where acco_id = #{value}
+	</select>
+	<!-- 
+		List<Accommodation> getAccommodationCommonFacilitiesById(int id);
+		숙소아이디로 숙소 공용시설 정보 검색
+	 -->
+	<select id="getAccommodationCommonFacilitiesById" parameterType="int" resultType="string">
+		select co_facility_id as commonFacility
+		from acco_common_facilities
+		where acco_id = #{value}
+	</select>
+	<!-- 
+		List<Accommodation> getAccommodationImagesById(int id);
+		숙소아이디로 숙소 상세이미지 정보 검색
+	 -->
+	<select id="getAccommodationImagesById" parameterType="int" resultType="string">
+		select image_file_name as image
+		from acco_detail_images
+		where acco_id = #{value}
+	</select>
+	<!-- 
+		List<Accommodation> getAccommodationTagsById(int id);
+		숙소아이디로 숙소 태그 정보 검색
+	 -->
+	<select id="getAccommodationTagsById" parameterType="int" resultType="string">
+		select acco_tag as tag
+		from acco_tags
+		where acco_id = #{value}
+	</select>
+	<!-- 
+		List<Accommodation> getAccommodationTypesById(int id);
+		숙소아이디로 숙소 타입 정보 검색
+	 -->
+	<select id="getAccommodationTypesById" parameterType="int" resultType="string">
+		select acco_type_id as type
+		from acco_types
+		where acco_id = #{value}
+	</select>
+	
+	<!-- 
+		List<Accommodation> getAccommodationRoomByaccoId(int id);
+		숙소아이디로 객실 검색
+	 -->
+	<select id="getAccommodationRoomByaccoId" parameterType="int" resultType="AccommodationRoom">
+		select acco_id as accoId, room_no as no, room_name as name, room_numbers as numbers,
+			   room_capacity as capacity, room_day_price as dayPrice,
+			   room_description as description, room_thumbnail_image as thumbnailImageName
+		from acco_rooms
+		where acco_id = #{value}
+	</select>
+	<!-- 
+		List<AccommodationRoom> getAccommodationRoomByroomNo(int no);
+		객실번호로 객실 검색
+	 -->
+ 	<select id="getAccommodationRoomByroomNo" parameterType="int" resultType="AccommodationRoom">
+	select acco_id as accoId, room_no as no, room_name as name, room_numbers as numbers,
+		   room_capacity as capacity, room_day_price as dayPrice,
+		   room_thumbnail_image as thumbnailImageName, room_description as description
+	from acco_rooms
+	where room_no = #{value}
+	</select>
+	<!-- 
+		List<Accommodation> getAccommodationRoomFacilitiesByroomNo(int id);
+		객실번호로 객실 시설 검색
+	 -->
+	<select id="getAccommodationRoomFacilitiesByroomNo" parameterType="int" resultType="string">
+		select ro_facility_id as roomFacility
+		from acco_room_facilities
+		where room_no = #{value}
+	</select>
+	<!-- 
+		List<AccommodationRoom> getAccommodationRoomImagesByroomNo(int id);
+		객실번호로 객실 상세이미지 검색
+	 -->
+	<select id="getAccommodationRoomImagesByroomNo" parameterType="int" resultType="string">
+		select room_image_file_name as image
+		from acco_room_detail_images
+		where room_no = #{value}
+	</select>
+	<!-- 
+		List<CommonFacilitiesDTO> getCheckedFacilities(int id);
+		객실번호로 객실 상세이미지 검색
+	 -->
+	<select id="getCheckedFacilities" parameterType="int" resultType="kr.co.nc.dto.CommonFacilitiesDTO">
+		select cf.co_facility_id as id, cf.co_facility_name as name, nvl2(acf.co_facility_id, 'y', 'n') checked
+		from common_facilities cf, acco_common_facilities acf
+		where cf.co_facility_id(+) = acf.co_facility_id
+		and acf.acco_id = #{value}
+	</select>
+	<!-- 
+		List<CommonFacility> getCommonFacilitiesByAccommodationTypes(CommonFacility commonFacility);
+		타입아이디로 공용시설 정보 검색
+	 -->
+	<select id="getCommonFacilitiesByAccommodationTypes" parameterType="java.util.List" resultType="CommonFacility">
+		select co_facility_id as id, co_facility_name as name, co_facility_icon_name as iconName
+		from common_facilities
+		where co_facility_id in (select co_facility_id 
+								 from acco_type_cofa 
+								 <where>
+									 acco_type_id in
+								 <foreach collection="types" item="type" open="(" close=")" separator=",">
+								 <if test="types != null">
+								 		#{type}
+							     </if>
+							     </foreach>
+								 )
+							     </where>
+	</select>
+	<!-- 
+		음식점 번호로 음식점 검색
+		Restaurant getSearchRestaurantByNo(int no);
+	 -->
+	<select id="getSearchRestaurantByNo" parameterType="int" resultType="Restaurant">
+		select restaurant_no as no, restaurant_name as name, restaurant_location as location,
+			   restaurant_imgname as imgname, restaurant_tel as tel, restaurant_latitud as latitud,
+			   restaurant_longitude as longitude, restaurant_delete as deleted, city_id as cityid,
+			   restaurant_opening as opening, restaurant_break_time as breaktime, restaurant_close as close,
+			   restaurant_district as district
+		from restaurant
+		where restaurant_no = #{value}
+	</select>
+	<!-- 
+		음식점 번호로 음식점 카테고리 검색
+		List<RestaurantCategoryModifyForm> getSearchRestaurantCategoriesByNo(int no);
+	 -->
+	<select id="getSearchRestaurantCategoriesByNo" parameterType="int" resultType="RestaurantCategoryModifyForm">
+		select restaurant_no as restaurantNo, restaurant_cat_id as category
+		from restaurant_cat
+		where restaurant_no = #{value}
+	</select>
+	<!-- 
+		음식점 번호로 음식점 태그 검색
+		List<RestaurantTag> getSearchRestaurantTagsByNo(int no);
+	 -->
+	<select id="getSearchRestaurantTagsByNo" parameterType="int" resultType="RestaurantTag">
+		select restaurant_no as restaurantNo, restaurant_tag as tag
+		from restaurant_tag
+		where restaurant_no = #{value}
+	</select>
+	<!-- 
+		음식점 번호로 음식점 메뉴 검색
+		public List<RestaurantMenu> getSearchRestaurantmenusByNo(int no);
+	 -->
+	<select id="getSearchRestaurantMenusByNo" parameterType="int" resultType="RestaurantMenu">
+		select restaurant_no as restaurantNo, restaurant_menu_name as menuName, restaurant_price as price
+		from restaurant_menu
+		where restaurant_no = #{value}
+	</select>
+	 
+	<!-- 
+		void updateAccommodation(Accommodation accommodation);
+		숙소 정보 수정
+	 -->
+	<update id="updateAccommodation" parameterType="Accommodation">
+		update
+			accommodations
+		set
+		    acco_name = #{name},
+			acco_district = #{district},
+			acco_address = #{address},
+			acco_latitude = #{latitude},
+			acco_longitude = #{longitude},
+		<if test='thumbnailImageName != null'>
+			acco_thumbnail_image = #{thumbnailImageName},			
+		</if>
+			acco_updated_date = sysdate,
+			acco_deleted = #{deleted},
+			city_id = #{cityId},
+			acco_introduce_comment = #{introduceComment},
+			acco_detail_description = #{detailDescription},
+			acco_admin_id = #{adminId}
+		where
+			acco_id = #{id}
+	</update>
+	<!--  
+		void updateAccoRoom(AccommodationRoom accommodationRoom);
+		객실 정보 수정
+	 -->
+	<update id="updateAccoRoom" parameterType="AccommodationRoom">
+		update
+			acco_rooms
+		set
+			room_name = #{name},
+			room_numbers = #{numbers},
+			room_capacity = #{capacity},
+			room_day_price = #{dayPrice},
+			<if test='thumbnailImageName != null'>
+				room_thumbnail_image = #{thumbnailImageName},
+			</if>
+			room_description = #{description}
+		where
+			room_no = #{no}
+	</update>
+	
+	<!-- 
+		void updateRestaurant(Restaurant restaurant);
+		음식점 수정
+	 -->
+	<update id="updateRestaurant" parameterType="Restaurant">
+		update
+			restaurant
+		set
+		    restaurant_name = #{name},
+			restaurant_location = #{location},
+		<if test='imgname != null'>
+			restaurant_imgname = #{imgname},			
+		</if>
+			restaurant_tel = #{tel},
+			restaurant_latitud = #{latitud},
+			restaurant_longitude = #{longitude},
+			city_id = #{cityId},
+			restaurant_opening = #{opening},
+			restaurant_break_time = #{breakTime},
+			restaurant_close = #{close},
+			restaurant_district = #{district}
+		where
+			restaurant_no = #{no}
+	</update>
+
+	<!--  
+		void deleteAccommodationDetailImages(AccommodationDeleteImageNameForm accommodationDeleteImageNameForm);
+		숙소 상세이미지 삭제
+	 -->
+	<delete id="deleteAccommodationDetailImages" parameterType="AccommodationDeleteImageNameForm">
+		delete
+			acco_detail_images
+		where
+			image_file_name = #{deleteImgName}
+	</delete>
+	<!--  
+		void deleteAccommodationTags(AccommodationDeleteTagForm accommodationDeleteTagForm);
+		숙소 태그 삭제
+	 -->
+	<delete id="deleteAccommodationTags" parameterType="AccommodationDeleteTagForm">
+		delete
+			acco_tags
+		where
+            acco_id = #{id}
+        and
+			acco_tag = #{deleteTag}
+	</delete>
+	<!--  
+		void deleteCommonFacilitiesById(AccommodationDeleteCommonFacilitiesForm accommodationDeleteCommonFacilitiesForm);
+		숙소 공용시설정보 삭제
+	 -->
+	<delete id="deleteCommonFacilitiesById" parameterType="int">
+		delete
+			acco_common_facilities
+		where
+            acco_id = #{value}
+	</delete>
+	<!--  
+		void deleteAccommodationTypes(int id);
+		숙소 숙소타입 삭제
+	 -->
+	<delete id="deleteAccommodationTypes" parameterType="int">
+		delete
+			acco_types
+		where
+            acco_id = #{value}
+	</delete>
+	<!-- 
+		객실 시설 삭제
+		void deleteRoomCommonFacilitiesById(int id);
+	 -->
+ 	<delete id="deleteRoomCommonFacilitiesById" parameterType="int">
+		delete
+			acco_room_facilities
+		where
+            room_no = #{value}
+	</delete>
+	<!--  
+		void deleteAccommodationRoomDetailImages(AccommodationRoomDeleteImageNameForm accommodationRoomDeleteImageNameForm);
+		숙소 메인 이미지 삭제
+	 -->
+	<delete id="deleteAccommodationRoomDetailImages" parameterType="AccommodationRoomDeleteImageNameForm">
+		delete
+			acco_room_detail_images
+		where
+			room_no = #{no}
+		and
+			room_image_file_name = #{deleteRoomDetailImgNames}
+	</delete>
+	<!--  
+		void deleteRestaurantTags(RestaurantDeleteTagForm restaurantDeleteTagForm);
+		음식점 태그 삭제
+	 -->
+	<delete id="deleteRestaurantTags" parameterType="RestaurantDeleteTagForm">
+		delete
+			restaurant_tag
+		where
+            restaurant_no = #{no}
+        and
+			restaurant_tag = #{deleteTag}
+	</delete>
+	<!--  
+		void deleteRestaurantMenus(RestaurantDeleteMenuForm restaurantDeleteMenuForm);
+		음식점 태그 삭제
+	 -->
+	<delete id="deleteRestaurantMenus" parameterType="RestaurantDeleteMenuForm">
+		delete
+			restaurant_menu
+		where
+            restaurant_no = #{no}
+        and
+			restaurant_menu_name = #{deletMenuName}
+		and
+			restaurant_price = #{deleteMenuPrice}
+	</delete>
+
+
+	<!--  
+		void updateAccommodationTypes(AccoTypeRegisterForm accoTypeRegisterForm);
+		숙소 타입 수정
+	<update id="updateAccommodationTypes" parameterType="AccoTypeRegisterForm">
+		update
+			acco_types
+		set
+			acco_type_id = #{typeId}
+		where
+			acco_id = #{id}
+	</update>	
+	
+		void updateAccommodationTags(AccoTagRegisterForm accoTagRegisterForm);
+		숙소 태그 수정
+	
+	<update id="updateAccommodationTags" parameterType="AccoTagRegisterForm">
+		update
+			into acco_tags
+		set
+			acco_tag = #{tag}
+		where
+			acco_id = #{id}
+	</update>
+	 -->
 </mapper>

@@ -24,7 +24,7 @@ import lombok.ToString;
 public class AccommodationRegisterForm {
 
 
-	private int id;
+	private int id;				// 숙소 아이디
 	private String accoName;	// 숙소명
 	private String district;	// 지역(시/군/구)명
 	private String address;		// 주소
@@ -43,6 +43,10 @@ public class AccommodationRegisterForm {
 	private List<String> stringCommonFacilities = new ArrayList<>();	// 이 숙소가 가지는 모든 공용시설 정보
 	private List<CommonFacility> commonFacilities = new ArrayList<>();	// 이 숙소가 가지는 모든 공용시설 정보
 	private List<String> tags;											// 이 숙소가 가지는 모든 부가사항 태그
+
+	private List<String> deleteImgNames = new ArrayList<>(); 			// 삭제할 숙소 상세 이미지 파일명
+	private List<String> deleteTags = new ArrayList<>(); 				// 삭제할 태그명
+	private List<String> deleteCommonFacilities = new ArrayList<>(); 	// 삭제할 공용시설타입
 	
 	public void addAccommodationRoomRegisterForm(AccommodationRoomRegisterForm accommodationRoomRegisterForm) {
 		accommodationRooms.add(accommodationRoomRegisterForm);

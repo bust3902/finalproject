@@ -105,7 +105,7 @@
 				<!-- 숙소 입력폼2로 -->
 				<div class="text-end mt-5">
 					<button type="submit" class="btn btn-secondary px-5">다음</button>
-				</div>				
+				</div>
 			</form>
 		</div>
 	</div>

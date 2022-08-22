@@ -10,7 +10,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- * 음식점 입력용 폼
+ * 음식점 입력, 삭제용 폼
  * RESTAURANT 테이블에 저장
  * @author USER
  *
@@ -39,4 +39,8 @@ public class RestaurantRegisterForm {
 	private List<String> menuNames;		// 음식점 메뉴
 	private List<Integer> prices;		// 음식점 메뉴
 	private List<String> categories;	// 음식점 카테고리
+
+	private List<String> deleteTags;		// 삭제할 음식점 태그
+	private List<String> deletMenuNames;	// 삭제할 음식점 메뉴
+	private List<String> deleteMenuPrices;	// 삭제할 음식점 메뉴 금액
 }
