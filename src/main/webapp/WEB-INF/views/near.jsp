@@ -25,58 +25,31 @@
 		<!-- 검색창, 결과 조회 -->
 		<div class="col-3 px-0">
 			<div class="p-3 bg-light">
-	  			<form id="form-search" class="d-flex justify-content-center p-3 my-auto" action="/search" autocomplete="off">
+	  			<form id="form-search" class="d-flex justify-content-center p-3 my-auto" action="javascript:search()" autocomplete="off">
 					<input class="form-control me-2" type="text" id="search" name="keyword" placeholder="통합검색" style="max-width:600px;height:auto">
+					<input type="hidden" name="type" value="">
 					<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
 				</form>
-				<ul class="nav nav-pills d-flex justify-content-evenly" id="myTab" role="tablist">
-					<li class="nav-item" role="presentation">
-						<button class="nav-link active" id="all-tab" data-bs-toggle="tab"
-							data-bs-target="#all-tab-pane" type="button" role="tab"
-							aria-controls="all-tab-pane" aria-selected="true">전체</button>
+				<ul class="nav nav-pills d-flex justify-content-evenly" id="tab-types"  role="tablist">
+					<li class="nav-item">
+						<button class="nav-link active" type="button" role="tab" data-bs-toggle="tab" aria-selected="true" onclick="setType('')">전체</button>
 					</li>
-					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="accommodation-tab" data-bs-toggle="tab"
-							data-bs-target="#accommodation-tab-pane" type="button" role="tab"
-							aria-controls="accommodation-tab-pane" aria-selected="true">숙소</button>
+					<li class="nav-item">
+						<button class="nav-link" type="button" role="tab" data-bs-toggle="tab" aria-selected="true" data-type="A" onclick="setType('A')">숙소</button>
 					</li>
-					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="restaurant-tab" data-bs-toggle="tab"
-							data-bs-target="#restaurant-tab-pane" type="button" role="tab"
-							aria-controls="restaurant-tab-pane" aria-selected="true">맛집</button>
+					<li class="nav-item">
+						<button class="nav-link" type="button" role="tab" data-bs-toggle="tab" aria-selected="true" data-type="R" onclick="setType('R')">맛집</button>
 					</li>
-					<li class="nav-item" role="presentation">
-						<button class="nav-link" id="like-tab" data-bs-toggle="tab"
-							data-bs-target="#like-tab-pane" type="button" role="tab"
-							aria-controls="like-tab-pane" aria-selected="true">MY</button>
+					<li class="nav-item">
+						<button class="nav-link" type="button" role="tab" data-bs-toggle="tab" aria-selected="true" data-type="M" onclick="setType('M')">MY</button>
 					</li>
 				</ul>
 			</div>
+			<div id="places-wrapper" class="p-3">
+				<!-- 검색결과가 이곳에 출력된다. -->
+			</div>
 			<div class="tab-content" id="myTabContent">
 				<div class="tab-pane fade show active" id="all-tab-pane" role="tabpanel" aria-labelledby="all-tab" tabindex="0">
-					<div class="p-3">
-						<div class="row p-3 border-bottom">
-							<p class="mb-1">
-								<span class="fw-light">장소 이름<small class="border-end mx-3"></small></span><small>식당</small>
-								<i class="bi bi-heart fs-5 text-primary float-end"></i>
-							</p>
-							<p class="text-warning small">
-								<span class="badge bg-warning">4.5</span>
-								<i class="bi bi-star-fill"></i>
-								<i class="bi bi-star-fill"></i>
-								<i class="bi bi-star-fill"></i>
-								<i class="bi bi-star-fill"></i>
-								<i class="bi bi-star-fill"></i>
-								<span class="border-end mx-1"></span>
-								<span class="text-muted">리뷰 5건</span>
-								<span class="border-end mx-1"></span>
-								<span class="text-muted"> 찜 50명</span>
-							</p>
-							<p class="small mb-1">
-								주소
-							</p>
-						</div>
-					</div>
 				</div>
 				<div class="tab-pane fade" id="accommodation-tab-pane" role="tabpanel" aria-labelledby="accommodation-tab" tabindex="0">
 					test accommodation
@@ -108,6 +81,9 @@
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <script type="text/javascript">
 $(function(){
+	// 화면 첫 출력시 전체 검색결과를 띄운다
+	search('');
+	
 	/*
 	 * 카카오 openAPI로 지도 가져오기
 	 */
@@ -155,7 +131,60 @@ $(function(){
 			map.setLevel(7);
 		}
 	}
+	
 });
+
+/*
+ * 탭 버튼 누를 때마다 타입 설정 바꾸고 검색 요청하는 이벤트핸들러 함수
+ */
+ function setType(type) {
+	 if (type === "M") {
+		 //ajax로 내 찜하기 목록 조회하는 함수
+		 console.log("my");
+	 } else {
+		 // ajax로 검색결과 조회하는 함수 실행
+		$(":hidden[name=type]").val(type);
+		 search();
+	 }
+	
+}
+// 검색창에 입력한 키워드에 따른 검색결과를 ajax로 획득하여 화면, 지도에 출력하는 함수
+function search() {
+	let queryString = $("#form-search").serialize();
+	
+	$.getJSON("/places", queryString).done(function(places) {
+		let $wrapper = $("#places-wrapper").empty();
+		let content = '';
+		if (places.length === 0) {
+			content += '<div class="row p-3 my-auto">조회 결과가 없습니다.</div>';
+		} else {
+			$.each(places, function(index, place) {
+				content += '	<div class="row p-3 border-bottom">';
+				content += '		<p class="mb-1">';
+				content += '			<span class="fw-light">' + place.name + '<small class="border-end mx-3"></small></span><small>' + place.type + '</small>';
+				content += '			<i class="bi bi-heart fs-5 text-primary float-end"></i>';
+				content += '		</p>';
+				content += '		<p class="text-warning small">';
+				content += '			<span class="badge bg-warning">' + place.reviewRate.toFixed(1) + '</span>';
+				content += '			<i class="bi ' + place.reviewRateIcon.star1 + '"></i>';
+				content += '			<i class="bi ' + place.reviewRateIcon.star2 + '"></i>';
+				content += '			<i class="bi ' + place.reviewRateIcon.star3 + '"></i>';
+				content += '			<i class="bi ' + place.reviewRateIcon.star4 + '"></i>';
+				content += '			<i class="bi ' + place.reviewRateIcon.star5 + '"></i>';
+				content += '			<span class="border-end mx-1"></span>';
+				content += '			<span class="text-muted">리뷰 ' + place.reviewCount +'건</span>';
+				content += '			<span class="border-end mx-1"></span>';
+				content += '			<span class="text-muted"> 찜 ' + place.likeCount +'명</span>';
+				content += '		</p>';
+				content += '		<p class="small mb-1">';
+				content += '			<span>' + place.address +'</span><span class="badge bg-danger ms-3">' + place.distance +'km</span>';
+				content += '		</p>';
+				content += '	</div>';
+			});
+		}
+		$wrapper.append(content);
+	})
+}
 </script>
 </body>
 </html>
