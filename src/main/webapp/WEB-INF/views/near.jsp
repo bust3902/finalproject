@@ -209,7 +209,7 @@ function search(currentPage) {
 			placeMarkers = [];
 			$.each(places, function(index, place) {
 				let detailURL = '';
-				if (place.type === "숙소") {
+				if (place.type === "A") {
 					detailURL = "/acco/detail?id=" + place.id;
 				} else {
 					detailURL = "/restaurant/detail?restaurantNo=" + place.id;
