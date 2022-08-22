@@ -16,7 +16,7 @@
 <%@ include file="../common/nav.jsp" %>
 <div class="row bg-secondary">
 	<div class="container" style="min-width:992px; max-width:992px; height:10vh;">
-		<h1 class="fs-3 text-white p-2">숙소 관리 페이지</h1>
+		<h1 class="fs-3 text-white p-2">음식점 관리 페이지</h1>
 	</div>
 </div>
 <div class="container" style="min-width:992px; max-width:992px;">
@@ -32,28 +32,15 @@
 		<div class="col-9 p-0">
 			<div class="row g-3 align-items-center mb-5">
 				<div class="col-9">
-					<input type="text" name="search-keyword" class="form-control" placeholder="검색하실 숙소명을 입력해주세요" onkeypress="SubmitBtnClick()">
+					<input type="text" name="search-keyword" class="form-control" placeholder="검색하실 음식점명을 입력해주세요" onkeypress="SubmitBtnClick()">
 				</div>
 				<div class="col-3">
 					<button type="submit" name="submit-keyword" class="btn btn-secondary">검색</button>
 				</div>
 			</div>
 			
-			<!-- 검색한 숙소 데이터 출력박스 -->
-			<div id="accommodation-box"></div>
-		
-			<!-- 검색한 숙소 출력 폼 --><!-- 도영님께 높이조절 어떻게 하셨는지 물어보기
-			<div class="card text-white p-0 rounded-0" style="height:10vw">
-				<a href="#"><img src="/resources/images/acco/thumbnail/11213.jpg" class="card-img rounded-0"></a>
-				<div class="card-img-overlay text-end">
-					<p class="card-title fs-3 fw-bold">숙소명</p>
-					<p class="card-text fw-bold">입력자 아이디</p>
-					<p class="card-text fw-bold">주소</p>
-					<button type="button" class="btn btn-outline-light" onclick="modifyAccommodation()">수정</button>
-					<button type="button" class="btn btn-outline-light" onclick="deleteAccommodation()">삭제</button>
-				</div>
-			</div>
-			 -->
+			<!-- 검색한 음식점 데이터 출력박스 -->
+			<div id="restaurant-box"></div>
 		</div>
 	</div>
 </div>	
@@ -70,11 +57,18 @@ $(document).ready(function(){
     $("button[name=submit-keyword]").click(function(){
     	
 		let queryString = $("input[name=search-keyword]").val();
-    	let $div = $("#accommodation-box").empty();
+    	let $div = $("#restaurant-box").empty();
+		
+		// 검색필드에 값이 있는지 체크하기
+		let searchValue = $.trim( $("input[name=search-keyword]").val() );
+		if (searchValue === "") {
+			alert("검색어를 입력해주세요.");
+			return false;
+		}
 	
 		// 숙소정보 검색
-		$.getJSON("/admin/searchAccommodation", {keyword:queryString}).done(function(accommodations) {
-			if (accommodations.length === 0) {
+		$.getJSON("/admin/searchRestaurant", {keyword:queryString}).done(function(restaurants) {
+			if (restaurants.length === 0) {
 				let content = `
 					<div class="col-12">
 						<p class="text-center">검색결과가 존재하지 않습니다.</p>
@@ -82,16 +76,16 @@ $(document).ready(function(){
 				`;
 				$div.append(content);
 			} else {
-				$.each(accommodations, function(index, accommodation) {
+				$.each(restaurants, function(index, restaurant) {
 					let content = '';
 					content += '<div class="card text-white p-0 rounded-0" style="height:200px">';
-					content += '	<img src="/resources/images/acco/thumbnail/'+accommodation.thumbnailImageName+'" class="card-img rounded-0">';
+					content += '	<img src="/resources/images/acco/thumbnail/'+restaurant.imgname+'" class="card-img rounded-0">';
 					content += '	<div class="card-img-overlay text-end">';
-					content += '		<p class="card-title fs-3 fw-bold">'+accommodation.name+'</p>';
-					content += '		<p class="card-text fw-bold">입력자 아이디</p>';
-					content += '		<p class="card-text fw-bold">'+accommodation.address+'</p>';
-					content += '		<a class="btn btn-outline-light" href="/admin/accommodationmodify?no='+accommodation.id+' ">수정</a>';
-					content += '		<a class="btn btn-outline-light" href="/admin/accommodationdelete?no='+accommodation.id+' ">삭제</button>';
+					content += '		<p class="card-title fs-3 fw-bold">'+restaurant.name+'</p>';
+					// content += '		<p class="card-text fw-bold">'+restaurant.deleted+'</p>';
+					content += '		<p class="card-text fw-bold">'+restaurant.address+'</p>';
+					content += '		<a class="btn btn-outline-light" href="/admin/modifyRestaurant?no='+restaurant.no+' ">수정</a>';
+					// content += '		<a class="btn btn-outline-light" href="/admin/delete?id='+accommodation.id+' ">삭제</a>';
 					content += '	</div>';
 					content += '</div>';
 					
