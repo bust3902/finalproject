@@ -302,11 +302,15 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				}
 				content += '<div class="col-3">';
 				content += '	<div class="card mb-3 p-1 h-100" style="max-width: 20rem;">';
-				content += '	  <img src="/resources/images/restaurant/thumbnail/' + item.imgname +'" class="card-img-top" alt="...">';
+				content += '		<a class="text-decoration-none" href="restaurant/detail?no=' + item.no + '">';
+				content += '			<img src="/resources/images/restaurant/thumbnail/' + item.imgname +'" class="card-img-top" alt="...">';
+				content += '		</a>';
 				content += '	  <div class="card-body d-flex flex-column justify-content-between my-auto">';
 				content += '		<div class="row">';
 				content += '	   		<div class="d-flex my-auto">';
-				content += '				<strong class="flex-fill text-dark fw-light fs-5 pe-2">' + item.name + '</strong>';
+				content += '				<a class="flex-fill text-decoration-none" href="restaurant/detail?no=' + item.no + '">';
+				content += '					<strong class="text-dark fw-light fs-5 pe-2">' + item.name + '</strong>';
+				content += '				</a>';
 				// 식당 찜하기 클릭하면 관련 ajax 요청 함수 실행 // 로그인 상태일 경우 하트 채워지는 여부 다르게 출력
 				content += '				<i id="icon-heart-' + item.no +'" class="text-primary fs-5 float-end bi ' + (item.liked ? 'bi-heart-fill' : 'bi-heart') + '" onclick="toggleRestaurantLike(' + item.no + ');"></i>';
 				content += '			</div>';

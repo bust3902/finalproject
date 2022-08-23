@@ -214,7 +214,7 @@ function search(currentPage) {
 				if (place.type === "A") {
 					detailURL = "/acco/detail?id=" + place.id;
 				} else {
-					detailURL = "/restaurant/detail?restaurantNo=" + place.id;
+					detailURL = "/restaurant/detail?no=" + place.id;
 				}
 				content += '	<div class="row p-3 border-bottom">';
 				content += '		<p class="mb-1">';
