@@ -49,6 +49,7 @@
 		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
 		<result column="RESTAURANT_CLOSE" property="close"/>
 		<result column="RESTAURANT_DISTRICT" property="district"/>
+		<collection column="RESTAURANT_NO" property="menus" select="getRestaurantMenusByRestaurantNo"></collection>
 	</resultMap>
 	
 	<!-- List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo); -->
@@ -77,7 +78,6 @@
 	</select>
 	<!--Restaurant의 있는 정보 싹다 가져오는 resultMap 디테일 출력시 이용 -->
 	<resultMap type="Restaurant" id="RestaurantDetailResultMap" extends="RestaurantResultMap">
-		<collection property="menus" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantMenusByRestaurantNo"></collection>
 		<collection property="tags" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantTagsByRestaurantNo"></collection>
 		<collection property="categories" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantCategoriesByRestaurantNo"></collection>
 	</resultMap>

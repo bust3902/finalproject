@@ -244,5 +244,5 @@ public class HomeController {
 		String findId = userService.findId(name, email);
 		return findId;
 	}
-
+	
 }

@@ -49,6 +49,11 @@ public class AccommodationService {
 	public List<RoomFacility> getRoomFacilityOptions() {
 		return accommodationMapper.getAllRoomFacilities();
 	}
+	
+	// 해당 숙소유형에 해당하는, 저장되어있는 모든 숙소 태그를 반환
+	public List<String> getAllAccoTagOptionsByType(String typeId) {
+		return accommodationMapper.getAllAccoTagsByAccoType(typeId);
+	}
 
 	// 저장되어있는 모든 숙소 태그를 반환
 	public List<String> getAllAccoTagOptions() {

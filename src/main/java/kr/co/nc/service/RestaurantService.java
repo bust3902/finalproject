@@ -49,6 +49,16 @@ public class RestaurantService {
 		return restaurantMapper.getRestaurantByNo(restaurantNo);
 	}
 	
+	// 음식점 디테일 재정의
+	public Restaurant getRestaurantDetail(Integer userNo, int restaurantNo) {
+		Restaurant restaurant = restaurantMapper.getRestaurantByNo(restaurantNo);
+		if (userNo != null) {
+			restaurant.setLiked(isLikedRestaurant(new LikeCriteria(userNo, restaurantNo)));
+		} else {
+		}
+		return restaurant;
+	}
+	
 	// 음식점 리뷰 service
 	public List<Review> getRestaurantReview(int restaurantNo) {
 		return restaurantMapper.getReviewByRestaurantNo(restaurantNo);
@@ -65,19 +75,37 @@ public class RestaurantService {
 		return restaurantMapper.getRestaurantsByCategoryId(categoryId);
 	}
 	
-	// 검색 조건에 따른 음식점 검색
-
+	/**
+	 * 검색조건에 따른 식당을 검색하여 리스트를 반환한다.
+	 * @param criteria
+	 * @return
+	 */
 	public List<Restaurant> searchRestaurant(RestaurantCriteria criteria) {
-		
-		List<Restaurant> restaurant = restaurantMapper.getRestaurantByCriteria(criteria);
-		return restaurant;
+		return restaurantMapper.getRestaurantByCriteria(criteria);
+	}
+	/**
+	 * 검색조건에 따른 식당을 검색한뒤, 사용자번호를 이용해 해당 사용자의 찜 여부를 식당 객체에 저장시킨 리스트를 반환한다.
+	 * @param userNo
+	 * @param criteria
+	 * @return
+	 */
+	public List<Restaurant> searchRestaurant(Integer userNo, RestaurantCriteria criteria) {
+		List<Restaurant> restaurants = searchRestaurant(criteria);
+		// 로그인 사용자 정보를 전달받은 경우, 맛집 홈에서 온 요청으로 찜하기 상태를 조회해 각 아이템에 저장시킨다.
+		if (userNo != null) {
+			for (Restaurant restaurant : restaurants) {
+				restaurant.setLiked(isLikedRestaurant(new LikeCriteria(userNo, restaurant.getNo())));
+			}
+		}
+		return restaurants;
 	}
 
 	
 	// 모든 카테고리를 가져오기
 
 	public List<Category> getAllCategories() { 
-		return restaurantMapper.getAllCategories(); }
+		return restaurantMapper.getAllCategories();
+	}
 
 	
 	// 모든 태그를 가져오기

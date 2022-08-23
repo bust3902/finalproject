@@ -9,7 +9,20 @@
 		    where a.acco_deleted = 'N'
 		    	and (a.acco_name like '%' || #{keyword} || '%'
 		    	or a.acco_district like '%' || #{keyword} || '%'
-				or a.acco_address like '%' || #{keyword} || '%'))
+				or a.acco_address like '%' || #{keyword} || '%'
+				or a.acco_id in (select acco_id
+								from acco_tags
+								where acco_tag like '%' || #{keyword} || '%')
+				or a.acco_id in (select acco_id
+                    from acco_common_facilities a, common_facilities f
+                    where a.co_facility_id = f.co_facility_id
+                    and f.co_facility_name like	'%' || #{keyword} || '%')
+				or a.acco_id in (select acco_id
+                    from acco_room_facilities a, room_facilities f
+                    where a.ro_facility_id = f.ro_facility_id
+                    and f.ro_facility_name like	'%' || #{keyword} || '%')
+				)
+		)
 		union
 		(select ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, r.restaurant_latitud, r.restaurant_longitude),2) distance,
 		    r.restaurant_no place_id, r.restaurant_latitud place_latitude, r.restaurant_longitude place_longitude, r.restaurant_name place_name,
@@ -17,7 +30,20 @@
 		    from restaurant r, (select 'R' as type from dual) x 
 		    where r.restaurant_delete = 'N'
 		    	and (r.restaurant_name like '%' || #{keyword} || '%'
-		    	or r.restaurant_location like '%' || #{keyword} || '%')))
+		    	or r.restaurant_district like '%' || #{keyword} || '%'
+		    	or r.restaurant_location like '%' || #{keyword} || '%'
+		    	or r.restaurant_no in (select restaurant_no
+		    							from restaurant_menu
+		    							where restaurant_menu_name like '%' || #{keyword} || '%')
+		    	or r.restaurant_no in (select restaurant_no
+										from restaurant_cat c, restaurant_cat_name n
+										where c.restaurant_cat_id = n.restaurant_cat_id
+										and n.restaurant_cat_name like '%' || #{keyword} || '%')
+		    	or r.restaurant_no in (select restaurant_no
+								    	from restaurant_tag
+										where restaurant_tag like '%' || #{keyword} || '%')
+		    	)
+		   ))
 	</sql>
 	
 	<resultMap type="kr.co.nc.dto.Place" id="placeResultMap">
