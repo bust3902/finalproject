@@ -303,6 +303,7 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 			let content = '';
 			// 식당 정보 카드 컨텐츠 생성 (최대 4개만 출력)
 			$.each(restaurants, function(index, item) {
+// 				console.log(item.menus);
 				if (index > 3) {
 					return;
 				}
@@ -332,8 +333,10 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				content += '	        <p class="card-text mb-1">' + item.distance + ' km</p>';
 				content += '	        <p class="card-text mb-3">'
 				if (item.menus != null) {
-					for (let i = 0; i < item.menus.length; i++) {
-						content += menus[i].menuName + (i - 1 == item.menus.length ? '' : ', ');
+					let menuLength = item.menus.length;
+					for (let i = 0; i < 3; i++) {
+						// 3개까지만 보여준다
+						content += item.menus[i].menuName + ((i == 2) ? '' : ', ');
 					}
 				} else {
 					content += '메뉴 정보가 없습니다.'

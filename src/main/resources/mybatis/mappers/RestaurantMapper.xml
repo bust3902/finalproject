@@ -50,6 +50,7 @@
 		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
 		<result column="RESTAURANT_CLOSE" property="close"/>
 		<result column="RESTAURANT_DISTRICT" property="district"/>
+		<collection column="RESTAURANT_NO" property="menus" select="getRestaurantMenusByRestaurantNo"></collection>
 	</resultMap>
 	
 	<!-- List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo); -->
