@@ -56,7 +56,7 @@ public class AccommodationController {
 			// 객실시설 옵션 list 전달
 			model.addAttribute("rofacilities", accommodationService.getRoomFacilityOptions());
 			// 기타 태그 옵션 list 전달
-			model.addAttribute("tags", accommodationService.getAllAccoTagOptions());
+			model.addAttribute("tags", accommodationService.getAllAccoTagOptionsByType(type));
 		}
 		
 		return "accommodation/home";
