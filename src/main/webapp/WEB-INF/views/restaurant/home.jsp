@@ -31,7 +31,7 @@
 		<div class="col-6">
 			<!-- 식당 검색창 -->
 			<div class="d-flex">
-		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,식당명을 검색하세요" autocomplete="off">
+		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,식당명,메뉴 검색" autocomplete="off">
 				<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
 				<input type="hidden" name="sort" value="dist" />
 				<input type="hidden" name="currentLat" value="" />
@@ -174,6 +174,11 @@ $("#form-search").submit(function() {
 	if (keyword != "") {
 		// 여기서 변수명 입력 조심하기
 		array.unshift(keyword);
+		// 최근 검색어 5개까지만 유지하기
+		if (array.length == 6) {
+			array.pop();
+		}
+		
 		text = JSON.stringify(array);
 		localStorage.setItem("keywords", text);
 		
@@ -234,6 +239,13 @@ function deleteKeyword(index) {
 function searchKeyword(keyword) {
 	location.href="near?keyword=" + keyword;
 };
+
+// 최근 검색어 외부 영역 클릭 시 최근 검색어 팝업 닫기
+$(document).mouseup(function (e) {
+	if ($boxKeywords.has(e.target).length === 0) {
+		$boxKeywords.addClass("d-none");
+	}
+});
 
 // 현재 위치 좌표를 저장하는 변수
 let currentLat = '';

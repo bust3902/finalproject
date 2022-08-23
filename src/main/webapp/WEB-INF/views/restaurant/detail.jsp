@@ -43,12 +43,12 @@
 <div class="container my-3" style="min-width:992px; max-width:992px;">
 	<div class="row my-5">
 		<div class="col-3">
-			<div class="card p-1">
-			<div id="map" style="width:100%;height:250px;"></div>
-			<button id="near-btn" type="button" class="float-end btn text-dark border-0 btn-sm p-2">
-				<strong>'<span id="district">${restaurant.district }</span>'</strong></br>
-				<span>맛집 더 검색하기</span>
-			</button>
+			<div class="card p-1" style="position: fixed; width:13rem;">
+				<div id="map" style="width:100%;height:250px;"></div>
+				<button id="near-btn" type="button" class="float-end btn text-dark border-0 btn-sm p-2">
+					<strong>'<span id="district">${restaurant.district }</span>'</strong></br>
+					<span>맛집 더 검색하기</span>
+				</button>
 			</div>
 		</div>
 		<div class="col-9">
@@ -160,7 +160,7 @@
 					<h5 class="fw-light" style="color:black;">${restaurant.reviewCount }건의 방문자 평가</h5>
 					<hr style="display: block;">
 					<!-- 통계 컨테이너 -->
-					<div id="chart" style="height: 250px;"></div>
+					<div id="chart" class="border-bottom" style="height: 250px;"></div>
 					<!-- 리뷰 -->
 					<div id="review-wrapper">
 					</div>
@@ -188,6 +188,7 @@ $(function() {
 	let mapContainer = document.getElementById('map'); // 지도를 표시할 div 
 	let locationCenter = new kakao.maps.LatLng(lat, lng);
     let mapOption = { 
+   		draggable: false, // 줌인아웃 방지
         center: locationCenter, // 지도의 중심좌표이자 식당 위치
         level: 3 // 지도의 확대 레벨
     };
@@ -233,13 +234,13 @@ $(function() {
 	
 	// 평점통계 차트 그리기
 	 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
 	 if (isEmpty) {
 		 $("#chart").addClass("d-none");
 		 return false;
 	 }
-    google.charts.load("current", {packages:["corechart"]});
-    google.charts.setOnLoadCallback(drawChart);
-    function drawChart() {
       var data = google.visualization.arrayToDataTable([
         ['review point', 'out of 5'],
         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],

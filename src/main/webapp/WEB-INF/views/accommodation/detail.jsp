@@ -382,14 +382,14 @@ $(function () {
  * ajax 리뷰데이터 요청 시 획득한 reviewChartData 객체 사용
  */
 	 $("#review-tab").click(function() {
-		 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
-		 if (isEmpty) {
-			 $("#chart").addClass("d-none");
-			 return false;
-		 }
 	     google.charts.load("current", {packages:["corechart"]});
 	     google.charts.setOnLoadCallback(drawChart);
 	     function drawChart() {
+			 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+			 if (isEmpty) {
+				 $("#chart").addClass("d-none");
+				 return false;
+			 }
 	       var data = google.visualization.arrayToDataTable([
 	         ['review point', 'out of 5'],
 	         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
