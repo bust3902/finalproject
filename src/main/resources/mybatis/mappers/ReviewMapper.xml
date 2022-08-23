@@ -7,7 +7,7 @@
 		insert into review
 		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_image, review_point)
 		values
-		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{image}, #{point})
+		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{accoId}, #{title}, #{content}, #{image}, #{point})
 	</insert>
 	
 	<!-- void updateReview(Review review); -->

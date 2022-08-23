@@ -149,12 +149,6 @@
 						</c:forEach>
 					</ul>
 				</div>
-				
-				<div class="m-3">
-					<h5 style="color:black;"><strong>맛집태그</strong></h5>
-					<!-- 리뷰에서 많이 언급된 태그일 수록 태그의 크기가 크게 출력하고 싶습니다. -->
-					<img class="img-fluid" alt="태그이미지" src="../resources/images/restaurant/tagImage.png">
-				</div>
 			</div>
 				<div class="mb-3 card p-1">
 					<div class="m-3" style="color:black;">
@@ -177,9 +171,9 @@
 								<p><strong>${review.title }</strong></p>
 								<p>${review.content }</p>
 							</div>
-							<img alt="" src="" width="200px" height="100px">
-							<img alt="" src="" width="200px" height="100px">
-							<img alt="" src="" width="200px" height="100px">
+							<img alt="이미지가 없습니다." src="../resources/images/restaurant/thumbnail/${review.image }" width="200px" height="100px">
+							<hr style="display: block;">
+							
 						</c:forEach>
 					</div>
 				</div>
