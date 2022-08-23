@@ -281,12 +281,8 @@
 		List<CommonFacilitiesDTO> getCheckedFacilities(int id);
 		객실번호로 객실 상세이미지 검색
 	 -->
-	<select id="getCheckedFacilities" parameterType="int" resultType="kr.co.nc.dto.CommonFacilitiesDTO">
-		select cf.co_facility_id as id, cf.co_facility_name as name, nvl2(acf.co_facility_id, 'y', 'n') checked
-		from common_facilities cf, acco_common_facilities acf
-		where cf.co_facility_id(+) = acf.co_facility_id
-		and acf.acco_id = #{value}
-	</select>
+	
+
 	<!-- 
 		List<CommonFacility> getCommonFacilitiesByAccommodationTypes(CommonFacility commonFacility);
 		타입아이디로 공용시설 정보 검색

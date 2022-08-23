@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import kr.co.nc.dto.CommonFacilitiesDTO;
 import kr.co.nc.mapper.AdminMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
@@ -199,10 +198,6 @@ public class AdminService {
 	// 숙소 타입으로 숙소 공용시설 정보 검색
 	public List<CommonFacility> getCommonFacilitiesByAccommodationTypes(List<String> types) {
 		return adminMapper.getCommonFacilitiesByAccommodationTypes(types);
-	}
-	// 숙소 아이디로 숙소 공용시설 체크 상태 검색
-	public List<CommonFacilitiesDTO> getCheckedFacilities(int id) {
-		return adminMapper.getCheckedFacilities(id);
 	}
 	// 숙소아이디로 숙소 상세이미지 정보 검색
 	public List<String> getAccommodationImagesById(int id) {

@@ -29,6 +29,14 @@ public class Pagination {
 		this.currentPage = currentPage;
 		init();
 	}
+
+	public Pagination(int pages, int rows, int totalRows, int currentPage) {
+		this.rows = rows;
+		this.pages = pages;
+		this.totalRows = totalRows;
+		this.currentPage = currentPage;
+		init();
+	}
 	
 	public void init() {
 		if (totalRows == 0) {

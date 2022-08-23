@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import kr.co.nc.dto.CommonFacilitiesDTO;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.AdminService;
 import kr.co.nc.vo.Accommodation;
@@ -30,13 +29,6 @@ public class AdminRestController {
 	@Autowired
 	private AccommodationService accommodationService;
 
-	// 수정시 공용시설 체크상태를 처리하기 위한 데이터 전달
-	@GetMapping("/searchChecked")
-	@ResponseBody
-	public List<CommonFacilitiesDTO> search(@RequestParam("id") int id) {
-		// type에 따른 공용시설 옵션 list 전달
-		return adminService.getCheckedFacilities(id);
-	}
 	
 	// 숙소타입 선택시 공용시설 체크박스 출력을 처리하기 위한 데이터 전달
 	@GetMapping("/searchCommonFacilities")

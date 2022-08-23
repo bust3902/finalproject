@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.nc.dto.CommonFacilitiesDTO;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.CommonFacility;
@@ -72,8 +71,6 @@ public interface AdminMapper {
 	List<String> getAccommodationTagsById(int id);
 	// 숙소아이디로 숙소 타입 정보 검색
 	List<String> getAccommodationTypesById(int id);
-	// 숙소아이디로 체크된 공용시설 정보 검색
-	List<CommonFacilitiesDTO> getCheckedFacilities(int id);
 	// 숙소 타입으로 숙소 공용시설 정보 검색
 	List<CommonFacility> getCommonFacilitiesByAccommodationTypes(List<String> types);
 	

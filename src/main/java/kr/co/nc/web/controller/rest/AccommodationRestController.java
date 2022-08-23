@@ -46,7 +46,7 @@ public class AccommodationRestController {
 	}
 	
 	// 객실 정보에 대한 pagination 객체 반환
-	@GetMapping(path = "/pagination")
+	@GetMapping(path = "/rooms/pagination")
 	public Pagination pagination(RoomCriteria criteria) {
 		return accommodationService.generatePagination(criteria);
 	}

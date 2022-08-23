@@ -27,12 +27,13 @@
 	</div>
 </div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
-	<form id="form-search" class="row d-flex position-relative my-5" role="search" action="restaurant/searchlist">
+	<form id="form-search" class="row d-flex position-relative my-5" role="search" action="../near">
 		<div class="col-6">
 			<!-- 식당 검색창 -->
 			<div class="d-flex">
-		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요" autocomplete="off">
+		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,식당명을 검색하세요" autocomplete="off">
 				<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
+				<input type="hidden" name="sort" value="dist" />
 				<input type="hidden" name="currentLat" value="" />
 				<input type="hidden" name="currentLong" value="" />
 			</div>
@@ -64,8 +65,9 @@
 	<!-- 한식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 한식집 추천</h5>
-		<div id="CAT_004-wrapper" class="row">
+		<div id="CAT_004-wrapper" class="row mb-3">
 		</div>
+		<!-- 
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_004" class="text-decoration-none text-muted float-end"><strong>'한식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
@@ -73,20 +75,24 @@
 	<!-- 일식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 일식집 추천</h5>
-		<div id="CAT_005-wrapper" class="row">
+		<div id="CAT_005-wrapper" class="row mb-3">
 		</div>
+		<!-- 
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_005" class="text-decoration-none text-muted float-end"><strong>'일식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
+		 -->
 	</div>
 	<!-- 중식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 중국집 추천</h5>
-		<div id="CAT_006-wrapper" class="row">
+		<div id="CAT_006-wrapper" class="row mb-3">
 		</div>
+		<!-- 
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_006" class="text-decoration-none text-muted float-end"><strong>'중국집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
+		 -->
 	</div>
 	<div class="row my-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-clock"></i> 실시간 맛집 평가</h5>
@@ -94,7 +100,7 @@
 			<div class="card mb-3 p-1">
 			  <div class="card-body">
 					<p class="m-0 mb-1">
-						${review.user.name } (89곳 평가,199개 공감받음)</br>
+						${review.user.nickname } </br>
 					</p>
 					<div class="d-flex flex-wrap justify-content-between">
 					    <div>
@@ -122,7 +128,6 @@
 					    </div>
 			    	</c:if>
 				  <div class="mt-3">
-				  	<button type="button" class="btn btn-outline-secondary">공감(1)</button>
 				  	<a href="/reviewform?restaurantNo=${review.restaurant.no }" class="btn btn-outline-secondary float-end">나도평가하기</a>
 				  </div>
 			  </div>
@@ -297,16 +302,20 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 			let content = '';
 			// 식당 정보 카드 컨텐츠 생성 (최대 4개만 출력)
 			$.each(restaurants, function(index, item) {
-				if (index > 4) {
+				if (index > 3) {
 					return;
 				}
 				content += '<div class="col-3">';
 				content += '	<div class="card mb-3 p-1 h-100" style="max-width: 20rem;">';
-				content += '	  <img src="/resources/images/restaurant/' + item.imgname +'" class="card-img-top" alt="...">';
+				content += '		<a class="text-decoration-none" href="restaurant/detail?no=' + item.no + '">';
+				content += '			<img src="/resources/images/restaurant/thumbnail/' + item.imgname +'" class="card-img-top" alt="...">';
+				content += '		</a>';
 				content += '	  <div class="card-body d-flex flex-column justify-content-between my-auto">';
 				content += '		<div class="row">';
 				content += '	   		<div class="d-flex my-auto">';
-				content += '				<strong class="flex-fill text-dark fw-light fs-5 pe-2">' + item.name + '</strong>';
+				content += '				<a class="flex-fill text-decoration-none" href="restaurant/detail?no=' + item.no + '">';
+				content += '					<strong class="text-dark fw-light fs-5 pe-2">' + item.name + '</strong>';
+				content += '				</a>';
 				// 식당 찜하기 클릭하면 관련 ajax 요청 함수 실행 // 로그인 상태일 경우 하트 채워지는 여부 다르게 출력
 				content += '				<i id="icon-heart-' + item.no +'" class="text-primary fs-5 float-end bi ' + (item.liked ? 'bi-heart-fill' : 'bi-heart') + '" onclick="toggleRestaurantLike(' + item.no + ');"></i>';
 				content += '			</div>';
@@ -319,7 +328,7 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				content += '		    	<i class="bi ' + item.reviewRateIcon.star4 + '"></i>';
 				content += '		    	<i class="bi ' + item.reviewRateIcon.star5 + '"></i>';
 				content += '		    </p>';
-				content += '	        <p class="card-text mb-1">' + Math.round(item.distance*1000/1000) + 'm</p>';
+				content += '	        <p class="card-text mb-1">' + item.distance + ' km</p>';
 				content += '	        <p class="card-text mb-3">'
 				if (item.menus != null) {
 					for (let i = 0; i < item.menus.length; i++) {

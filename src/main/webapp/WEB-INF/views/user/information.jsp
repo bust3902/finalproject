@@ -313,7 +313,7 @@
 														</div>
 													</div>
 													<div class="row mt-3 mb-0">
-														<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+														<span class="small text-center">${item.likeCount } 명이 찜한 식당</span>
 														<div class="text-warning text-center small mb-3">
 															<i class="bi ${item.reviewRateIcon.star1 }"></i>
 															<i class="bi ${item.reviewRateIcon.star2 }"></i>

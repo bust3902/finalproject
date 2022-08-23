@@ -13,9 +13,16 @@ import lombok.Getter;
 public class LikeCriteria {
 	int userNo;
 	int id; // 숙소의 찜하기 여부를 조회할때는 accoId를, 식당의 찜하기 여부를 조회할때는 restaurantNo를 저장
+	String type; // 숙소/식당 A/R
 	
 	public LikeCriteria(int userNo, int id) {
 		this.userNo = userNo;
 		this.id = id;
+	}
+	
+	public LikeCriteria(int userNo, int id, String type) {
+		this.userNo = userNo;
+		this.id = id;
+		this.type = type;
 	}
 }
