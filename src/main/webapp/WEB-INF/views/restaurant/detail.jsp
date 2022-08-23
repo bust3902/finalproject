@@ -31,8 +31,9 @@
 		<div class="col-3">
 			<div class="card p-1">
 			<div id="map" style="width:100%;height:250px;"></div>
-			<button type="button" class="float-end btn text-dark border-0 btn-sm">
-				<span><strong>'${restaurant.district }'</strong><p>맛집 더 검색하기</p></span>
+			<button id="near-btn" type="button" class="float-end btn text-dark border-0 btn-sm p-2">
+				<strong>'<span id="district">${restaurant.district }</span>'</strong></br>
+				<span>맛집 더 검색하기</span>
 			</button>
 			</div>
 		</div>
@@ -122,12 +123,6 @@
 						</c:forEach>
 					</ul>
 				</div>
-				
-				<div class="m-3">
-					<h5 class="pb-2 border-bottom" style="color:black;"><strong>맛집태그</strong></h5>
-					<!-- 리뷰에서 많이 언급된 태그일 수록 태그의 크기가 크게 출력하고 싶습니다. -->
-					<img class="img-fluid" alt="태그이미지" src="../resources/images/restaurant/tagImage.png">
-				</div>
 			</div>
 				<div class="mb-3 card p-3">
 					<div class="m-3" style="color:black;">
@@ -183,6 +178,11 @@ $(function() {
 	    image: new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45))
 	});
 	marker.setMap(map);
+	
+	$("#near-btn").click(function() {
+		let keyword = $(this).find("#district").text();
+		location.href="/near?keyword=" + keyword;
+	});
 });
 </script>
 </body>
