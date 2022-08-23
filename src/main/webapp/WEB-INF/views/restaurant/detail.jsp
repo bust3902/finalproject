@@ -44,11 +44,11 @@
 				</div>
 				<div class="m-3 mb-0">
 					<div class="d-flex justify-content-between">
-						<h4 id="title" class="text-dark fw-semibold" data-lat="${restaurant.latitud }" data-long="${restaurant.longitude }">${restaurant.name }</h4>
+						<h4 id="title" class="text-dark fw-semibold" data-no="${restaurant.no }" data-lat="${restaurant.latitud }" data-long="${restaurant.longitude }">${restaurant.name }</h4>
 						<div class="row">
-							<a href="" class="text-center mx-auto">
+							<span class="text-center mx-auto">
 								<i id="icon-heart" class="text-primary px-1 fs-4 bi ${restaurant.liked ? 'bi-heart-fill' : 'bi-heart'  }"></i></br>
-							</a>
+							</span>
 							<small class="text-center text-primary">(<span id="likeCount">${restaurant.likeCount }</span>)</small>
 						</div>
 					</div>
@@ -183,7 +183,34 @@ $(function() {
 		let keyword = $(this).find("#district").text();
 		location.href="/near?keyword=" + keyword;
 	});
+	
+	// 찜하기 토글
+	$("#icon-heart").click(function() {
+		let no = $("#title").attr("data-no");
+		let $icon = $(this);
+		
+		// 로그인 여부 체크
+		if ("${LOGIN_USER }" == "") {
+			alert("찜하기는 로그인이 필요한 기능입니다.");
+			return false;
+		}
+		
+		// 숙소아이디 전달해서 ajax로 like 저장 요청
+		$.getJSON("/changelike/restaurant", "restaurantNo=" + no).done(function(result) {
+			if (result === true) {
+				// 아이콘 표현 토글 처리
+				$icon.toggleClass("bi-heart-fill");
+				$icon.toggleClass("bi-heart");
+				let likeCount = Number($("#likeCount").text());
+				let change = $icon.hasClass("bi-heart") ? -1 : 1;
+				$("#likeCount").text(likeCount + change);
+			} else {
+				alert("오류가 발생했습니다. 다시 시도해주세요.");
+			}
+		});
+	})
 });
+
 </script>
 </body>
 </html>
