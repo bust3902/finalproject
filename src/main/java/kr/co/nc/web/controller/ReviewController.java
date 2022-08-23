@@ -32,7 +32,7 @@ public class ReviewController {
 	
 	@PostMapping(path = "/reviewcomplete")
 	public String reviewCompleted(@LoginUser User user ,@RequestParam(name="restaurantNo",required=false)Integer restaurantNo,@RequestParam(name="accoId",required=false)Integer accoId, ReviewRegisterForm reviewRegisterForm) {
-			reviewService.addNewReview(user, restaurantNo, accoId, reviewRegisterForm);
+//			reviewService.addNewReview(user, restaurantNo, accoId, reviewRegisterForm);
 		return "reviews/reviewcomplete";
 	}
 }

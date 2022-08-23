@@ -782,7 +782,7 @@ function toggleAccoLike(accoId) {
 let reviewChartData = '';
 let reviewArray = [];
 let isEmpty = false; 
-$.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
+$.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 	reviewChartData = data.chartData;
 	let reviews = data.reviews
 	if (reviews.length == 0) {

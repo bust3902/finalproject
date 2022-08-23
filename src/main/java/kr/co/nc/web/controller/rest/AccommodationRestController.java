@@ -52,7 +52,7 @@ public class AccommodationRestController {
 	}
 	
 	// 해당 숙소에 대한 리뷰 리스트, 평점분포 집계결과 반환
-	@GetMapping(path = "/reviews")
+	@GetMapping(path = "/reviews/acco")
 	public Map<String, Object> reviews(int accoId) {
 		// 두 가지 정보를 map객체에 담아 반환한다.
 		Map<String, Object> reviewdatas = new HashMap<>();
@@ -60,7 +60,7 @@ public class AccommodationRestController {
 		ReviewCriteria criteria = new ReviewCriteria("accommodation", accoId);
 		reviewdatas.put("reviews", reviewService.getReviewsByCriteria(criteria));
 		// 평점분포 집계결과 객체
-		reviewdatas.put("chartData", reviewService.getReviewPointChartByAccoId(accoId));
+		reviewdatas.put("chartData", reviewService.getReviewPointChart(criteria));
 		return reviewdatas;
 	}
 	
