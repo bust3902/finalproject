@@ -38,8 +38,8 @@ public class RestaurantController {
 	public String detail(@RequestParam("no") int restaurantNo, String categoryId,Model model) {
 		// 변수 따로 만들지 않고 reviews안에 넣었습니다.
 		model.addAttribute("restaurant",restaurantService.getRestaurantDetail(restaurantNo));
-		model.addAttribute("reviews",restaurantService.getRestaurantReview(restaurantNo));
 		model.addAttribute("categoryId",restaurantService.getRestaurantsByCategoryId(categoryId));
+		model.addAttribute("review",restaurantService.getRestaurantReview(restaurantNo));
 
 		return "restaurant/detail";
 	}

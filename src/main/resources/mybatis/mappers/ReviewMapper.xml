@@ -89,7 +89,14 @@
 		from restaurant_tag
 		where restaurant_no = #{value}
 	</select>
-	
+
+	<!-- List<String> getAllReviewTagsByRestaurantNo(String restaurantNo); -->
+	<select id="getAllReviewsByRestaurantNo" parameterType="int" resultType="Review">
+		select *
+		from review r, users u
+		where restaurant_no = #{value}
+		and r.user_no = u.user_no
+	</select>
 	<!--  List<Map<String, Integer>> countReviewPointsByAccoId(int accoId); -->
 	<select id="countReviewPointsByAccoId" parameterType="int" resultType="hashmap">
 		with points
