@@ -67,6 +67,7 @@
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 한식집 추천</h5>
 		<div id="CAT_004-wrapper" class="row mb-3">
 		</div>
+		<!-- 
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_004" class="text-decoration-none text-muted float-end"><strong>'한식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
@@ -76,18 +77,22 @@
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 일식집 추천</h5>
 		<div id="CAT_005-wrapper" class="row mb-3">
 		</div>
+		<!-- 
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_005" class="text-decoration-none text-muted float-end"><strong>'일식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
+		 -->
 	</div>
 	<!-- 중식집 추천 -->
 	<div class="row mb-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-geo-alt"></i> 주변 중국집 추천</h5>
 		<div id="CAT_006-wrapper" class="row mb-3">
 		</div>
+		<!-- 
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_006" class="text-decoration-none text-muted float-end"><strong>'중국집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
+		 -->
 	</div>
 	<div class="row my-3">
 		<h5 class="fw-semibold mb-3"><i class="bi bi-clock"></i> 실시간 맛집 평가</h5>
