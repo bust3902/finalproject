@@ -90,8 +90,6 @@ $(function(){
 /*
  * 현재 위치 좌표 갱신하고, 숙소 검색 결과 갱신하기 : 최초 화면 출력시에 실행하고, 사용자가 내 위치 버튼 클릭 시에도 실행한다.
  */
-	// 현재 위치 좌표를 저장하고 마커를 생성하는 함수
-	refreshLocation();
 	
 	// 지도 정의하기
 	let container = document.getElementById('map');
@@ -102,6 +100,14 @@ $(function(){
 	};
 	// 지도 생성, 윈도우로 보내기(지도 객체를 사용하는 search함수를 외부에서 정의하기 위함)
 	window.map = new kakao.maps.Map(container, options);
+
+	// 현재 위치 좌표를 저장하고 마커를 생성
+	refreshLocation();
+	myLocationMarker = new kakao.maps.Marker({
+	    position: new kakao.maps.LatLng($(":hidden[name=currentLat]").val(), $(":hidden[name=currentLong]").val()),
+	    image: myLocaMarkerImage
+	});
+	myLocationMarker.setMap(map);
 
 	// 화면 첫 출력시 페이지버튼과 전체 검색결과를 띄운다
 	refreshPaginationButton(1);
@@ -135,9 +141,8 @@ function refreshLocation() {
 			$(":hidden[name=currentLong]").val(currentLong);
 			
 			// 검색결과, 내위치마커, 지도 중심 갱신
-			changeCurrentPage(1);
-			setMyLocationMarker(currentLat, currentLong);
 			map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
+			setMyLocationByMe(currentLat, currentLong);
     	}, function(position) {
 			// 실패 시 콜백함수
 			// 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
@@ -147,22 +152,19 @@ function refreshLocation() {
 			$(":hidden[name=currentLong]").val(currentLong);
 
 			// 검색결과, 내위치마커, 지도 중심 갱신
-			changeCurrentPage(1);
-			setMyLocationMarker(currentLat, currentLong);
 			map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
+			setMyLocationByMe(currentLat, currentLong);
 		});
 	}
 	
 }
 
-// 내 위치 마커 표시하는 함수
-function setMyLocationMarker(currentLat, currentLong) {
-	// 내 위치 마커 생성하기
-	myLocationMarker = new kakao.maps.Marker({
-	    position: new kakao.maps.LatLng(currentLat, currentLong),
-	    image: myLocaMarkerImage
-	});
-	myLocationMarker.setMap(map);
+// 현재 지도 중심을 실제 내 위치로 바꾸는 함수
+function setMyLocationByMe(currentLat, currentLong) {
+	$(":hidden[name=currentLat]").val(currentLat);
+	$(":hidden[name=currentLong]").val(currentLong);
+	myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+	changeCurrentPage(1);
 }
 
 // 현재 지도 중심을 내 위치(검색 기준으로 바꾸는 함수)
