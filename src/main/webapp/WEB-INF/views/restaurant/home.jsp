@@ -31,7 +31,7 @@
 		<div class="col-6">
 			<!-- 식당 검색창 -->
 			<div class="d-flex">
-		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,음식을 검색하세요" autocomplete="off">
+		        <input class="form-control w-50 me-sm-2" type="text" id="search" name="keyword" placeholder="지역,식당명을 검색하세요" autocomplete="off">
 				<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
 				<input type="hidden" name="sort" value="dist" />
 				<input type="hidden" name="currentLat" value="" />
