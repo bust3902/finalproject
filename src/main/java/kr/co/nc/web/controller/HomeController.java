@@ -11,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.UserService;
@@ -245,4 +247,19 @@ public class HomeController {
 		return findId;
 	}
 	
+	@PostMapping(path="/findPw")
+	@ResponseBody
+	public String findPw(@RequestParam("id") String id, @RequestParam("email") String email) throws Exception{
+	   String result = userService.findPw(id,email);
+	   try {
+	      if ("success".equals(result)) {
+	         return result; // 성공
+	      } else {
+	         return "fail"; // 실패
+	      }
+	   } catch (Exception e) {
+	      e.printStackTrace();
+	      return "error"; //에러
+	   }
+	}
 }

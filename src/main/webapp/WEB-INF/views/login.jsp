@@ -115,8 +115,9 @@ li {
     					<button class="btn btn-primary btn-lg">로그인</button>
     				</div>
     				<div class="finish">
-						<button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#findId" style="padding-left: 33px; padding-right:33px;width: 190px;height: 42px;">아이디 찾기</button>
-            			<a href="/register" class="btn btn-light" style="padding-left: 33px; padding-right:33px;height: 41px;">회원가입</a>
+						<button class="btn btn-light mb-2" type="button" data-bs-toggle="modal" data-bs-target="#findId" style="padding-left: 33px; padding-right:33px;width: 190px;height: 42px;">아이디 찾기</button>
+						<a href="/register" class="btn btn-light mb-2" style="padding-left: 33px; padding-right:33px;height: 42px;">회원가입</a>
+            			<button class="btn btn-light" type="button" data-bs-toggle="modal" data-bs-target="#findPw" style="padding-left: 33px; padding-right:33px;height: 45px;">비밀번호 찾기</button>
     				</div>
     			</form>
     		</div>
@@ -151,6 +152,34 @@ li {
 			</div>
 		</div>
 		
+		<!-- 비밀번호 찾기 -->
+		<div class="modal fade" id="findPw" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+			<div class="modal-dialog modal-dialog-centered">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel"><strong>비밀번호 찾기</strong></h5>
+						<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+					</div>
+					<div class="modal-body">
+						<table class="table findPw">
+							<tr>
+                            	<td><label>아이디</label></td>
+								<td><input type="text" class="form-control" id="id" name="id" placeholder="아이디를 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '이름을 입력해주세요.'"></td>
+							</tr>
+							<tr>
+								<td><label>이메일</label></td>
+								<td><input type="text" class="form-control" id="email2" name="email" placeholder="이메일을 입력해주세요." onfocus="this.placeholder = ''" onblur="this.placeholder = '이메일을 입력해주세요.'"></td>
+							</tr>
+						</table>
+						<div class="showPw"></div>
+					</div>
+					<div class="modal-footer">
+                        <button type="button" class="btn btn-primary btnConfirm2" onclick="findPw()">확인</button>
+						<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+					</div>
+				</div>
+			</div>
+		</div>
     </div>
 </div>
 
@@ -293,6 +322,31 @@ function findId() {
             $(".btnConfirm").css('display','none');
             let content = '<p class="text-center">아이디는 <strong>'+data+'</strong> 입니다.</p>';
             $(".showId").append(content);
+         }
+      }, 
+      error:function(){
+         alert("에러입니다.");
+      }
+   })
+};
+
+<%-- 비밀번호 찾기 --%>
+function findPw() {
+   let id = document.getElementById('id').value;
+   let email = document.getElementById('email2').value;
+   
+   $.ajax({
+      url: '/findPw',
+      type: 'post',
+      data: {"id":id, "email":email},
+      success:function(data){
+         if(data == "success") {
+            $(".findPw").css('display','none');
+            $(".btnConfirm2").css('display','none');
+            let content = '<p class="text-center">임시 비밀번호를 '+email+'로 보냈습니다.</p>';
+            $(".showPw").append(content);
+         } else if (data =="fail"){
+            alert("아이디 혹은 이메일이 잘못되었습니다.");
          }
       }, 
       error:function(){

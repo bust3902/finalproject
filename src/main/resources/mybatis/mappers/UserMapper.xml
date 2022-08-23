@@ -112,4 +112,26 @@
       and user_email = #{email}
    </select>
    
+   <!-- 아이디와 비밀번호를 정보를 받아서 회원탈퇴 -->
+	<delete id="withdraw" parameterType="string">
+		delete from users 
+		where user_id = #{id}
+		and user_password = #{password}
+	</delete>
+	
+	<!-- int finePwCheck(@Param("id") String id, @Param("email")String email); -->
+    <select id="finePwCheck" parameterType="String" resultType="int">
+       select count(user_id)
+       from users
+       where user_id = #{id}
+       and user_email =#{email}
+    </select>
+    
+    <!-- void updatePw(User user); -->
+    <update id="updatePw" parameterType="User">
+       update users
+       set 
+          user_password = #{password}
+       where user_email = #{email}
+    </update>
 </mapper>
