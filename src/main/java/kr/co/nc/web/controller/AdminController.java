@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.FileCopyUtils;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -70,7 +69,16 @@ public class AdminController {
 
 	// 관리자 메인화면
 	@GetMapping(path = "")
-	public String search() {
+	public String search(Model model) {
+		
+		// 입실예정 예약현황 출력
+		// System.out.println("컨트롤러"+adminService.getReservationList());
+		model.addAttribute("reservations",adminService.getReservationList());
+		// 주간 매출 그래프 출력을 위한 데이터 검색
+		model.addAttribute("weeklyChartData",adminService.getWeeklyChartData());
+		// 미답변 문의내역 출력
+		model.addAttribute("QAs",adminService.getQAListByAnswerStatus());
+		
 		return "/admin/home";
 	}
 	

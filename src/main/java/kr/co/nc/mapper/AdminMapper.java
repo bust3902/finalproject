@@ -4,10 +4,12 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-import kr.co.nc.dto.CommonFacilitiesDTO;
+import kr.co.nc.dto.QaDto;
+import kr.co.nc.dto.ReservationDto;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.CommonFacility;
+import kr.co.nc.vo.QaAnswer;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.RestaurantMenu;
 import kr.co.nc.vo.RestaurantTag;
@@ -21,11 +23,14 @@ import kr.co.nc.web.form.AccoTypeRegisterForm;
 import kr.co.nc.web.form.AccommodationDeleteImageNameForm;
 import kr.co.nc.web.form.AccommodationDeleteTagForm;
 import kr.co.nc.web.form.AccommodationRoomDeleteImageNameForm;
+import kr.co.nc.web.form.MonthlySalesDataForm;
 import kr.co.nc.web.form.RestaurantCategoryModifyForm;
 import kr.co.nc.web.form.RestaurantCategoryRegisterForm;
 import kr.co.nc.web.form.RestaurantDeleteMenuForm;
 import kr.co.nc.web.form.RestaurantDeleteTagForm;
 import kr.co.nc.web.form.RestaurantMenuRegisterForm;
+import kr.co.nc.web.form.WeeklySalesDataForm;
+import kr.co.nc.web.form.YearlySalesDataForm;
 
 @Mapper
 public interface AdminMapper {
@@ -57,6 +62,9 @@ public interface AdminMapper {
 	// 음식점 카테고리 정보 저장
 	void insertRestaurantCategories(RestaurantCategoryRegisterForm restaurantCategoryRegisterForm);
 	
+	// 문의게시판 답글 저장
+	void insertQaAnswer(QaAnswer qaAnswer);
+	
 	// 키워드로 숙소 정보 검색
 	List<Accommodation> getSearchAccommodations(String keyword);
 	// 키워드로 음식점 정보 검색
@@ -72,8 +80,6 @@ public interface AdminMapper {
 	List<String> getAccommodationTagsById(int id);
 	// 숙소아이디로 숙소 타입 정보 검색
 	List<String> getAccommodationTypesById(int id);
-	// 숙소아이디로 체크된 공용시설 정보 검색
-	List<CommonFacilitiesDTO> getCheckedFacilities(int id);
 	// 숙소 타입으로 숙소 공용시설 정보 검색
 	List<CommonFacility> getCommonFacilitiesByAccommodationTypes(List<String> types);
 	
@@ -95,6 +101,18 @@ public interface AdminMapper {
 	List<RestaurantTag> getSearchRestaurantTagsByNo(int no);
 	// 음식점 번호로 음식점 메뉴 검색
 	List<RestaurantMenu> getSearchRestaurantMenusByNo(int no);
+
+	// 입실예정 예약 현황 검색
+	List<ReservationDto> getReservationList();
+	// 미답변 Q&A 검색
+	List<QaDto> getQAListByAnswerStatus();
+	
+	// 주간 매출 차트를 위한 데이터 검색
+	List<WeeklySalesDataForm> getWeeklyChartData();
+	// 월간 매출 차트를 위한 데이터 검색
+	List<MonthlySalesDataForm> getMonthlyChartData();
+	// 연간 매출 차트를 위한 데이터 검색
+	List<YearlySalesDataForm> getYearlyChartData();
 	
 	// 숙소 정보 수정
 	void updateAccommodation(Accommodation accommodation);
@@ -106,6 +124,9 @@ public interface AdminMapper {
 	void updateAccommodationCommonFacilities(AccoCommonFacilityRegisterForm accoCommonFacilityRegisterForm);
 	// 숙소 상세정보 수정
 	void updateAccommodationDetailImages(AccoDetailImageNamesRegisterForm accoDetailImageNamesRegisterForm);
+
+	// 문의글 답변여부 수정용
+	void updateQa(int qaNo);
 	
 	// 숙소 상세이미지 삭제
 	void deleteAccommodationDetailImages(AccommodationDeleteImageNameForm accommodationDeleteImageNameForm);
@@ -134,5 +155,6 @@ public interface AdminMapper {
 	
 	// 음식점 수정
 	void updateRestaurant(Restaurant restaurant);
+
 
 }

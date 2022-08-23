@@ -151,6 +151,21 @@
 		values
 			(#{no}, #{category})
 	</insert>
+	 
+	 <!-- 
+		문의게시판 답글 저장
+		void insertQaAnswer(int qaNo, String content);
+	 -->
+	<insert id="insertQaAnswer" parameterType="QaAnswer">
+		<selectKey keyProperty="answerNo" resultType="int" order="BEFORE">
+			select qa_answer_seq.nextval 
+			from dual
+		</selectKey>
+		insert into qa_answer
+			(qa_no, qa_answer_no, content)
+		values
+			(#{qaNo}, #{answerNo}, #{content})
+	</insert>
 	
 	<!-- 
 		List<Accommodation> getSearchAccommodations(String keyword);
@@ -278,16 +293,6 @@
 		where room_no = #{value}
 	</select>
 	<!-- 
-		List<CommonFacilitiesDTO> getCheckedFacilities(int id);
-		객실번호로 객실 상세이미지 검색
-	 -->
-	<select id="getCheckedFacilities" parameterType="int" resultType="kr.co.nc.dto.CommonFacilitiesDTO">
-		select cf.co_facility_id as id, cf.co_facility_name as name, nvl2(acf.co_facility_id, 'y', 'n') checked
-		from common_facilities cf, acco_common_facilities acf
-		where cf.co_facility_id(+) = acf.co_facility_id
-		and acf.acco_id = #{value}
-	</select>
-	<!-- 
 		List<CommonFacility> getCommonFacilitiesByAccommodationTypes(CommonFacility commonFacility);
 		타입아이디로 공용시설 정보 검색
 	 -->
@@ -346,7 +351,90 @@
 		from restaurant_menu
 		where restaurant_no = #{value}
 	</select>
-	 
+	<!-- 
+		입실예정 예약 현황 검색
+		List<ReservationDto> getReservationList();
+	 -->
+	<select id="getReservationList" resultType="kr.co.nc.dto.ReservationDto">
+		select r.reservation_id as reservationId, r.reservation_check_in as checkIn,
+			   r.user_no as userNo, r.room_no as roomNo, r.acco_id as accoId, r.reservation_name as reservationName,
+    		   r.reservation_tel as reservationTel, a.acco_name as accoName, u.user_name as userName
+		from reservation r, accommodations a, users u
+		where r.acco_id = a.acco_id
+		and r.user_no = u.user_no
+		and r.reservation_check_in &gt; TO_CHAR(sysdate, 'YY/MM/DD')
+		order by r.reservation_check_in asc
+	</select>
+	<!-- 
+		미답변 Q&A 검색
+		List<QaDto> getQAListByAnswerStatus();
+	 -->
+	<select id="getQAListByAnswerStatus" resultType="kr.co.nc.dto.QaDto">
+		select q.qa_no as no, q.user_no as userNo, q.qa_content as content,
+			   q.qa_title as title, q.qa_created_date as createdDate, q.qa_image as image,
+			   q.qa_answer_status as answerStatus, u.user_nickname as userNickName,
+			   u.user_name as userName
+		from qa q, users u
+		where q.user_no = u.user_no
+		and q.qa_answer_status = 'N'
+		order by q.qa_created_date asc
+	</select>
+
+	<!--  
+		주간 매출 차트를 위한 데이터 검색
+		List<WeeklySalesDataForm> getWeeklyChartData();
+	 -->
+	<select id="getWeeklyChartData" resultType="kr.co.nc.web.form.WeeklySalesDataForm">
+		with dates as
+		(select to_char(sysdate - level, 'dd') day
+		 from dual
+		 connect by level  &lt;= 7)
+		select Y.day as salesDate , nvl(X.price, 0) as salesprice
+		from (select to_char(r.reservation_check_in, 'DD') dd, SUM(P.PAYMENT_TOTAL_PRICE) price
+		      from reservation r, payment p
+		      where r.reservation_id = p.reservation_id
+		      and to_char(r.reservation_check_in,'yy/mm/DD') between sysdate - interval '7' day and sysdate
+		      group by to_char(r.reservation_check_in, 'DD')) X, dates Y
+		where X.dd(+) = Y.day
+		order by Y.day asc
+	</select>
+	<!--  
+		월간 매출 차트를 위한 데이터 검색
+		List<MonthlySalesDataForm> getMonthlyChartData();
+	 -->
+	<select id="getMonthlyChartData" resultType="kr.co.nc.web.form.MonthlySalesDataForm">
+		with dates as
+		(select to_char(sysdate - level, 'dd') day
+		 from dual
+		 connect by level &lt;= 30)
+		select Y.day as salesDate , nvl(X.price, 0) as salesprice
+		from (select to_char(r.reservation_check_in, 'DD') dd, SUM(P.PAYMENT_TOTAL_PRICE) price
+			  from reservation r, payment p
+			  where r.reservation_id = p.reservation_id
+			  and to_char(r.reservation_check_in,'yy/mm/DD') between sysdate - interval '30' day and sysdate
+			  group by to_char(r.reservation_check_in, 'DD')) X, dates Y
+		where X.dd(+) = Y.day
+		order by Y.day asc
+	</select>
+	<!--  
+		연간 매출 차트를 위한 데이터 검색
+		List<YearlySalesDataForm> getYearlyChartData();
+	 -->
+	<select id="getYearlyChartData" resultType="kr.co.nc.web.form.YearlySalesDataForm">
+		with months as
+		(select to_char(add_months(sysdate, - level), 'mm') month
+		 from dual
+		 connect by level  &lt;= 12)
+		select Y.month as salesMonth , nvl(X.price, 0) as salesprice
+		from (select to_char(r.reservation_check_in, 'mm') dd, SUM(P.PAYMENT_TOTAL_PRICE) price
+			  from reservation r, payment p
+			  where r.reservation_id = p.reservation_id
+			  and to_char(r.reservation_check_in,'yy/mm/DD') between add_months(sysdate,-12) and sysdate
+			  group by to_char(r.reservation_check_in, 'mm')) X, months Y
+		where X.dd(+) = Y.month
+		order by Y.month asc
+	</select>
+	
 	<!-- 
 		void updateAccommodation(Accommodation accommodation);
 		숙소 정보 수정
@@ -413,6 +501,19 @@
 			restaurant_district = #{district}
 		where
 			restaurant_no = #{no}
+	</update>
+	
+	<!-- 
+		void updateQaAnswerChecked(Qa qa);
+		답변한 Qa 수정용
+	 -->
+	<update id="updateQa" parameterType="int">
+		update
+			QA
+		set
+		    qa_answer_status = 'Y'
+		where
+			qa_no = #{value}
 	</update>
 
 	<!--  
@@ -506,29 +607,4 @@
 			restaurant_price = #{deleteMenuPrice}
 	</delete>
 
-
-	<!--  
-		void updateAccommodationTypes(AccoTypeRegisterForm accoTypeRegisterForm);
-		숙소 타입 수정
-	<update id="updateAccommodationTypes" parameterType="AccoTypeRegisterForm">
-		update
-			acco_types
-		set
-			acco_type_id = #{typeId}
-		where
-			acco_id = #{id}
-	</update>	
-	
-		void updateAccommodationTags(AccoTagRegisterForm accoTagRegisterForm);
-		숙소 태그 수정
-	
-	<update id="updateAccommodationTags" parameterType="AccoTagRegisterForm">
-		update
-			into acco_tags
-		set
-			acco_tag = #{tag}
-		where
-			acco_id = #{id}
-	</update>
-	 -->
 </mapper>
