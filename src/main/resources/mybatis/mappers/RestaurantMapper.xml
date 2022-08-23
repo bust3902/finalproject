@@ -14,8 +14,9 @@
 		<result column="REVIEW_DELETED" property="deleted"/>
 		<result column="REVIEW_IMAGE" property="image"/>
 		<result column="REVIEW_POINT" property="point"/>
-		<association property="user" column="user_no" select="kr.co.nc.mapper.UserMapper."></association>
-		<association property="restaurant" column="RESTAURANT_NO" select="kr.co.nc.mapper.RestaurantMapper"></association>
+		<association property="user" column="user_no" select="kr.co.nc.mapper.UserMapper.getUserByNo"></association>
+		<association property="user" column="user_name" select="kr.co.nc.mapper.UserMapper.getUserByNo"></association>
+		<association property="restaurant" column="RESTAURANT_NO" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantByNo"></association>
 		<!-- <association property="user" column="user_no"></association> -->
 	</resultMap>
 	
@@ -23,8 +24,7 @@
 	<select id="getReviewByRestaurantNo" parameterType="int" resultMap="ReviewResultMap">
 		select *
 		from REVIEW
-		where
-			ACCO_ID is NULL and REVIEW_DELETED = 'N'
+		where REVIEW_DELETED = 'N'
 			and RESTAURANT_NO = #{value}
 		order by
 			REVIEW_CREATED_DATE desc
@@ -49,6 +49,7 @@
 		<result column="RESTAURANT_BREAK_TIME" property="breakTime"/>
 		<result column="RESTAURANT_CLOSE" property="close"/>
 		<result column="RESTAURANT_DISTRICT" property="district"/>
+		<collection column="RESTAURANT_NO" property="menus" select="getRestaurantMenusByRestaurantNo"></collection>
 	</resultMap>
 	
 	<!-- List<RestaurantMenu> getRestaurantMenusByRestaurantNo(int restaurantNo); -->
@@ -77,7 +78,6 @@
 	</select>
 	<!--Restaurant의 있는 정보 싹다 가져오는 resultMap 디테일 출력시 이용 -->
 	<resultMap type="Restaurant" id="RestaurantDetailResultMap" extends="RestaurantResultMap">
-		<collection property="menus" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantMenusByRestaurantNo"></collection>
 		<collection property="tags" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantTagsByRestaurantNo"></collection>
 		<collection property="categories" column="restaurant_no" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantCategoriesByRestaurantNo"></collection>
 	</resultMap>
@@ -121,15 +121,31 @@
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantsByCategoryId(@Param("categoryId") String categoryId); -->
-	<select id="getRestaurantsByCategoryId" >
-		select *
+	<select id="getRestaurantsByCategoryId" parameterType="string" resultType="kr.co.nc.vo.Restaurant" >
+		select
+			RESTAURANT_NO as no,
+			RESTAURANT_NAME as name,
+			RESTAURANT_LOCATION as location,
+			RESTAURANT_IMGNAME as imgName,
+			RESTAURANT_TEL as tel,
+			RESTAURANT_LIKE_COUNT as likeCount,
+			RESTAURANT_REVIEW_COUNT as reviewCount,
+			RESTAURANT_REVIEW_POINT as reviewPoint,
+			RESTAURANT_CREATED_DATE as createdDate,
+			RESTAURANT_UPDATE_DATE as updatedDate,
+			RESTAURANT_LATITUD as latitud,
+			RESTAURANT_LONGITUDE as longitude,
+			CITY_ID as "CITIES.CITY_ID",
+			RESTAURANT_OPENING as opening,
+			RESTAURANT_BREAK_TIME as breakTime,
+			RESTAURANT_CLOSE as close,
+			RESTAURANT_DISTRICT as district
 		from RESTAURANT
-		<if test="categoryId != null">
-			where RESTAURANT_NO in (select RESTAURANT_NO
-									from RESTAURANT_CAT
-									where RESTAURANT_CAT_ID = #{categoryId})
-		</if>
-		order by RESTAURANT_CREATED_DATE desc
+		where
+			RESTAURANT_NO in (select RESTAURANT_NO
+								from RESTAURANT_CAT
+							   where RESTAURANT_CAT_ID = #{categoryId})
+		order by RESTAURANT_CREATED_DATE DESC
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria); -->
@@ -137,7 +153,7 @@
 		select distinct res.RESTAURANT_NO, res.RESTAURANT_NAME, res.RESTAURANT_LOCATION, res.RESTAURANT_IMGNAME,
 				res.RESTAURANT_LIKE_COUNT, res.RESTAURANT_REVIEW_COUNT, res.RESTAURANT_REVIEW_POINT, res.RESTAURANT_LATITUD,
 				res.RESTAURANT_LONGITUDE, res.CITY_ID, res.RESTAURANT_TEL, res.RESTAURANT_DISTRICT,
-				ROUND(DISTANCE_WGS84(37, 128, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),3) as distance
+				ROUND(DISTANCE_WGS84(#{currentLat}, #{currentLong}, res.RESTAURANT_LATITUD, res.RESTAURANT_LONGITUDE),2) as distance
 		
 		FROM
 		   restaurant res, restaurant_tag rtag, restaurant_menu rmenu, RESTAURANT_CAT rcat, RESTAURANT_CAT_NAME rcatname
@@ -176,26 +192,6 @@
 										<foreach collection="tags" item="tag" open="(" close=")" separator=",">
 											#{tag}
 										</foreach>)
-			</if>
-			<if test="distance == 'meter'">
-				<!-- and res.restaurant_no (SELECT restaurant_no , 
-										( 6371 * acos ( cos ( radians(37) )* 
-										cos( radians( RESTAURANT_LATITUD ) )* 
-										cos( radians( RESTAURANT_LONGITUDE) - radians(128) ) + 
-										sin ( radians(37) ) * sin( radians( RESTAURANT_LATITUD ) ))) AS distance
-										FROM RESTAURANT
-										HAVING distance &lt; 2
-										ORDER BY distance;
-										) -->
-			</if>
-			<if test="distance == 'oneKilometer'">
-			
-			</if>
-			<if test="distance == 'twoKilometer'">
-			
-			</if>
-			<if test="distance == 'threeKilometer'">
-			
 			</if>
 		</where>
 		<choose>
@@ -238,7 +234,7 @@
 	
 	<!-- List<Accommodation> getAllLikedRestaurantByUserNo(int no); -->
 	<select id="getAllLikedRestaurantByUserNo" parameterType="int" resultMap="RestaurantResultMap">
-		select r. restaurant_no, r.restaurant_name, r.restaurant_district, r.restaurant_imgname,
+		select r.restaurant_no, r.restaurant_name, r.restaurant_district, r.restaurant_imgname,
 				r.restaurant_like_count, r.restaurant_review_point, r.restaurant_latitud, r.restaurant_longitude
 		from user_restaurant_likes l, restaurant r
 		where r.restaurant_delete = 'N'
@@ -268,5 +264,4 @@
 			restaurant_district = #{district}
 		where restaurant_no = #{no}
 	</update>
-	
 </mapper>

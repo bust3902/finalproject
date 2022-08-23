@@ -22,7 +22,7 @@
 <div id="review" class="container my-3">
 	<div class="row mb-6">
 		<div class="col-8">
-			<form action="">
+			<form action="/reviewcomplete" method="post" enctype="multipart/form-data">
 				<div class="my-3">
 					<h4 class="text-center"><strong>리뷰 작성하기</strong></h4>
 				</div>
@@ -34,37 +34,38 @@
 					<p><strong>카테고리</strong></p>
 					<select class="form-select" name="category" id="category" style="width:800px;">
 						<option value="selectCategory">카테고리를 선택해주세요.</option>
-						<option value="rooms">객실</option>
 						<option value="accommodations">숙소</option>
 						<option value="restaurant">음식점</option>
 					</select>
+					<input type="hidden" name="restaurantNo"value="${param.restaurantNo }">
+					<input type="hidden" name="accoId" value="${empty param.accoId ? 0 : param.accoId }">
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point1">
+						<input class="form-check-input" type="radio" name="point" value="1">
 						<label class="form-check-label">1점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point2">
+						<input class="form-check-input" type="radio" name="point" value="2">
 						<label class="form-check-label">2점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point3">
+						<input class="form-check-input" type="radio" name="point" value="3">
 						<label class="form-check-label">3점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point4">
+						<input class="form-check-input" type="radio" name="point" value="4">
 						<label class="form-check-label">4점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point5">
+						<input class="form-check-input" type="radio" name="point" value="5">
 						<label class="form-check-label">5점</label>
 					</div>
 				</div>
 				<div class="my-3">
 					<label type="image-field" class="form-label">이미지첨부</label>
-					<input type="file" class="form-control" name="imageFile" id="image-field" style="width:800px;">
+					<input type="file" class="form-control" name="imageFile" multiple="multiple" id="image-field" style="width:800px;">
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>

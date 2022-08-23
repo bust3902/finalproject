@@ -153,21 +153,21 @@
 			<!-- CAT_002 예약 내역 -->
 			<c:if test="${param.cat eq 'CAT_002'}">
 			<div class="m-3">
-				<h5 class="fw-bold pb-3 border-bottom mb-3">숙소 찜 목록</h5>
+				<h5 class="fw-bold pb-3 border-bottom mb-3">숙소내역</h5>
 				<div class="row">
 					<c:choose >
 						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
 								<div class="card col-4 m-2 " >
-										<img class="card-img-top" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
-										<div class="card-body">
-											<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
-												<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
-												<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
-												<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
-												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
-											</a>
-										</div>
+									<img class="card-img-top mt-1" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+									<div class="card-body">
+										<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
+											<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
+											<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
+											<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+											<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
+										</a>
+									</div>
 									<div class="row">
 										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
 									</div>
@@ -184,7 +184,8 @@
 					</c:choose>
 				</div>
 			</div>
-			<div class="m-3" style="color:black;"><strong>이용 내역</strong>
+			<div class="m-3" >
+				<h5 class="fw-bold pb-3 border-bottom mb-3">이용내역</h5>
 				<div class="row" >
 					<c:choose>
 						<c:when test="${empty Readyreservation }">
@@ -215,7 +216,8 @@
 					</c:choose>
 				</div>
 			</div>
-			<div class="m-3" style="color:black;"><strong>취소 내역</strong>
+			<div class="m-3">
+				<h5 class="fw-bold pb-3 border-bottom mb-3">취소내역</h5>
 				<div class="row">
 					<c:choose>
 						<c:when test="${empty Refundreservation }">
@@ -258,11 +260,15 @@
 									<c:forEach var="item" items="${likedAccommodations }">
 										<div id="slide-${item.id }" class="swiper-slide" style="height: auto;">
 											<div class="card p-1 h-100" style="max-width: 20rem;">
-												<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+												<a href="/acco/detail?id=${item.id }">
+													<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+												</a>
 												<div class="card-body d-flex flex-column justify-content-between my-auto">
 													<div class="row pb-3 border-bottom">
 														<div class="d-flex my-auto">
-															<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															<a class="text-decoration-none " href="/acco/detail?id=${item.id }">
+																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															</a>
 															<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteAccoLike(${item.id});"></i>
 														</div>
 													</div>
@@ -302,16 +308,20 @@
 									<c:forEach var="item" items="${likedRestaurants }">
 										<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
 											<div class="card p-1 h-100" style="max-width: 20rem;">
-												<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+												<a href="/restaurant/detail?no=${item.no }">
+													<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+												</a>
 												<div class="card-body d-flex flex-column justify-content-between my-auto">
 													<div class="row pb-3 border-bottom">
 														<div class="d-flex my-auto">
-															<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															<a class="text-decoration-none " href="/restaurant/detail?no=${item.no }">
+																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															</a>
 															<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteRestaurantLike(${item.no});"></i>
 														</div>
 													</div>
 													<div class="row mt-3 mb-0">
-														<span class="small text-center">${item.likeCount } 명이 찜한 숙소</span>
+														<span class="small text-center">${item.likeCount } 명이 찜한 식당</span>
 														<div class="text-warning text-center small mb-3">
 															<i class="bi ${item.reviewRateIcon.star1 }"></i>
 															<i class="bi ${item.reviewRateIcon.star2 }"></i>
@@ -348,6 +358,22 @@
 <!-- swiper js -->
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){
+	// 취소
+	$(".cencle").on("click", function(){
+		
+		location.href = "/";
+				    
+	})
+
+	$("#submit").on("click", function(){
+		if($("#userPass").val()==""){
+			alert("비밀번호를 입력해주세요.");
+			$("#userPass").focus();
+			return false;
+		}	
+	});	
+})
 
 $("#form-nickname").submit(function() {
 	let inputValue = $("#form-nickname input[name='nickname']").val();
@@ -355,6 +381,12 @@ $("#form-nickname").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+
+	var nicknameRe = /^[가-힣]{2,4}$/;
+    if( !nicknameRe.test( $("#form-nickname input[name='nickname']").val())) {
+        alert("닉네임은 한글로 2글자 이상만 허용됩니다.");
+        return false;
+    }
 	return true;
 });
 
@@ -364,6 +396,11 @@ $("#form-name").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+	var nameRe = /^[가-힣]{2,4}$/;
+    if( !nameRe.test( $("#form-name input[name='name']").val())) {
+        alert("이름은 한글로 2글자 이상만 허용됩니다.");
+        return false;
+    }
 	return true;
 });
 
@@ -373,6 +410,11 @@ $("#form-tel").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+	var telRe = /^\d{3}-\d{3,4}-\d{4}$/;
+    if( !telRe.test( $("#form-tel input[name='tel']").val())) {
+        alert("유효한 전화번호 형식이 아닙니다.");
+        return false;
+    }
 	return true;
 });
 

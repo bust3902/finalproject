@@ -28,6 +28,8 @@ public interface AccommodationMapper {
 	List<CommonFacility> getCommonFacilitiesByAccoType(String typeId);
 	// 모든 객실시설 옵션 조회
 	List<RoomFacility> getAllRoomFacilities();
+	// 해당 숙소유형에 따른 모든 부가사항 태그 조회
+	List<String> getAllAccoTagsByAccoType(String typeId);
 	// 모든 부가사항 태그 조회
 	List<String> getAllAccoTags();
 	

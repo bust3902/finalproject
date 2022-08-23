@@ -509,7 +509,7 @@ $(function () {
 	let container = document.getElementById('map-acco-info');
  	let mapcenter = new kakao.maps.LatLng(accoLatitude, accoLongitude);
 	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng(accoLatitude, accoLongitude), //지도의 중심좌표.
+			center: mapcenter, //지도의 중심좌표.
 			level: 3 //지도의 레벨(확대, 축소 정도)
 	};
 	// 지도 생성
@@ -550,7 +550,7 @@ function changeCurrentPage(num) {
  */
 function refreshPaginationButton(currentPage) {
 	let queryString = $("#form-search-rooms").serialize() + "&currentPage=" + currentPage;
-	$.getJSON("/pagination", queryString).done(function(pagination) {
+	$.getJSON("/rooms/pagination", queryString).done(function(pagination) {
 		let $wrapper = $("#ul-item-wrapper").empty();
 		let content = '';
 		content += '<li class="page-item">';
@@ -651,8 +651,6 @@ function searchRooms(currentPage) {
 				content += '</div>'
 				// 생성한 컨텐츠 화면에 추가
 				$wrapper.append(content);
-				
-				
 				
 				// '객실 이용안내' 링크를 눌러서 모달을 열때마다 해당 객실의 정보를 모달에 저장하도록 한다.
 				// * 클릭한 링크에 대한 익명함수 등록 : content를 append하기 전에는 a태그가 아직 DOM객체가 아니어서 할 수가 없으므로, 그 이후에 등록한다.

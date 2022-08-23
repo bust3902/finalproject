@@ -87,13 +87,13 @@ public class UserService {
 		User savedUser = userMapper.getUserById(user.getId());
 		if (savedUser != null) {
 			log.warn("일반 회원가입: 아이디 중복");
-			throw new RuntimeException("사용할 수 없는 아이디입니다.");
+			throw new RuntimeException("중복된 아이디입니다.");
 		}
 		
 		savedUser = userMapper.getUserByEmail(user.getEmail());
 		if (savedUser != null) {
 			log.warn("일반 회원가입: 이메일 중복");
-			throw new RuntimeException("사용할 수 없는 이메일입니다.");
+			throw new RuntimeException("중복된 이메일 주소입니다.");
 		}
 		
 		userMapper.insert(user);
@@ -131,6 +131,15 @@ public class UserService {
 		return savedUser;
 	}
 
-	
-	
+	/**
+	 * 사용자 아이디 찾기
+	 * @param name 사용자 이름
+	 * @param email	사용자 이메일
+	 * @return 사용자 아이디
+	 */
+	public String findId(String name, String email) {
+		String findId = userMapper.findId(name, email);
+		return findId;
+	}
+
 }

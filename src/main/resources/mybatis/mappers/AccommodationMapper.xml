@@ -49,6 +49,13 @@
 		order by ro_facility_id
 	</select>
 	
+	<!-- List<String> getAllAccoTagsByAccoType(String typeId) -->
+	<select id="getAllAccoTagsByAccoType" parameterType="string" resultType="string">
+		select acco_tag
+		from acco_tags
+		where acco_id in (select acco_id from acco_types where acco_type_id = #{value}) 
+	</select>
+	
 	<!-- List<String> getAllAccoTags(); -->
 	<select id="getAllAccoTags" resultType="string">
 		select acco_tag
@@ -140,6 +147,14 @@
 								where co_facility_id in
 								<foreach item="cofa" collection="commonFacilities" open="(" close=")" separator=",">
 									#{cofa}
+								</foreach>
+								)
+			</if>
+			<if test="tags != null">
+				and a.acco_id in (select acco_id from acco_tags
+								where acco_tag in
+								<foreach item="tag" collection="tags" open="(" close=")" separator=",">
+									#{tag}
 								</foreach>
 								)
 			</if>

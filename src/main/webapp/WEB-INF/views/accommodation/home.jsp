@@ -268,8 +268,6 @@ $(function () {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
 				// 성공 시 콜백함수
-				console.log(currentLat);
-				console.log(currentLong);
 		    	currentLat = position.coords.latitude;
 		    	currentLong = position.coords.longitude;
 				$(":hidden[name=currentLat]").val(currentLat);
@@ -490,7 +488,6 @@ $(function () {
 				`;
 				$div.append(content);
 			} else {
-				console.log("전체 검색결과 배열 길이:" + accos.length);
 				let count = 0;
 				$.each(accos, function(index, acco) {
 					// 숙소 정보 html컨텐츠 생성
@@ -565,7 +562,6 @@ $(function () {
 				// 배열에 새로 담긴 마커 객체를 모두 지도에 표시한다.
 				setMarker(map);
 			}
-			console.log("화면에 출력할 배열 길이:" + accoContents.length);
 			
 		});
 	}
@@ -577,7 +573,6 @@ $(function () {
  window.onscroll = function(e) {
  	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
  	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
- 	console.log(accoContents.length);
  	$("#footer").addClass("d-none");
  	if (accoContents.length == 0) {
  		$("#footer").removeClass("d-none");
@@ -588,6 +583,7 @@ $(function () {
 	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 가장 앞에 있는 값을 꺼내 콘텐츠를 추가시킨다.
 	// 화면에 제공한 콘텐츠는 배열에서 삭제된다.
  	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+ 		console.log(window.scrollY);
  		let addContent = accoContents.shift();
  		$("#accos-wrapper").append(addContent);
  	}

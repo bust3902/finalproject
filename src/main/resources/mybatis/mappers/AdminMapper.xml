@@ -292,6 +292,7 @@
 		from acco_room_detail_images
 		where room_no = #{value}
 	</select>
+  
 	<!-- 
 		List<CommonFacility> getCommonFacilitiesByAccommodationTypes(CommonFacility commonFacility);
 		타입아이디로 공용시설 정보 검색

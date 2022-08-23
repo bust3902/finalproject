@@ -4,7 +4,6 @@ package kr.co.nc.web.controller;
 
 
 import java.io.IOException;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,7 +19,6 @@ import kr.co.nc.criteria.RoomCriteria;
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.LoginedUserService;
 import kr.co.nc.service.ReservationService;
-import kr.co.nc.vo.Category;
 import kr.co.nc.vo.User;
 import kr.co.nc.web.form.PaymentRequest;
 
@@ -80,24 +78,6 @@ public class ReservationController {
 		
 		model.addAttribute("payment", reservationService.getPaymentInfo(reservationNo));
 		return "reservation/myreservation";
-	}
-	/*
-	
-	 * 내 예약내역 리스트페이지 요청
-	 * 요청URI : /reservationList
-	 * 뷰 페이지 : /WEB-INF/views/reservationList.jsp
-	 */
-	@GetMapping(path = "/reservationList")
-	public String reservationList(@LoginUser User user, String reservationNo, @RequestParam(name ="cat", required = false) String categoryId, Model model) {
-		model.addAttribute("Readyreservation", reservationService.getReadytoReserveInfoByReserveId(user.getNo()));
-		model.addAttribute("Refundreservation", reservationService.getRefundReserveInfoByReserveId(user.getNo()));
-		model.addAttribute("payment",reservationService.getAllPaymentInfo(user.getNo()));
-		model.addAttribute("reservation", reservationService.getReserveInfoByReserveId(reservationNo));
-
-		 List<Category> categories = loginedUserService.getAllCategories();
-	     model.addAttribute("categories",categories);
-	      
-		return "reservation/reservationList";
 	}
 
 	
