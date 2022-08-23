@@ -22,7 +22,7 @@
 <div id="review" class="container my-3">
 	<div class="row mb-6">
 		<div class="col-8">
-			<form action="">
+			<form action="/reviewcomplete" method="post" enctype="multipart/form-data">
 				<div class="my-3">
 					<h4 class="text-center"><strong>리뷰 작성하기</strong></h4>
 				</div>
@@ -38,6 +38,8 @@
 						<option value="accommodations">숙소</option>
 						<option value="restaurant">음식점</option>
 					</select>
+					<input type="hidden" value="${param.restaurantNo }">
+					<input type="hidden" value="${param.accoId }">
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
