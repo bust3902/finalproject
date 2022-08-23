@@ -34,33 +34,32 @@
 					<p><strong>카테고리</strong></p>
 					<select class="form-select" name="category" id="category" style="width:800px;">
 						<option value="selectCategory">카테고리를 선택해주세요.</option>
-						<option value="rooms">객실</option>
 						<option value="accommodations">숙소</option>
 						<option value="restaurant">음식점</option>
 					</select>
-					<input type="hidden" value="${param.restaurantNo }">
-					<input type="hidden" value="${param.accoId }">
+					<input type="hidden" name="restaurantNo"value="${param.restaurantNo }">
+					<input type="hidden" name="accoId" value="${empty param.accoId ? 0 : param.accoId }">
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point1">
+						<input class="form-check-input" type="radio" name="point" value="1">
 						<label class="form-check-label">1점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point2">
+						<input class="form-check-input" type="radio" name="point" value="2">
 						<label class="form-check-label">2점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point3">
+						<input class="form-check-input" type="radio" name="point" value="3">
 						<label class="form-check-label">3점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point4">
+						<input class="form-check-input" type="radio" name="point" value="4">
 						<label class="form-check-label">4점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point5">
+						<input class="form-check-input" type="radio" name="point" value="5">
 						<label class="form-check-label">5점</label>
 					</div>
 				</div>

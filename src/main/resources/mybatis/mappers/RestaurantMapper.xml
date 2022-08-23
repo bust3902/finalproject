@@ -24,8 +24,7 @@
 	<select id="getReviewByRestaurantNo" parameterType="int" resultMap="ReviewResultMap">
 		select *
 		from REVIEW
-		where
-			ACCO_ID is NULL and REVIEW_DELETED = 'N'
+		where REVIEW_DELETED = 'N'
 			and RESTAURANT_NO = #{value}
 		order by
 			REVIEW_CREATED_DATE desc

@@ -147,6 +147,8 @@
 								<p><strong>${review.title }</strong></p>
 								<p>${review.content }</p>
 							</div>
+							<img alt="이미지가 없습니다." src="../resources/images/restaurant/thumbnail/${review.image }" width="200px" height="100px">
+							<hr style="display: block;">
 							<!-- 리뷰 이미지 출력 여부? -->
 						</c:forEach>
 					</div>
