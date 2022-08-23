@@ -199,9 +199,6 @@
 							</li>
 						</ul>
 					</div>
-					<div class="fixed-bottom p-5">
-						<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
-					</div>
 				</div>
 				<!-- 정렬기준, 지도버튼, 숙소 리스트 -->
 				<div class="col-8">
@@ -225,6 +222,9 @@
 					</div>
 				</div>
 			</div>
+	</div>
+	<div class="fixed-bottom p-5">
+		<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
 	</div>
 </form>
 <%@ include file="../common/footer.jsp" %>

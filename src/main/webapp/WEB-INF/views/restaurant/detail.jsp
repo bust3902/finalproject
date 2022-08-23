@@ -168,6 +168,9 @@
 			</div>
 		</div>
 	</div>
+	<div class="fixed-bottom p-5">
+		<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
+	</div>
 </div>
 <div>
 <%@ include file="../common/footer.jsp" %>
@@ -226,7 +229,34 @@ $(function() {
 				alert("오류가 발생했습니다. 다시 시도해주세요.");
 			}
 		});
-	})
+	});
+	
+	// 평점통계 차트 그리기
+	 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+	 if (isEmpty) {
+		 $("#chart").addClass("d-none");
+		 return false;
+	 }
+    google.charts.load("current", {packages:["corechart"]});
+    google.charts.setOnLoadCallback(drawChart);
+    function drawChart() {
+      var data = google.visualization.arrayToDataTable([
+        ['review point', 'out of 5'],
+        ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
+        ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
+        ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
+        ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
+        ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
+      ]);
+
+      var options = {
+        title: '평점 분포',
+        pieHole: 0.4,
+      };
+
+      var chart = new google.visualization.PieChart(document.getElementById('chart'));
+      chart.draw(data, options);
+    };
 
 });
 
@@ -259,31 +289,6 @@ $(function() {
 	return "방금 전"
 }
 
-// 리뷰평점 통계 출력
- // 리뷰 개수가 0이면 차트를 그리지 않는다.(컨테이너도 출력되지 않음)
-// function getStatic() {
-// 	    google.charts.load("current", {packages:["corechart"]});
-// 	    google.charts.setOnLoadCallback(drawChart);
-// 	    function drawChart() {
-// 	      var data = google.visualization.arrayToDataTable([
-// 	        ['review point', 'out of 5'],
-// 	        ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
-// 	        ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
-// 	        ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
-// 	        ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
-// 	        ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
-// 	      ]);
-
-// 	      var options = {
-// 	        title: '평점 분포',
-// 	        pieHole: 0.4,
-// 	      };
-
-// 	      var chart = new google.visualization.PieChart(document.getElementById('chart'));
-// 	      chart.draw(data, options);
-// 	    };
-// 	}
-	
 /**
  * 리뷰 차트 정보 획득, 리뷰 데이터에 대한 무한스크롤링
  */

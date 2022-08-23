@@ -277,6 +277,9 @@
 			</div>
 		</div>
 	</div>
+	<div class="fixed-bottom p-5">
+		<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
+	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
 
