@@ -136,7 +136,11 @@ public class HomeController {
 			User user = userService.login(id, password);
 			SessionUtils.addAttribute("LOGIN_USER", user);
 			log.info("일반 로그인 처리 완료");
-			return "redirect:/";
+			if ( "A".equals(user.getAuthority())) { 
+				return "redirect:/admin"; }
+			else {
+				return "redirect:/";
+			}
 		} catch (RuntimeException e) {
 			log.warn("일반 로그인 오류: " + e.getMessage());
 			
@@ -239,4 +243,5 @@ public class HomeController {
 		String findId = userService.findId(name, email);
 		return findId;
 	}
+
 }

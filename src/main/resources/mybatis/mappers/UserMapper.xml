@@ -43,7 +43,8 @@
 			user_login_type loginType,
 			user_disabled disabled,
 			user_updated_date updatedDate,
-			user_created_date createdDate
+			user_created_date createdDate,
+			user_authority authority
 		from
 			users
 		where
@@ -110,6 +111,5 @@
       where user_name = #{name} 
       and user_email = #{email}
    </select>
-	
-	
+   
 </mapper>

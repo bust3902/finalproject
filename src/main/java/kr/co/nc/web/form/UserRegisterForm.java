@@ -14,7 +14,6 @@ import lombok.ToString;
 public class UserRegisterForm {
 
 	@NotBlank(message = "아이디는 필수입력값입니다.")
-	@Pattern(regexp = "/^[a-z]+[a-z0-9]{5,19}$", message = "아이디는 영문자로 시작하며, 영문자 또는 숫자 6~20자만 허용됩니다.")
 	private String id;
 	
 	@NotBlank(message = "비밀번호는 필수입력값입니다.")

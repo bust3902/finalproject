@@ -131,11 +131,15 @@ public class UserService {
 		return savedUser;
 	}
 
+	/**
+	 * 사용자 아이디 찾기
+	 * @param name 사용자 이름
+	 * @param email	사용자 이메일
+	 * @return 사용자 아이디
+	 */
 	public String findId(String name, String email) {
 		String findId = userMapper.findId(name, email);
 		return findId;
 	}
 
-	
-	
 }
