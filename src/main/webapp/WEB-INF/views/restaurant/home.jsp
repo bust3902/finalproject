@@ -335,9 +335,18 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				content += '	        <p class="card-text mb-3">'
 				if (item.menus != null) {
 					let menuLength = item.menus.length;
-					for (let i = 0; i < 3; i++) {
+					for (let i = 0; i < menuLength; i++) {
+						if (i > 2) {
+							break;
+						}
 						// 3개까지만 보여준다
-						content += item.menus[i].menuName + ((i == 2) ? ' 등' : ', ');
+
+						let lastDelemeter = ' 등';
+						if (i == menuLength - 1){
+							lastDelemeter = '';
+						} 
+						content += item.menus[i].menuName + ((i == 2 || i == menuLength - 1) ? lastDelemeter : ', ');
+						console.log(item.menus[i], i)
 					}
 				} else {
 					content += '메뉴 정보가 없습니다.'
