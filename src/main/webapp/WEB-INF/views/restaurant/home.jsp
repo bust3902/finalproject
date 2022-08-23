@@ -27,7 +27,7 @@
 	</div>
 </div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
-	<form id="form-search" class="row d-flex position-relative my-5" role="search" action="restaurant/searchlist">
+	<form id="form-search" class="row d-flex position-relative my-5" role="search" action="../near">
 		<div class="col-6">
 			<!-- 식당 검색창 -->
 			<div class="d-flex">

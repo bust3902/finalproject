@@ -2,10 +2,12 @@ package kr.co.nc.web.controller;
 
 import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Required;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import kr.co.nc.service.AccommodationService;
@@ -216,7 +218,9 @@ public class HomeController {
 	 * 내주변 통합검색 페이지 요청을 처리한다.
 	 */
 	@GetMapping("/near")
-	public String near() {
+	public String near(@RequestParam(required = false) String keyword, Model model) {
+		// 맛집 홈에서 검색한 경우 keyword를 전달
+		model.addAttribute("keyword", keyword);
 		return "near";
 	}
 }

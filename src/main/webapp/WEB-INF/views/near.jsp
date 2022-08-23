@@ -34,7 +34,7 @@
 		<div class="col-3 d-flex flex-column px-0">
 			<div class="p-3 bg-light">
 	  			<form id="form-search" class="d-flex justify-content-center p-3 my-auto" action="javascript:changeCurrentPage(1);" autocomplete="off">
-					<input class="form-control me-2 type="text" id="search" name="keyword" placeholder="통합검색" style="max-width:600px;height:auto">
+					<input class="form-control me-2 type="text" id="search" name="keyword" value="${keyword }" placeholder="통합검색" style="max-width:600px;height:auto">
 					<input type="hidden" name="type" value="">
 					<input type="hidden" name="currentLat" value="">
 					<input type="hidden" name="currentLong" value="">
