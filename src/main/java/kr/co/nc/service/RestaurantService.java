@@ -8,7 +8,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RestaurantCriteria;
+import kr.co.nc.criteria.ReviewCriteria;
+import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.mapper.RestaurantMapper;
+import kr.co.nc.mapper.ReviewMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.City;
@@ -32,9 +35,15 @@ import kr.co.nc.vo.User;
 @Service
 public class RestaurantService {
 
+
 	@Autowired
 	private RestaurantMapper restaurantMapper;
 	
+	@Autowired
+	private AccommodationMapper accommodationMapper;
+	
+	@Autowired
+	private ReviewMapper reviewMapper;
 	// 음식점 디테일 service
 	public Restaurant getRestaurantDetail(int restaurantNo) {
 		return restaurantMapper.getRestaurantByNo(restaurantNo);
@@ -49,6 +58,7 @@ public class RestaurantService {
 	public List<Review> getAllRestaurantReview() {
 		return restaurantMapper.getAllReview();
 	}
+	
 	
 	// 카테고리 아이디를 받아 음식점 검색
 	public List<Restaurant> getRestaurantsByCategoryId(String categoryId) {
