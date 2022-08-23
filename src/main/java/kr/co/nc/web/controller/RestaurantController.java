@@ -44,7 +44,6 @@ public class RestaurantController {
 		} else {
 			model.addAttribute("restaurant",restaurantService.getRestaurantDetail(no));
 		}
-//		model.addAttribute("categoryId",restaurantService.getRestaurantsByCategoryId(categoryId));
 		model.addAttribute("review",restaurantService.getRestaurantReview(no));
 
 		return "restaurant/detail";

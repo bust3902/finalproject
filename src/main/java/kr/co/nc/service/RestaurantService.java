@@ -44,10 +44,8 @@ public class RestaurantService {
 	public Restaurant getRestaurantDetail(Integer userNo, int restaurantNo) {
 		Restaurant restaurant = restaurantMapper.getRestaurantByNo(restaurantNo);
 		if (userNo != null) {
-			System.out.println(new LikeCriteria(userNo, restaurantNo));
 			restaurant.setLiked(isLikedRestaurant(new LikeCriteria(userNo, restaurantNo)));
 		} else {
-			System.out.println("null");
 		}
 		return restaurant;
 	}
