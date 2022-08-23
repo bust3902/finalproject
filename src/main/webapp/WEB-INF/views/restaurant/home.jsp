@@ -336,7 +336,7 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 					let menuLength = item.menus.length;
 					for (let i = 0; i < 3; i++) {
 						// 3개까지만 보여준다
-						content += item.menus[i].menuName + ((i == 2) ? '' : ', ');
+						content += item.menus[i].menuName + ((i == 2) ? ' 등' : ', ');
 					}
 				} else {
 					content += '메뉴 정보가 없습니다.'
