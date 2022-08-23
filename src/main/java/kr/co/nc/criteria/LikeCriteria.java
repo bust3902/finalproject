@@ -15,11 +15,13 @@ public class LikeCriteria {
 	int id; // 숙소의 찜하기 여부를 조회할때는 accoId를, 식당의 찜하기 여부를 조회할때는 restaurantNo를 저장
 	String type; // 숙소/식당 A/R
 	
+	// 숙소 서비스, 식당서비스에서 각각 분리된 mapper 호출 시 사용하는 생성자
 	public LikeCriteria(int userNo, int id) {
 		this.userNo = userNo;
 		this.id = id;
 	}
 	
+	// 통합검색에서 사용하는 생성자 
 	public LikeCriteria(int userNo, int id, String type) {
 		this.userNo = userNo;
 		this.id = id;

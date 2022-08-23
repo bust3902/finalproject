@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.co.nc.service.RestaurantService;
 import kr.co.nc.service.ReviewService;
+import kr.co.nc.vo.User;
 
 @Controller
 @RequestMapping("/restaurant")
@@ -35,11 +36,16 @@ public class RestaurantController {
 	}
 	
 	@GetMapping(path = "/detail")
-	public String detail(@RequestParam("no") int restaurantNo, String categoryId,Model model) {
-		// 변수 따로 만들지 않고 reviews안에 넣었습니다.
-		model.addAttribute("restaurant",restaurantService.getRestaurantDetail(restaurantNo));
-		model.addAttribute("categoryId",restaurantService.getRestaurantsByCategoryId(categoryId));
-		model.addAttribute("review",restaurantService.getRestaurantReview(restaurantNo));
+	public String detail(int no, Model model) {
+		User loginUser = (User) model.getAttribute("LOGIN_USER");
+		// 로그인 상태이면 사용자번호도 전달해서 사용자의 찜 상태를 restaurant 객체에 반영한다.
+		if (loginUser != null) {
+			model.addAttribute("restaurant",restaurantService.getRestaurantDetail(loginUser.getNo(), no));
+		} else {
+			model.addAttribute("restaurant",restaurantService.getRestaurantDetail(no));
+		}
+//		model.addAttribute("categoryId",restaurantService.getRestaurantsByCategoryId(categoryId));
+		model.addAttribute("review",restaurantService.getRestaurantReview(no));
 
 		return "restaurant/detail";
 	}
