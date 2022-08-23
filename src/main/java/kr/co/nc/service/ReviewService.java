@@ -1,21 +1,19 @@
 package kr.co.nc.service;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import kr.co.nc.annotation.LoginUser;
 import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.dto.ReviewPointChart;
 import kr.co.nc.mapper.ReviewMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.Review;
-import kr.co.nc.vo.ReviewCategory;
 import kr.co.nc.vo.User;
 import kr.co.nc.web.form.ReviewRegisterForm;
 
@@ -25,26 +23,29 @@ public class ReviewService {
 	@Autowired
 	private ReviewMapper reviewMapper;
 	
-	public void addNewReview(User loginUser, ReviewRegisterForm reviewRegisterForm) throws IOException{
+	public void addNewReview(@LoginUser User user,@RequestParam(name="restaurantNo",required=false)Integer restaurantNo,@RequestParam(name="accoId",required=false)Integer accoId,  ReviewRegisterForm reviewRegisterForm ) {
 		Review review = new Review();
-		review.setTitle(review.getTitle());
-		review.setContent(review.getContent());
-		review.setLikeCount(review.getLikeCount());
-		review.setImage(review.getImage());
-		review.setPoint(review.getPoint());
-		review.setUser(loginUser);
-		review.setAccoId(review.getAccoId());
-		review.setRestaurantNo(review.getRestaurantNo());
-		reviewMapper.insertReview(review);
-		
-		// 리뷰 카테고리 정보 저장
-		List<String> categoryIds = reviewRegisterForm.getCategoryIds();
-		for(String categoryId : categoryIds) {
-			reviewMapper.insertReviewCategory(new ReviewCategory(review.getNo(), categoryId));
+		review.setTitle(reviewRegisterForm.getTitle());
+		review.setContent(reviewRegisterForm.getContent());
+		review.setLikeCount(reviewRegisterForm.getLikeCount());
+		review.setImage(reviewRegisterForm.getImage());
+		review.setPoint(reviewRegisterForm.getPoint());
+		review.setUser(user);
+		if(accoId != null) {
+			review.setAccoId(accoId);
 		}
-		
+		if(restaurantNo !=null) {
+			review.setRestaurantNo(restaurantNo);
+		}
+		reviewMapper.insertReview(review);
 	}
-	
+		/*
+		 * // 리뷰 카테고리 정보 저장 List<String> categoryIds =
+		 * reviewRegisterForm.getCategoryIds(); for(String categoryId : categoryIds) {
+		 * reviewMapper.insertReviewCategory(new ReviewCategory(review.getNo(),
+		 * categoryId)); }
+		 */
+		
 	/**
 	 * 숙소 또는 식당 리뷰를 반환 (원하는 대상에 따라 criteria의 값을 set해서 전달할 것)
 	 * @param criteria
@@ -57,7 +58,7 @@ public class ReviewService {
 	
 	/**
 	 * 리뷰 평점 분포 집계결과를 이용해 적절한 객체에 값을 저장해 반환
-	 * @param accoId
+	 * @param accoId1
 	 * @return
 	 */
 	public ReviewPointChart getReviewPointChartByAccoId(int accoId) {
