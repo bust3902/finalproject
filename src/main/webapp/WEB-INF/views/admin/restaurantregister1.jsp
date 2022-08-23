@@ -17,7 +17,7 @@
 <%@ include file="../common/nav.jsp" %>
 <div class="row bg-secondary">
 	<div class="container" style="min-width:992px; max-width:992px; height:10vh;">
-		<h1 class="fs-3 text-white p-2">음식점 등록</h1>
+		<a href="/admin" class="fs-3 text-white text-decoration-none p-2">음식점 등록</a>
 	</div>
 </div>
 <div class="container mt-5" style="min-width:992px; max-width:992px;">
