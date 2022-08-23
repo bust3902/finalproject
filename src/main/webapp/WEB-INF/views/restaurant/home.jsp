@@ -71,6 +71,7 @@
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_004" class="text-decoration-none text-muted float-end"><strong>'한식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
+		-->
 	</div>
 	<!-- 일식집 추천 -->
 	<div class="row mb-3">
