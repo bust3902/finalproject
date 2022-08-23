@@ -31,12 +31,12 @@ public class RestaurantRestController {
 	@GetMapping(path = "/restaurants")
 	public List<Restaurant> restaurants(@RequestParam(required = false) Integer userNo, RestaurantCriteria criteria) {
 		// userNo는 null이 들어올 수 있는 값이므로 wrapper타입으로 지정
-		List<Restaurant> restaurants = restaurantService.searchRestaurant(criteria);
-		// 로그인 사용자 정보를 전달받은 경우, 맛집 홈에서 온 요청으로 찜하기 상태를 조회해 각 아이템에 저장시킨다.
-		if (userNo != null) {
-			for (Restaurant restaurant : restaurants) {
-				restaurant.setLiked(restaurantService.isLikedRestaurant(new LikeCriteria(userNo, restaurant.getNo())));
-			}
+		List<Restaurant> restaurants = null; 
+		if (userNo == null) {
+			restaurants = restaurantService.searchRestaurant(criteria);
+		} else {
+			// 로그인 사용자 정보를 전달받은 경우, 맛집 홈에서 온 요청으로 찜하기 상태를 조회해 각 아이템에 저장시킨다.
+			restaurants = restaurantService.searchRestaurant(userNo, criteria);
 		}
 		return restaurants;
 	}

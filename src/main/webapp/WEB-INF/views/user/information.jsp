@@ -260,11 +260,15 @@
 									<c:forEach var="item" items="${likedAccommodations }">
 										<div id="slide-${item.id }" class="swiper-slide" style="height: auto;">
 											<div class="card p-1 h-100" style="max-width: 20rem;">
-												<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+												<a href="/acco/detail?id=${item.id }">
+													<img src="/resources/images/acco/thumbnail/${item.thumbnailImageName }" class="card-img-top" alt="...">
+												</a>
 												<div class="card-body d-flex flex-column justify-content-between my-auto">
 													<div class="row pb-3 border-bottom">
 														<div class="d-flex my-auto">
-															<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															<a class="text-decoration-none " href="/acco/detail?id=${item.id }">
+																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															</a>
 															<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteAccoLike(${item.id});"></i>
 														</div>
 													</div>
@@ -304,11 +308,15 @@
 									<c:forEach var="item" items="${likedRestaurants }">
 										<div id="slide-${item.no }" class="swiper-slide" style="height: auto;">
 											<div class="card p-1 h-100" style="max-width: 20rem;">
-												<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+												<a href="/restaurant/detail?no=${item.no }">
+													<img src="/resources/images/restaurant/thumbnail/${item.imgname }" class="card-img-top" alt="...">
+												</a>
 												<div class="card-body d-flex flex-column justify-content-between my-auto">
 													<div class="row pb-3 border-bottom">
 														<div class="d-flex my-auto">
-															<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															<a class="text-decoration-none " href="/restaurant/detail?no=${item.no }">
+																<strong class="flex-fill text-dark fw-light small pe-2" style="word-break: keep-all;">${item.name }</strong>
+															</a>
 															<i class="text-primary fs-5 float-end bi bi-heart-fill" onclick="deleteRestaurantLike(${item.no});"></i>
 														</div>
 													</div>

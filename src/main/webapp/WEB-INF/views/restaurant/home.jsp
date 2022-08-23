@@ -71,6 +71,7 @@
 		<div>
 			<a href="restaurant/searchlist?categoryId=CAT_004" class="text-decoration-none text-muted float-end"><strong>'한식집'</strong> 더보기 <i class="bi bi-chevron-double-right"></i></a>
 		</div>
+		-->
 	</div>
 	<!-- 일식집 추천 -->
 	<div class="row mb-3">
@@ -104,7 +105,9 @@
 					</p>
 					<div class="d-flex flex-wrap justify-content-between">
 					    <div>
-						    <strong class="text-dark">${review.restaurant.name }</strong>
+					    	<a class="text-decoration-none" href="/restaurant/detail?no=${review.restaurant.no }">
+							    <strong class="text-dark">${review.restaurant.name }</strong>
+					    	</a>
 						    <i class="bi bi-geo-alt ms-3 me-1"></i>${review.restaurant.district }
 					    </div>
 					    <div class="text-warning text-end m-0 mb-3">
@@ -229,9 +232,7 @@ function deleteKeyword(index) {
 // 최근 검색어 클릭시 검색되게 하는 기능
 // index를 주고 받지 말고 쉽게 keyword를 주고 받기
 function searchKeyword(keyword) {
-	//alert(keyword);
-	
-	location.href="restaurant/searchlist?keyword=" + keyword;
+	location.href="near?keyword=" + keyword;
 };
 
 // 현재 위치 좌표를 저장하는 변수
@@ -331,8 +332,19 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 				content += '	        <p class="card-text mb-1">' + item.distance + ' km</p>';
 				content += '	        <p class="card-text mb-3">'
 				if (item.menus != null) {
-					for (let i = 0; i < item.menus.length; i++) {
-						content += menus[i].menuName + (i - 1 == item.menus.length ? '' : ', ');
+					let menuLength = item.menus.length;
+					for (let i = 0; i < menuLength; i++) {
+						if (i > 2) {
+							break;
+						}
+						// 3개까지만 보여준다
+
+						let lastDelemeter = ' 등';
+						if (i == menuLength - 1){
+							lastDelemeter = '';
+						} 
+						content += item.menus[i].menuName + ((i == 2 || i == menuLength - 1) ? lastDelemeter : ', ');
+						console.log(item.menus[i], i)
 					}
 				} else {
 					content += '메뉴 정보가 없습니다.'
