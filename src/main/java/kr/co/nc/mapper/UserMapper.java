@@ -15,6 +15,7 @@ public interface UserMapper {
 	User getUserByName(String name);
 	void update(User user);
 	void delete(String Id);
+	//아이디 찾기
 	String findId(@Param("name")String name, @Param("email")String email);
 	
 }
