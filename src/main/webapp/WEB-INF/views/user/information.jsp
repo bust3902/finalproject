@@ -93,7 +93,7 @@
 		<!-- 카테고리 리스트 -->	
 		<div id="category-box">
 			<c:forEach var="category" items="${categories }">
-				<a href="imformation?cat=${category.id }" data-category="${category.id }" class="list-group-item list-group-item-action py-3 ${param.cat eq category.id ? 'active' : '' }"> ${category.name }</a>
+				<a href="information?cat=${category.id }" data-category="${category.id }" class="list-group-item list-group-item-action py-3 ${param.cat eq category.id ? 'active' : '' }"> ${category.name }</a>
 			</c:forEach>
 		</div>
 		<!-- 메뉴 클릭 후 재요청마다 parameter에 따라 다른 내용을 보여준다. -->
@@ -152,6 +152,102 @@
 			</c:if>
 			<!-- CAT_002 예약 내역 -->
 			<c:if test="${param.cat eq 'CAT_002'}">
+			<div class="m-3">
+				<h5 class="fw-bold pb-3 border-bottom mb-3">숙소내역</h5>
+				<div class="row">
+					<c:choose >
+						<c:when test="${!empty payment }">
+							<c:forEach var="payment" items="${payment }" >
+								<div class="card col-4 m-2 " >
+									<img class="card-img-top mt-1" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+									<div class="card-body">
+										<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
+											<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>
+											<p class="text-center"><strong>${payment.reservation.acco.name }</strong></p>
+											<p class="form-text text-center">체크인 : <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+											<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
+										</a>
+									</div>
+									<div class="row">
+										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
+									</div>
+								</div>
+							</c:forEach>
+						</c:when>
+						<c:otherwise>
+								<div class="border col m-2 " >
+									<tr>
+										<td colspan="5" class="text-center">예약내역이 없습니다.</td>
+									</tr>
+								</div>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<div class="m-3" >
+				<h5 class="fw-bold pb-3 border-bottom mb-3">이용내역</h5>
+				<div class="row" >
+					<c:choose>
+						<c:when test="${empty Readyreservation }">
+							<div class="card col m-2 " >
+								<tr>
+									<td colspan="5" class="text-center">예약내역이 없습니다.</td>
+								</tr>
+							</div>
+						</c:when>
+						<c:otherwise>
+							<c:forEach var="Readyreservation" items="${Readyreservation }" >
+								<div class="card col-4 m-2 " >
+										<img class="card-img-top" src="/resources/images/acco/thumbnail/${Readyreservation.reservation.acco.thumbnailImageName}"><br>
+										<div class="card-body">
+											<a href="/myreservation?reservationNo=${Readyreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
+												<p class="text-center"><span class="badge ${Readyreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Readyreservation.paymentStatus }</span></p>
+												<p class="text-center"><strong>${Readyreservation.reservation.acco.name }</strong></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Readyreservation.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Readyreservation.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
+											</a>
+										</div>
+									<div class="row">
+										<button class="btn  ${Readyreservation.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
+									</div>
+								</div>
+							</c:forEach>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
+			<div class="m-3">
+				<h5 class="fw-bold pb-3 border-bottom mb-3">취소내역</h5>
+				<div class="row">
+					<c:choose>
+						<c:when test="${empty Refundreservation }">
+							<div class="border col m-2 " >
+								<tr>
+									<td colspan="5" class="text-center">취소내역이 없습니다.</td>
+								</tr>
+							</div>
+						</c:when>
+						<c:otherwise>
+								<c:forEach var="Refundreservation" items="${Refundreservation }" >
+									<div class="card col-4 m-2 " >
+										<img class="card-img-top" src="/resources/images/acco/thumbnail/${Refundreservation.reservation.acco.thumbnailImageName}"><br>
+										<div class="card-body">
+											<a href="/myreservation?reservationNo=${Refundreservation.reservation.reservationNo}"  style="text-decoration: none; color:black;">
+												<p class="text-center"><span class="badge ${Refundreservation.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${Refundreservation.paymentStatus }</span></p>
+												<p class="text-center"><strong>${Refundreservation.reservation.acco.name }</strong></p>
+												<p class="form-text text-center">체크인 : <fmt:formatDate value="${Refundreservation.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/></p>
+												<p class="form-text text-center" >체크아웃 : <fmt:formatDate value="${Refundreservation.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/></p>
+											</a>
+										</div>
+									<div class="row">
+										<button class="btn  ${Refundreservation.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
+									</div>
+								</div>
+								</c:forEach>
+						</c:otherwise>
+					</c:choose>
+				</div>
+			</div>
 			</c:if>
 			<!-- CAT_003 내가 찜한 목록 -->
 			<c:if test="${param.cat eq 'CAT_003' }">
@@ -254,6 +350,22 @@
 <!-- swiper js -->
 <script src="https://cdn.jsdelivr.net/npm/swiper/swiper-bundle.min.js"></script>
 <script type="text/javascript">
+$(document).ready(function(){
+	// 취소
+	$(".cencle").on("click", function(){
+		
+		location.href = "/";
+				    
+	})
+
+	$("#submit").on("click", function(){
+		if($("#userPass").val()==""){
+			alert("비밀번호를 입력해주세요.");
+			$("#userPass").focus();
+			return false;
+		}	
+	});	
+})
 
 $("#form-nickname").submit(function() {
 	let inputValue = $("#form-nickname input[name='nickname']").val();
@@ -261,6 +373,12 @@ $("#form-nickname").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+
+	var nicknameRe = /^[가-힣]{2,4}$/;
+    if( !nicknameRe.test( $("#form-nickname input[name='nickname']").val())) {
+        alert("닉네임은 한글로 2글자 이상만 허용됩니다.");
+        return false;
+    }
 	return true;
 });
 
@@ -270,6 +388,11 @@ $("#form-name").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+	var nameRe = /^[가-힣]{2,4}$/;
+    if( !nameRe.test( $("#form-name input[name='name']").val())) {
+        alert("이름은 한글로 2글자 이상만 허용됩니다.");
+        return false;
+    }
 	return true;
 });
 
@@ -279,6 +402,11 @@ $("#form-tel").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
+	var telRe = /^\d{3}-\d{3,4}-\d{4}$/;
+    if( !telRe.test( $("#form-tel input[name='tel']").val())) {
+        alert("유효한 전화번호 형식이 아닙니다.");
+        return false;
+    }
 	return true;
 });
 

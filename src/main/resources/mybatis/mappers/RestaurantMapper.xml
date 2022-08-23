@@ -121,15 +121,31 @@
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantsByCategoryId(@Param("categoryId") String categoryId); -->
-	<select id="getRestaurantsByCategoryId" >
-		select *
+	<select id="getRestaurantsByCategoryId" parameterType="string" resultType="kr.co.nc.vo.Restaurant" >
+		select
+			RESTAURANT_NO as no,
+			RESTAURANT_NAME as name,
+			RESTAURANT_LOCATION as location,
+			RESTAURANT_IMGNAME as imgName,
+			RESTAURANT_TEL as tel,
+			RESTAURANT_LIKE_COUNT as likeCount,
+			RESTAURANT_REVIEW_COUNT as reviewCount,
+			RESTAURANT_REVIEW_POINT as reviewPoint,
+			RESTAURANT_CREATED_DATE as createdDate,
+			RESTAURANT_UPDATE_DATE as updatedDate,
+			RESTAURANT_LATITUD as latitud,
+			RESTAURANT_LONGITUDE as longitude,
+			CITY_ID as "CITIES.CITY_ID",
+			RESTAURANT_OPENING as opening,
+			RESTAURANT_BREAK_TIME as breakTime,
+			RESTAURANT_CLOSE as close,
+			RESTAURANT_DISTRICT as district
 		from RESTAURANT
-		<if test="categoryId != null">
-			where RESTAURANT_NO in (select RESTAURANT_NO
-									from RESTAURANT_CAT
-									where RESTAURANT_CAT_ID = #{categoryId})
-		</if>
-		order by RESTAURANT_CREATED_DATE desc
+		where
+			RESTAURANT_NO in (select RESTAURANT_NO
+								from RESTAURANT_CAT
+							   where RESTAURANT_CAT_ID = #{categoryId})
+		order by RESTAURANT_CREATED_DATE DESC
 	</select>
 	
 	<!-- List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria); -->

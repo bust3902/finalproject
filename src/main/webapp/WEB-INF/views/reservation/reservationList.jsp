@@ -25,8 +25,8 @@
 					<c:choose >
 						<c:when test="${!empty payment }">
 							<c:forEach var="payment" items="${payment }" >
-								<div class="card col-4 m-2 " >
-										<img class="card-img-top" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
+								<div class="card col-4 m-1 " >
+										<img class="card-img-top m-1" src="/resources/images/acco/thumbnail/${payment.reservation.acco.thumbnailImageName}"><br>
 										<div class="card-body">
 											<a href="/myreservation?reservationNo=${payment.reservation.reservationNo}" style="text-decoration: none; color:black;">
 												<p class="text-center"><span class="badge  ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' }">${payment.paymentStatus }</span></p>

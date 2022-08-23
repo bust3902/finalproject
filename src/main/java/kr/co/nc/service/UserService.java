@@ -131,6 +131,11 @@ public class UserService {
 		return savedUser;
 	}
 
+	public String findId(String name, String email) {
+		String findId = userMapper.findId(name, email);
+		return findId;
+	}
+
 	
 	
 }

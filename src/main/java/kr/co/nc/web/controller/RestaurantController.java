@@ -24,21 +24,23 @@ public class RestaurantController {
 	private ReviewService reviewService; 
 	
 	@GetMapping(path="/searchlist")
-	public String searchList(@RequestParam(name="keyword",required=false) String keyword,Model model ) {
+	public String searchList(@RequestParam(name="keyword",required=false) String keyword, @RequestParam(name="categoryId",required=false) String categoryId,Model model ) {
 		
 		model.addAttribute("categories",restaurantService.getAllCategories());
 		model.addAttribute("cities",restaurantService.getAllCity());
 		model.addAttribute("tags",restaurantService.getAlltags());
-		
+		model.addAttribute("restaurant",restaurantService.getRestaurantsByCategoryId(categoryId));
 		
 		return "restaurant/searchlist";
 	}
 	
 	@GetMapping(path = "/detail")
-	public String detail(@RequestParam("no") int restaurantNo, Model model) {
+	public String detail(@RequestParam("no") int restaurantNo, String categoryId,Model model) {
 		// 변수 따로 만들지 않고 reviews안에 넣었습니다.
 		model.addAttribute("restaurant",restaurantService.getRestaurantDetail(restaurantNo));
 		model.addAttribute("reviews",restaurantService.getRestaurantReview(restaurantNo));
+		model.addAttribute("categoryId",restaurantService.getRestaurantsByCategoryId(categoryId));
+
 		return "restaurant/detail";
 	}
 	

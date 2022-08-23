@@ -59,14 +59,14 @@ public class ReservationController {
 	public String paymentinfo(PaymentRequest paymentRequest, @LoginUser User user) throws IamportResponseException, IOException{
 		reservationService.insertReservate(paymentRequest, user);
 		
-		return "redirect:/reservationList";
+		return "redirect:/user/information?cat=CAT_002";
 	}
 	
 	@GetMapping("/reservation/refund")
 	public String reservationRefund(@LoginUser User user, @RequestParam(name="reservationNo") String reservationNo) {
 		reservationService.updatePaymentStatus(reservationNo);
 		
-		return "redirect:/reservationList";
+		return "redirect:/user/information?cat=CAT_002";
 	}
 	
 	/*
@@ -94,9 +94,6 @@ public class ReservationController {
 		model.addAttribute("payment",reservationService.getAllPaymentInfo(user.getNo()));
 		model.addAttribute("reservation", reservationService.getReserveInfoByReserveId(reservationNo));
 
-		 List<Category> categories = loginedUserService.getAllCategories();
-	     model.addAttribute("categories",categories);
-	      
 		return "reservation/reservationList";
 	}
 

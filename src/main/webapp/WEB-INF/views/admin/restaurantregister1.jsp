@@ -55,8 +55,8 @@
 					<div>
 						<c:forEach var="category" items="${categories }">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="categories" value="${category.ID }">
-							<label class="form-check-label me-5">${category.NAME }</label>
+							<input class="form-check-input" type="checkbox" name="categories" value="${category.id }">
+							<label class="form-check-label me-5">${category.name }</label>
 						</div>
 						</c:forEach>
 					</div>
@@ -190,7 +190,7 @@ $(function() {
 		let open = $openTime.val();
 		let close = $closeTime.val();
 
-		let $data = $(":input[name=opening]").val(open+' - '+close);
+		let $data = $(":input[name=opening]").val(open+'-'+close);
 		let data = $(":input[name=opening]").val();
 		// alert(data);
 		
@@ -202,7 +202,7 @@ $(function() {
 		let start = $startTime.val();
 		let end = $endTime.val();
 
-		let $breakData = $(":input[name=breakTime]").val(start+' - '+end);
+		let $breakData = $(":input[name=breakTime]").val(start+'-'+end);
 		let breakData = $(":input[name=breakTime]").val();
 		// alert(breakData);
 	});

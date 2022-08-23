@@ -1,6 +1,7 @@
 package kr.co.nc.mapper;
 
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import kr.co.nc.vo.User;
 
@@ -13,5 +14,7 @@ public interface UserMapper {
 	User getUserByEmail(String email);
 	User getUserByName(String name);
 	void update(User user);
+	void delete(String Id);
+	String findId(@Param("name")String name, @Param("email")String email);
 	
 }

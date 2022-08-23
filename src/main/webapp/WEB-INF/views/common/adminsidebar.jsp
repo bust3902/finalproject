@@ -21,7 +21,7 @@ span.sub { color:#C0C0C0; font-size:14px; }
 				<div class="collapse" id="cat02">
 					<ul class="list-unstyled">
 						<li><a href="/admin/restaurant" class="text-decoration-none"><span class="sub">등록</span></a></li>
-						<li><a href="#" class="text-decoration-none"><span class="sub">관리</span></a></li>
+						<li><a href="/admin/restausearch" class="text-decoration-none"><span class="sub">관리</span></a></li>
 					</ul>
 				</div>
 			</li>

@@ -98,8 +98,18 @@
 			user_disabled = #{disabled},
 			user_updated_date = sysdate
 		where
-			user_no = #{no}
-	
+			user_no = #{no}	
 	</update>
+	
+	<!-- String findId(@Param("name") String name, @Param("email")String email); 
+       mapper 인터페이스에서 parameter 설정 parameterType 설정을 하지 않아도 된다.
+   -->
+   <select id="findId" resultType="string">
+      select user_id
+      from users
+      where user_name = #{name} 
+      and user_email = #{email}
+   </select>
+	
 	
 </mapper>
