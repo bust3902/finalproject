@@ -93,4 +93,5 @@ public class LoginedUserController {
 	   
 	   return "redirect:/user/imformation?cat=CAT_001";
    }
+ 
 }

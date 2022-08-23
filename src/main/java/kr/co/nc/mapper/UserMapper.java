@@ -8,14 +8,22 @@ import kr.co.nc.vo.User;
 @Mapper
 public interface UserMapper {
 
+	// 회원가입
 	void insert(User user);
+	
 	User getUserByNo(int no);
 	User getUserById(String Id);
 	User getUserByEmail(String email);
 	User getUserByName(String name);
-	void update(User user);
-	void delete(String Id);
-	//아이디 찾기
-	String findId(@Param("name")String name, @Param("email")String email);
 	
+	// 회원정보 수정
+	void update(User user);
+	
+	// 아이디 찾기
+	String findId(@Param("name")String name, @Param("email")String email);
+
+	void updatePw(User user);
+
+	int finePwCheck(@Param("id") String id, @Param("email")String email);
+
 }

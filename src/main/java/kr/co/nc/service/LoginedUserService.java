@@ -52,5 +52,4 @@ public class LoginedUserService {
 		return user;
 	}
 	
-	
 }
