@@ -232,9 +232,7 @@ function deleteKeyword(index) {
 // 최근 검색어 클릭시 검색되게 하는 기능
 // index를 주고 받지 말고 쉽게 keyword를 주고 받기
 function searchKeyword(keyword) {
-	//alert(keyword);
-	
-	location.href="restaurant/searchlist?keyword=" + keyword;
+	location.href="near?keyword=" + keyword;
 };
 
 // 현재 위치 좌표를 저장하는 변수
