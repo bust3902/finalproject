@@ -41,6 +41,9 @@ public interface RestaurantMapper {
 	
 	// 검색조건에 따른 맛집 정보를 조회
 	List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria);
+	// 음식점 리뷰
+	List<Review> getRestaurantReviewsByRestaurantNo(int restaurantNo);
+
 	
 	//// 찜하기 관련
 	// 해당 사용자의, 해당 번호의 식당에 대한 찜하기 정보가 존재하면 1을, 존재하지 않으면 0을 반환

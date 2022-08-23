@@ -91,7 +91,7 @@
 					<div class="mb-3">
 						<button type="button" class="btn btn-outline-secondary mx-3">좋아요(${restaurant.likeCount })</button>
 						<button type="button" class="btn btn-outline-secondary">공유</button>
-				  		<button type="button" class="btn btn-outline-secondary float-end mx-3" onclick="/reviewform">리뷰쓰기</button>
+				  		<button type="button" class="btn btn-outline-secondary float-end mx-3" onclick="location.href='/reviewform?restaurantNo=${restaurant.no}'">리뷰쓰기</button>
 					</div>
 				</div>
 			</div>
@@ -129,15 +129,17 @@
 						</li>
 						<c:if test='${restaurant.breakTime != null and restaurant.breakTime != "" }'>
 							<li class="list-group-item list-group-flush border-0">
-								<span>휴게시간</span><span class="float-end">${restaurant.breakTime }</span>
+								<span>브레이크 타임</span><span class="float-end">${restaurant.breakTime }</span>
 							</li>
 						</c:if>
-						<li class="list-group-item list-group-flush border-0">
-							<span>영업종료시간</span><span class="float-end">${restaurant.close }</span>
-						</li>
+						<c:if test='${restaurant.close != null and restaurant.close != "" }'>
+							<li class="list-group-item list-group-flush border-0">
+								<span>휴무일</span><span class="float-end">${restaurant.close }</span>
+							</li>
+						</c:if>
 					</ul>
 				</div>
-				<div class="m-3">
+			 	<div class="m-3">
 					<h5 style="color:black;"><strong>메뉴</strong></h3>
 					<ul class="list-group">
 						<c:forEach var="restaurantMenue" items="${restaurant.menus }">
@@ -147,6 +149,7 @@
 						</c:forEach>
 					</ul>
 				</div>
+				
 				<div class="m-3">
 					<h5 style="color:black;"><strong>맛집태그</strong></h5>
 					<!-- 리뷰에서 많이 언급된 태그일 수록 태그의 크기가 크게 출력하고 싶습니다. -->
@@ -157,28 +160,27 @@
 					<div class="m-3" style="color:black;">
 						<h5 style="color:black;">${restaurant.reviewCount }건의 방문자 평가</h5>
 						<hr style="display: block;">
-						<div class="row ">
-							<div class="col-2">
-								<img alt="" width="100px" src="../resources/images/homeicons/restaurant.png""> 
+						<c:forEach var="review" items="${review }">
+							<div class="row ">
+								<div class="col-2">
+									<img alt="" width="100px" src="../resources/images/homeicons/restaurant.png""> 
+								</div>
+								<div class="col">
+									<p>${review.user.name }님</p>
+									<i class="bi ${review.point gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
+									<i class="bi ${review.point gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
+									<i class="bi ${review.point gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
+									<i class="bi ${review.point gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
+									<i class="bi ${review.point gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
+									(${review.point }점)
+								</div>
+								<p><strong>${review.title }</strong></p>
+								<p>${review.content }</p>
 							</div>
-							<div class="col">
-								<p>${reivew.user.name }형찬님</p>
-								<i class="bi ${restaurant.reviewPoint gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
-								<i class="bi ${restaurant.reviewPoint gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
-								<i class="bi ${restaurant.reviewPoint gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
-								<i class="bi ${restaurant.reviewPoint gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
-								<i class="bi ${restaurant.reviewPoint gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
-								(${review.likeCount } 4.0 점)
-							</div>
-							<p><strong>${review.title }리뷰제목</strong></p>
-							<p>${review.content }여기의 최고 메뉴는 메밀전이예요
-							바로 나와서 바삭바삭하고 양도 굉장히 푸짐합니다
-							그리고 곁들임 간장이 달달하고 전에 잘 어울립니다
-							아들 사장님만 계실때는 주문 불가 메뉴라서 매우 아쉬워요</p>
-						</div>
-						<img alt="" src="" width="200px" height="100px">
-						<img alt="" src="" width="200px" height="100px">
-						<img alt="" src="" width="200px" height="100px">
+							<img alt="" src="" width="200px" height="100px">
+							<img alt="" src="" width="200px" height="100px">
+							<img alt="" src="" width="200px" height="100px">
+						</c:forEach>
 					</div>
 				</div>
 		</div>
