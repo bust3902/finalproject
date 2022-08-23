@@ -105,7 +105,9 @@
 					</p>
 					<div class="d-flex flex-wrap justify-content-between">
 					    <div>
-						    <strong class="text-dark">${review.restaurant.name }</strong>
+					    	<a class="text-decoration-none" href="/restaurant/detail?no=${review.restaurant.no }">
+							    <strong class="text-dark">${review.restaurant.name }</strong>
+					    	</a>
 						    <i class="bi bi-geo-alt ms-3 me-1"></i>${review.restaurant.district }
 					    </div>
 					    <div class="text-warning text-end m-0 mb-3">
@@ -303,7 +305,6 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 			let content = '';
 			// 식당 정보 카드 컨텐츠 생성 (최대 4개만 출력)
 			$.each(restaurants, function(index, item) {
-// 				console.log(item.menus);
 				if (index > 3) {
 					return;
 				}
