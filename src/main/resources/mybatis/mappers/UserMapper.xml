@@ -9,7 +9,7 @@
 		insert into users
 			(user_no, user_id, user_password, user_nickname, user_name, user_email, user_tel, user_address, user_login_type)
 		values
-			(user_seq.nextval, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address}, #{loginType})
+			(#{no}, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address}, #{loginType})
 	</insert>
 		
 	<select id="getUserByNo" parameterType="int" resultType="User">
@@ -28,7 +28,7 @@
 		from 
 			users
 		where
-			user_no = #{value}	
+			user_no = #{value}
 	</select>
 	
 	<select id="getUserById" parameterType="string" resultType="kr.co.nc.vo.User">

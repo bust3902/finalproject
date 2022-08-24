@@ -195,6 +195,7 @@ function kakaoLogin() {
         Kakao.API.request({
           url: '/v2/user/me',
           success: function (response) {
+        	  console.log(response)
 			$("#form-kakao-login input[name=id]").val(response.id);
 			$("#form-kakao-login input[name=nickname]").val(response.kakao_account.profile.nickname);
 			$("#form-kakao-login input[name=email]").val(response.kakao_account.email);
