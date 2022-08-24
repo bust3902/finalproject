@@ -37,7 +37,7 @@
 						<option value="accommodations">숙소</option>
 						<option value="restaurant">음식점</option>
 					</select>
-					<input type="hidden" name="restaurantNo"value="${param.restaurantNo }">
+					<input type="hidden" name="restaurantNo"value="${empty param.restaurantNo ? 0 : param.accoId }">
 					<input type="hidden" name="accoId" value="${empty param.accoId ? 0 : param.accoId }">
 				</div>
 				<div class="my-3">

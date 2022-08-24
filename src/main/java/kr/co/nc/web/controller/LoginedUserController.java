@@ -51,7 +51,6 @@ public class LoginedUserController {
 		model.addAttribute("Readyreservation", reservationService.getReadytoReserveInfoByReserveId(user.getNo()));
 		model.addAttribute("Refundreservation", reservationService.getRefundReserveInfoByReserveId(user.getNo()));
 		model.addAttribute("payment",reservationService.getAllPaymentInfo(user.getNo()));
-		model.addAttribute("reservation", reservationService.getReserveInfoByReserveId(reservationNo));
 	
       }
       

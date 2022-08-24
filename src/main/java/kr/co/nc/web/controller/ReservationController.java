@@ -39,7 +39,7 @@ public class ReservationController {
 	@GetMapping(path = "/reservation")
 	public String reservation(@LoginUser User user,RoomCriteria criteria, @RequestParam(name ="id")Integer accoId, @RequestParam(name="roomno")Integer roomNo, @RequestParam(name ="checkin" ,required=false) String checkIn, @RequestParam(name ="checkout") String checkOut ,
 	Model model, PaymentRequest paymentRequest) {
-		
+		model.addAttribute("user", user);
 		model.addAttribute("id", accoId);
 		model.addAttribute("roomno", roomNo);
 		model.addAttribute("checkin", checkIn);

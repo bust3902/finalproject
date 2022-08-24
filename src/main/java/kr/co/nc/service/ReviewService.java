@@ -37,6 +37,8 @@ public class ReviewService {
 		if(restaurantNo !=null) {
 			review.setRestaurantNo(restaurantNo);
 		}
+		System.out.println(restaurantNo);
+		System.out.println(accoId);
 		reviewMapper.insertReview(review);
 	}
 		/*

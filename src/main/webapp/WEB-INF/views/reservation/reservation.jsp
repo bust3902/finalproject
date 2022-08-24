@@ -24,13 +24,13 @@
 				<div class="my-3">
 					<p><strong>예약자 정보</strong></p>
 					<label class="form-label" name="reserName">예약자 이름</label>
-					<input class="form-control" type="text" placeholder="체크인시 필요한 정보입니다." name="reserName" id="reserName">
+					<input class="form-control" type="text" placeholder="체크인시 필요한 정보입니다." name="reserName" id="reserName" value="${user.name }">
 				</div>
 				<div class="my-3">
 					<p class="form-label">휴대폰 번호</p>
 					<p class="form-text">개인 정보 보호를 위해 안심번호로 숙소에 전송됩니다.</p>
 					<div class="input-group">
-						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel" id="reserTel">
+						<input type="text" class="form-control" placeholder="체크인시 필요한 정보입니다." name="reserTel" id="reserTel" value="${user.tel }">
 						<span class="input-group-btn">
 						<button class="btn btn-outline-secondary mx-2" type="button" onclick="phoneCheck()" disabled>인증번호 전송</button>
 						</span>
