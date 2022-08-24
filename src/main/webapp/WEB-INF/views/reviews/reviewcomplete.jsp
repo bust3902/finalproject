@@ -11,15 +11,17 @@
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
-<div class="container mt-3">
-	<div class="row mb-3">
+<div class="container d-flex justify-content-center align-items-center" style="height: 60vh;">
+	<div class="row">
 		<div class="col">
-			<div class="border p-5 bg-light">
-				<h1 class="display-3 mb-5">리뷰 작성이 완료되었습니다.</h1>
-				<a href="/review" class="btn btn-primary">돌아가기</a>
+			<div class="p-5 text-center">
+				<i class="bi bi-check-circle fs-1"></i>
+				<h3 class="my-5">리뷰 작성이 완료되었습니다.</h3>
+				<a href="/user/information?cat=CAT_004" class="btn btn-primary">내 리뷰 내역 보기</a>
 			</div>
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 </body>
 </html>

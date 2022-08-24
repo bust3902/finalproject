@@ -469,7 +469,6 @@ $(function () {
 	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
 	setDateValues(startDayString, endDayString, duration);
 	// 화면 최초 요청 시에 날짜에 대한 값이 모두 저장되면 객실 정보를 조회하여 출력한다. 
-	refreshPaginationButton(1);
 	changeCurrentPage(1);
 	
 	// 날짜 변경 여부와 무관하게 적용을 누르면 발생하는 이벤트에 함수 등록
@@ -477,7 +476,6 @@ $(function () {
     $('#datepicker').on('apply.daterangepicker', function(ev, picker) {
     	setDateValues(startDayString, endDayString);
     	$(this).val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박')
-    	refreshPaginationButton(1);
     	changeCurrentPage(1);
     });
     
@@ -515,12 +513,16 @@ $(function () {
 	let container = document.getElementById('map-acco-info');
  	let mapcenter = new kakao.maps.LatLng(accoLatitude, accoLongitude);
 	let options = { //지도를 생성할 때 필요한 기본 옵션
+			draggable: false, // 줌인아웃 방지
 			center: mapcenter, //지도의 중심좌표.
 			level: 3 //지도의 레벨(확대, 축소 정도)
 	};
 	// 지도 생성
 	let map = new kakao.maps.Map(container, options);
-	
+	// 지도 클릭이벤트 등록(통합검색으로 이동)
+	kakao.maps.event.addListener(map, 'click', function(mouseEvent) {
+		location.href = "/near?currentLat=" + accoLatitude + "&currentLong=" + accoLongitude;
+	});
 	// 숙소 위치 마커 생성하고 지도에 표시하기
 	let accoMarker = new kakao.maps.Marker({
 	    position: mapcenter,
@@ -549,7 +551,6 @@ function changeCurrentPage(num) {
 	refreshPaginationButton(num);
 }
 
-
 /**
  * 현재 페이지에 대한 pagination 객체를 db로부터 조회해 페이지 버튼 엘리먼트를 생성하는 함수
  * 검색날짜를 변경해서, 객실 데이터 행 수가 변경될 때 실행한다.
@@ -576,6 +577,7 @@ function refreshPaginationButton(currentPage) {
 		content += '  </a>';
 		content += '</li>';
 		$wrapper.append(content);
+		
 	});
 }	
 
@@ -694,6 +696,7 @@ function searchRooms(currentPage) {
 			addRoomCardEventListener();
 			// 화면에 추가한 모든 예약버튼에 대하여 이벤트핸들러 등록
 			addReserveBtnEventListener();
+
 		}
 	});
 }
@@ -800,6 +803,13 @@ $.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 	} else {
 		let count = 0;
 		for (let review of reviews) {
+			let nickname= '';
+			if (!review.user.nickname) {
+				nickname = "닉네임정보없음 (" + review.user.loginType + " 연동계정)";
+			} else {
+				nickname = review.user.nickname;
+			}
+			
 			let content = '';
 			content += '<div class="row p-5 border-bottom">';
 			content += '    <div class="col-2 profile-image-wrapper rounded-circle">';
@@ -816,7 +826,7 @@ $.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 			content += '            <span class="text-muted mx-1">' + review.point +'</span>';
 			content += '        </div>';
 			content += '        <p class="my-1">';
-			content += '            <small>' + review.user.nickname +'</small> /';
+			content += '            <small>' + nickname +'</small> /';
 			content += '            <small>' + review.room.name + ' 이용</small><br/>';
 			content += '        </p>';
 			content += '        <p class="text-dark my-3 small">' + review.content +'</p>';

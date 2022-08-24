@@ -364,12 +364,19 @@
 						<table class="table table-sm">
 							<colgroup>
 								<col width="20%">
-								<col width="50%">
+								<col width="*">
 								<col width="20%">
 							</colgroup>
 							<tbody>
 							<c:choose>
 								<c:when test="${not empty accommodationReviews }">
+										<tr>
+											<th class="p-3 align-middle">장소명</th>
+											<th class="p-3 align-middle">리뷰 제목</th>
+											<th class="p-3 align-middle">평점</th>
+											<th class="p-3 align-middle">작성일</th>
+											<th></th>
+										</tr>
 										<c:forEach var="review" items="${accommodationReviews }">
 											<tr>
 												<td class="p-3 align-middle">
@@ -378,7 +385,17 @@
 												<td class="p-3 align-middle">
 													${review.title }
 												</td>
+												<td class="p-3 align-middle text-warning">
+													<i class="${review.pointIcon.star1 }"></i>
+													<i class="${review.pointIcon.star2 }"></i>
+													<i class="${review.pointIcon.star3 }"></i>
+													<i class="${review.pointIcon.star4 }"></i>
+													<i class="${review.pointIcon.star5 }"></i>
+												</td>
 												<td class="p-3 align-middle">
+													<fmt:formatDate value="${review.createdDate }" pattern="YYYY년 MM월 dd일"/>
+												</td>
+												<td class="p-3 align-middle text-end">
 													<button class="btn btn-outline-secondary">수정</button>
 												</td>
 											</tr>
@@ -398,22 +415,39 @@
 					<div class="mb-5" style="min-height: 400px;">
 						<table class="table table-sm">
 							<colgroup>
-								<col width="50%">
+								<col width="20%">
 								<col width="*">
 								<col width="20%">
 							</colgroup>
 							<tbody>
 							<c:choose>
 								<c:when test="${not empty restaurantReviews }">
+										<tr>
+											<th class="p-3 align-middle">장소명</th>
+											<th class="p-3 align-middle">리뷰 제목</th>
+											<th class="p-3 align-middle">평점</th>
+											<th class="p-3 align-middle">작성일</th>
+											<th></th>
+										</tr>
 										<c:forEach var="review" items="${restaurantReviews }">
 											<tr>
 												<td class="p-3 align-middle">
-													<a class="text-muted" href="/restaurant/detail?no=${review.restaurant.no }">${review.restaurant.name }</a>
+													<a class="text-muted" href="/restaurant/detail?no=${review.restaurant.no }" style="word-break: keep-all; ">${review.restaurant.name }</a>
 												</td>
 												<td class="p-3 align-middle">
 													${review.title }
 												</td>
+												<td class="p-3 align-middle text-warning">
+													<i class="${review.pointIcon.star1 }"></i>
+													<i class="${review.pointIcon.star2 }"></i>
+													<i class="${review.pointIcon.star3 }"></i>
+													<i class="${review.pointIcon.star4 }"></i>
+													<i class="${review.pointIcon.star5 }"></i>
+												</td>
 												<td class="p-3 align-middle">
+													<fmt:formatDate value="${review.createdDate }" pattern="YYYY년 MM월 dd일"/>
+												</td>
+												<td class="p-3 align-middle text-end">
 													<button class="btn btn-outline-secondary">수정</button>
 												</td>
 											</tr>

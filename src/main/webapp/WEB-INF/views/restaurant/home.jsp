@@ -101,7 +101,12 @@
 			<div class="card mb-3 p-1">
 			  <div class="card-body">
 					<p class="m-0 mb-1">
-						${review.user.nickname } </br>
+						<c:if test="${empty review.user.nickname }">
+							닉네임정보없음 (${review.user.loginType} 연동계정)
+						</c:if>
+						<c:if test="${not empty review.user.nickname }">
+							${review.user.nickname } 
+						</c:if>
 					</p>
 					<div class="d-flex flex-wrap justify-content-between">
 					    <div>
@@ -118,10 +123,13 @@
 						    <i class="${review.pointIcon.star5 }"></i>
 					    </div>
 					</div>
-				    <p class="card-text">${review.content }</p>
+				    <p class="card-text">
+				    	<strong class="mb-1">${review.title }</strong></br>
+				    	${review.content }
+				    </p>
 				    <div class="elapsedTime small text-end">
-				    	<fmt:formatDate value="${review.createdDate }" var="createdDate"/>
-				    	${createdDate }
+ 				    	<fmt:formatDate value="${review.createdDate }" var="createdDate" pattern="yyyy-MM-dd HH:mm:ss"/>
+				    	${createdDate } 
 			    	</div>
 			    	<c:if test="${not empty review.reviewRestaurantTags }">
 					    <div class="mt-3">
@@ -356,7 +364,6 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 							lastDelemeter = '';
 						} 
 						content += item.menus[i].menuName + ((i == 2 || i == menuLength - 1) ? lastDelemeter : ', ');
-						console.log(item.menus[i], i)
 					}
 				} else {
 					content += '메뉴 정보가 없습니다.'
