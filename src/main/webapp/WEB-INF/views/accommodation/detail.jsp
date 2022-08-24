@@ -796,6 +796,13 @@ $.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 	} else {
 		let count = 0;
 		for (let review of reviews) {
+			let nickname= '';
+			if (!review.user.nickname) {
+				nickname = "닉네임정보없음 (" + review.user.loginType + " 연동계정)";
+			} else {
+				nickname = review.user.nickname;
+			}
+			
 			let content = '';
 			content += '<div class="row p-5 border-bottom">';
 			content += '    <div class="col-2 profile-image-wrapper rounded-circle">';
@@ -812,7 +819,7 @@ $.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 			content += '            <span class="text-muted mx-1">' + review.point +'</span>';
 			content += '        </div>';
 			content += '        <p class="my-1">';
-			content += '            <small>' + ((!review.user.nickname) ? "닉네임정보없음" : review.user.nickname) + ((review.user.loginType) ? ' (' + review.user.loginType + ' 연동계정)' : '') +'</small> /';
+			content += '            <small>' + nickname +'</small> /';
 			content += '            <small>' + review.room.name + ' 이용</small><br/>';
 			content += '        </p>';
 			content += '        <p class="text-dark my-3 small">' + review.content +'</p>';
