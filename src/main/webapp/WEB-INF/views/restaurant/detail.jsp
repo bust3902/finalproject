@@ -328,7 +328,7 @@ $.getJSON("/reviews/restaurant", "restaurantNo=" + ${param.no}).done(function(da
 			content += '            <span class="text-muted mx-1">' + review.point +'</span>';
 			content += '        </div>';
 			content += '        <p class="my-1">';
-			content += '            <small>' + review.user.nickname +'</small> /';
+			content += '            <small>' + ((!review.user.nickname) ? "닉네임정보없음" : review.user.nickname) + ((review.user.loginType) ? ' (' + review.user.loginType + ' 연동계정)' : '') +'</small>';
 			content += '        </p>';
 			content += '        <p class="text-dark my-3 small">' + review.content +'</p>';
 			if (!(review.image == null || review.image === "")) {

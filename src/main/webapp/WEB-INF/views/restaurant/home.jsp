@@ -101,7 +101,12 @@
 			<div class="card mb-3 p-1">
 			  <div class="card-body">
 					<p class="m-0 mb-1">
-						${review.user.nickname } </br>
+						<c:if test="${empty review.user.nickname }">
+							닉네임정보없음 (${review.user.loginType} 연동계정)
+						</c:if>
+						<c:if test="${not empty review.user.nickname }">
+							${review.user.nickname } 
+						</c:if>
 					</p>
 					<div class="d-flex flex-wrap justify-content-between">
 					    <div>
