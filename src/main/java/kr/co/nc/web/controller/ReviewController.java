@@ -44,7 +44,7 @@ public class ReviewController {
 	}
 	
 	@PostMapping(path = "/reviewcomplete")
-	public String reviewCompleted(@LoginUser User user ,@RequestParam(name="restaurantNo",required=false)Integer restaurantNo,@RequestParam(name="accoId",required=false)Integer accoId, @ModelAttribute("ReviewRegisterForm") ReviewRegisterForm reviewRegisterForm  ) throws IOException {
+	public String reviewCompleted(@LoginUser User user ,@RequestParam(name="roomNo",required=false)Integer roomNo,@RequestParam(name="restaurantNo",required=false)Integer restaurantNo,@RequestParam(name="accoId",required=false)Integer accoId, @ModelAttribute("ReviewRegisterForm") ReviewRegisterForm reviewRegisterForm  ) throws IOException {
 			
 		if (!reviewRegisterForm.getImageFile().isEmpty()) {
 			MultipartFile imageFile = reviewRegisterForm.getImageFile();
@@ -57,7 +57,7 @@ public class ReviewController {
 			FileCopyUtils.copy(in, out);
 		}
 		
-		reviewService.addNewReview(user, restaurantNo, accoId, reviewRegisterForm);
+		reviewService.addNewReview(user, restaurantNo,roomNo, accoId, reviewRegisterForm);
 		return "reviews/reviewcomplete";
 	}
 }

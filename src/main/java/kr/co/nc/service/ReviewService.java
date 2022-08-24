@@ -23,7 +23,7 @@ public class ReviewService {
 	@Autowired
 	private ReviewMapper reviewMapper;
 	
-	public void addNewReview(@LoginUser User user,@RequestParam(name="restaurantNo",required=false)Integer restaurantNo,@RequestParam(name="accoId",required=false)Integer accoId,  ReviewRegisterForm reviewRegisterForm ) {
+	public void addNewReview(@LoginUser User user,@RequestParam(name="restaurantNo",required=false)Integer restaurantNo,@RequestParam(name="roomNo",required=false)Integer roomNo,@RequestParam(name="accoId",required=false)Integer accoId,  ReviewRegisterForm reviewRegisterForm ) {
 		Review review = new Review();
 		review.setTitle(reviewRegisterForm.getTitle());
 		review.setContent(reviewRegisterForm.getContent());
@@ -33,12 +33,11 @@ public class ReviewService {
 		review.setUser(user);
 		if(accoId != null) {
 			review.setAccoId(accoId);
+			review.setRoomNo(roomNo);
 		}
 		if(restaurantNo !=null) {
 			review.setRestaurantNo(restaurantNo);
 		}
-		System.out.println(restaurantNo);
-		System.out.println(accoId);
 		reviewMapper.insertReview(review);
 	}
 		/*
