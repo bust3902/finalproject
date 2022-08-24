@@ -204,4 +204,5 @@ public class AccommodationService {
 	public List<Accommodation> getAllLikedItemsByUser(int userNo) {
 		return accommodationMapper.getAllLikedAccoByUserNo(userNo);
 	}
+	
 }

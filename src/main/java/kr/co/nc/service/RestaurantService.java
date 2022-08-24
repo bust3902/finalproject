@@ -8,10 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RestaurantCriteria;
-import kr.co.nc.criteria.ReviewCriteria;
-import kr.co.nc.mapper.AccommodationMapper;
 import kr.co.nc.mapper.RestaurantMapper;
-import kr.co.nc.mapper.ReviewMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.City;
