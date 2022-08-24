@@ -617,6 +617,30 @@ $(function () {
  			return isToggleChecked;
  		});
  	});
+ 	$("input[name=commonFacilities]").change(function(){
+ 		let checkedItemsLength = $("input[name=commonFacilities]:checked").length;
+ 		if (checkedItemsLength == 0) {
+	 		$("#toggle-cofa").prop("checked", false);
+ 		} else {
+	 		$("#toggle-cofa").prop("checked", true);
+ 		}
+ 	});
+ 	$("input[name=roomFacilities]").change(function(){
+ 		let checkedItemsLength = $("input[name=roomFacilities]:checked").length;
+ 		if (checkedItemsLength == 0) {
+	 		$("#toggle-rofa").prop("checked", false);
+ 		} else {
+	 		$("#toggle-rofa").prop("checked", true);
+ 		}
+ 	});
+ 	$("input[name=tags]").change(function(){
+ 		let checkedItemsLength = $("input[name=tags]:checked").length;
+ 		if (checkedItemsLength == 0) {
+	 		$("#toggle-tag").prop("checked", false);
+ 		} else {
+	 		$("#toggle-tag").prop("checked", true);
+ 		}
+ 	});
 	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
 	$("input[name=sort]").click(function() {
@@ -627,7 +651,7 @@ $(function () {
 		searchAccos();
 		changeMapCenter(map);
 	});
-	// 초기화 버튼을 눌렀을 때 상세조건을 모두 초기화
+	// 초기화 버튼을 눌렀을 때 상세조건을 모두 초기화 후 검색(적용)
 	$("#btn-reset").click(function() {
 		// 인원
 		$("input[name=capacity]").val("1");
@@ -644,6 +668,7 @@ $(function () {
 		$(":checkbox[name=tags]").prop("checked", false);
 		// 토글체크박스
 		$(".toggle").prop("checked", false);
+		searchAccos();
 	});
 	// 상세조건 공용시설, 객실시설, 태그 옵션 열고 닫기, 아이콘 토글
 	$(".label-option").click(function() {
