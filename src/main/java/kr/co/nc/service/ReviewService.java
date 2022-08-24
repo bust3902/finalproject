@@ -91,4 +91,11 @@ public class ReviewService {
 		return reviewMapper.getAllReviews();
 	}
 
+	public List<Review> getMyAccoReviews(int userNo) {
+		return reviewMapper.getAccommodationReviewsByUserNo(userNo);
+	}
+
+	public List<Review> getMyRestaurantReviews(int userNo) {
+		return reviewMapper.getRestaurantReviewsByUserNo(userNo);
+	}
 }

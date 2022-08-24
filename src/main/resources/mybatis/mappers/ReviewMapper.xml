@@ -150,4 +150,23 @@
 		from review
 		where review_created_date desc
 	</select>
+	
+	<!-- List<Review> getAccommodationReviewsByUserNo(int userNo); -->
+	<select id="getAccommodationReviewsByUserNo" parameterType="int" resultMap="reviewResultMap">
+		select *
+		from review rv, accommodations a
+		where user_no = #{value}
+			and rv.acco_id = a.acco_id
+		order by rv.review_created_date, rv.review_no desc
+	</select>
+	
+	<!-- List<Review> getRestaurantReviewsByUserNo(int userNo); -->
+	<select id="getRestaurantReviewsByUserNo" parameterType="int" resultMap="reviewResultMap">
+		select *
+		from review rv, restaurant r
+		where user_no = #{value}
+			and rv.acco_id = r.restaurant_no
+		order by rv.review_created_date, rv.review_no desc
+	</select>
+	
 </mapper>
