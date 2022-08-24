@@ -832,7 +832,7 @@ $.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 			content += '        <p class="text-dark my-3 small">' + review.content +'</p>';
 			if (!(review.image == null || review.image === "")) {
 				content += '            <div class="my-3">';
-				content += '                <img class="img-fluid" alt="review image" src="/resources/images/review/' + review.image +'">';
+				content += '                <img style="height: 15rem; width:auto;" alt="review image" src="/resources/images/review/' + review.image +'">';
 				content += '            </div>';
 			}
 			// review.createdDate은 iso-8601 형식의 날짜정보를 반환한다. 이 값을 getElapsedTime 함수에 전달해 경과시간을 획득한다.

@@ -121,7 +121,7 @@
 							<li class="list-group-item py-3 border-bottom-0 text-muted">
 								<div class="fw-bold mb-3">가격<small id="amount" class="text-secondary ms-3">1만원 이상</small></div>
 								<input type="hidden" name="minPrice" value="10000" />
-								<input type="hidden" name="maxPrice" value="300000" />
+								<input type="hidden" name="maxPrice" value="800000" />
 								<div id="slider-range"></div>
 							</li>
 							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
@@ -444,8 +444,8 @@ $(function () {
 	$("#slider-range").slider({
 		range : true,
 		min : 1,
-		max : 30,
-		values : [1, 30],
+		max : 80,
+		values : [1, 80],
 		slide : function(event, ui) {
 			// 슬라이더 값이 바뀔 때마다 텍스트 내용을 변경하고, hidden태그의 값도 변경한다.
 			$("#amount").text(ui.values[0] + "만원 ~ " + ui.values[1] + "만원");
@@ -658,7 +658,7 @@ $(function () {
 		// 가격
 		$("#slider-range").slider("option", "values", [1,30]);
 		$(":hidden[name=minPrice]").val(10000);
-		$(":hidden[name=maxPrice]").val(300000);
+		$(":hidden[name=maxPrice]").val(800000);
 		$("#amount").text("1만원 이상");
 		// 공용시설
 		$(":checkbox[name=commonFacilities]").prop("checked", false);
