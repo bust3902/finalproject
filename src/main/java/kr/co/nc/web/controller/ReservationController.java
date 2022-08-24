@@ -37,13 +37,14 @@ public class ReservationController {
 	 * 뷰 페이지 : /WEB-INF/views/home.jsp
 	 */
 	@GetMapping(path = "/reservation")
-	public String reservation(@LoginUser User user,RoomCriteria criteria, @RequestParam(name ="id")Integer accoId, @RequestParam(name="roomno")Integer roomNo, @RequestParam(name ="checkin" ,required=false) String checkIn, @RequestParam(name ="checkout") String checkOut ,
+	public String reservation(@LoginUser User user,RoomCriteria criteria, @RequestParam(name ="id")Integer accoId,@RequestParam(name ="duration")Integer duration, @RequestParam(name="roomno")Integer roomNo, @RequestParam(name ="checkin" ,required=false) String checkIn, @RequestParam(name ="checkout") String checkOut ,
 	Model model, PaymentRequest paymentRequest) {
 		model.addAttribute("user", user);
 		model.addAttribute("id", accoId);
 		model.addAttribute("roomno", roomNo);
 		model.addAttribute("checkin", checkIn);
 		model.addAttribute("checkout", checkOut);
+		model.addAttribute("duration", duration);
 		
 		//상세페이지에서 온 해당 id를 가지고 숙소정보 가져오기.
 		model.addAttribute("acco", accommodationService.getAccommodationDetailById(accoId));

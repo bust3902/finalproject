@@ -78,7 +78,7 @@
 						<div class="my-5 mx-3">
 							<dl>
 								<dt id="accoName">${acco.name }
-								<dd id="accoType">${room.name } / <span id="days">1박</span>
+								<dd id="accoType">${room.name } / <span id="days">${param.duration }박</span>
 								<dt class="col-3 form-text">체크인</dt>
 								<dd id="checkIn" >${param.checkin } 15:00</dd>
 								<dd class="form-text">체크아웃</dd>
@@ -97,7 +97,7 @@
 					</div>
 					<div class="my-3 mx-3">
 						<p><strong>총 결제 금액</strong><small>(VAT포함)</small></p>
-						<h4><strong class="text-danger" id="dayPrice"><fmt:formatNumber> ${room.dayPrice }</fmt:formatNumber>원</strong></h4>
+						<h4><strong class="text-danger" id="dayPrice"><fmt:formatNumber> ${room.dayPrice * param.duration}</fmt:formatNumber>원</strong></h4>
 						<label><small>
 							<li class="mx-2">해당 객실가는세금, 봉사료가 포함된 금액입니다.</li>
 							<li class="mx-2">결제완료 후 <span class="text-danger">예약자</span> 이름으로 바로 <span class="text-danger">체크인</span> 하시면 됩니다.</li>
@@ -141,7 +141,7 @@
 						<dt class="form-text mt-3">숙소이름</dt>
 						<dd>${acco.name }</dd>
 						<dt class="form-text mt-3">객실 타입/기간</dt>
-						<dd>${room.name } / 1박</dd>
+						<dd>${room.name } / ${param.duration }박</dd>
 						<dt class="form-text mt-3">체크인</dt>
 						<dd >${param.checkin } 15:00</dd>
 						<dt class="form-text mt-3">체크아웃</dt>
@@ -307,7 +307,7 @@ function startPay(){
 		merchant_uid : new Date().getTime(),
 		name : '${acco.name}',
 		// 숙소명 : accoName.value
-		amount : ${room.dayPrice},
+		amount : ${room.dayPrice}*${param.duration},
 		// 가격 : accoPrice.value
 		buyer_name : reserName.value,
 		buyer_tel : reserTel.value,

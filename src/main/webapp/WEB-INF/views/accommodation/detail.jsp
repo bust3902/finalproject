@@ -165,6 +165,7 @@
 							<input type="text" id="datepicker" class="form-control w-100" value="" />
 							<input type="hidden" name="startDate" value="">
 							<input type="hidden" name="endDate" value="">
+							<input type="hidden" name="duration" value="">
 							<input type="hidden" name="accoId" value="${param.id }">
 						</div>
 						<div class="col d-flex justify-content-end">
@@ -317,7 +318,7 @@
 					<label class="fw-bold mb-3">선택날짜</label>
 					<ul>
 						<!-- 현재 사용자가 선택한 날짜를 출력 -->
-						<li><span id="modal-content-startdate"></span> ~ <span id="modal-content-enddate"></span></li>
+						<li><span id="modal-content-startdate"></span> ~ <span id="modal-content-enddate"></span><span id="modal-cotent-duration"></span></li>
 					</ul>
 				</div>
 			</div>
@@ -466,7 +467,7 @@ $(function () {
 	// html이 출력될 때 datepicker의 input태그의 value 저장
 	$('#datepicker').val(startDayString + ' ~ ' + endDayString + ' · '  + duration + '박');
 	// html이 출력될 때에도 날짜 정보를 hidden 태그와 localStorage에 저장
-	setDateValues(startDayString, endDayString);
+	setDateValues(startDayString, endDayString, duration);
 	// 화면 최초 요청 시에 날짜에 대한 값이 모두 저장되면 객실 정보를 조회하여 출력한다. 
 	refreshPaginationButton(1);
 	changeCurrentPage(1);
@@ -486,8 +487,10 @@ $(function () {
     function setDateValues(start, end) {
         $(":hidden[name=startDate]").val(start);
         $(":hidden[name=endDate]").val(end);
+        $(":hidden[name=duration]").val(duration);
         localStorage.setItem("startDate", start);
         localStorage.setItem("endDate", end);
+        localStorage.setItem("duration", duration);
     }
     
     // 초기화할 날짜 정보를 가져오는 함수.
@@ -673,6 +676,7 @@ function searchRooms(currentPage) {
 					$("#modal-content-rofas").text(rofasContent);
 					$("#modal-content-startdate").text($(":hidden[name=startDate]").val());
 					$("#modal-content-enddate").text($(":hidden[name=endDate]").val());
+					$("#modal-content-duration").text($(":hidden[name=duration]").val());
 				});
 			});
 			
@@ -712,7 +716,7 @@ function addRoomCardEventListener() {
 function addReserveBtnEventListener() {
 	$(".btn-room-reserve").click(function() {
 		let roomNo = $(this).attr("data-room-no");
-		location.href="../reservation?id=" + ${param.id} + "&roomno=" + roomNo + "&checkin=" + $(":hidden[name=startDate]").val() + "&checkout=" +$(":hidden[name=endDate]").val();
+		location.href="../reservation?id=" + ${param.id} + "&roomno=" + roomNo + "&checkin=" + $(":hidden[name=startDate]").val() + "&checkout=" +$(":hidden[name=endDate]").val()+ "&duration="+$(":hidden[name=duration]").val();
 	});
 }
 	
