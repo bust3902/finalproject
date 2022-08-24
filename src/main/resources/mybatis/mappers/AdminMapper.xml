@@ -405,15 +405,15 @@
 	 -->
 	<select id="getMonthlyChartData" resultType="kr.co.nc.web.form.MonthlySalesDataForm">
 		with dates as
-		(select to_char(sysdate - level, 'dd') day
+		(select to_char(sysdate - level, 'mm/dd') day
 		 from dual
 		 connect by level &lt;= 30)
 		select Y.day as salesDate , nvl(X.price, 0) as salesprice
-		from (select to_char(r.reservation_check_in, 'DD') dd, SUM(P.PAYMENT_TOTAL_PRICE) price
+		from (select to_char(r.reservation_check_in, 'mm/dd') dd, SUM(p.payment_total_price) price
 			  from reservation r, payment p
 			  where r.reservation_id = p.reservation_id
-			  and to_char(r.reservation_check_in,'yy/mm/DD') between sysdate - interval '30' day and sysdate
-			  group by to_char(r.reservation_check_in, 'DD')) X, dates Y
+			  and to_char(r.reservation_check_in,'yy/mm/dd') between sysdate - interval '30' day and sysdate
+			  group by to_char(r.reservation_check_in, 'mm/dd')) X, dates Y
 		where X.dd(+) = Y.day
 		order by Y.day asc
 	</select>
@@ -423,15 +423,15 @@
 	 -->
 	<select id="getYearlyChartData" resultType="kr.co.nc.web.form.YearlySalesDataForm">
 		with months as
-		(select to_char(add_months(sysdate, - level), 'mm') month
+		(select to_char(add_months(sysdate, - level), 'yy/mm') month
 		 from dual
 		 connect by level  &lt;= 12)
 		select Y.month as salesMonth , nvl(X.price, 0) as salesprice
-		from (select to_char(r.reservation_check_in, 'mm') dd, SUM(P.PAYMENT_TOTAL_PRICE) price
+		from (select to_char(r.reservation_check_in, 'yy/mm') dd, SUM(P.PAYMENT_TOTAL_PRICE) price
 			  from reservation r, payment p
 			  where r.reservation_id = p.reservation_id
 			  and to_char(r.reservation_check_in,'yy/mm/DD') between add_months(sysdate,-12) and sysdate
-			  group by to_char(r.reservation_check_in, 'mm')) X, months Y
+			  group by to_char(r.reservation_check_in, 'yy/mm')) X, months Y
 		where X.dd(+) = Y.month
 		order by Y.month asc
 	</select>

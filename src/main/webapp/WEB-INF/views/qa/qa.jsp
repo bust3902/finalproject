@@ -9,10 +9,10 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<c:set var="review" value="reveiw">
 <title>문의사항</title>
 </head>
 <body>
-<c:set var="review" value="reveiw">
 <%@ include file="../common/nav.jsp" %>
 <div class="container my-3">
 	<div class="row mb-3">
@@ -52,7 +52,7 @@
 					<c:otherwise>
 						<c:forEach var="qa" items="${qa }">
 							<tr class="align-middle">
-								<td><a href="/detail?no=${qa.no }">${qa.title }</a></td>
+								<td><a href="/detail?no=${qa.no }">${qa.title }</a>
 								<c:forEach var="qaCat" items="${qaCategories }">
 									<div>${qaCat.category.name }</div>
 								</c:forEach>
