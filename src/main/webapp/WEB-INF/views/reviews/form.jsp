@@ -70,7 +70,7 @@
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
-					<textarea class="form-control" rows="13" name="contents" placeholder="내용을 10자 이상 작성해주세요." style="width:800px;"></textarea>
+					<textarea class="form-control" rows="13" name="content" placeholder="내용을 10자 이상 작성해주세요." style="width:800px;"></textarea>
 				</div>
 				<div class="text-end">
 					<a href="/" class="btn btn-secondary px-3">취소</a>
@@ -136,7 +136,7 @@ $(document).ready(function() {
 			reviewModal.show();
 			return false;
 		}
-		if($("#textarea[name=contents]").val().length <= 10) {
+		if($("#textarea[name=content]").val().length <= 10) {
 			$("#modal-message-box").text("내용 10자 이상 입력해주세요");
 			reviewModal.show();
 			return false;

@@ -27,7 +27,7 @@
 		<div class="col-8">
 			<p class="text"><span class="badge ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
 			<h5>${payment.reservation.acco.name }</h5>
-			<h6>${payment.reservation.room.name } / 1박</h6>
+			<h6>${payment.reservation.room.name }</h6>
 			<dl>
 				<dt class="form-text col-3">체크인</dt>
 				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/> 15:00 </dd>
