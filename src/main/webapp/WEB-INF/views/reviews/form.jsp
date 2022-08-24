@@ -31,12 +31,6 @@
 					<input class="form-control" type="text" name="title" style="width:800px;" placeholder="제목을 작성해주세요."/>
 				</div>
 				<div class="my-3">
-					<p><strong>카테고리</strong></p>
-					<select class="form-select" name="category" id="category" style="width:800px;">
-						<option value="selectCategory">카테고리를 선택해주세요.</option>
-						<option value="accommodations">숙소</option>
-						<option value="restaurant">음식점</option>
-					</select>
 					<c:if test="${not empty param.restaurantNo }">
 						<input type="hidden" name="restaurantNo" value="${param.restaurantNo }">
 					</c:if>
@@ -76,7 +70,7 @@
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
-					<textarea class="form-control" rows="13" name="content" placeholder="내용을 10자 이상 작성해주세요." style="width:800px;"></textarea>
+					<textarea class="form-control" rows="13" name="contents" placeholder="내용을 10자 이상 작성해주세요." style="width:800px;"></textarea>
 				</div>
 				<div class="text-end">
 					<a href="/" class="btn btn-secondary px-3">취소</a>
@@ -124,7 +118,6 @@
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 <script type="text/javascript">
 let reviewConfirm = new bootstrap.Modal(document.getElementById("reviewConfirm"));
-
 $(document).ready(function() {
 	var reviewModal = new bootstrap.Modal(document.getElementById("modal-danger"))
 	$("#modal-button").click(function() {
@@ -143,7 +136,7 @@ $(document).ready(function() {
 			reviewModal.show();
 			return false;
 		}
-		if($("#textarea[name=content]").val().length <= 10) {
+		if($("#textarea[name=contents]").val().length <= 10) {
 			$("#modal-message-box").text("내용 10자 이상 입력해주세요");
 			reviewModal.show();
 			return false;
