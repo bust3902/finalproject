@@ -34,11 +34,12 @@ public class ReviewService {
 		if(accoId != null) {
 			review.setAccoId(accoId);
 			review.setRoomNo(roomNo);
-		}
-		if(restaurantNo !=null) {
+			reviewMapper.insertAccommodationReview(review);
+		} else if(restaurantNo != null) {
 			review.setRestaurantNo(restaurantNo);
+			reviewMapper.insertRestaurantReview(review);
 		}
-		reviewMapper.insertReview(review);
+//		reviewMapper.insertReview(review);
 	}
 		/*
 		 * // 리뷰 카테고리 정보 저장 List<String> categoryIds =

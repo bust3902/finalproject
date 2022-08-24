@@ -37,9 +37,15 @@
 						<option value="accommodations">숙소</option>
 						<option value="restaurant">음식점</option>
 					</select>
-					<input type="hidden" name="restaurantNo"value="${empty param.restaurantNo ? 0 : param.restaurantNo }">
-					<input type="hidden" name="accoId" value="${empty param.accoId ? 0 : param.accoId }">
-					<input type="hidden" name="roomNo" value="${empty param.roomNo ? 0 : param.roomNo }">
+					<c:if test="${not empty param.restaurantNo }">
+						<input type="hidden" name="restaurantNo" value="${param.restaurantNo }">
+					</c:if>
+					<c:if test="${not empty param.accoId }">
+						<input type="hidden" name="accoId" value="${param.accoId }">
+					</c:if>
+					<c:if test="${not empty param.roomNo }">
+						<input type="hidden" name="roomNo" value="${param.roomNo }">
+					</c:if>
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
