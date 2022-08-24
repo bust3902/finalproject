@@ -128,8 +128,8 @@
 				    	${review.content }
 				    </p>
 				    <div class="elapsedTime small text-end">
-				    	<fmt:formatDate value="${review.createdDate }" var="createdDate"/>
-				    	${createdDate }
+ 				    	<fmt:formatDate value="${review.createdDate }" var="createdDate" pattern="yyyy-MM-dd HH:mm:ss"/>
+				    	${createdDate } 
 			    	</div>
 			    	<c:if test="${not empty review.reviewRestaurantTags }">
 					    <div class="mt-3">
@@ -364,7 +364,6 @@ function showRecommendedRestaurantsByCategory(categoryId) {
 							lastDelemeter = '';
 						} 
 						content += item.menus[i].menuName + ((i == 2 || i == menuLength - 1) ? lastDelemeter : ', ');
-						console.log(item.menus[i], i)
 					}
 				} else {
 					content += '메뉴 정보가 없습니다.'
