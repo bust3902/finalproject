@@ -1,14 +1,17 @@
 package kr.co.nc.web.controller;
 
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -262,4 +265,52 @@ public class HomeController {
 	      return "error"; //에러
 	   }
 	}
+	
+/**	
+	// 비밀번호 변경 요청
+	@GetMapping("/pw-change")
+	public ModelAndView pwChange() {
+		return new ModelAndView ("user/pw-change");
+	}
+	
+	// 비밀번호 확인 처리 요청
+	@PostMapping("/checkPw")
+	public String checkPw(@RequestBody String password, HttpSession session) throws Exception {
+		log.info("비밀번호 확인 요청 발생");
+		
+		String result = null;
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		User user = (User)session.getAttribute("login");
+		log.info("사용자 비밀번호:" + user.getPassword());
+		log.info("폼에 작성한 비밀번호:" + password);
+		
+		if(encoder.matches(password, user.getPassword())) {
+			result = "passwordConfirmOK";
+		} else {
+			result = "passwordConfirmNO";
+		}
+		
+		return result;
+	}
+	
+	// 비밀번호 변경 요청
+	@PostMapping("/pw-change")
+	public String pwChange(@RequestBody User user, HttpSession session) throws Exception {
+		log.info("비밀번호 변경 요청 발생");
+		
+		// 비밀번호 변경
+		userService.modifyPw(user);
+		
+		// 비밀번호 변경 성공시 로그인 세션 객체 다시 담음
+		User modifyUser = new User();
+		modifyUser.setEmail(user.getEmail());
+		
+		User savedUser = userService.login(id, password);
+		log.info("회원정보 불러오기:" + user);
+		session.setAttribute("login", user);
+		
+		return "changeSuccess";
+	}
+*/
 }

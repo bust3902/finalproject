@@ -147,7 +147,7 @@
 				<div class="col mb-5" id="user">
 					<div class="col mt-5"<p>서울어때를 이용하고 싶지 않으신가요?</p></div>
 					<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
-					<button type="button" class="btn btn-link"><a href="">회원탈퇴</a></button>
+					<button type="button" class="btn btn-link"><a href="/pw-change">비밀번호 변경</a></button>
 				</div>
 			</c:if>
 			<!-- CAT_002 예약 내역 -->
@@ -448,6 +448,101 @@ $("#btn-hide-tel-form").click(function() {
 	$("#box-tel-btn").removeClass('d-none');
 })
 
+<%--
+/**
+ * 현재 비밀번호가 맞는지 요청하기
+ */
+$.ajax({
+	type: "POST",
+	url: "/user/information",
+	headers: {
+		"Content-Type": "application/json",
+		"X-HTTP-Method-Override": "POST"
+	},
+	data: password,
+	datatype: "json",
+	success: function(result) {
+		console.log(result);
+		
+		if(result === "pwContirmOK") {
+			$('#pwMsg').html('');
+			chk1 = true;
+		} else {
+			$('#pwMsg').html('');
+			chk1 = false;
+		}
+	},
+	error : function(error) {
+		console.log("error:" + error)
+	}
+});
+
+/**
+ * 새 비밀번호랑 기존의 비밀번호가 일치하는지 확인
+ */
+ $('#newPwCheck').on('keyup', function() {
+	 if($("#newPwCheck").val() === "") {
+		$('#newPwMsg').html('<b>비밀번호 확인은 필수 정보입니다.</b>');
+		chk3 = false;
+	 } else if($("#newPw").val() != $("#newPwCheck").val()) {
+	   $('#newPwMsg').html('<b>비밀번호가 일치하지 않습니다.</b>');
+	   chk3 = false;
+	 } else {
+	   $('#newPwMsg').html('');
+	   chk3 = true;
+	 }
+ });
+ 
+ /**
+  * 비밀번호 변경 요청 처리하기
+  */
+ $('.emailChkBtn').click(function(e) {
+	 if(chk1 == false) {
+		 alert('현재 비밀번호가 틀렸습니다.');
+	 } else if(chk2 ==false) {
+		 alert('2번 틀림');
+	 } else if(chk2 ==false) {
+		 alert('3번 틀림');
+	 } else if(chk1 && chk2 && chk3) {
+		 const userNo = $('#userNo').val();
+		 const password = $('#newPw').val();
+		 const email = $('#email').val();
+		 const id = $('#id').val();
+		 const name = $('#name').val();
+		 const user = {
+			userNo: userNo,
+			id: id,
+			password: password,
+			email: email,
+			name: name
+		};
+		console.log(user);
+		
+		$.ajax({
+			type: "POST",
+			url: "/user/information",
+			headers: {
+				"Content-Type": "application/json",
+				"X-HTTP-Method-Override": "POST"
+			},
+			datatype: "json",
+			data: JSON.stringify(user),
+			success: function(result) {
+				console.log(result);				
+				if(result === "changeSuccess") {
+					alert('비밀번호가 변경되었습니다.');
+					location.href="/user/information";
+				} else {
+					alert('현재 비밀번호가 틀렸습니다.');
+				}
+			}
+		});
+	 } else {
+		 alert('입력정보를 다시 확인하세요.');
+	 }
+ });
+ --%>
+ 
 /**
  * 찜 목록에서 하트를 클릭하면, 해당 카드가 화면에서 사라지고 DB정보에서 찜 정보를 삭제시킨다.
  */
