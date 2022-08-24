@@ -10,6 +10,22 @@
 		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{accoId}, #{title}, #{content}, #{image}, #{point},#{roomNo})
 	</insert>
 	
+	<!-- void insertAccommodationReview(Review review); -->
+	<insert id="insertAccommodationReview" parameterType="Review">
+		insert into review
+		(review_no, user_no, acco_id, review_title, review_content, review_image, review_point,room_no)
+		values
+		(review_seq.nextval, #{user.no}, #{accoId}, #{title}, #{content}, #{image}, #{point},#{roomNo})
+	</insert>
+	
+	<!-- void insertRestaurantReview(Review review); -->
+	<insert id="insertRestaurantReview" parameterType="Review">
+		insert into review
+		(review_no, user_no, restaurant_no, review_title, review_content, review_image, review_point)
+		values
+		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{title}, #{content}, #{image}, #{point})
+	</insert>
+	
 	<!-- void updateReview(Review review); -->
 	<update id="updateReview" parameterType="Review">
 		update
@@ -23,7 +39,7 @@
 		where
 			review_no = #{no}
 	</update>
-		
+	
 	<!-- void deleteReview(Review reivew); -->
 		<delete id="deleteReview" parameterType="Review">
 			delete from review
@@ -140,6 +156,7 @@
 		from (select *
 		    from review
 		    where restaurant_no is not null
+		    	and acco_id is null
 		    order by review_created_date, restaurant_no desc)
 		where rownum &lt;=3
 	</select>
@@ -165,7 +182,7 @@
 		select *
 		from review rv, restaurant r
 		where user_no = #{value}
-			and rv.acco_id = r.restaurant_no
+			and rv.restaurant_no = r.restaurant_no
 		order by rv.review_created_date, rv.review_no desc
 	</select>
 	

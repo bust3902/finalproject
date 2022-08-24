@@ -13,9 +13,12 @@ import kr.co.nc.vo.ReviewCategory;
 public interface ReviewMapper {
 
 	void insertReview(Review review);
+	void insertAccommodationReview(Review review);
+	void insertRestaurantReview(Review review);
 	void updateReview(Review review);
 	void deleteReview(Review reivew);
 	void insertReviewCategory(ReviewCategory reviewCategory);		// 리뷰 카테고리를 저장한다.
+	
 	// 리뷰 조회
 	// ReviewCriteria의 값에 따라 동적 sql문을 이용해 특정 식별번호를 가지는 식당리뷰 / 숙소리뷰를 조회한다.
 	List<Review> getReviewsByCriteria(ReviewCriteria criteria);
