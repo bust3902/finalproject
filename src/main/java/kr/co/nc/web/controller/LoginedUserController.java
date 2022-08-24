@@ -78,7 +78,7 @@ public class LoginedUserController {
 	   user = loginedService.updateNickname(user.getId(), nickname);
 	   SessionUtils.addAttribute("LOGIN_USER", user);
 	   
-	   return "redirect:/user/imformation?cat=CAT_001";
+	   return "redirect:/user/information?cat=CAT_001";
    }
    
    @GetMapping(path = "/updateName")
@@ -88,7 +88,7 @@ public class LoginedUserController {
 	   user = loginedService.updateName(user.getId(), name);
 	   SessionUtils.addAttribute("LOGIN_USER", user);
 	   
-	   return "redirect:/user/imformation?cat=CAT_001";
+	   return "redirect:/user/information?cat=CAT_001";
    }
    
    @GetMapping(path = "/updateTel")
@@ -98,7 +98,7 @@ public class LoginedUserController {
 	   user = loginedService.updateTel(user.getId(), tel);
 	   SessionUtils.addAttribute("LOGIN_USER", user);
 	   
-	   return "redirect:/user/imformation?cat=CAT_001";
+	   return "redirect:/user/information?cat=CAT_001";
    }
  
 }
