@@ -20,8 +20,8 @@ select
     r.reservation_check_in as "reservation.checkIn",
 	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationNo",
-    a.acco_id as "reservation.Accommodation.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
     a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
@@ -30,6 +30,7 @@ where p.reservation_Id = r.reservation_id
 and r.acco_id = a.acco_id
 and u.user_no = r.user_no
 and r.user_no = #{value}
+order by r.reservation_check_in desc
 </select>
 
 <select id="getPaymentInfo" parameterType="string" resultType="Payment">
@@ -43,7 +44,7 @@ select
     r.reservation_tel as "reservation.reserTel",
     r.reservation_name as "reservation.reserName",
     a.acco_id as "reservation.acco.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
     AR.room_name as "reservation.room.name",
@@ -54,7 +55,7 @@ and r.room_no = AR.room_no
 and r.acco_id = a.acco_id
 and u.user_no = r.user_no
 and r.reservation_id = #{value}
-order by r.reservation_check_in
+order by r.reservation_check_in desc
 </select>
 	<!-- 예약완료된 예약정보가져오기-->
 <select id="getReadytoReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Payment" >
@@ -66,8 +67,8 @@ select
     r.reservation_check_in as "reservation.checkIn",
 	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationId",
-    a.acco_id as "reservation.Accommodation.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
     r.reservation_id as "reservation.reservationNo",
@@ -78,7 +79,7 @@ and r.acco_id = a.acco_id
 and u.user_no = r.user_no
 and p.payment_status = '예약완료'
 and r.user_no = #{value}
-order by r.reservation_check_in
+order by r.reservation_check_in desc
 </select>
 	<!-- 예약취소된 예약정보 가져오기-->
 <select id="getRefundReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Payment" >
@@ -90,8 +91,8 @@ select
     r.reservation_check_in as "reservation.checkIn",
 	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationId",
-    a.acco_id as "reservation.Accommodation.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
     r.reservation_id as "reservation.reservationNo",
@@ -102,7 +103,7 @@ and r.acco_id = a.acco_id
 and u.user_no = r.user_no
 and p.payment_status = '예약취소'
 and r.user_no = #{value}
-order by r.reservation_check_in	
+order by r.reservation_check_in	desc
 </select>
 	
 <insert id="insertPayment" parameterType="kr.co.nc.vo.Payment">

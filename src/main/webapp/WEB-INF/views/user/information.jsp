@@ -169,7 +169,7 @@
 										</a>
 									</div>
 									<div class="row">
-										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" href="#">리뷰 작성</button>
+										<button class="btn  ${payment.paymentStatus eq '예약완료' ? 'btn-danger' : 'btn-info disabled'}" type="button" onclick="location.href='/reviewform?accoId=${payment.reservation.acco.id }'">리뷰 작성</button>
 									</div>
 								</div>
 							</c:forEach>
