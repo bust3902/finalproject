@@ -277,6 +277,9 @@
 			</div>
 		</div>
 	</div>
+	<div class="fixed-bottom p-5">
+		<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
+	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
 
@@ -379,14 +382,14 @@ $(function () {
  * ajax 리뷰데이터 요청 시 획득한 reviewChartData 객체 사용
  */
 	 $("#review-tab").click(function() {
-		 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
-		 if (isEmpty) {
-			 $("#chart").addClass("d-none");
-			 return false;
-		 }
 	     google.charts.load("current", {packages:["corechart"]});
 	     google.charts.setOnLoadCallback(drawChart);
 	     function drawChart() {
+			 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+			 if (isEmpty) {
+				 $("#chart").addClass("d-none");
+				 return false;
+			 }
 	       var data = google.visualization.arrayToDataTable([
 	         ['review point', 'out of 5'],
 	         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
@@ -782,7 +785,7 @@ function toggleAccoLike(accoId) {
 let reviewChartData = '';
 let reviewArray = [];
 let isEmpty = false; 
-$.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
+$.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 	reviewChartData = data.chartData;
 	let reviews = data.reviews
 	if (reviews.length == 0) {

@@ -97,8 +97,8 @@
 		where restaurant_no = #{value}
 		and r.user_no = u.user_no
 	</select>
-	<!--  List<Map<String, Integer>> countReviewPointsByAccoId(int accoId); -->
-	<select id="countReviewPointsByAccoId" parameterType="int" resultType="hashmap">
+	<!-- List<Map<String, Integer>> countReviewPoints(ReviewCriteria criteria); -->
+	<select id="countReviewPoints" parameterType="kr.co.nc.criteria.ReviewCriteria" resultType="hashmap">
 		with points
 		as (select 1 as review_point from dual
 		    union all select 2 from dual
@@ -107,7 +107,14 @@
 		    union all select 5 from dual)
 		select p.review_point as point, nvl(x.cnt,0) as count
 		from points p,
-		    (select review_point, count(*) cnt from review where acco_id=#{value} group by review_point) x
+			<choose>
+				<when test="accoId != 0">
+				    (select review_point, count(*) cnt from review where acco_id=#{accoId} group by review_point) x
+				</when>
+				<otherwise>
+				    (select review_point, count(*) cnt from review where restaurant_no=#{restaurantNo} group by review_point) x
+				</otherwise>
+			</choose>
 		where x.review_point (+) = p.review_point
 		order by p.review_point
 	</select>

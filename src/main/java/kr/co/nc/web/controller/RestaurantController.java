@@ -24,16 +24,16 @@ public class RestaurantController {
 	@Autowired
 	private ReviewService reviewService; 
 	
-	@GetMapping(path="/searchlist")
-	public String searchList(@RequestParam(name="keyword",required=false) String keyword, @RequestParam(name="categoryId",required=false) String categoryId,Model model ) {
-		
-		model.addAttribute("categories",restaurantService.getAllCategories());
-		model.addAttribute("cities",restaurantService.getAllCity());
-		model.addAttribute("tags",restaurantService.getAlltags());
-		model.addAttribute("restaurant",restaurantService.getRestaurantsByCategoryId(categoryId));
-		
-		return "restaurant/searchlist";
-	}
+//	@GetMapping(path="/searchlist")
+//	public String searchList(@RequestParam(name="keyword",required=false) String keyword, @RequestParam(name="categoryId",required=false) String categoryId,Model model ) {
+//		
+//		model.addAttribute("categories",restaurantService.getAllCategories());
+//		model.addAttribute("cities",restaurantService.getAllCity());
+//		model.addAttribute("tags",restaurantService.getAlltags());
+//		model.addAttribute("restaurant",restaurantService.getRestaurantsByCategoryId(categoryId));
+//		
+//		return "restaurant/searchlist";
+//	}
 	
 	@GetMapping(path = "/detail")
 	public String detail(int no, Model model) {

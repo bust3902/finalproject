@@ -1,31 +1,29 @@
 package kr.co.nc.web.controller.rest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.SessionAttributes;
 
 import kr.co.nc.annotation.LoginUser;
-import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RestaurantCriteria;
+import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.service.RestaurantService;
+import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.User;
 
-/**
- * 음식점 데이터에 관해 서버와 자원을 주고 받는 컨트롤러입니다.
- * @author charles
- *
- */
-@SessionAttributes("LOGIN_USER")
 @RestController
 public class RestaurantRestController {
 
 	@Autowired
 	private RestaurantService restaurantService;
+	@Autowired
+	private ReviewService reviewService;
 	
 	// 검색 조건에 맞는 숙소 리스트 반환
 	@GetMapping(path = "/restaurants")
@@ -39,6 +37,19 @@ public class RestaurantRestController {
 			restaurants = restaurantService.searchRestaurant(userNo, criteria);
 		}
 		return restaurants;
+	}
+	
+	// 해당 식당에 대한 리뷰 리스트, 평점분포 집계결과 반환
+	@GetMapping(path = "/reviews/restaurant")
+	public Map<String, Object> reviews(int restaurantNo) {
+		// 두 가지 정보를 map객체에 담아 반환한다.
+		Map<String, Object> reviewdatas = new HashMap<>();
+		// 리뷰 리스트
+		ReviewCriteria criteria = new ReviewCriteria("restaurant", restaurantNo);
+		reviewdatas.put("reviews", reviewService.getReviewsByCriteria(criteria));
+		// 평점분포 집계결과 객체
+		reviewdatas.put("chartData", reviewService.getReviewPointChart(criteria));
+		return reviewdatas;
 	}
 	
 	// 식당 찜하기 토글

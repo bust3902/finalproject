@@ -61,8 +61,8 @@ public class ReviewService {
 	 * @param accoId1
 	 * @return
 	 */
-	public ReviewPointChart getReviewPointChartByAccoId(int accoId) {
-		List<Map<String, Integer>> countResults = reviewMapper.countReviewPointsByAccoId(accoId);
+	public ReviewPointChart getReviewPointChart(ReviewCriteria criteria) {
+		List<Map<String, Integer>> countResults = reviewMapper.countReviewPoints(criteria);
 		// 생성자메소드에서 countResults를 이용해 hashMap 구현객체인 ReviewPointChart에 각 평점의 개수를 저장한다.
 		return new ReviewPointChart(countResults);
 	}
@@ -90,4 +90,5 @@ public class ReviewService {
 	public List<Review> getAllReviews(Review review) {
 		return reviewMapper.getAllReviews();
 	}
+
 }

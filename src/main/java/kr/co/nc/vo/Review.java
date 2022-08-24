@@ -29,12 +29,15 @@ public class Review {
 	private Date createdDate;
 	private Date updatedDate;
 	private String deleted;
-	private String image;		// 리뷰 사진
-	private int point;			// 리뷰 평점
+	private String image;		// 리뷰 사진 파일명
+	
+	// 등록 시 사용하는 변수
+	private int restaurantNo;
+	private int accoId;				
 	private int roomNo;			// 방 번호
+	private int point;			// 리뷰 평점
 	
-	private List<ReviewCategory> reviewCategories;
-	
+	private List<ReviewCategory> reviewCategories; // ?
 	private List<ReviewRestaurantTag> reviewRestaurantTags;		// 음식점 리뷰 태그
 	
 	// 화면 표현 시 사용하는 필드
