@@ -168,8 +168,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="fixed-bottom p-5">
-		<i class="bi bi-arrow-up-circle fs-2 float-end" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
+	<div class="fixed-bottom d-flex justify-content-end">
+		<i class="bi bi-arrow-up-circle fs-2 p-5" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
 	</div>
 </div>
 <div>
