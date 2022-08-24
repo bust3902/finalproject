@@ -147,7 +147,7 @@
 				<div class="col mb-5" id="user">
 					<div class="col mt-5"><p>서울어때를 이용하고 싶지 않으신가요?</p></div>
 					<button type="button" class="btn btn-link"><a href="/logout">로그아웃</a></button>
-					<button type="button" class="btn btn-link"><a href="">비밀번호 변경</a></button>
+					<button type="button" class="btn btn-link"><a href="/user/changePassword">비밀번호 변경</a></button>
 				</div>
 			</c:if>
 			<!-- CAT_002 예약 내역 -->
