@@ -123,7 +123,10 @@
 						    <i class="${review.pointIcon.star5 }"></i>
 					    </div>
 					</div>
-				    <p class="card-text">${review.content }</p>
+				    <p class="card-text">
+				    	<strong class="mb-1">${review.title }</strong></br>
+				    	${review.content }
+				    </p>
 				    <div class="elapsedTime small text-end">
 				    	<fmt:formatDate value="${review.createdDate }" var="createdDate"/>
 				    	${createdDate }
