@@ -14,10 +14,10 @@ import lombok.ToString;
 @Alias("MonthlySalesDataForm")
 public class MonthlySalesDataForm {
 
-	private int salesDate;
+	private String salesDate;
 	private int salesPrice;
 	
-	public MonthlySalesDataForm(int salesDate, int salesPrice) {
+	public MonthlySalesDataForm(String salesDate, int salesPrice) {
 		this.salesDate = salesDate;
 		this.salesPrice = salesPrice;
 	}

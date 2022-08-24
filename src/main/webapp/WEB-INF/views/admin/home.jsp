@@ -311,7 +311,7 @@ $(function() {
 			var options = {
 		    title: '주간 매출',
 		    hAxis: {title: '날짜', titleTextStyle: {color: '#333'}},
-		    'width':1000,
+		    'width':1100,
 		    'height':400,
 		    vAxis: {title: '매출', minValue: 0}
 			};
@@ -336,8 +336,8 @@ $(function() {
 		
 			var options = {
 				title: '월간 매출',
-			    hAxis: {title: '날짜',  titleTextStyle: {color: '#333'}},
-			    'width':1000,
+			    hAxis: {title: '날짜',  titleTextStyle: {color: '#333'}, maxValue: 10},
+			    'width':1100,
 			    'height':400,
 			    vAxis: {title: '매출', minValue: 0}
 			};
@@ -363,7 +363,7 @@ $(function() {
 			var options = {
 			    title: '연간 매출',
 			    hAxis: {title: '월',  titleTextStyle: {color: '#333'}},
-			    'width':1000,
+			    'width':1100,
 			    'height':400,
 			    vAxis: {title: '매출', minValue: 0}
 			};
