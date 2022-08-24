@@ -18,9 +18,11 @@ public class Review {
 
 	private int no;
 	private User user;				// userNo대신 썼습니다
-	private Restaurant restaurant;	// (조회할 때 사용)
-	private Accommodation acco;				// 숙소 정보 (조회할 때 사용)
-	private AccommodationRoom room; // 객실 정보 (조회할 때 사용. name 저장)
+	private Restaurant restaurant;	// restaurantNo 대신 썼습니다.
+	private Accommodation acco;				// 숙소 번호
+	private AccommodationRoom room; // 객실 정보 (등록할 때는 no 저장, 조회할때는 name 저장)
+	private int restaurantNo;
+	private int accoId;
 	private String title;
 	private String content;
 	private int likeCount;
@@ -46,5 +48,6 @@ public class Review {
 		this.point = point;
 		this.pointIcon = new StarIconForRate(point);
 	}
+
 	
 }

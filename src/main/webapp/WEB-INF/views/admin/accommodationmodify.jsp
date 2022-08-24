@@ -21,7 +21,7 @@
 <%@ include file="../common/nav.jsp" %>
 <div class="row bg-secondary">
 	<div class="container" style="min-width:992px; max-width:992px; height:10vh;">
-		<h1 class="fs-3 text-white p-2">숙소 수정</h1>
+		<a href="/admin" class="fs-3 text-white text-decoration-none p-2">숙소 수정</a>
 	</div>
 </div>
 <div class="container mt-5" style="min-width:992px; max-width:992px;">
@@ -315,7 +315,7 @@
 		let accoId = $("input[name=id]").val();
 	  	$.getJSON("/admin/searchChecked", {id:accoId}).done(function(cofacilitiesChecked) {
 	  		console.log("체크된 것", cofacilitiesChecked);
-	  		
+	  		alert();
 	  		$.each(cofacilitiesChecked, function(index, cofacilityChecked) {
 	  			console.log('공용 ', $("input[name=stringCommonFacilities]"))
 	  			$("input[name=stringCommonFacilities]").each(function() {

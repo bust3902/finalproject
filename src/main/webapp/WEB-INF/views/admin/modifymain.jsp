@@ -16,7 +16,7 @@
 <%@ include file="../common/nav.jsp" %>
 <div class="row bg-secondary">
 	<div class="container" style="min-width:992px; max-width:992px; height:10vh;">
-		<h1 class="fs-3 text-white p-2">수정할 숙소 선택 페이지</h1>
+		<a href="/admin" class="fs-3 text-white text-decoration-none p-2">수정할 숙소 선택 페이지</a>
 	</div>
 </div>
 <div class="container" style="min-width:992px; max-width:992px;">
@@ -30,7 +30,7 @@
 		
 		<!-- 숙소 검색 폼 -->
 		<div class="col-9 p-0">
-			<div><h3>수정할 숙소 혹은 객실을 선택하세요.</h3></div>
+			<div class="mb-3"><h3 class="fw-bold">수정할 숙소 혹은 객실을 선택하세요.</h3></div>
 			<div class="row">
 				<div class="card text-white p-0 rounded-0" style="height:200px">
 					<img src="/resources/images/acco/thumbnail/${accommodations.thumbnailImageName }" class="card-img rounded-0">
@@ -38,7 +38,7 @@
 						<p class="card-title fs-3 fw-bold">${accommodations.name }</p>
 						<p class="card-text fw-bold">${accommodations.address }</p>
 						<a class="btn btn-outline-light" href="/admin/modifyAccommodation?id=${accommodations.id }">수정</a>
-						<a class="btn btn-outline-light" href="/admin/delete?id=${accommodations.id }">삭제</a>
+						<!-- <a class="btn btn-outline-light" href="/admin/delete?id=${accommodations.id }">삭제</a> -->
 					</div>
 				</div>
 				<c:forEach var="accommodationroom" items="${accommodationrooms }">

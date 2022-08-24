@@ -2,10 +2,12 @@ package kr.co.nc.service;
 
 import java.util.UUID;
 
+import org.apache.commons.mail.HtmlEmail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import kr.co.nc.mapper.UserMapper;
+import kr.co.nc.util.MailUtils;
 import kr.co.nc.vo.User;
 import lombok.extern.slf4j.Slf4j;
 
@@ -140,6 +142,43 @@ public class UserService {
 	public String findId(String name, String email) {
 		String findId = userMapper.findId(name, email);
 		return findId;
+	}
+
+	public String findPw(String id, String email) throws Exception {
+		
+		String result = null;
+	      
+	    System.out.println("email 확인 : " + email);
+	    //아이디&이메일 정보 확인
+	    int check = userMapper.finePwCheck(id, email);
+	    //회원정보 불러오기
+	    User user = userMapper.getUserByEmail(email);
+	      
+	    //가입된 이메일이 존재한다면 이메일 발송
+	    if(check == 1) {
+	         
+	       //임시 비밀번호 생성(UUID 이용 - 특수문자는 못넣음 ㅠㅠ)
+	       String tempPw = UUID.randomUUID().toString().replace("-", ""); // -를 제거
+	       tempPw = tempPw.substring(0,10); //tempPw를 앞에서부터 10자리 잘라줌
+	         
+	       System.out.println("임시 비밀번호 확인 : " + tempPw);
+	         
+	       //user객체에 임시 비밀번호 담기
+	       user.setPassword(tempPw);
+	         
+	       //메일 전송
+	       MailUtils mail = new MailUtils();
+	       mail.sendMail(user);
+	         
+	      //비밀번호 변경
+	      userMapper.updatePw(user);
+	         
+	      result = "success";
+	   } else {
+	      result = "fail";
+	   }
+	   return result;
+
 	}
 
 }

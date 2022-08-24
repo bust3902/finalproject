@@ -65,7 +65,7 @@
 				</div>
 				<div class="my-3">
 					<label type="image-field" class="form-label">이미지첨부</label>
-					<input type="file" class="form-control" name="imageFile" id="image-field" style="width:800px;">
+					<input type="file" class="form-control" name="imageFile" multiple="multiple" id="image-field" style="width:800px;">
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>

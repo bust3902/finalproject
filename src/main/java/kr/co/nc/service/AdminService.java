@@ -13,10 +13,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+
+import kr.co.nc.dto.QaDto;
+import kr.co.nc.dto.ReservationDto;
+
 import kr.co.nc.mapper.AdminMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.CommonFacility;
+import kr.co.nc.vo.QaAnswer;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.RestaurantMenu;
 import kr.co.nc.vo.RestaurantTag;
@@ -32,12 +37,15 @@ import kr.co.nc.web.form.AccommodationDeleteTagForm;
 import kr.co.nc.web.form.AccommodationRegisterForm;
 import kr.co.nc.web.form.AccommodationRoomDeleteImageNameForm;
 import kr.co.nc.web.form.AccommodationRoomRegisterForm;
+import kr.co.nc.web.form.MonthlySalesDataForm;
 import kr.co.nc.web.form.RestaurantCategoryModifyForm;
 import kr.co.nc.web.form.RestaurantCategoryRegisterForm;
 import kr.co.nc.web.form.RestaurantDeleteMenuForm;
 import kr.co.nc.web.form.RestaurantDeleteTagForm;
 import kr.co.nc.web.form.RestaurantMenuRegisterForm;
 import kr.co.nc.web.form.RestaurantRegisterForm;
+import kr.co.nc.web.form.WeeklySalesDataForm;
+import kr.co.nc.web.form.YearlySalesDataForm;
 
 @Service
 public class AdminService {
@@ -160,7 +168,6 @@ public class AdminService {
 		for (String tag : tags) {
 			adminMapper.insertRestaurantTags(new RestaurantTag(restaurant.getNo(), tag));
 		}
-		
 		// 음식점 메뉴 정보 저장
 		List<String> menuNames = restaurantRegisterForm.getMenuNames();
 		List<Integer> prices = restaurantRegisterForm.getPrices();
@@ -170,7 +177,6 @@ public class AdminService {
 			
 			adminMapper.insertRestaurantMenus(new RestaurantMenuRegisterForm(restaurant.getNo(), menuNames.get(index), prices.get(index)));
 		}
-
 		// 음식점 카테고리 정보 저장
 		List<String> categories = restaurantRegisterForm.getCategories();
 		for (String category : categories) {
@@ -178,13 +184,30 @@ public class AdminService {
 		}
 	}
 	
+	// 문의게시판 답글 입력 및 답변여부 Y로 수정
+	public void insertQaAnswer(QaAnswer qaAnswer) throws IOException {
+		System.out.println(qaAnswer);
+		adminMapper.insertQaAnswer(qaAnswer);
+		adminMapper.updateQa(qaAnswer.getQaNo());
+	}
+	
+	// 입실예정 예약 현황 검색
+	public List<ReservationDto> getReservationList() {
+		// System.out.println("서비스"+adminMapper.getReservationList());
+		return adminMapper.getReservationList();
+	}
+	
 	// 검색조건에 맞는 모든 숙소정보를 반환
 	public List<Accommodation> searchAccommodation(String keyword) {
 		return adminMapper.getSearchAccommodations(keyword);
 	}
-	// 검색조건에 맞는 모든 숙소정보를 반환
+	// 검색조건에 맞는 모든 음식점정보를 반환
 	public List<Restaurant> searchRestaurant(String keyword) {
 		return adminMapper.getSearchRestaurant(keyword);
+	}
+	// 답변 여부가 N인 모든 문의 반환
+	public List<QaDto> getQAListByAnswerStatus() {
+		return adminMapper.getQAListByAnswerStatus();
 	}
 	
 	// 숙소 아이디로 숙소 정보 검색
@@ -248,7 +271,19 @@ public class AdminService {
 	public List<RestaurantMenu> getSearchRestaurantMenusByNo(int no) {
 		return adminMapper.getSearchRestaurantMenusByNo(no);
 	}
-	
+	// 주간 매출 차트를 위한 데이터 검색
+	public List<WeeklySalesDataForm> getWeeklyChartData() {
+		return adminMapper.getWeeklyChartData();
+	}
+	// 월간 매출 차트를 위한 데이터 검색
+	public List<MonthlySalesDataForm> getMonthlyChartData() {
+		return adminMapper.getMonthlyChartData();
+	}
+	// 연간 매출 차트를 위한 데이터 검색
+	public List<YearlySalesDataForm> getYearlyChartData() {
+		return adminMapper.getYearlyChartData();
+	}
+
 	// 숙소 정보 수정
 	public void updateAccommodation(AccommodationRegisterForm accommodationRegisterForm) throws IOException {
 		// System.out.println(accommodationRegisterForm);
@@ -481,6 +516,5 @@ public class AdminService {
 				adminMapper.insertRestaurantMenus(new RestaurantMenuRegisterForm(restaurant.getNo(), menuNames.get(index), prices.get(index)));
 			}
 		}
-		
 	}
 }

@@ -499,7 +499,7 @@ $("#btn-hide-tel-form").click(function() {
 			prevEl : ".restaurant-swiper-button"
 		}
 	});
- 
+
 </script>
 </body>
 </html>
