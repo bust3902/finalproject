@@ -15,6 +15,7 @@ import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.LoginedUserService;
 import kr.co.nc.service.ReservationService;
 import kr.co.nc.service.RestaurantService;
+import kr.co.nc.service.ReviewService;
 import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.User;
@@ -32,6 +33,8 @@ public class LoginedUserController {
    private RestaurantService restaurantService;
    @Autowired
    private ReservationService reservationService;
+   @Autowired
+   private ReviewService reviewService;
    /*
     * @RequestParam
     *       요청파라미터값을 매핑시키는 어노테이션이다.
@@ -58,6 +61,11 @@ public class LoginedUserController {
     	  int userNo = user.getNo();
     	  model.addAttribute("likedAccommodations", accommodationService.getAllLikedItemsByUser(userNo));
     	  model.addAttribute("likedRestaurants", restaurantService.getAllLikedItemsByUser(userNo));
+      }
+
+      if ("CAT_004".equals(categoryId)) {
+    	  model.addAttribute("accommodationReviews", reviewService.getMyAccoReviews(user.getNo()));
+    	  model.addAttribute("restaurantReviews", reviewService.getMyRestaurantReviews(user.getNo()));
       }
       
       return "user/information";

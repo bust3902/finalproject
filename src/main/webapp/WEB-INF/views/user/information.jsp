@@ -350,8 +350,87 @@
 			</c:if>
 			<!-- CAT_004 내 리뷰 보기 -->
 			<c:if test="${param.cat eq 'CAT_004' }">
-			</c:if>
-		</div>						
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+				  <li class="nav-item" role="presentation">
+				    <button class="nav-link active" id="acco-tab" data-bs-toggle="tab" data-bs-target="#acco-tab-pane" type="button" role="tab" aria-controls="acco-tab-pane" aria-selected="true">숙소</button>
+				  </li>
+				  <li class="nav-item" role="presentation">
+				    <button class="nav-link" id="restaurant-tab" data-bs-toggle="tab" data-bs-target="#restaurant-tab-pane" type="button" role="tab" aria-controls="restaurant-tab-pane" aria-selected="false">맛집</button>
+				  </li>
+				</ul>
+				<div class="tab-content" id="myTabContent">
+				  <div class="tab-pane fade show active" id="acco-tab-pane" role="tabpanel" aria-labelledby="acco-tab" tabindex="0">
+					<div class="mb-5" style="min-height: 400px;">
+						<table class="table table-sm">
+							<colgroup>
+								<col width="20%">
+								<col width="50%">
+								<col width="20%">
+							</colgroup>
+							<tbody>
+							<c:choose>
+								<c:when test="${not empty accommodationReviews }">
+										<c:forEach var="review" items="${accommodationReviews }">
+											<tr>
+												<td class="p-3 align-middle">
+													<a class="text-muted" href="/acco/detail?id=${review.acco.id }">${review.acco.name }</a>
+												</td>
+												<td class="p-3 align-middle">
+													${review.title }
+												</td>
+												<td class="p-3 align-middle">
+													<button class="btn btn-outline-secondary">수정</button>
+												</td>
+											</tr>
+										</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td colspan="3" class="p-5 border-bottom-0 align-middle text-center">리뷰 정보가 없습니다.</td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				  <div class="tab-pane fade" id="restaurant-tab-pane" role="tabpanel" aria-labelledby="restaurant-tab" tabindex="0">
+					<div class="mb-5" style="min-height: 400px;">
+						<table class="table table-sm">
+							<colgroup>
+								<col width="50%">
+								<col width="*">
+								<col width="20%">
+							</colgroup>
+							<tbody>
+							<c:choose>
+								<c:when test="${not empty restaurantReviews }">
+										<c:forEach var="review" items="${restaurantReviews }">
+											<tr>
+												<td class="p-3 align-middle">
+													<a class="text-muted" href="/restaurant/detail?no=${review.restaurant.no }">${review.restaurant.name }</a>
+												</td>
+												<td class="p-3 align-middle">
+													${review.title }
+												</td>
+												<td class="p-3 align-middle">
+													<button class="btn btn-outline-secondary">수정</button>
+												</td>
+											</tr>
+										</c:forEach>
+								</c:when>
+								<c:otherwise>
+									<tr>
+										<td colspan="3" class="p-5 border-bottom-0 align-middle text-center">리뷰 정보가 없습니다.</td>
+									</tr>
+								</c:otherwise>
+							</c:choose>
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>		 				
+		</c:if>
 	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>

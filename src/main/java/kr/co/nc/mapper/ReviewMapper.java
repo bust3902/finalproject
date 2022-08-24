@@ -31,7 +31,11 @@ public interface ReviewMapper {
 	// 식당 최신리뷰 정보를 최대 3건 조회
 	List<Review> getLatestRestaurantReviews();
 	
-	// 사용자가 작성한 모든 리뷰를 조회한다.
+	// 모든 리뷰를 조회한다. 사용여부?
 	List<Review> getAllReviews();
+
+	// 사용자가 작성한 식당리뷰를 조회한다.
+	List<Review> getAccommodationReviewsByUserNo(int userNo);
+	List<Review> getRestaurantReviewsByUserNo(int userNo);
 
 }
