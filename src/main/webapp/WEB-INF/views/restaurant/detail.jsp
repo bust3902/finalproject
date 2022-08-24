@@ -108,7 +108,7 @@
 				</div>
 			</div>
 			<!-- 영업시간 / 메뉴 아코디언 -->
-			<div class="accordion" id="accordionPanelsStayOpenExample">
+			<div class="accordion" id="accordion-restaurant-info">
 				<div class="accordion-item">
 					<h2 class="accordion-header" id="panelsStayOpen-headingOne">
 						<button class="accordion-button fw-bold" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
@@ -203,7 +203,9 @@ $(function() {
 	
 	$("#near-btn").click(function() {
 		let keyword = $(this).find("#district").text();
-		location.href="/near?keyword=" + keyword;
+		let lat = $("#title").attr("data-lat");
+		let long = $("#title").attr("data-long");
+		location.href="/near?keyword=" + keyword + "&currentLat=" + lat + "&currentLong=" + long;
 	});
 	
 	// 찜하기 토글

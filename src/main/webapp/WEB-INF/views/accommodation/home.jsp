@@ -233,10 +233,10 @@
 <div id="modal-map" class="modal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered modal-xl">
 		<div class="modal-content">
-			<div class="modal-header">
-				<small class="modal-title text-center">내 위치 : <strong id="modal-current-location-address"></strong></small>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"
-					aria-label="Close"></button>
+			<div class="modal-header d-flex justify-content-between">
+				<span class="small me-auto"><strong id="modal-current-city"></strong></span>
+				<span class="small ms-auto">내 위치 : <strong id="modal-current-location-address"></strong></span>
+				<button type="button" class="btn-close ms-3" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body d-flex justify-content-center">
 				<!-- 지도 출력 :  -->
@@ -337,6 +337,9 @@ $(function () {
 		map.relayout(); 
 		changeMapCenter(map);
 		myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+		// 선택한 지역범위 출력
+		let cityValue = $("[name=city] :selected").text();
+		$("#modal-current-city").text(cityValue);
 	});
 
 /*
@@ -351,7 +354,7 @@ $(function () {
 	if ($("select[name=city] :selected").val() == "") {
 		map.setLevel(8);
 	} else {
-		map.setLevel(7);
+		map.setLevel(6);
 	}
 }
 

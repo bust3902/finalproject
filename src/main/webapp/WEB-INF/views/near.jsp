@@ -34,10 +34,10 @@
 		<div class="col-3 d-flex flex-column px-0">
 			<div class="p-3 bg-light">
 	  			<form id="form-search" class="d-flex justify-content-center p-3 my-auto" action="javascript:changeCurrentPage(1);" autocomplete="off">
-					<input class="form-control me-2 type="text" id="search" name="keyword" value="${keyword }" placeholder="통합검색" style="max-width:600px;height:auto">
+					<input class="form-control me-2 type="text" id="search" name="keyword" value="${param.keyword }" placeholder="통합검색" style="max-width:600px;height:auto">
 					<input type="hidden" name="type" value="">
-					<input type="hidden" name="currentLat" value="">
-					<input type="hidden" name="currentLong" value="">
+					<input type="hidden" name="currentLat" value="${param.currentLat}">
+					<input type="hidden" name="currentLong" value="${param.currentLong}">
 					<input type="hidden" name="userNo" value="${LOGIN_USER.no }">
 					<button class="btn btn-outline-primary" type="submit"><i class="bi bi-search"></i></button>
 				</form>
@@ -90,33 +90,43 @@ $(function(){
 /*
  * 현재 위치 좌표 갱신하고, 숙소 검색 결과 갱신하기 : 최초 화면 출력시에 실행하고, 사용자가 내 위치 버튼 클릭 시에도 실행한다.
  */
-	
 	// 지도 정의하기
 	let container = document.getElementById('map');
 	// mapcenter 값 설정
 	let options = { //지도를 생성할 때 필요한 기본 옵션
 			center: new kakao.maps.LatLng("37.5666805", "126.9784147"), //지도의 중심좌표
-			level: 7 //지도의 레벨(확대, 축소 정도)
+			level: 8 //지도의 레벨(확대, 축소 정도)
 	};
 	// 지도 생성, 윈도우로 보내기(지도 객체를 사용하는 search함수를 외부에서 정의하기 위함)
 	window.map = new kakao.maps.Map(container, options);
+	map.relayout();
 
 	// 현재 위치 좌표를 저장하고 마커를 생성
-	refreshLocation();
 	myLocationMarker = new kakao.maps.Marker({
 	    position: new kakao.maps.LatLng($(":hidden[name=currentLat]").val(), $(":hidden[name=currentLong]").val()),
 	    image: myLocaMarkerImage
 	});
 	myLocationMarker.setMap(map);
+	
+	if("${param.currentLat}" != "" && "${param.currentLong}" != "") {
+		// URL에서 특정 좌표를 전달받은 경우, 내위치와 지도 중심을 그 좌표로 하고 지도 레벨을 확대시킨다.
+		setMyLocationByLatLng("${param.currentLat}", "${param.currentLong}");
+		map.setLevel(5);
+	} else if ("${param.keyword }" != "") {
+		// URL에서 특정 좌표 없이 요청파라미터로 keyword값을 전달받은 경우, 내위치와 지도중심을 서울중심으로 한다.
+		setMyLocationByLatLng("37.5666805", "126.9784147");
+	} else {
+		// 어느 경우에도 속하지 않으면 내위치 획득하고 중심 설정하는 함수 실행
+		refreshLocation();
+	}
 
 	// 화면 첫 출력시 페이지버튼과 전체 검색결과를 띄운다
-	refreshPaginationButton(1);
-	search(1);
+	changeCurrentPage(1);
 });
 
 ////////////////// 지도 관련
 // 검색결과 마커로 사용할 이미지 객체를 만든다.
-let placeMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+let placeMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(42,42));
 // 현재 지도에 표시된 검색결과 마커를 관리하기 위한 배열을 정의한다.
 let placeMarkers = [];
 // 내 위치좌표값, 마커객체를 관리하는 변수를 정의
@@ -124,7 +134,7 @@ let currentLat = '';
 let currentLong = '';
 let myLocationMarker = '';
 // 내 위치 마커 이미지 만들기
-let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(45,45));
+let myLocaMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/house-door-fill.svg', new kakao.maps.Size(42,42));
 
 ////// 내 위치 관련
 // 아래 함수를 실행하면 현재 위치 좌표를 새로 조회하고, 전역변수 currentLat, currentLong와 hidden 태그에 값이 저장된다.
@@ -137,33 +147,26 @@ function refreshLocation() {
 			// 성공 시 콜백함수
 	    	currentLat = position.coords.latitude;
 	    	currentLong = position.coords.longitude;
-			$(":hidden[name=currentLat]").val(currentLat);
-			$(":hidden[name=currentLong]").val(currentLong);
-			
 			// 검색결과, 내위치마커, 지도 중심 갱신
-			map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
-			setMyLocationByMe(currentLat, currentLong);
+			setMyLocationByLatLng(currentLat, currentLong);
     	}, function(position) {
 			// 실패 시 콜백함수
 			// 현재 위치를 받을 수 없으면 서울 중심 좌표를 저장
 			currentLat = 37.564214;
 			currentLong = 127.0016985;
-			$(":hidden[name=currentLat]").val(currentLat);
-			$(":hidden[name=currentLong]").val(currentLong);
-
 			// 검색결과, 내위치마커, 지도 중심 갱신
-			map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
-			setMyLocationByMe(currentLat, currentLong);
+			setMyLocationByLatLng(currentLat, currentLong);
 		});
 	}
 	
 }
 
-// 현재 지도 중심을 실제 내 위치로 바꾸는 함수
-function setMyLocationByMe(currentLat, currentLong) {
+// 현재 지도 중심을 특정 좌표값으로 바꿔주는 함수
+function setMyLocationByLatLng(currentLat, currentLong) {
 	$(":hidden[name=currentLat]").val(currentLat);
 	$(":hidden[name=currentLong]").val(currentLong);
 	myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+	map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
 	changeCurrentPage(1);
 }
 
@@ -175,6 +178,7 @@ function setMyLocationByMap() {
 	$(":hidden[name=currentLat]").val(currentLat);
 	$(":hidden[name=currentLong]").val(currentLong);
 	myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+	map.setCenter(new kakao.maps.LatLng(currentLat, currentLong));
 	changeCurrentPage(1);
 }
 
@@ -201,24 +205,29 @@ function search(currentPage) {
 	}
 	
 	$.getJSON(url, queryString).done(function(places) {
-		let $wrapper = $("#places-wrapper").empty();
 		let content = '';
+		let $wrapper = $("#places-wrapper").empty();
 		if (places.length === 0) {
 			content += '<div class="p-3 text-center my-auto">조회 결과가 없습니다.</div>';
+			$wrapper.append(content);
 		} else {
 			// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
 			setMarker(null);
 			placeMarkers = [];
 			$.each(places, function(index, place) {
+				content = '';
 				let detailURL = '';
 				if (place.type === "A") {
 					detailURL = "/acco/detail?id=" + place.id;
-				} else {
+				} else if (place.type === "R") {
 					detailURL = "/restaurant/detail?no=" + place.id;
+				} else {
+					alert("다시 시도해주세요.")
+					return;
 				}
 				content += '	<div class="row p-3 border-bottom">';
 				content += '		<p class="mb-1">';
-				content += '			<a class="fw-light text-muted" href="' + detailURL + '">' + place.name + '</a>';
+				content += '			<span id="place-name-' + place.id + '" class="fw-light text-muted" style="cursor: pointer;">' + place.name + '</span>';
 				content += '			<small class="border-end mx-3"></small>';
 				content += '			<small>' + (place.type == "A" ? '숙소' : '맛집' ) + '</small>';
 				content += '			<i id="icon-heart-' + place.id + '" data-place-id="' + place.id +'" data-place-type="' + place.type +'" class="icon-heart bi ' + (place.liked ? 'bi-heart-fill' : 'bi-heart') + ' fs-5 text-primary float-end"></i>';
@@ -239,7 +248,9 @@ function search(currentPage) {
 				content += '		<p class="small mb-1">';
 				content += '			<span>' + place.address +'</span>';
 				content += '		</p>';
+				content += '		<a class="small text-decoration-none text-secondary float-end" href="' + detailURL + '">상세보기</a>';
 				content += '	</div>';
+				$wrapper.append(content);
 				
 				let markerPosition = new kakao.maps.LatLng(place.latitude, place.longitude);
 				let marker = new kakao.maps.Marker({
@@ -277,14 +288,18 @@ function search(currentPage) {
 				kakao.maps.event.addListener(marker, 'mouseout', function() {
 					overlay.setMap(null);
 				});
+				// 장소 이름을 클릭하면 해당 장소의 커스텀오버레이를 보여주는 이벤트핸들러 등록
+				 $("#place-name-" + place.id).click(function() {
+					 overlay.setMap(map);
+				 });
 				
 				// 배열에 마커 객체를 저장
 				placeMarkers.push(marker);
+				
 			});
 			// 배열에 담긴 마커를 지도에 모두 표시한다.
 			setMarker(map);
 		}
-		$wrapper.append(content);
 	})
 }
 
