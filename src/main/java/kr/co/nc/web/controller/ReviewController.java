@@ -60,4 +60,10 @@ public class ReviewController {
 		reviewService.addNewReview(user, restaurantNo,roomNo, accoId, reviewRegisterForm);
 		return "reviews/reviewcomplete";
 	}
+	
+	// 화면구현하느라 테스트로 넣은 요청핸들러메소드
+//	@GetMapping(path = "/reviewcomplete")
+//	public String test() {
+//		return "reviews/reviewcomplete";
+//	}
 }
