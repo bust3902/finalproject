@@ -20,16 +20,6 @@
 		<!-- <association property="user" column="user_no"></association> -->
 	</resultMap>
 	
-	<!-- List<Review> getReviewByRestaurantNo(int restaurantNo); 음식점 리뷰-->
-	<select id="getReviewByRestaurantNo" parameterType="int" resultMap="ReviewResultMap">
-		select *
-		from REVIEW
-		where REVIEW_DELETED = 'N'
-			and RESTAURANT_NO = #{value}
-		order by
-			REVIEW_CREATED_DATE desc
-	</select>
-
 	<resultMap type="Restaurant" id="RestaurantResultMap">
 		<id column="RESTAURANT_NO" property="no"/>
 		<result column="RESTAURANT_NAME" property="name"/>

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import kr.co.nc.criteria.ReviewCriteria;
 import kr.co.nc.service.RestaurantService;
 import kr.co.nc.service.ReviewService;
 import kr.co.nc.vo.User;
@@ -44,7 +45,7 @@ public class RestaurantController {
 		} else {
 			model.addAttribute("restaurant",restaurantService.getRestaurantDetail(no));
 		}
-		model.addAttribute("review",restaurantService.getRestaurantReview(no));
+		model.addAttribute("review",reviewService.getReviewsByCriteria(new ReviewCriteria("restaurantNo", no)));
 
 		return "restaurant/detail";
 	}

@@ -39,11 +39,6 @@ public class RestaurantService {
 	@Autowired
 	private RestaurantMapper restaurantMapper;
 	
-	@Autowired
-	private AccommodationMapper accommodationMapper;
-	
-	@Autowired
-	private ReviewMapper reviewMapper;
 	// 음식점 디테일 service
 	public Restaurant getRestaurantDetail(int restaurantNo) {
 		return restaurantMapper.getRestaurantByNo(restaurantNo);
@@ -59,10 +54,6 @@ public class RestaurantService {
 		return restaurant;
 	}
 	
-	// 음식점 리뷰 service
-	public List<Review> getRestaurantReview(int restaurantNo) {
-		return restaurantMapper.getReviewByRestaurantNo(restaurantNo);
-	}
 	
 	// 음식점 모든 리뷰 service
 	public List<Review> getAllRestaurantReview() {

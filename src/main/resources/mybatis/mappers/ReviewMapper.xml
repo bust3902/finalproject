@@ -5,9 +5,9 @@
 	<!-- void insertReview(Review review); -->
 	<insert id="insertReview" parameterType="Review">
 		insert into review
-		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_image, review_point)
+		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_image, review_point,room_no)
 		values
-		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{accoId}, #{title}, #{content}, #{image}, #{point})
+		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{accoId}, #{title}, #{content}, #{image}, #{point},#{roomNo})
 	</insert>
 	
 	<!-- void updateReview(Review review); -->
