@@ -48,8 +48,6 @@ public class LoginedUserController {
       List<Category> categories = loginedService.getAllCategories();
       model.addAttribute("categories",categories);
       
-      
-      
       if ("CAT_002".equals(categoryId)) {
 		model.addAttribute("Readyreservation", reservationService.getReadytoReserveInfoByReserveId(user.getNo()));
 		model.addAttribute("Refundreservation", reservationService.getRefundReserveInfoByReserveId(user.getNo()));
@@ -101,4 +99,11 @@ public class LoginedUserController {
 	   return "redirect:/user/information?cat=CAT_001";
    }
  
+   @GetMapping(path = "/changePassword")
+   public String changePassword(@LoginUser User user, @RequestParam(name ="cat", required = false) String categoryId, String reservationNo, Model model) {
+	   List<Category> categories = loginedService.getAllCategories();
+	   model.addAttribute("categories",categories);
+	   return "user/changePassword";
+   }
+   
 }
