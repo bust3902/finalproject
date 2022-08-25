@@ -80,8 +80,8 @@ public class ReviewController {
 	@GetMapping(path = "/reviewmodify")
 	public String reviewModifyForm(@LoginUser User user, int no,  Model model) {
 
+		// TODO 사용자와 작성자가 같은지 확인
 		// TODO 존재하지 않거나 삭제된 리뷰일 경우 예외처리
-		
 		model.addAttribute("review", reviewService.getReviewByNo(no));
 		
 		return "/reviews/modifyform";
@@ -104,7 +104,18 @@ public class ReviewController {
 		System.out.println(form);
 		reviewService.modifyReview(user.getNo(), form);
 		
-		return "reviews/reviewcomplete";
+		return "/reviews/reviewcomplete";
 	}
 	
+	@GetMapping(path = "/reviewdelete")
+	public String reviewdelete(@LoginUser User user, int no) {
+		
+		try {
+			reviewService.deleteReview(user, no);
+		} catch (Exception e) {
+			// TODO: 오류페이지 연결하기
+		}
+		
+		return "redirect:user/information?cat=CAT_004";
+	}
 }

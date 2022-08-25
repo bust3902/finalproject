@@ -42,12 +42,6 @@
 			review_no = #{no}
 	</update>
 	
-	<!-- void deleteReview(Review reivew); -->
-		<delete id="deleteReview" parameterType="Review">
-			delete from review
-			where review_no = #{no}
-		</delete>
-	
 	<!-- void insertReviewCategory(ReviewCategory reviewCategory); -->
 	<insert id="insertReviewCategory" parameterType="ReviewCategory">
 		insert into review_categories
@@ -98,7 +92,7 @@
 				</when>
 			</choose>
 		</where>
-		order by rv.review_created_date desc
+		order by rv.review_updated_date desc
 	</select>
 	
 	<!-- List<String> getAllReviewTagsByRestaurantNo(int no); -->
@@ -114,6 +108,7 @@
 		from review r, users u
 		where restaurant_no = #{value}
 		and r.user_no = u.user_no
+		and r.review_deleted = 'N'
 	</select>
 	<!-- List<Map<String, Integer>> countReviewPoints(ReviewCriteria criteria); -->
 	<select id="countReviewPoints" parameterType="kr.co.nc.criteria.ReviewCriteria" resultType="hashmap">
@@ -127,10 +122,10 @@
 		from points p,
 			<choose>
 				<when test="accoId != 0">
-				    (select review_point, count(*) cnt from review where acco_id=#{accoId} group by review_point) x
+				    (select review_point, count(*) cnt from review where acco_id=#{accoId} and review_deleted = 'N' group by review_point) x
 				</when>
 				<otherwise>
-				    (select review_point, count(*) cnt from review where restaurant_no=#{restaurantNo} group by review_point) x
+				    (select review_point, count(*) cnt from review where restaurant_no= #{restaurantNo} and review_deleted = 'N' group by review_point) x
 				</otherwise>
 			</choose>
 		where x.review_point (+) = p.review_point
@@ -142,13 +137,14 @@
 		select *
 		from (select r.review_title, r.review_content, a.acco_id, a.acco_name
 		    from review r, accommodations a, cities c
-		    where r.acco_id = a.acco_id
+		    where review_deleted = 'N' 
+		    and r.acco_id = a.acco_id
 		    and a.city_id = c.city_id
 		    and r.acco_id in
 				<foreach item="accoId" collection="list" open="(" close=")" separator=",">
 					#{accoId}
 				</foreach>
-		    order by r.review_created_date desc)
+		    order by r.review_updated_date desc)
 		where rownum &lt;= 10
 	</select>
 	
@@ -157,9 +153,10 @@
 		select *
 		from (select *
 		    from review
-		    where restaurant_no is not null
+		    where review_deleted = 'N' 
+		    	and restaurant_no is not null
 		    	and acco_id is null
-		    order by review_created_date desc)
+		    order by review_updated_date desc)
 		where rownum &lt;=3
 	</select>
 
@@ -167,25 +164,27 @@
 	<select id="getAllReviews" resultType="Review">
 		select *
 		from review
-		where review_created_date desc
+		order by review_updated_date desc
 	</select>
 	
 	<!-- List<Review> getAccommodationReviewsByUserNo(int userNo); -->
 	<select id="getAccommodationReviewsByUserNo" parameterType="int" resultMap="reviewResultMap">
 		select *
 		from review rv, accommodations a
-		where user_no = #{value}
+		where rv.review_deleted = 'N'
+			and user_no = #{value}
 			and rv.acco_id = a.acco_id
-		order by rv.review_created_date desc
+		order by rv.review_updated_date desc
 	</select>
 	
 	<!-- List<Review> getRestaurantReviewsByUserNo(int userNo); -->
 	<select id="getRestaurantReviewsByUserNo" parameterType="int" resultMap="reviewResultMap">
 		select *
 		from review rv, restaurant r
-		where user_no = #{value}
+		where rv.review_deleted = 'N'
+			and rv.user_no = #{value}
 			and rv.restaurant_no = r.restaurant_no
-		order by rv.review_created_date desc
+		order by rv.review_updated_date desc
 	</select>
 	
 	<!-- Review getReviewByNo(int no); -->
@@ -193,6 +192,7 @@
 		select *
 		from review
 		where review_no = #{value}
+		and review_deleted = 'N'
 	</select>
 	
 </mapper>

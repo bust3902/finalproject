@@ -187,4 +187,39 @@ public class ReviewService {
 		return reviewMapper.getReviewByNo(no);
 	}
 
+	@Transactional
+	public void deleteReview(User loginUser, int reviewNo) {
+		// 존재하거지 않거나 삭제된 리뷰일 경우 예외처리
+		Review review = getReviewByNo(reviewNo);
+		if (review == null) {
+			throw new RuntimeException("존재하지 않는 게시글입니다.");
+		}
+		// 사용자와 작성자가 같지 않으면 예외 발생
+		if (loginUser.getNo() != review.getUser().getNo()) {
+			throw new RuntimeException("작성자 외에는 게시글을 삭제할 수 없습니다.");
+		}
+		// 삭제 작업
+		review.setDeleted("Y");
+		reviewMapper.updateReview(review);
+		
+		// 삭제 작업을 완료하면 리뷰의 개수와 평점을 반영시킨다.
+		if (review.getAcco() != null) {
+			Accommodation accommodation = accommodationMapper.getAccommodationById(review.getAcco().getId());
+			int changedCount = accommodation.getReviewCount() - 1;
+			double originalTotalReviewRate = accommodation.getReviewRate();
+			double changedTotalReviewRate = (originalTotalReviewRate*(accommodation.getReviewCount()) - review.getPoint())/changedCount;
+			accommodation.setReviewCount(changedCount);
+			accommodation.setReviewRate(changedTotalReviewRate);
+			accommodationMapper.updateAccommodation(accommodation);
+		} else if (review.getRestaurant() != null) {
+			Restaurant restaurant = restaurantMapper.getRestaurantByNo(review.getRestaurant().getNo());
+			int changedCount = restaurant.getReviewCount() - 1;
+			double originalTotalReviewRate = restaurant.getReviewPoint();
+			double changedTotalReviewRate = (originalTotalReviewRate*(restaurant.getReviewCount()) - review.getPoint())/changedCount;
+			restaurant.setReviewCount(changedCount);
+			restaurant.setReviewPoint(changedTotalReviewRate);
+			restaurantMapper.updateRestaurant(restaurant);
+		}
+	}
+
 }

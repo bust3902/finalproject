@@ -98,7 +98,7 @@
 				<!-- 숙소 이미지 - 미리보기 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<!-- 이미지 미리보기 : 이미지 중 3장이 첫 화면 가장 먼저 보인다. -->
+						<!-- 이미지 미리보기 : 이미지 중 4장이 첫 화면 가장 먼저 보인다. -->
 						<c:forEach var="image" items="${detail.images }">
 							<div class="swiper-slide">
 								<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
@@ -106,7 +106,7 @@
 						</c:forEach>
 						<!-- 이미지 정보가 3개 미만일 경우, 미리 보기에는 부족한 개수만큼 로고 이미지 출력  -->
 						<c:if test="${fn:length(detail.images) < 4 }">
-							<c:forEach begin="0" end="${2 - fn:length(detail.images) }">
+							<c:forEach begin="0" end="${3 - fn:length(detail.images) }">
 								<div class="swiper-slide">
 									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
 								</div>
@@ -762,8 +762,8 @@ function toggleAccoLike(accoId) {
  function getElapsedTime(value) {
 	let now = moment();
 	// 경과시간 정보
-	let createdDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
-	let duration = moment.duration(now.diff(createdDate));
+	let updatedDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
+	let duration = moment.duration(now.diff(updatedDate));
 	// 경과시간에 대해 문자열로 표시할 단위 옵션
 	let durationOptions = [
 		{"dur" : duration.asYears(), "option" : "년 전"},
@@ -835,8 +835,8 @@ $.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 				content += '                <img style="height: 15rem; width:auto;" alt="review image" src="/resources/images/review/' + review.image +'">';
 				content += '            </div>';
 			}
-			// review.createdDate은 iso-8601 형식의 날짜정보를 반환한다. 이 값을 getElapsedTime 함수에 전달해 경과시간을 획득한다.
-			content += '        <small class="elapsedTime">' + getElapsedTime(review.createdDate) + '</small>';
+			// review.updatedDate은 iso-8601 형식의 날짜정보를 반환한다. 이 값을 getElapsedTime 함수에 전달해 경과시간을 획득한다.
+			content += '        <small class="elapsedTime">' + getElapsedTime(review.updatedDate) + '</small>';
 			content += '    </div>';
 			content += '</div>';
 			count++;

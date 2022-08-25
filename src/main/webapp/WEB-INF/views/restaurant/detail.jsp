@@ -270,8 +270,8 @@ $(function() {
  function getElapsedTime(value) {
 	let now = moment();
 	// 경과시간 정보
-	let createdDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
-	let duration = moment.duration(now.diff(createdDate));
+	let updatedDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
+	let duration = moment.duration(now.diff(updatedDate));
 	// 경과시간에 대해 문자열로 표시할 단위 옵션
 	let durationOptions = [
 		{"dur" : duration.asYears(), "option" : "년 전"},
@@ -344,8 +344,8 @@ $.getJSON("/reviews/restaurant", "restaurantNo=" + ${param.no}).done(function(da
 				content += '                <img style="height: 15rem; width:auto;" alt="review image" src="/resources/images/review/' + review.image +'">';
 				content += '            </div>';
 			}
-			// review.createdDate은 iso-8601 형식의 날짜정보를 반환한다. 이 값을 getElapsedTime 함수에 전달해 경과시간을 획득한다.
-			content += '        <small class="elapsedTime float-end">' + getElapsedTime(review.createdDate) + '</small>';
+			// review.updatedDate은 iso-8601 형식의 날짜정보를 반환한다. 이 값을 getElapsedTime 함수에 전달해 경과시간을 획득한다.
+			content += '        <small class="elapsedTime float-end">' + getElapsedTime(review.updatedDate) + '</small>';
 			content += '    </div>';
 			content += '</div>';
 			count++;
