@@ -53,18 +53,18 @@
 		<strong><h3>비밀번호 변경</h3></strong>
 		<div class="changePw">
     		<div class="row">
-    			<form class="form p-3" method="post" id="pwUpdateForm" name="pwUpdateForm" action="/user/pwUpdate">
-    				<div class="form-group">
+    			<form class="form p-3" method="post" id="pwUpdateForm" name="pwUpdateForm" action="">
+    				<div class="form-group" id="standardPassword">
       					<label for="password" class="form-label mt-4">기존 비밀번호</label>
-      					<input type="password" class="form-control" name="memberPw" id="memberPw" placeholder="기존 비밀번호를 입력해 주세요." style="width: 380px; height: 50px;">
+      					<input type="password" class="form-control" name="pw" id="pw" placeholder="기존 비밀번호를 입력해 주세요." style="width: 380px; height: 50px;">
     				</div>
-    				<div class="form-group2">
+    				<div class="form-group2" id="ChangePassword">
       					<label for="newPassword" class="form-label2 mt-4">새 비밀번호</label>
-      					<input type="password" class="form-control" name="memberPw1" placeholder="비밀번호(최소 8자 이상)" style="width: 380px; height: 50px;">
+      					<input type="password" class="form-control" name="pw1" placeholder="비밀번호(최소 8자 이상)" style="width: 380px; height: 50px;">
     				</div>
-    				<div class="form-group3 mb-4">
+    				<div class="form-group3 mb-4" id="ChangePasswordConfirm">
       					<label for="newPasswordConfirm" class="form-label3 mt-4">새 비밀번호 확인</label>
-      					<input type="password" class="form-control" name="memberPw2" placeholder="변경할 비밀번호를 재입력해 주세요." style="width: 380px; height: 50px;">
+      					<input type="password" class="form-control" name="pw2" placeholder="변경할 비밀번호를 재입력해 주세요." style="width: 380px; height: 50px;">
     				</div>
     				<div class="mt-3 text-end" id="text-end">
     					<button type="submit" id="pwUpdate" name="pwUpdate" class="btn btn-primary btn-lg">변경</button>
@@ -78,43 +78,31 @@
 $(document).ready(function(){
 	
 	$("#pwUpdate").on("click", function(){
-		if($("#memberPw").val==""){
+		if($("#pw").val==""){
 			alert("현재 비밀번호를 입력해주세요");
 			$("#memberPw").focus();
 			return false
 		}
-		if($("#memberPw1").val==""){
+		if($("#pw1").val==""){
 			alert("변경비밀번호을를 입력해주세요");
-			$("#memberPw1").focus();
+			$("#pw1").focus();
 			return false
 		}
-		if($("#memberPw2").val==""){
+		if($("#pw2").val==""){
 			alert("변경비밀번호를 입력해주세요");
-			$("#memberPw2").focus();
+			$("#pw2").focus();
 			return false
 		}
-		if ($("#memberPw").val() != $("#memberPw2").val()) {
+		if ($("#pw").val() != $("#pw2").val()) {
 			alert("변경비밀번호가 일치하지 않습니다.");
-			$("#memberPw2").focus();
+			$("#pw2").focus();
 			 
 		
 		$.ajax({
-			url : "/user/pwUpdate",
+			url : "user/changePassword",
 			type : "POST",
 			dataType : "json",
-			data : $("#pwUpdateForm").serializeArray(),
-			success: function(data){
-				
-				if(data==0){
-					alert("패스워드가 틀렸습니다.");
-					return;
-				}else{
-					if(confirm("변경하시겠습니까?")){
-						$("#pwUpdateForm").submit();
-					}
-					
-				}
-			}
+			data : $("#pwUpdateForm").serializeArray()
 		})
 		
 	});

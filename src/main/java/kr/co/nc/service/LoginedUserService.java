@@ -51,5 +51,14 @@ public class LoginedUserService {
 		
 		return user;
 	}
+
+	public User updatePassword(String id, String password) {
+		User user = userMapper.getUserById(id);
+		user.setPassword(password);
+		
+		userMapper.update(user);
+		
+		return user;
+	}
 	
 }
