@@ -179,23 +179,5 @@ public class UserService {
 	   return result;
 
 	}
-
-/**
-	// 비밀번호 변경
-	public void modifyPw(User user) throws Exception {
-		
-		// 회원 비밀번호를 인코딩하기 위해 객체 선언
-		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-		System.out.println("암호화 전 비밀번호: " + user.getPassword());
-		
-		// 회원 비밀번호를 암호화하여 user객체에 다시 저장
-		String securePw = encoder.encode(user.getPassword());
-		user.setPassword(securePw);		
-		System.out.println("암호화 후 비밀번호: " + user.getPassword());
-		
-		//비밀번호 변경
-	    userMapper.updatePw(user);
-	}
-*/
 	
 }

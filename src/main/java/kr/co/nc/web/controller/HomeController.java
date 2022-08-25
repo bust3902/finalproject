@@ -248,7 +248,7 @@ public class HomeController {
 	
 	@PostMapping(path="/findPw")
 	@ResponseBody
-	public String findPw(@RequestParam("id") String id, @RequestParam("email") String email) throws Exception{
+	public String findPw(@RequestParam("id") String id, @RequestParam("email") String email) throws Exception {
 	   String result = userService.findPw(id,email);
 	   try {
 	      if ("success".equals(result)) {

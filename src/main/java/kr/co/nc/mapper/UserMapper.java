@@ -22,6 +22,7 @@ public interface UserMapper {
 	// 아이디 찾기
 	String findId(@Param("name")String name, @Param("email")String email);
 
+	// 비밀번호 변경
 	void updatePw(User user);
 
 	int finePwCheck(@Param("id") String id, @Param("email")String email);

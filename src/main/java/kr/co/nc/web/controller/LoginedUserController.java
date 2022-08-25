@@ -106,4 +106,13 @@ public class LoginedUserController {
 	   return "user/changePassword";
    }
    
+   @GetMapping(path = "/pwUpdate")
+   public String pwUpdate(@LoginUser User user, @RequestParam(name ="pwUpdateForm") String password) {
+	   
+	   user = loginedService.updatePassword(user.getId(), password);
+	   SessionUtils.addAttribute("LOGIN_USER", user);
+	   
+	   return "user/changePassword";
+   }
+
 }
