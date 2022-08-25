@@ -35,6 +35,8 @@
 			review_content = #{content},
 			review_like_count = #{likeCount},
 			review_image = #{image},
+			review_deleted = #{deleted},
+			review_point = #{point},
 			review_updated_date = sysdate
 		where
 			review_no = #{no}
@@ -64,9 +66,9 @@
 		<result column="review_updated_date" property="updatedDate"/>
 		<result column="review_image" property="image"/>
 		<result column="review_point" property="point"/>
-		<result column="acco_id" property="acco.id"/>
-		<result column="acco_name" property="acco.name"/>
-		<result column="room_name" property="room.name"/>
+		<result column="review_deleted" property="deleted"/>
+		<association column="acco_id" property="acco" select="kr.co.nc.mapper.AccommodationMapper.getAccommodationById"></association>
+		<association column="room_no" property="room" select="kr.co.nc.mapper.AccommodationMapper.getRoomByNo"/>
 		<association column="user_no" property="user" select="kr.co.nc.mapper.UserMapper.getUserByNo"></association>
 		<association column="restaurant_no" property="restaurant" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantByNo"></association>
 		<collection column="restaurant_no" property="reviewRestaurantTags" select="getAllReviewTagsByRestaurantNo"></collection>
@@ -184,6 +186,13 @@
 		where user_no = #{value}
 			and rv.restaurant_no = r.restaurant_no
 		order by rv.review_created_date desc
+	</select>
+	
+	<!-- Review getReviewByNo(int no); -->
+	<select id="getReviewByNo" parameterType="int" resultMap="reviewResultMap">
+		select *
+		from review
+		where review_no = #{value}
 	</select>
 	
 </mapper>

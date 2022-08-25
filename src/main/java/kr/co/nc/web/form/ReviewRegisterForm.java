@@ -6,8 +6,6 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import kr.co.nc.dto.StarIconForRate;
-import kr.co.nc.vo.AccommodationRoom;
-import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.ReviewRestaurantTag;
 import kr.co.nc.vo.User;
 import lombok.Getter;
@@ -21,9 +19,9 @@ public class ReviewRegisterForm {
 
 	private int no;
 	private User user;
-	private Restaurant restaurant;
 	private int accoId;
-	private AccommodationRoom room;
+	private int roomNo;
+	private int restaurantNo;
 	private String title;
 	private String content;
 	private int likeCount;
@@ -33,7 +31,6 @@ public class ReviewRegisterForm {
 	private String image;
 	private MultipartFile imageFile;
 	private int point;
-	private int roomNo;
 	private List<String> categoryIds;
 	
 	private List<ReviewRestaurantTag> reviewRestaurantTags;

@@ -22,63 +22,59 @@
 <div id="review" class="container my-3">
 	<div class="row mb-6">
 		<div class="col-8">
-			<form action="/reviewcomplete" method="post" enctype="multipart/form-data">
+			<form action="/reviewmodify" method="post" enctype="multipart/form-data">
 				<div class="my-3">
-					<h4 class="text-center"><strong>리뷰 작성하기</strong></h4>
+					<h4 class="text-center"><strong>리뷰 수정하기</strong></h4>
 				</div>
 				<div class="my-3">
-					<c:if test="${not empty param.restaurantNo }">
-						${restaurantName }
+					<c:if test="${not empty review.restaurant }">
+						${review.restaurant.name }
 					</c:if>
-					<c:if test="${not empty param.accoId }">
-						${roomName.accoName } / ${roomName.name }
+					<c:if test="${not empty review.acco }">
+						${review.acco.name } / ${review.room.name }
 					</c:if>
 				</div>
 				<div class="my-3">
 					<p><strong>제목</strong></p>
-					<input class="form-control" type="text" name="title" style="width:800px;" placeholder="제목을 작성해주세요."/>
+					<input class="form-control" type="text" name="title" style="width:800px;" value="${review.title }"/>
 				</div>
 				<div class="my-3">
-					<c:if test="${not empty param.restaurantNo }">
-						<input type="hidden" name="restaurantNo" value="${param.restaurantNo }">
-					</c:if>
-					<c:if test="${not empty param.accoId }">
-						<input type="hidden" name="accoId" value="${param.accoId }">
-					</c:if>
-					<c:if test="${not empty param.roomNo }">
-						<input type="hidden" name="roomNo" value="${param.roomNo }">
-					</c:if>
+					<input type="hidden" name="no" value="${review.no }">
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="1">
+						<input class="form-check-input" type="radio" name="point" value="1" ${review.point eq 1 ? 'checked' : ''}>
 						<label class="form-check-label">1점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="2">
-						<label class="form-check-label">2점</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="3">
-						<label class="form-check-label">3점</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="4">
-						<label class="form-check-label">4점</label>
-					</div>
-					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="5">
+						<input class="form-check-input" type="radio" name="point" value="2" ${review.point eq 2 ? 'checked' : ''}>
+						<label class="form-check-label">2점</label>                         
+					</div>                                                                  
+					<div class="form-check form-check-inline">                              
+						<input class="form-check-input" type="radio" name="point" value="3" ${review.point eq 3 ? 'checked' : ''}>
+						<label class="form-check-label">3점</label>                         
+					</div>                                                                  
+					<div class="form-check form-check-inline">                              
+						<input class="form-check-input" type="radio" name="point" value="4" ${review.point eq 4 ? 'checked' : ''}>
+						<label class="form-check-label">4점</label>                         
+					</div>                                                                  
+					<div class="form-check form-check-inline">                              
+						<input class="form-check-input" type="radio" name="point" value="5" ${review.point eq 5 ? 'checked' : ''}>
 						<label class="form-check-label">5점</label>
 					</div>
 				</div>
 				<div class="my-3">
-					<label type="image-field" class="form-label">이미지첨부</label>
+					<p><strong>이미지변경</strong></p>
 					<input type="file" class="form-control" name="imageFile" multiple="multiple" id="image-field" style="width:800px;">
+					<c:if test="${not empty review.image }">
+						<p class="mt-3">기존 업로드 이미지</p>
+						<img class="p-1" style="width:15rem; height:auto;" alt="" src="/resources/images/review/${review.image }">
+					</c:if>
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
-					<textarea class="form-control" rows="13" name="content" placeholder="내용을 10자 이상 작성해주세요." style="width:800px;"></textarea>
+					<textarea class="form-control" rows="13" name="content" style="width:800px;">${review.content }</textarea>
 				</div>
 				<div class="text-end">
 					<a href="/" class="btn btn-secondary px-3">취소</a>

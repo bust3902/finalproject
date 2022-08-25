@@ -234,12 +234,30 @@
 		<result column="room_description" property="description" />
 		<result column="room_thumbnail_image" property="thumbnailImageName" />
 		<result column="acco_id" property="accoId" />
+	</resultMap>
+	
+	<resultMap type="AccommodationRoom" id="RoomDetailResultMap" extends="RoomResultMap">
 		<collection column="room_no" property="roomFacilities" select="getRoomFacilitiesByRoomNo"></collection>
 		<collection column="room_no" property="images" select="getImagesByRoomNo"></collection>
 	</resultMap>
 	
+	<!-- AccommodationRoom getNamesByRoomNo(int roomNo); -->
+	<select id="getNamesByRoomNo" parameterType="int" resultType="AccommodationRoom">
+		select r.room_name as name, a.acco_name as accoName
+		from acco_rooms r, accommodations a
+		where r.room_no = #{value}
+			and r.acco_id = a.acco_id
+	</select>
+	
+	<!-- AccommodationRoom getRoomByNo(int roomNo); -->
+	<select id="getRoomByNo" parameterType="int" resultMap="RoomResultMap">
+		select *
+		from acco_rooms
+		where room_no = #{value}
+	</select>
+	
 	<!-- List<AccommodationRoom> getAllRoomsByAccoId(int accoId); -->
-	<select id="getAllRoomsByAccoId" parameterType="int" resultMap="RoomResultMap">
+	<select id="getAllRoomsByAccoId" parameterType="int" resultMap="RoomDetailResultMap">
 		select *
 		from acco_rooms
 		where acco_id = #{value}
@@ -332,7 +350,7 @@
 	</select>
 	
 	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria); -->
-	<select id="getRoomsByAccoIdwithPagination" parameterType="kr.co.nc.criteria.RoomCriteria" resultMap="RoomResultMap">
+	<select id="getRoomsByAccoIdwithPagination" parameterType="kr.co.nc.criteria.RoomCriteria" resultMap="RoomDetailResultMap">
 		select *
 		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.*
 				from acco_rooms a

@@ -363,9 +363,11 @@
 					<div class="mb-5" style="min-height: 400px;">
 						<table class="table table-sm">
 							<colgroup>
-								<col width="20%">
+								<col width="15%">
 								<col width="*">
 								<col width="20%">
+								<col width="25%">
+								<col width="10%">
 							</colgroup>
 							<tbody>
 							<c:choose>
@@ -377,26 +379,26 @@
 											<th class="p-3 align-middle">작성일</th>
 											<th></th>
 										</tr>
-										<c:forEach var="review" items="${accommodationReviews }">
+										<c:forEach var="item" items="${accommodationReviews }">
 											<tr>
 												<td class="p-3 align-middle">
-													<a class="text-muted" href="/acco/detail?id=${review.acco.id }">${review.acco.name }</a>
+													<a class="text-muted" href="/acco/detail?id=${item.acco.id }">${item.acco.name }</a>
 												</td>
 												<td class="p-3 align-middle">
-													${review.title }
+													<a class="text-muted" href="/reviewmodify?no=${item.no }">${item.title }</a>
 												</td>
 												<td class="p-3 align-middle text-warning">
-													<i class="${review.pointIcon.star1 }"></i>
-													<i class="${review.pointIcon.star2 }"></i>
-													<i class="${review.pointIcon.star3 }"></i>
-													<i class="${review.pointIcon.star4 }"></i>
-													<i class="${review.pointIcon.star5 }"></i>
+													<i class="${item.pointIcon.star1 }"></i>
+													<i class="${item.pointIcon.star2 }"></i>
+													<i class="${item.pointIcon.star3 }"></i>
+													<i class="${item.pointIcon.star4 }"></i>
+													<i class="${item.pointIcon.star5 }"></i>
 												</td>
 												<td class="p-3 align-middle">
-													<fmt:formatDate value="${review.createdDate }" pattern="YYYY년 MM월 dd일"/>
+													<fmt:formatDate value="${item.createdDate }" pattern="YYYY년 MM월 dd일"/>
 												</td>
 												<td class="p-3 align-middle text-end">
-													<button class="btn btn-outline-secondary">수정</button>
+													<button class="btn btn-sm btn-secondary">삭제</button>
 												</td>
 											</tr>
 										</c:forEach>
@@ -415,9 +417,11 @@
 					<div class="mb-5" style="min-height: 400px;">
 						<table class="table table-sm">
 							<colgroup>
-								<col width="20%">
+								<col width="15%">
 								<col width="*">
 								<col width="20%">
+								<col width="25%">
+								<col width="10%">
 							</colgroup>
 							<tbody>
 							<c:choose>
@@ -435,7 +439,7 @@
 													<a class="text-muted" href="/restaurant/detail?no=${review.restaurant.no }" style="word-break: keep-all; ">${review.restaurant.name }</a>
 												</td>
 												<td class="p-3 align-middle">
-													${review.title }
+													<a class="text-muted" href="/reviewmodify?no=${review.no}">${review.title }</a>
 												</td>
 												<td class="p-3 align-middle text-warning">
 													<i class="${review.pointIcon.star1 }"></i>
@@ -448,7 +452,7 @@
 													<fmt:formatDate value="${review.createdDate }" pattern="YYYY년 MM월 dd일"/>
 												</td>
 												<td class="p-3 align-middle text-end">
-													<button class="btn btn-outline-secondary">수정</button>
+													<button class="btn btn-sm btn-secondary">삭제</button>
 												</td>
 											</tr>
 										</c:forEach>
