@@ -25,32 +25,32 @@
 					<div class="accordion accordion-flush" id="accordionFlushExample">
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="flush-headingOne">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne" id="weekly-open">
 									주간 매출 그래프
 								</button>
 							</h2>
 							<div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-								<div class="accordion-body"><div id="weekly_chart_div"></div></div>
+								<div class="accordion-body"><div></div></div>
 							</div>
 						</div>
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="flush-headingTwo">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo" id="monthly-open">
 									월간 매출 그래프
 								</button>
 							</h2>
 							<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-								<div id="monthly_chart_div"></div>
+								<div></div>
 							</div>
 						</div>
 						<div class="accordion-item">
 							<h2 class="accordion-header" id="flush-headingThree">
-								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree">
+								<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseThree" aria-expanded="false" aria-controls="flush-collapseThree" id="yearly-open">
 									연간 매출 그래프
 								</button>
 							</h2>
 							<div id="flush-collapseThree" class="accordion-collapse collapse" aria-labelledby="flush-headingThree" data-bs-parent="#accordionFlushExample">
-								<div class="accordion-body"><div id="yearly_chart_div"></div></div>
+								<div class="accordion-body"><div></div></div>
 							</div>
 							</div>
 						</div>
@@ -62,13 +62,9 @@
 <script type="text/javascript">
 
 //구글 그래프 API
-$(function() {
-	
+ $("#weekly-open").click(function() {
 	google.charts.load('current', {'packages':['corechart']});
 	google.charts.setOnLoadCallback(drawWeeklyChart);
-	google.charts.setOnLoadCallback(drawMonthlyChart);
-	google.charts.setOnLoadCallback(drawYearlyChart);
-	
 	// 주간 매출 그래프
 	function drawWeeklyChart() {
 	
@@ -86,17 +82,20 @@ $(function() {
 			var options = {
 		    title: '주간 매출',
 		    hAxis: {title: '날짜', titleTextStyle: {color: '#333'}},
-		    'width':1100,
+		    'width':900,
 		    'height':400,
 		    vAxis: {title: '매출', minValue: 0}
 			};
 		
-			var chart = new google.visualization.AreaChart(document.getElementById('weekly_chart_div'));
+			var chart = new google.visualization.AreaChart(document.getElementById('flush-collapseOne'));
 			chart.draw(data, options);
 		});
-		
 	}
-	// 월간 매출 그래프
+})
+// 월간 매출 그래프
+$("#monthly-open").click(function() {
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawMonthlyChart);
 	function drawMonthlyChart() {
 	
 		$.getJSON("/admin/monthlyChartData").done(function(monthlyDataList) {
@@ -112,17 +111,21 @@ $(function() {
 			var options = {
 				title: '월간 매출',
 			    hAxis: {title: '날짜',  titleTextStyle: {color: '#333'}, maxValue: 10},
-			    'width':1100,
+			    'width':900,
 			    'height':400,
 			    vAxis: {title: '매출', minValue: 0}
 			};
 		
-			var chart = new google.visualization.AreaChart(document.getElementById('monthly_chart_div'));
+			var chart = new google.visualization.AreaChart(document.getElementById('flush-collapseTwo'));
 			chart.draw(data, options);
 		});
 		
 	}
-	// 연간 매출 그래프
+})
+// 연간 매출 그래프
+$("#yearly-open").click(function() {
+	google.charts.load('current', {'packages':['corechart']});
+	google.charts.setOnLoadCallback(drawYearlyChart);
 	function drawYearlyChart() {
 	
 		$.getJSON("/admin/yearlyChartData").done(function(yearlyDataList) {
@@ -138,12 +141,12 @@ $(function() {
 			var options = {
 			    title: '연간 매출',
 			    hAxis: {title: '월',  titleTextStyle: {color: '#333'}},
-			    'width':1100,
+			    'width':900,
 			    'height':400,
 			    vAxis: {title: '매출', minValue: 0}
 			};
 		
-			var chart = new google.visualization.AreaChart(document.getElementById('yearly_chart_div'));
+			var chart = new google.visualization.AreaChart(document.getElementById('flush-collapseThree'));
 			chart.draw(data, options);
 		});
 	}

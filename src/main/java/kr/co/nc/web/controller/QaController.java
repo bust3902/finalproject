@@ -36,6 +36,7 @@ public class QaController {
 	public String QaDetail(@RequestParam("no") int no, Model model) {
 		// 화면에 문의내역을 출력시키기 위한 모든 정보 전달
 		model.addAttribute("qas", qaService.getQaByNo(no));
+		model.addAttribute("qasByQaNo", qaService.getUserQaByQaNo(no));
 		
 		return "qa/detail";
 	}

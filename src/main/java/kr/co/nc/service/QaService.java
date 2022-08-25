@@ -73,4 +73,10 @@ public class QaService {
 		System.out.println("서비스 호출"+qaMapper.getUserQa(no));
 		return qaMapper.getQaByNo(no);
 	}
+	
+	public QaDto getUserQaByQaNo(int no) {
+		System.out.println("서비스 입력"+no);
+		System.out.println("서비스 호출"+qaMapper.getUserQa(no));
+		return qaMapper.getUserQaByQaNo(no);
+	}
 }
