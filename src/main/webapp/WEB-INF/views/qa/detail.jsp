@@ -49,6 +49,7 @@
 		<div class="col-2"></div>
 	</div>
 </div>
-				
+		
+<%@ include file="../common/footer.jsp" %>		
 </body>
 </html>
