@@ -9,7 +9,6 @@
 <link href="resources/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<c:set var="review" value="reveiw">
 <title>문의사항</title>
 </head>
 <body>
@@ -30,39 +29,48 @@
 		</div>
 		<div class="col-6">
 			<table class="table text-center" style="width:1000px;">
+				<colgroup>
+					<col width="10%">
+					<col width="1%">
+					<col width="15%">
+					<col width="*">
+					<col width="15%">
+				</colgroup>
 				<thead>
 					<tr>
-						<th></th>
 						<th>제목</th>
-						<th>카테고리</th>
-						<th>문의 유형</th>
+						<th></th>
+						<!-- <th>카테고리</th>
+						<th>문의 유형</th> -->
 						<th>이미지</th>
 						<th>내용</th>
 						<th>등록일</th>
-						<th>답변현황</th>
+						<!-- <th>답변현황</th> -->
 					</tr>
 				</thead>
 				<tbody>
 				<c:choose>
-					<c:when test="${empty qa }">
+					<c:when test="${empty qas }">
 						<tr>
 							<td colspan="8" class="text-center">등록된 1:1 문의가 없습니다.</td>
 						</tr>
 					</c:when>
 					<c:otherwise>
-						<c:forEach var="qa" items="${qa }">
+						<c:forEach var="qa" items="${qas }">
 							<tr class="align-middle">
-								<td><a href="/detail?no=${qa.no }">${qa.title }</a>
+								<td><a href="/qaDetail?no=${qa.no }">${qa.title }</a>
 								<c:forEach var="qaCat" items="${qaCategories }">
 									<div>${qaCat.category.name }</div>
 								</c:forEach>
 								</td>
 								<td>
+								</td>
+								<%-- <td>
 								<c:forEach var="qaType" items="${qatype }">
 									<div>${qaType.category.name }</div>
 								</c:forEach>
-								</td>
-								<td><img src="/resources/images/reviews/${qa.image }" class="img-thumbnail rounded-0"></td>
+								</td> --%>
+								<td><img src="/resources/images/qa/${qa.image }" class="img-thumbnail rounded-0" style="weight:100px; height:100px;"></td>
 								<td>${qa.content }</td>
 								<td><fmt:formatDate value="${qa.createdDate }" pattern="YYYY년 MM월 dd일" /></td>
 							</tr>
@@ -73,6 +81,9 @@
 			</table>
 		</div>
 	</div>
+			<div class="text-end">
+			<a href="/qaform" class="btn btn-secondary">작성하기</a>
+			</div>
 </div>
 </body>
 </html>

@@ -32,7 +32,7 @@
 		<div class="col-9 p-0">
 			<div class="row g-3 align-items-center mb-5">
 				<div class="col-9">
-					<input type="text" name="search-keyword" class="form-control" placeholder="검색하실 숙소명을 입력해주세요" onkeypress="SubmitBtnClick()">
+					<input type="text" name="search-keyword" class="form-control" placeholder="검색하실 숙소명을 입력해주세요" id="enter-search">
 				</div>
 				<div class="col-3">
 					<button type="submit" name="submit-keyword" class="btn btn-secondary">검색</button>
@@ -48,10 +48,12 @@
 </body>
 <script type="text/javascript">
 
-// 숙소 검색 스크립트
-function SubmitBtnClick(){
-	$("button[name=submit-keyword]").click();
-}
+// 엔터키 입력시 숙소 검색 버튼 클릭 이벤트
+$('#enter-search').keydown(function( event ) {
+	if (event.keyCode === 13) {
+		$("button[name=submit-keyword]").trigger("click");
+	}
+});
 
 $(document).ready(function(){
     $("button[name=submit-keyword]").click(function(){

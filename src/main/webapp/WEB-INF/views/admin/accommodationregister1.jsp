@@ -244,6 +244,13 @@
 		// 히든시켜둔 서밋버튼 클릭이벤트
 		$("#btn-submit-hidden").click();
     }
+    
+    // 인풋 텍스트 서밋 방지
+    $('input[type="text"]').keydown(function() {
+    	if (event.keyCode === 13) {
+    		event.preventDefault();
+    	};
+    });
 </script>
 </body>
 </html>

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-
+import kr.co.nc.dto.CommonFacilitiesDTO;
 import kr.co.nc.dto.QaDto;
 import kr.co.nc.dto.ReservationDto;
 
@@ -21,6 +21,7 @@ import kr.co.nc.mapper.AdminMapper;
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.CommonFacility;
+import kr.co.nc.vo.Payment;
 import kr.co.nc.vo.QaAnswer;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.RestaurantMenu;
@@ -191,6 +192,11 @@ public class AdminService {
 		adminMapper.updateQa(qaAnswer.getQaNo());
 	}
 	
+	// 사용자 ID로 검색하여 PAYMENT_STATUS 값 '예약취소'로 수정
+	public void deleteReservationByAdmin(Payment payment) throws IOException {
+		adminMapper.deleteReservationByAdmin(payment);
+	}
+	
 	// 입실예정 예약 현황 검색
 	public List<ReservationDto> getReservationList() {
 		// System.out.println("서비스"+adminMapper.getReservationList());
@@ -217,6 +223,10 @@ public class AdminService {
 	// 숙소 아이디로 숙소 공용시설 정보 검색
 	public List<String> getAccommodationCommonFacilitiesById(int id) {
 		return adminMapper.getAccommodationCommonFacilitiesById(id);
+	}
+	// 숙소 아이디로 숙소 공용시설 체크 상태 검색
+	public List<CommonFacilitiesDTO> getCheckedFacilities(int id) {
+		return adminMapper.getCheckedFacilities(id);
 	}
 	// 숙소 타입으로 숙소 공용시설 정보 검색
 	public List<CommonFacility> getCommonFacilitiesByAccommodationTypes(List<String> types) {

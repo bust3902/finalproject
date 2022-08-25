@@ -81,6 +81,7 @@ public class ReservationService {
 		payment.setPaymentTotalPrice(paymentRequest.getAmount());
 		payment.setReservationNo(paymentRequest.getMerchantUid());
 		
+		System.out.println(reservation);
 		reservationMapper.insertReservation(reservation);
 		paymentMapper.insertPayment(payment);
 		

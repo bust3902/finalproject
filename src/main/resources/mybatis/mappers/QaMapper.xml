@@ -3,11 +3,11 @@
 <mapper namespace="kr.co.nc.mapper.QaMapper">
 
 	<!-- void insertQa(Qa qa); -->
-	<insert id="insertQa" parameterType="Qa">
+	<insert id="insertQa" parameterType="kr.co.nc.dto.QaDto">
 		insert into qa
 		(qa_no, user_no, qa_content, qa_title, qa_image)
 		values
-		(qa_seq.nextval, #{user.id}, #{content}, #{title}, #{image})
+		(qa_seq.nextval, #{userNo}, #{content}, #{title}, #{image})
 	</insert>
 	
 	<!-- List<Qa> getAllQas(); -->
@@ -31,6 +31,32 @@
 	<select id="getAllQaTypes" resultType="QaType">
 		select *
 		from qa_type
+	</select>
+	
+	<!-- List<QaDto> getUserQa(String userNo);  -->
+	<select id="getUserQa" parameterType="int" resultType="kr.co.nc.dto.QaDto">
+		select qa_no as no,
+			   user_no,
+			   qa_content as content,
+			   qa_title as title,
+			   qa_created_date as createdDate,
+			   qa_image as image,
+			   qa_answer_status as answerStatus
+		from qa
+		where user_no = #{value}
+		order by qa_created_date desc
+	</select>
+	
+	<!-- List<QaDto> getQaByNo(int no);  -->
+	<select id="getQaByNo" parameterType="int" resultType="kr.co.nc.dto.QaDto">
+		select qa_no as no,
+			   qa_content as content,
+			   qa_title as title,
+			   qa_created_date as createdDate,
+			   qa_image as image,
+			   qa_answer_status as answerStatus
+		from qa
+		where qa_no = #{value}
 	</select>
 	
 </mapper>

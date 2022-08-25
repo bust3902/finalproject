@@ -82,6 +82,16 @@ public class AdminController {
 		return "/admin/home";
 	}
 	
+	// 관리자 매출 페이지
+	@GetMapping(path = "/saleschart")
+	public String salesChart(Model model) {
+		
+		// 주간 매출 그래프 출력을 위한 데이터 검색
+		model.addAttribute("weeklyChartData",adminService.getWeeklyChartData());
+		
+		return "/admin/saleschart";
+	}
+	
 	// 음식점 입력폼1
 	@GetMapping(path = "/restaurant")
 	public String RestaurantRegister(Model model) {

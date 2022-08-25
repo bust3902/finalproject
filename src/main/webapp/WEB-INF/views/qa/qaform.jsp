@@ -22,7 +22,7 @@
 <div id="content" class="container my-3">
 	<div class="row mb-6">
 		<div class="col-10">
-			<form action="">
+			<form method="post" action="qacomplete" enctype="multipart/form-data">
 				<div class="alter-top">
 					<p class="text-center"><strong>서울어때 이용 중 불편하신 점을 문의해주시면 빠른 시일내에 답변 드리겠습니다.</strong></p>
 				</div>
@@ -30,7 +30,7 @@
 					<p><strong>제목</strong></p>
 					<input class="form-control" name="title" type="text" style="width:800px;height:40px;" placeholder="제목을 작성해주세요."/>
 				</div>
-				<div class="my-3">
+				<!-- <div class="my-3">
 				<p><strong>카테고리 유형</strong></p>
 					<select class="form-select" name="categoryType" id="categoryType" style="width:800px;">
 						<option value="1">카테고리 유형을 선택해주세요.</option>
@@ -56,8 +56,8 @@
 				<div class="email-block my-3">
 					<p><strong>이메일</strong></p>
 					<input class="form-control" type="text" placeholder="선택사항 입니다." style="width:800px;height:40px;">
-				</div>
-				<div class="account-block container" name="account" id="account" style="display:none;">
+				</div> -->
+				<!-- <div class="account-block container" name="account" id="account" style="display:none;">
 					<div class="col-3">
 						<p><strong>환불받을 계좌정보 입력</strong></p>
 						<select class="form-select" data-account-bank name="accountBank">
@@ -79,21 +79,21 @@
 					<div class="row p-2">
 						<input type="text" class="form-control" placeholder="예금주를 입력하세요." style="width:300px;">
 					</div>
-				</div>
+				</div> -->
 				<div class="my-3">
 					<p><strong>문의 내용</strong></p>
 					<textarea class="form-control" style="width:800px;" rows="13" name="content" id="content" placeholder="문의하실 내용을 10자 이상 입력해주세요.
 																											  문의하시는 제휴점 이름과 예약정보를 남겨주시면 보다 빠른 상담이 가능합니다.
 																											  문의 내용 작성 시 개인정보가 입력되지 않도록 주의 부탁드립니다." ></textarea>
 				</div>
-				<div class="form-check mb-2">
+				<!-- <div class="form-check mb-2">
 					<input class="form-check-input" type="checkbox" id="infoCheckBox" name="checkbox">
 					<label class="form-text" for="checkboxInfo"><a onclick="openInfoModal()" style="width:500px; height:300px;">개인정보 수집. 이용동의</a></label>
 					<btn class="reviewContent"><strong>[내용보기]</strong></btn>
-				</div>
+				</div> -->
 				<div class="my-3">
 					<p><strong>이미지 첨부</strong></p>
-					<input type="file" class="form-control" name="image" style="width:800px;">
+					<input type="file" class="form-control" name="imageFile" style="width:800px;">
 				</div>
 				<div class="text-center">
 					<button id="modal-button" class="btn btn-primary" type="submit" data-bs-target="#completeQa">작성 완료</button>

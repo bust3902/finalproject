@@ -43,19 +43,19 @@
 				<div class="row mt-5 p-0">
 					<div class="col-6 mb-3">
 						<label class="form-label">객실명</label>
-						<input class="form-control " type="text" name="name">
+						<input class="form-control " type="text" name="name" >
 					</div>
 					<div class="col-6 mb-3">
 						<label class="form-label">총 객실 수</label>
-						<input class="form-control " type="text" name="numbers">
+						<input class="form-control " type="text" name="numbers" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="form-label">최대 숙박 인원</label>
-						<input class="form-control " type="text" name="capacity">
+						<input class="form-control " type="text" name="capacity" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="form-label">1박 기본 요금</label>
-						<input class="form-control " type="text" name="dayPrice">
+						<input class="form-control " type="text" name="dayPrice" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 					</div>
 				</div>
 				
@@ -106,7 +106,7 @@
 
 				<!-- 객실 타입 저장버튼 -->
 				<div class="text-end mt-5">
-					<button type="submit" class="btn btn-secondary px-5">객실 타입 저장</button>
+					<button type="submit" class="btn btn-secondary px-5" id="btn-add-room">객실 타입 저장</button>
 				</div>
 				
 				<!-- 입력된 방 갯수 출력 -->
@@ -130,11 +130,19 @@ $("#btn-add-room").click(function() {
 		alert("객실수를 입력해주세요.");
 		return false;
 	}
+	if (numbersValue > 500) {
+		alert("500호실 이상 입력하실 수 없습니다.");
+		return false;
+	}
 	
 	// 최대 숙박 인원 필드에 값이 있는지 체크하기
 	let capacityCommentValue = $.trim( $(":input[name=capacity]").val() );
 	if (capacityCommentValue === "") {
 		alert("최대 숙박 가능 인원을 입력해주세요.");
+		return false;
+	}
+	if (capacityCommentValue > 20) {
+		alert("20인 이상 입력하실 수 없습니다.");
 		return false;
 	}
 	
@@ -145,6 +153,7 @@ $("#btn-add-room").click(function() {
 		return false;
 	}
 	
+	// 객실 시설정보가 체크되었는지 확인하기
 	let checkedRoomFacilities = document.querySelectorAll('input[name=roomFacilities]:checked').length;
 	if (checkedRoomFacilities < 1) {
 		alert("객실 시설 정보를 1개 이상 선택해주세요.");
@@ -174,6 +183,13 @@ function inputCompleted(){
 	document.body.appendChild(inputCompleted);
 	inputCompleted.submit();
 }
+
+// 인풋 텍스트 서밋 방지
+$('input[type="text"]').keydown(function() {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+	};
+});
 </script>
 </body>
 </html>

@@ -25,6 +25,10 @@ span.sub { color:#C0C0C0; font-size:14px; }
 					</ul>
 				</div>
 			</li>
+		
+			<li class="mb-4">
+				<a href="/admin/saleschart" class="text-decoration-none"><span class="main">매출 차트</span></a>
+			</li>
 			<!-- 
 			<li class="mb-4">
 				<button type="button" onclick="location.href='#'" class="btn nav-link border-0 text-decoration-none"><span class="main">문의</span></button>
