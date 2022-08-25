@@ -10,12 +10,15 @@ import kr.co.nc.vo.Payment;
 public interface PaymentMapper {
 
 	// 결제 상태변경하기 (결제대기 / 결제완료)
-	void updatePaymentStatuts(Payment payment);
+	void updatePaymentStatuts(String reservationNo);
 	
 	// 결제정보 가져오기
-	List<Payment> getPaymentInfo(int userNo);
-	// 예약완료된
+	List<Payment> getAllPaymentInfo(int userNo);
+	Payment getPaymentInfo(String reservationNo);
+
+	// 예약완료된 예약정보가져오기
 	List<Payment> getReadytoReserveInfoByReserveId(int userNo);
+	
 	// 예약취소된 예약정보가져오기
 	List<Payment> getRefundReserveInfoByReserveId(int userNo);
 	

@@ -17,7 +17,7 @@
 <%@ include file="../common/nav.jsp" %>
 <div class="row bg-secondary">
 	<div class="container" style="min-width:992px; max-width:992px; height:10vh;">
-		<h1 class="fs-3 text-white p-2">음식점 등록</h1>
+		<a href="/admin" class="fs-3 text-white text-decoration-none p-2">음식점 등록</a>
 	</div>
 </div>
 <div class="container mt-5" style="min-width:992px; max-width:992px;">
@@ -55,8 +55,8 @@
 					<div>
 						<c:forEach var="category" items="${categories }">
 						<div class="form-check form-check-inline">
-							<input class="form-check-input" type="checkbox" name="categories" value="${category.ID }">
-							<label class="form-check-label me-5">${category.NAME }</label>
+							<input class="form-check-input" type="checkbox" name="categories" value="${category.id }">
+							<label class="form-check-label me-5">${category.name }</label>
 						</div>
 						</c:forEach>
 					</div>
@@ -190,7 +190,7 @@ $(function() {
 		let open = $openTime.val();
 		let close = $closeTime.val();
 
-		let $data = $(":input[name=opening]").val(open+' - '+close);
+		let $data = $(":input[name=opening]").val(open+'-'+close);
 		let data = $(":input[name=opening]").val();
 		// alert(data);
 		
@@ -202,7 +202,7 @@ $(function() {
 		let start = $startTime.val();
 		let end = $endTime.val();
 
-		let $breakData = $(":input[name=breakTime]").val(start+' - '+end);
+		let $breakData = $(":input[name=breakTime]").val(start+'-'+end);
 		let breakData = $(":input[name=breakTime]").val();
 		// alert(breakData);
 	});

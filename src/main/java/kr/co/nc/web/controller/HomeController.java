@@ -1,12 +1,18 @@
 package kr.co.nc.web.controller;
 
-import org.apache.jasper.tagplugins.jstl.core.ForEach;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 
 import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.UserService;
@@ -14,8 +20,10 @@ import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.User;
 import kr.co.nc.web.form.FacebookLoginForm;
 import kr.co.nc.web.form.KakaoLoginForm;
+import kr.co.nc.web.form.NaverLoginForm;
 import kr.co.nc.web.form.UserRegisterForm;
 import lombok.extern.slf4j.Slf4j;
+
 
 @Slf4j
 @Controller
@@ -24,6 +32,7 @@ public class HomeController {
 	private static final String NORMAL_LOGIN_TYPE = "normal";
 	private static final String KAKAO_LOGIN_TYPE = "kakao";
 	private static final String FACEBOOK_LOGIN_TYPE = "facebook";
+	private static final String NAVER_LOGIN_TYPE = "naver";
 	
 	@Autowired
 	private UserService userService;
@@ -53,7 +62,8 @@ public class HomeController {
 	 * 뷰 페이지 : /WEB-INF/views/registerform.jsp
 	 */
 	@GetMapping("/register")
-	public String registerform() {
+	public String registerform(Model model) {
+		model.addAttribute("form", new UserRegisterForm());
 		return "registerform";
 	}
 	
@@ -64,16 +74,20 @@ public class HomeController {
 	 * 재요청 URI : 성공 - /completed, 실패 - /register
 	 */
 	@PostMapping("/register") 
-	public String register(UserRegisterForm form, RedirectAttributes redirectAttributes) {
+	public String register(@ModelAttribute("form") @Valid UserRegisterForm form, BindingResult errors, RedirectAttributes redirectAttributes) {
 		log.info("일반 회원가입 정보: " + form);
+		
+		if (errors.hasErrors()) {
+			return "registerform";
+		}
+		
 		User user = User.builder()
 				.id(form.getId())
 				.password(form.getPassword())
 				.nickname(form.getNickname())
 				.name(form.getName())
-				.email(form.getEmail())
 				.tel(form.getTel())
-				.address(form.getAddress())
+				.email(form.getEmail())
 				.loginType(NORMAL_LOGIN_TYPE)	// 일반회원 가입은 로그인타입을 "normal"로 설정한다.
 				.build();
 		try {
@@ -83,8 +97,8 @@ public class HomeController {
 			
 			return "redirect:/completed";
 		} catch (RuntimeException e) {
-			redirectAttributes.addFlashAttribute("error", e.getMessage());
-			return "redirect:/register";
+			errors.rejectValue("email", null, e.getMessage());
+			return "registerform";
 		}
 	}
 	
@@ -122,7 +136,11 @@ public class HomeController {
 			User user = userService.login(id, password);
 			SessionUtils.addAttribute("LOGIN_USER", user);
 			log.info("일반 로그인 처리 완료");
-			return "redirect:/";
+			if ( "A".equals(user.getAuthority())) { 
+				return "redirect:/admin"; }
+			else {
+				return "redirect:/";
+			}
 		} catch (RuntimeException e) {
 			log.warn("일반 로그인 오류: " + e.getMessage());
 			
@@ -174,7 +192,7 @@ public class HomeController {
 						.loginType(FACEBOOK_LOGIN_TYPE)
 						.build();
 		
-		User savedUser = userService.loginWithfacebook(user);
+		User savedUser = userService.loginWithFacebook(user);
 		
 		if (savedUser != null) {
 			SessionUtils.addAttribute("LOGIN_USER", savedUser);
@@ -186,4 +204,109 @@ public class HomeController {
 		return "redirect:/";
 	}
 	
+	// 네이버 로그인 요청을 처리한다.
+	@PostMapping("/naver-login")
+	public String NaverLoginForm (NaverLoginForm form) {
+		log.info("네이버 로그인 인증정보: " + form);
+			
+		User user = User.builder()
+						.name(form.getName())
+						.email(form.getEmail())
+						.nickname(form.getNickname())
+						.loginType(NAVER_LOGIN_TYPE)
+						.build();
+			
+		User savedUser = userService.loginWithNaver(user);
+			
+		if (savedUser != null) {
+			SessionUtils.addAttribute("LOGIN_USER", savedUser);
+		} else {
+			SessionUtils.addAttribute("LOGIN_USER", user);
+		}
+		log.info("네이버 로그인 완료");
+
+		return "redirect:/";
+	}
+
+	/*
+	 * 내주변 통합검색 페이지 요청을 처리한다.
+	 */
+	@GetMapping("/near")
+	public String near(@RequestParam(required = false) String keyword, Model model) {
+		// 맛집 홈에서 검색한 경우 keyword를 전달
+		model.addAttribute("keyword", keyword);
+		return "near";
+	}
+	
+	// 아이디 찾기
+	@PostMapping(path ="/findId")
+	@ResponseBody
+	public String findId(@RequestParam("name") String name, @RequestParam("email") String email) {
+		String findId = userService.findId(name, email);
+		return findId;
+	}
+	
+	@PostMapping(path="/findPw")
+	@ResponseBody
+	public String findPw(@RequestParam("id") String id, @RequestParam("email") String email) throws Exception{
+	   String result = userService.findPw(id,email);
+	   try {
+	      if ("success".equals(result)) {
+	         return result; // 성공
+	      } else {
+	         return "fail"; // 실패
+	      }
+	   } catch (Exception e) {
+	      e.printStackTrace();
+	      return "error"; //에러
+	   }
+	}
+	
+/**	
+	// 비밀번호 변경 요청
+	@GetMapping("/pw-change")
+	public ModelAndView pwChange() {
+		return new ModelAndView ("user/pw-change");
+	}
+	
+	// 비밀번호 확인 처리 요청
+	@PostMapping("/checkPw")
+	public String checkPw(@RequestBody String password, HttpSession session) throws Exception {
+		log.info("비밀번호 확인 요청 발생");
+		
+		String result = null;
+		BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
+		
+		User user = (User)session.getAttribute("login");
+		log.info("사용자 비밀번호:" + user.getPassword());
+		log.info("폼에 작성한 비밀번호:" + password);
+		
+		if(encoder.matches(password, user.getPassword())) {
+			result = "passwordConfirmOK";
+		} else {
+			result = "passwordConfirmNO";
+		}
+		
+		return result;
+	}
+	
+	// 비밀번호 변경 요청
+	@PostMapping("/pw-change")
+	public String pwChange(@RequestBody User user, HttpSession session) throws Exception {
+		log.info("비밀번호 변경 요청 발생");
+		
+		// 비밀번호 변경
+		userService.modifyPw(user);
+		
+		// 비밀번호 변경 성공시 로그인 세션 객체 다시 담음
+		User modifyUser = new User();
+		modifyUser.setEmail(user.getEmail());
+		
+		User savedUser = userService.login(id, password);
+		log.info("회원정보 불러오기:" + user);
+		session.setAttribute("login", user);
+		
+		return "changeSuccess";
+	}
+*/
 }

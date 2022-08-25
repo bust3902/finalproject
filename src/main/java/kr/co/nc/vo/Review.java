@@ -18,8 +18,8 @@ public class Review {
 
 	private int no;
 	private User user;				// userNo대신 썼습니다
-	private Restaurant restaurantNo;	// restaurantNo 대신 썼습니다.
-	private int accoId;				// 숙소 번호
+	private Restaurant restaurant;	// restaurantNo 대신 썼습니다.
+	private Accommodation acco;				// 숙소 번호
 	private AccommodationRoom room; // 객실 정보 (등록할 때는 no 저장, 조회할때는 name 저장)
 	private String title;
 	private String content;
@@ -27,12 +27,15 @@ public class Review {
 	private Date createdDate;
 	private Date updatedDate;
 	private String deleted;
-	private String image;		// 리뷰 사진
-	private int point;			// 리뷰 평점
+	private String image;		// 리뷰 사진 파일명
+	
+	// 등록 시 사용하는 변수
+	private int restaurantNo;
+	private int accoId;				
 	private int roomNo;			// 방 번호
+	private int point;			// 리뷰 평점
 	
-	private List<ReviewCategory> reviewCategories;
-	
+	private List<ReviewCategory> reviewCategories; // ?
 	private List<ReviewRestaurantTag> reviewRestaurantTags;		// 음식점 리뷰 태그
 	
 	// 화면 표현 시 사용하는 필드
@@ -43,5 +46,6 @@ public class Review {
 		this.point = point;
 		this.pointIcon = new StarIconForRate(point);
 	}
+
 	
 }

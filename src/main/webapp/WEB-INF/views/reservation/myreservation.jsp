@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ include file="../common/tags.jsp" %>
+    
 <!DOCTYPE html>
 <html>
 <head>
@@ -23,40 +25,55 @@
 		<div class="col-4 bg-light">
 		</div>
 		<div class="col-8">
-			<p class="badge rounded-pill bg-danger">예약확정</p>
-			<h5>천안 호텔 소설 스미스</h5>
-			<h6>비즈니스 (공기청정기, 스타일러) / 1박</h6>
+			<p class="text"><span class="badge ${payment.paymentStatus eq '예약완료' ? 'bg-danger' : 'bg-info' } mt-3">${payment.paymentStatus }</span></p>
+			<h5>${payment.reservation.acco.name }</h5>
+			<h6>${payment.reservation.room.name } / 1박</h6>
 			<dl>
 				<dt class="form-text col-3">체크인</dt>
-				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
+				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy-MM-dd (E)"/> 15:00 </dd>
 				<dt class="form-text col-3">체크아웃</dt>
-				<dd class="form-text col-7">2022.07.29 금 15:00</dd>
+				<dd class="form-text col-7"><fmt:formatDate value="${payment.reservation.checkOut }" pattern="yyyy-MM-dd (E)"/> 14:00 </dd>
 				<dt class="form-text col-3 mt-2">예약번호</dt>
-				<dd class="form-text col-7">${reservationList.reservationNo }</dd> <!-- 난수생성 -->
+				<dd class="form-text col-7">${param.reservationNo }</dd> <!-- 난수생성 -->
 				<dt class="form-text col-3">예약자이름</dt>
-				<dd class="form-text col-7">${reservationList.resername }</dd>
+				<dd class="form-text col-7">${payment.reservation.reserName }</dd>
 				<dt class="form-text col-3">안심번호</dt>
 				<dd class="form-text col-7">050440257369</dd> <!-- 형식에 맞는 난수생성 -->
-				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${reservationList.resertel }은(는)<p>안심번호로 숙소에 전송되며, 퇴술 후 7일간 보관됩니다. </p></small></dd>
+				<dd class="form-text"><i class="bi bi-exclamation-circle"  ></i><small>휴대폰 번호 ${payment.reservation.reserTel }은(는)<p>안심번호로 숙소에 전송되며, 퇴실 후 7일간 보관됩니다. </p></small></dd>
 			</dl>
-	
 			<hr>
 			<div class="row">
-				<h6 class="mb-3">결제정보</h6>
+				<h5 class="mb-3"><strong>결제정보</strong></h5>
 				<dl>
 					<dt>총 결제금액</dt>
-					<dd class="text-danger"><strong>60,000원</strong></dd>
+					<h4 class="text-danger"><strong><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber> 원</strong></h4>
 				</dl>			
 			</div>
 			<hr>
-			<div class="row">
-				<div class="col">
-					<p class="text-danger"><small>2022년 07월 28일 23:59까지 무료취소 가능합니다.</small></p>
+			<!--  여기 c:when 달아서 예약완료일때 예약취소 / 예약취소일땐 / disabled 설정하기.
+					or 삼항연산자로 그냥 disable 처리하기? 
+			 -->
+			<c:choose>
+				<c:when test="${payment.paymentStatus eq '예약완료' }">
 					<div class="row">
-						<button type="button" id="modal-button" class="btn btn-danger" onclick="openReservationConfirm()" > 예약취소</button>
+						<div class="col">
+							<p class="text-danger"><small> * <fmt:formatDate value="${payment.reservation.checkIn }" pattern="yyyy년MM월dd일"/> 전 까지 무료취소 가능합니다.</small></p>
+							<div class="row">
+								<button type="button" id="modal-button" class="btn btn-danger" onclick="openReservationConfirm()" > 예약취소</button>
+							</div>
+						</div>
 					</div>
-				</div>
-			</div>
+				</c:when>
+				<c:otherwise>
+					<div class="row">
+						<div class="col">
+							<div class="row">
+								<button type="button" id="modal-button" class="btn btn-success" onclick="location.href='/acco/detail?id=${payment.reservation.acco.id }'" > 재예약</button>
+							</div>
+						</div>
+					</div>
+				</c:otherwise>
+			</c:choose>
 		</div>
 	</div>
 </div>
@@ -89,7 +106,7 @@
 								<p>ㄴ 현금에서 차감</p>	
 							</div>
 							<div class="text-end col">
-								<p>60000원</p>
+								<p><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber>원</p>
 								<p>0원</p>
 								<p>0원</p>
 								<p>0P</p>
@@ -107,7 +124,7 @@
 								<p>0P</p>
 								<p>0원</p>
 								<p>카카오페이 환불</p>
-								<p>60000원</p>
+								<p><fmt:formatNumber>${payment.paymentTotalPrice }</fmt:formatNumber>원</p>
 							</div>
 						</div>
 		     		</div>
@@ -166,8 +183,11 @@
 				예약취소 되었습니다.
 			</div>
       		<div class="modal-footer">
-  				<!-- 환불창으로 정보전달. -->
-	        	<a class="btn btn-danger" data-bs-toggle="modal" onclick="cancelPay()" role="button">확인</a>
+	      		<form action="/reservation/refund" id="reservationNoForm">
+	  				<!-- 환불창으로 정보전달. -->
+		        	<a class="btn btn-danger" data-bs-toggle="modal" onclick="reservationNoSubmit()" role="button">확인</a>
+					<input type="hidden" id="reservationNo" name="reservationNo" value="${payment.reservation.reservationNo }">
+	      		</form>
       		</div>
    		</div>
  	</div>
@@ -193,30 +213,8 @@ function openReservationConfirm() {
 
 function openCancelModal() {
 	reservationConfirmModal.hide();
-	cancelPay();
 	cancelModal.show();
 }
-
-var IMP = window.IMP;
-IMP.init("imp72261061");
-
-function cancelPay() {
-    jQuery.ajax({
-      url: "/reservation/refund/",//IMP_UID로 받을것
-      type: "POST",
-      contentType: "application/json",
-      data: JSON.stringify({
-        merchant_uid: "1659664324976", // 예: 주문번호
-        cancel_request_amount: 100, // 환불금액
-        reason: $("#payType option:selected").val(), // 환불사유
-        refund_holder: "", // [가상계좌 환불시 필수입력] 환불 수령계좌 예금주
-        refund_bank: "56", // [가상계좌 환불시 필수입력] 환불 수령계좌 은행코드(예: KG이니시스의 경우 신한은행은 88번)
-        refund_account: "" // [가상계좌 환불시 필수입력] 환불 수령계좌 번호
-      }),
-      "dataType": "json"
-    });
-  }
-
 
 // 툴팁
 var collapseElementList = [].slice.call(document.querySelectorAll('.collapse'))
@@ -224,6 +222,9 @@ var collapseList = collapseElementList.map(function (collapseEl) {
   return new bootstrap.Collapse(collapseEl)
 })
 
+function reservationNoSubmit(){
+	document.getElementById('reservationNoForm').submit();
+}
 
 
 

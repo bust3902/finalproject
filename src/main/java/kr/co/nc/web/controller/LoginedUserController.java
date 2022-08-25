@@ -10,7 +10,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 
+import kr.co.nc.annotation.LoginUser;
+import kr.co.nc.service.AccommodationService;
 import kr.co.nc.service.LoginedUserService;
+import kr.co.nc.service.ReservationService;
+import kr.co.nc.service.RestaurantService;
+import kr.co.nc.service.ReviewService;
 import kr.co.nc.util.SessionUtils;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.User;
@@ -22,7 +27,14 @@ public class LoginedUserController {
    
    @Autowired
    private LoginedUserService loginedService;
-   
+   @Autowired
+   private AccommodationService accommodationService;
+   @Autowired
+   private RestaurantService restaurantService;
+   @Autowired
+   private ReservationService reservationService;
+   @Autowired
+   private ReviewService reviewService;
    /*
     * @RequestParam
     *       요청파라미터값을 매핑시키는 어노테이션이다.
@@ -31,12 +43,32 @@ public class LoginedUserController {
     *               false로 지정하면 해당 요청파라미터값이 없어도 상관없다.
     *       defaultValue: 요청파라미터값이 존재하지 않을 때 변수에 저장될 기본값을 지정한다.
     */
-   @GetMapping(path = "/imformation")
-   public String home(@RequestParam(name ="cat", required = false) String categoryId, Model model) {
+   @GetMapping(path = "/information")
+   public String home(@LoginUser User user, @RequestParam(name ="cat", required = false) String categoryId, String reservationNo, Model model) {
       List<Category> categories = loginedService.getAllCategories();
       model.addAttribute("categories",categories);
       
-      return "user/imformation";
+      
+      
+      if ("CAT_002".equals(categoryId)) {
+		model.addAttribute("Readyreservation", reservationService.getReadytoReserveInfoByReserveId(user.getNo()));
+		model.addAttribute("Refundreservation", reservationService.getRefundReserveInfoByReserveId(user.getNo()));
+		model.addAttribute("payment",reservationService.getAllPaymentInfo(user.getNo()));
+	
+      }
+      
+      if ("CAT_003".equals(categoryId)) {
+    	  int userNo = user.getNo();
+    	  model.addAttribute("likedAccommodations", accommodationService.getAllLikedItemsByUser(userNo));
+    	  model.addAttribute("likedRestaurants", restaurantService.getAllLikedItemsByUser(userNo));
+      }
+
+      if ("CAT_004".equals(categoryId)) {
+    	  model.addAttribute("accommodationReviews", reviewService.getMyAccoReviews(user.getNo()));
+    	  model.addAttribute("restaurantReviews", reviewService.getMyRestaurantReviews(user.getNo()));
+      }
+      
+      return "user/information";
    }
    
    @GetMapping(path = "/updateNickname")
@@ -46,7 +78,7 @@ public class LoginedUserController {
 	   user = loginedService.updateNickname(user.getId(), nickname);
 	   SessionUtils.addAttribute("LOGIN_USER", user);
 	   
-	   return "redirect:/user/imformation?cat=CAT_001";
+	   return "redirect:/user/information?cat=CAT_001";
    }
    
    @GetMapping(path = "/updateName")
@@ -56,7 +88,7 @@ public class LoginedUserController {
 	   user = loginedService.updateName(user.getId(), name);
 	   SessionUtils.addAttribute("LOGIN_USER", user);
 	   
-	   return "redirect:/user/imformation?cat=CAT_001";
+	   return "redirect:/user/information?cat=CAT_001";
    }
    
    @GetMapping(path = "/updateTel")
@@ -66,6 +98,7 @@ public class LoginedUserController {
 	   user = loginedService.updateTel(user.getId(), tel);
 	   SessionUtils.addAttribute("LOGIN_USER", user);
 	   
-	   return "redirect:/user/imformation?cat=CAT_001";
+	   return "redirect:/user/information?cat=CAT_001";
    }
+ 
 }

@@ -22,7 +22,7 @@
 <div id="review" class="container my-3">
 	<div class="row mb-6">
 		<div class="col-8">
-			<form action="">
+			<form action="/reviewcomplete" method="post" enctype="multipart/form-data">
 				<div class="my-3">
 					<h4 class="text-center"><strong>리뷰 작성하기</strong></h4>
 				</div>
@@ -34,37 +34,45 @@
 					<p><strong>카테고리</strong></p>
 					<select class="form-select" name="category" id="category" style="width:800px;">
 						<option value="selectCategory">카테고리를 선택해주세요.</option>
-						<option value="rooms">객실</option>
 						<option value="accommodations">숙소</option>
 						<option value="restaurant">음식점</option>
 					</select>
+					<c:if test="${not empty param.restaurantNo }">
+						<input type="hidden" name="restaurantNo" value="${param.restaurantNo }">
+					</c:if>
+					<c:if test="${not empty param.accoId }">
+						<input type="hidden" name="accoId" value="${param.accoId }">
+					</c:if>
+					<c:if test="${not empty param.roomNo }">
+						<input type="hidden" name="roomNo" value="${param.roomNo }">
+					</c:if>
 				</div>
 				<div class="my-3">
 					<p><strong>평점</strong></p>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point1">
+						<input class="form-check-input" type="radio" name="point" value="1">
 						<label class="form-check-label">1점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point2">
+						<input class="form-check-input" type="radio" name="point" value="2">
 						<label class="form-check-label">2점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point3">
+						<input class="form-check-input" type="radio" name="point" value="3">
 						<label class="form-check-label">3점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point4">
+						<input class="form-check-input" type="radio" name="point" value="4">
 						<label class="form-check-label">4점</label>
 					</div>
 					<div class="form-check form-check-inline">
-						<input class="form-check-input" type="radio" name="point" value="point5">
+						<input class="form-check-input" type="radio" name="point" value="5">
 						<label class="form-check-label">5점</label>
 					</div>
 				</div>
 				<div class="my-3">
 					<label type="image-field" class="form-label">이미지첨부</label>
-					<input type="file" class="form-control" name="imageFile" id="image-field" style="width:800px;">
+					<input type="file" class="form-control" name="imageFile" multiple="multiple" id="image-field" onchange="checkFile(this)" style="width:800px;">
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
@@ -139,6 +147,21 @@ $(document).ready(function() {
 			$("#modal-message-box").text("내용 10자 이상 입력해주세요");
 			reviewModal.show();
 			return false;
+		}
+		
+	});
+	
+	$("input[name=imageFile]").off().on("change", function(){
+		if (this.files && this.files[0]) {
+
+			var maxSize = 2 * 1024 * 1024;
+			var fileSize = this.files[0].size;
+
+			if(fileSize > maxSize){
+				alert("첨부파일 사이즈는 2MB 이내로 등록 가능합니다.");
+				$(this).val('');
+				return false;
+			}
 		}
 	});
 })

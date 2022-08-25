@@ -5,7 +5,9 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import kr.co.nc.criteria.LikeCriteria;
 import kr.co.nc.criteria.RestaurantCriteria;
+import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.Category;
 import kr.co.nc.vo.City;
 import kr.co.nc.vo.Restaurant;
@@ -39,5 +41,21 @@ public interface RestaurantMapper {
 	
 	// 검색조건에 따른 맛집 정보를 조회
 	List<Restaurant> getRestaurantByCriteria(RestaurantCriteria criteria);
+	// 음식점 리뷰
+	List<Review> getRestaurantReviewsByRestaurantNo(int restaurantNo);
+
+	
+	//// 찜하기 관련
+	// 해당 사용자의, 해당 번호의 식당에 대한 찜하기 정보가 존재하면 1을, 존재하지 않으면 0을 반환
+	int isExistUserLikeByRestaurantNo(LikeCriteria criteria);
+	// 해당 사용자의, 해당 번호의 식당에 대한 찜하기 정보 저장
+	void insertUserLikeByRestaurantNo(LikeCriteria criteria);
+	// 해당 사용자의, 해당 번호의 식당에 대한 찜하기 정보 삭제
+	void deleteUserLikeByRestaurantNo(LikeCriteria criteria);
+	// 사용자가 찜하기 누른 모든 식당 정보 반환
+	List<Accommodation> getAllLikedRestaurantByUserNo(int no);
+	
+	// 식당정보 업데이트
+	void updateRestaurant(Restaurant restaurant);
 	
 }

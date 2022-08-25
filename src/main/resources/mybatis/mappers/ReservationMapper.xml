@@ -9,7 +9,7 @@
 		(reservation_id, reservation_check_in, reservation_check_out, 
 		 reservation_name, reservation_tel, user_no, room_no, acco_id)
 	values
-		(#{reservationNo}, #{checkIn}, #{checkOut}, #{reserName}, #{reserTel}, #{user.No}, #{roomNo}, #{accoId} )		
+		(#{reservationNo}, #{checkIn}, #{checkOut}, #{reserName}, #{reserTel}, #{user.no}, #{roomNo}, #{accoId} )		
 </insert>
 
 
@@ -21,21 +21,21 @@
 		r.reservation_check_out as checkOut,
 		r.reservation_name as reserName,
 		r.reservation_tel as reserTel,
-		r.acco_id as "Accommodation.id",
-		r.room_no as "AccommodationRoom.no",
+		r.acco_id as "reservation.acco.id",
+		r.room_no as "reservation.room.no",
 		u.user_name as "users.name",
 		a.acco_name as "acco.name",
 		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName"
 	from
 		reservation r
-	INNER join users u
-	on r.user_no = u.user_no
-	INNER join ACCOMMODATIONS a
-	on r.acco_id = a.acco_id
+		INNER join users u
+			on r.user_no = u.user_no
+		INNER join ACCOMMODATIONS a
+			on r.acco_id = a.acco_id
 	where r.user_no = u.user_no
 	and r.acco_id = a.acco_id
 	and r.user_no = #{value}
-	order by r.reservation_check_in
+	order by r.reservation_check_in desc
 </select>
 
 
@@ -47,22 +47,35 @@
 		r.reservation_check_out as checkOut,
 		r.reservation_name as reserName,
 		r.reservation_tel as reserTel,
-		r.acco_id as "Accommodation.id",
-		r.room_no as "AccommodationRoom.no",
+		r.acco_id as "reservation.acco.id",
+		r.room_no as "room.no",
 		u.user_name as "users.name",
 		a.acco_name as "acco.name",
-		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName"
+		a.ACCO_THUMBNAIL_IMAGE as "acco.thumbnailImageName",
+		p.payment_total_price as "payment.paymentTotalPrice"
 	from
-		reservation r
-	INNER join users u
-	on r.user_no = u.user_no
-	INNER join ACCOMMODATIONS a
-	on r.acco_id = a.acco_id
+		reservation r, users u, ACCOMMODATIONS a, payment p
 	where r.user_no = u.user_no
 	and r.acco_id = a.acco_id
 	and r.reservation_id = #{value}
-	order by r.reservation_check_in
+	order by r.reservation_check_in desc
 </select>
 
+
+<!-- AccommodationRoom getRoomDetailByroomNo(int roomNo); -->
+<select id="getRoomDetailByroomNo" parameterType="Integer" resultType="AccommodationRoom">
+		select 	
+			room_no as no,
+			room_name as name,
+			room_numbers as numbers,
+			room_capacity as capacity,
+			room_day_price as dayPrice,
+			room_description as description,
+			room_thumbnail_image as thumbnailImage
+		from 
+			acco_rooms
+		where 
+			room_no = #{value}
+</select>
 
 </mapper>

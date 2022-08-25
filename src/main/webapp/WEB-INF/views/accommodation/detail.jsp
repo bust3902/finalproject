@@ -44,7 +44,7 @@
 		object-fit: cover;
 	}
 
- 	.room-swiper-wrapper .mySwiper2 img {
+ 	.room-swiper-wrapper .roomSwiper img {
  		width: 100%;
 		height: 400px;
 		object-fit: cover;
@@ -85,11 +85,7 @@
 				<div class="swiper mySwiper2 mb-3" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 					<!-- 숙소 이미지 - 큰이미지 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 					<div class="swiper-wrapper">
-						<!-- 썸네일 이미지 : DB에서 NOT NULL이므로 별도로 empty는 체크하지 않음 -->
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/acco/thumbnail/${detail.thumbnailImageName }">
-						</div>
-						<!-- 상세이미지 -->
+						<!-- 이미지 (상세이미지 중 첫번째로 저장된 이미지가 썸네일이미지와 동일하다) -->
 						<c:forEach var="image" items="${detail.images }">
 							<div class="swiper-slide">
 								<img alt="accommodation expanded image" src="/resources/images/acco/detail/${image }">
@@ -102,17 +98,14 @@
 				<!-- 숙소 이미지 - 미리보기 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<!-- 이미지 미리보기 : 썸네일 이미지, 상세 이미지 3장 총 4장이 첫 화면 가장 먼저 보인다. -->
-						<div class="swiper-slide">
-							<img alt="accommodation expanded image" src="/resources/images/acco/thumbnail/${detail.thumbnailImageName }">
-						</div>
+						<!-- 이미지 미리보기 : 이미지 중 3장이 첫 화면 가장 먼저 보인다. -->
 						<c:forEach var="image" items="${detail.images }">
 							<div class="swiper-slide">
 								<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
 							</div>
 						</c:forEach>
 						<!-- 이미지 정보가 3개 미만일 경우, 미리 보기에는 부족한 개수만큼 로고 이미지 출력  -->
-						<c:if test="${fn:length(detail.images) < 3 }">
+						<c:if test="${fn:length(detail.images) < 4 }">
 							<c:forEach begin="0" end="${2 - fn:length(detail.images) }">
 								<div class="swiper-slide">
 									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
@@ -123,11 +116,16 @@
 				</div>
 			</div>
 		</div>
-		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장됨-->
+		<!-- 숙소명, 주소, 한마디 소개: 하트 아이콘 누르면 bi-heart-fill로 변경, DB 찜한 목록에 저장되어 아이콘 상태에도 반영됨(비로그인 상태일 경우 무조건 빈 하트)-->
 		<div class="col-6">
 			<div class="d-flex justify-content-between">
 				<h4 id="acco-name" class="fw-semibold text-dark p-1 me-3" style="word-break: keep-all;">${detail.name } </h4>
-				<a href="javascript:toggleAccoLike(${detail.id })"><i id="icon-heart" class="bi fs-4 ${isLiked ? 'bi-heart-fill' : 'bi-heart'  }"></i></a>
+				<div class="row">
+					<a href="javascript:toggleAccoLike(${detail.id })" class="text-center mx-auto">
+						<i id="icon-heart" class="bi fs-4 ${isLiked ? 'bi-heart-fill' : 'bi-heart'  }"></i>
+					</a>
+					<small class="text-center text-primary">(<span id="likeCount">${detail.likeCount }</span>)</small>
+				</div>
 			</div>
 			<p id="acco-address" class="text-muted" data-alat="${detail.latitude }" data-along="${detail.longitude }">${detail.address }</p>
 			<div class="bg-light p-3">
@@ -161,16 +159,31 @@
 			<!-- 객실안내/예약 -->
 			<div class="tab-pane fade show active" id="room-tab-pane" role="tabpanel" aria-labelledby="room-tab" tabindex="0">
 				<div class="my-3">
-					<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
-					<form id="form-search-rooms">
-						<input type="text" id="datepicker" class="form-control w-50" value="" />
-						<input type="hidden" name="startDate" value="">
-						<input type="hidden" name="endDate" value="">
-						<input type="hidden" name="accoId" value="${param.id }">
+					<form id="form-search-rooms" class="row d-flex flex-wrap">
+						<!-- 숙박 일정 선택 : 기본적으로 검색페이지에서 선택한 날짜를 출력, 이 페이지에서 일정을 변경하면 로컬스토리지에 저장돼서 검색 페이지에도 반영된다. -->
+						<div class="col">
+							<input type="text" id="datepicker" class="form-control w-100" value="" />
+							<input type="hidden" name="startDate" value="">
+							<input type="hidden" name="endDate" value="">
+							<input type="hidden" name="accoId" value="${param.id }">
+						</div>
+						<div class="col d-flex justify-content-end">
+							<p class="small align-middle my-auto me-3">
+								예약가능한 객실만 보기
+								<input type="checkbox" id="checkbox-onlyAvailable" name="onlyAvailable" value="yes">
+							</p>
+							<!-- 정원 선택 : DB에서 이 숙소의 모든 인원 수 범위를 조회해서 출력한다. -->
+							<select id="select-capacity" class="form-control w-25 text-end" name="capacity">
+								<option value="0">객실 정원</option>
+								<c:forEach var="capacity" items="${capacities }">
+									<option value="${capacity }">${capacity }인</option>
+								</c:forEach>
+							</select>
+						</div>
 					</form>
 				</div>
 				<div id="room-list-wraper" class="mx-0">
-					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 날짜의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
+					<!-- 스크립트에서 객실 정보 출력 : 현재 선택한 조건의 예약 가능 여부를 ajax로 조회해서, 그에 따라 예약버튼 내용 변경  -->
 				</div>
 				<!-- 페이징 버튼 : 버튼을 누르면, 해당 값을 currentPage로 해서 숙소정보를 다시 출력한다. -->
 				<div id="pagination-wrapper" class="d-flex justify-content-center">
@@ -204,20 +217,40 @@
 						</h2>
 						<div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordion-acco-info">
 							<div class="accordion-body bg-light text-muted p-5 m-3">
-							<!-- DB에서 조회한 공용시설, 태그 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
-								<div id="cofas-wrapper" class="d-flex flex-wrap mb-3">
-									<c:forEach var="fac" items="${detail.commonFacilities }">
-										<div id="icon-wrapper-${fac.id }" class="text-center">
-											<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
-											<small>${fac.name }</small>
-										</div>
-									</c:forEach>
-								</div>
-								<div id="tags-wrapper" class="d-flex flex-wrap">
-									<c:forEach var="tag" items="${detail.tags }">
-										<span class="mx-1 badge bg-primary">${tag }</span>
-									</c:forEach>
-								</div>
+							<!-- DB에서 조회한 공용시설, 객실 편의시설 태그 출력 (아이콘 파일명과 각 시설 DB 컬럼으로 연결시키기)-->
+								<c:if test="${not empty detail.commonFacilities }">
+									<div class="mb-3 small fw-bold ps-3">공용시설</div>
+									<div id="cofas-wrapper" class="d-flex flex-wrap justify-content-start mb-5">
+										<c:forEach var="fac" items="${detail.commonFacilities }">
+											<div id="icon-wrapper-${fac.id }" class="text-center">
+												<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
+												<small>${fac.name }</small>
+											</div>
+										</c:forEach>
+									</div>
+								</c:if>
+								<c:if test="${not empty detail.roomFacilities }">
+									<div class="mb-3 small fw-bold ps-3">객실 편의시설<span class="fw-normal"> (객실 별 제공 여부는 객실안내 탭의 이용정보를 확인하세요)</span></div>
+									<div id="cofas-wrapper" class="d-flex flex-wrap justify-content-start mb-5">
+										<c:forEach var="fac" items="${detail.roomFacilities }">
+											<div id="icon-wrapper-${fac.id }" class="text-center">
+												<img class="w-50" alt="facility icon" src="/resources/images/icons/${fac.iconName }"><br/>
+												<small>${fac.name }</small>
+											</div>
+										</c:forEach>
+									</div>
+								</c:if>
+								<c:if test="${not empty detail.tags }">
+									<div class="mb-3 small fw-bold ps-3">태그</div>
+									<div id="tags-wrapper" class="d-flex flex-wrap">
+										<c:forEach var="tag" items="${detail.tags }">
+											<span class="mx-1 badge bg-primary">${tag }</span>
+										</c:forEach>
+									</div>
+								</c:if>
+								<c:if test="${(empty detail.commonFacilities) and (empty detail.roomFacilities) and (empty detail.tags)}">
+									<div class="small text-center">제공 정보가 없습니다.</div>
+								</c:if>
 							</div>
 						</div>
 					</div>
@@ -243,6 +276,9 @@
 				<!--  윈도우 바닥으로 스크롤을 내리면 리뷰가 출력된다. -->
 			</div>
 		</div>
+	</div>
+	<div class="fixed-bottom d-flex justify-content-end">
+		<i class="bi bi-arrow-up-circle fs-2 p-5" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
 	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
@@ -298,6 +334,29 @@
 $(function () {
 	
 /**
+ * 숙소 이미지 swiper를 위한 Swiper 객체 생성
+ */
+	let swiper = new Swiper(".mySwiper", {
+		loop : true,
+		spaceBetween : 10,
+		slidesPerView : 4,
+		freeMode : true,
+		watchSlidesProgress : true,
+	});
+	
+	let swiper2 = new Swiper(".mySwiper2", {
+		loop : true,
+		spaceBetween : 10,
+		navigation : {
+			nextEl : ".swiper-button-next",
+			prevEl : ".swiper-button-prev"
+		},
+		thumbs : {
+			swiper : swiper
+		},
+	});
+	
+/**
  * 선택 시 메뉴 스타일 변경하는 이벤트핸들러 등록
  * 해당 엘리먼트가 클릭될 때마다 각 버튼 태그의 active 여부에 따라 text-muted 클래스, text-secondary, fw-bold 클래스를 추가/삭제한다.
  * (active 클래스에 대한 토글은 부트스트랩 js에서 이미 구현하고 있다)
@@ -310,77 +369,66 @@ $(function () {
 			} else {
 				$(this).addClass('text-muted').removeClass('fw-bold').removeClass('text-secondary');
 			}
+		  	// 사용자가 리뷰를 스크롤링으로 조회하다가 다른 탭을 눌렀을 때 footer를 다시 보여주기
+			if ($(this).attr('id') != "review-tab") {
+				$("#footer").removeClass('d-none');
+			}
 		});
 	});
-	
 	
 /**
  * 리뷰 탭을 누르면, id='chart'인 div엘리먼트에 리뷰평점에 대한 차트 그래프를 출력하는 이벤트핸들러 등록
  * (그냥 dom 출력 시 같이 그래프를 draw하도록 하면, 해당 div가 display:none 상태이기 때문에 오류가 발생함)
  * ajax 리뷰데이터 요청 시 획득한 reviewChartData 객체 사용
  */
- $("#review-tab").click(function() {
-	 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
-	 if (isEmpty) {
-		 $("#chart").addClass("d-none");
-		 return false;
-	 }
-     google.charts.load("current", {packages:["corechart"]});
-     google.charts.setOnLoadCallback(drawChart);
-     function drawChart() {
-       var data = google.visualization.arrayToDataTable([
-         ['review point', 'out of 5'],
-         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
-         ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
-         ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
-         ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
-         ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
-       ]);
+	 $("#review-tab").click(function() {
+	     google.charts.load("current", {packages:["corechart"]});
+	     google.charts.setOnLoadCallback(drawChart);
+	     function drawChart() {
+			 // 리뷰 개수가 0이면 차트를 그리지 않고 컨테이너를 d-none으로 바꾼다.
+			 if (isEmpty) {
+				 $("#chart").addClass("d-none");
+				 return false;
+			 }
+	       var data = google.visualization.arrayToDataTable([
+	         ['review point', 'out of 5'],
+	         ['5점 ('+ reviewChartData.point5 + '개)', reviewChartData.point5],
+	         ['4점 ('+ reviewChartData.point4 + '개)', reviewChartData.point4],
+	         ['3점 ('+ reviewChartData.point3 + '개)', reviewChartData.point3],
+	         ['2점 ('+ reviewChartData.point2 + '개)', reviewChartData.point2],
+	         ['1점 ('+ reviewChartData.point1 + '개)', reviewChartData.point1]
+	       ]);
+	
+	       var options = {
+	         title: '평점 분포',
+	         pieHole: 0.4,
+	       };
+	
+	       var chart = new google.visualization.PieChart(document.getElementById('chart'));
+	       chart.draw(data, options);
+	     };
+	 })
 
-       var options = {
-         title: '평점 분포',
-         pieHole: 0.4,
-       };
-
-       var chart = new google.visualization.PieChart(document.getElementById('chart'));
-       chart.draw(data, options);
-     };
- })
-
-/*
- * 숙소 이미지 swiper 생성
- * TO DO: 화면 요청 시 출력되는 과정(?) 안보이게 할 수 없나?
+/**
+ * 예약가능여부, 객실정원 옵션 선택하기 : 각 input 태그의 이벤트에 객실정보 갱신하는 함수를 등록한다. 
  */
-	let swiper = new Swiper(".mySwiper", {
-		loop : true,
-		spaceBetween : 10,
-		slidesPerView : 4,
-		freeMode : true,
-		watchSlidesProgress : true,
+	$("#select-capacity").change(function() {
+		changeCurrentPage(1);
 	});
-	let swiper2 = new Swiper(".mySwiper2", {
-		loop : true,
-		spaceBetween : 10,
-		navigation : {
-			nextEl : ".swiper-button-next",
-			prevEl : ".swiper-button-prev",
-		},
-		thumbs : {
-			swiper : swiper,
-		},
+	$("#checkbox-onlyAvailable").change(function() {
+		changeCurrentPage(1);
 	});
-
-/*
-	input태그에서 daterangepicker 통해 숙박일정 선택하기
-	TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
-*/
+	 
+/**
+ * input태그에서 daterangepicker 통해 숙박일정 선택하기
+ * TO DO : 가능하면 확인 버튼 위치 등 수정 또는 다른 라이브러리 사용?
+ */
 	// 화면 로드 시 날짜 및 기간 초기화
 	// * 로컬스토리지에 기존에 조회한 날짜가 저장되어 있으면 그 값을, 없으면 오늘/내일 날짜를 가져온다.
 	// * 이 변수의 값이 hidden태그, 로컬스토리지, daterangepicker 에서 관리된다.
 	let startDayString = getDateValues().start
 	let endDayString = getDateValues().end;
 	let duration = 1;
-	
 	// daterangepicker 생성 설정
     $('#datepicker').daterangepicker({
     	// 직접 커스텀한 문자열을 input태그의 value에 넣기 위해 autoUpdate 해제
@@ -454,7 +502,7 @@ $(function () {
     	return selectedDate;
     }
 	
-/*
+/**
  * 숙소 위치 카카오 openAPI로 지도에 표현하기
  */
  	// html에서 jstl로 출력한 숙소 좌표를 받아온다.
@@ -464,7 +512,7 @@ $(function () {
 	let container = document.getElementById('map-acco-info');
  	let mapcenter = new kakao.maps.LatLng(accoLatitude, accoLongitude);
 	let options = { //지도를 생성할 때 필요한 기본 옵션
-			center: new kakao.maps.LatLng(accoLatitude, accoLongitude), //지도의 중심좌표.
+			center: mapcenter, //지도의 중심좌표.
 			level: 3 //지도의 레벨(확대, 축소 정도)
 	};
 	// 지도 생성
@@ -482,12 +530,12 @@ $(function () {
 		map.relayout(); 
 		map.setCenter(mapcenter);
 	});
-
+	
 });
 
 //////////////////////////////////////////// DOM 생성 전에 정의되는 내용
 /**
- * 페이징 버튼을 누르면 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
+ * 페이징 버튼을 누르면 객실정보를 갱신하면서 currentPage의 값을 바꾸고, active 클래스의 상태를 변경시키는 함수 
  */
 function changeCurrentPage(num) {
 	$("#pagination-wrapper .page-item").removeClass("active");
@@ -504,7 +552,8 @@ function changeCurrentPage(num) {
  * 검색날짜를 변경해서, 객실 데이터 행 수가 변경될 때 실행한다.
  */
 function refreshPaginationButton(currentPage) {
-	$.getJSON("/pagination", "accoId=" + ${param.id} +"&currentPage=" + currentPage).done(function(pagination) {
+	let queryString = $("#form-search-rooms").serialize() + "&currentPage=" + currentPage;
+	$.getJSON("/rooms/pagination", queryString).done(function(pagination) {
 		let $wrapper = $("#ul-item-wrapper").empty();
 		let content = '';
 		content += '<li class="page-item">';
@@ -540,22 +589,6 @@ function searchRooms(currentPage) {
 			let content = '<p class="py-5">조회된 결과가 없습니다.</p>'
 			$wrapper.append(content);
 		} else {
-			// 객실별 이미지 박스 콘텐츠 생성 시 사용할 html 태그를 미리 생성
-			let imageBoxHTML =	`<div class="box-room-detail-img row bg-light m-3 p-5 position-relative d-none">
-									<span>
-										<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
-									</span>
-									<div class="room-swiper-wrapper w-75 mx-auto">
-										<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
-											<div class="swiper-wrapper">
-											</div>
-											<div class="swiper-button-next"></div>
-											<div class="swiper-button-prev"></div>
-										</div>
-									</div>
-								</div>
-							</div>`;
-			
 			// 반복 처리로 객실 별 정보를 보여주는 카드 html콘텐츠 생성, 모달에 정보를 전달하는 이벤트핸들러 등록
 			$.each(rooms, function(index, room) {
 				// 1. 기본 카드 본문 콘텐츠
@@ -602,12 +635,12 @@ function searchRooms(currentPage) {
 										<i class="icon-close-room-detail-img bi bi-x-lg fs-5 p-3 position-absolute top-0 end-0" style="cursor: pointer;"></i>
 									</span>
 									<div class="room-swiper-wrapper w-75 mx-auto">
-										<div class="swiper mySwiper2" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
+										<div class="swiper roomSwiper" style="--swiper-navigation-color: #fff; --swiper-pagination-color: #fff">
 											<div class="swiper-wrapper">`;
 				imageBox += imageSlides;
 				imageBox +=				`</div>
-											<div class="swiper-button-next"></div>
-											<div class="swiper-button-prev"></div>
+											<div class="roomSwiper-button swiper-button-next"></div>
+											<div class="roomSwiper-button swiper-button-prev"></div>
 										</div>
 									</div>
 								</div>
@@ -642,6 +675,16 @@ function searchRooms(currentPage) {
 					$("#modal-content-enddate").text($(":hidden[name=endDate]").val());
 				});
 			});
+			
+			// 이미지 swiper 기능을 제공하는 Swiper 객체를 생성한다. (dom객체 생성 후 생성해야 함)
+			 new Swiper(".roomSwiper", {
+					loop : true,
+					spaceBetween : 10,
+					navigation : {
+						nextEl : ".roomSwiper-button",
+						prevEl : ".roomSwiper-button"
+					}
+				});
 			
 			// 화면에 추가한 모든 객실카드에 대하여 이벤트핸들러 등록
 			addRoomCardEventListener();
@@ -690,15 +733,19 @@ function toggleAccoLike(accoId) {
 	}
 	
 	// 숙소아이디 전달해서 ajax로 like 저장 요청
-	$.getJSON("/changelike", "accoId=" + accoId).done(function(result) {
+	$.getJSON("/changelike/acco", "accoId=" + accoId).done(function(result) {
 		if (result === true) {
 			// 아이콘 표현 토글 처리
 			$icon.toggleClass("bi-heart-fill");
 			$icon.toggleClass("bi-heart");
+			let likeCount = Number($("#likeCount").text());
+			let change = $icon.hasClass("bi-heart") ? -1 : 1;
+			$("#likeCount").text(likeCount + change);
 		} else {
 			alert("오류가 발생했습니다. 다시 시도해주세요.");
 		}
 	});
+	
 }
 
 /**
@@ -738,14 +785,16 @@ function toggleAccoLike(accoId) {
 let reviewChartData = '';
 let reviewArray = [];
 let isEmpty = false; 
-$.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
+$.getJSON("/reviews/acco", "accoId=" + ${param.id}).done(function(data) {
 	reviewChartData = data.chartData;
 	let reviews = data.reviews
 	if (reviews.length == 0) {
-		let content = '<div class="p-5 border-bottom">등록된 리뷰가 없습니다.</div>';
-		reviewArray.push(content);
 		isEmpty = true;
+		let content = '<div class="p-5 text-center">등록된 리뷰가 없습니다.</div>';
+		// 배열에 담지 않고 바로 append시킨다.
+		$("#review-tab-pane").append(content);
 	} else {
+		let count = 0;
 		for (let review of reviews) {
 			let content = '';
 			content += '<div class="row p-5 border-bottom">';
@@ -776,13 +825,19 @@ $.getJSON("/reviews", "accoId=" + ${param.id}).done(function(data) {
 			content += '        <small class="elapsedTime">' + getElapsedTime(review.createdDate) + '</small>';
 			content += '    </div>';
 			content += '</div>';
-			reviewArray.push(content);
+			count++;
+			
+			// 3개까지는 화면에 바로 출력시키고, 나머지는 스크롤링으로 제공한다.
+			if (count < 4) {
+				$("#review-tab-pane").append(content);
+			} else {
+				reviewArray.push(content);
+			}
 		}
 	}
 });
  
 // 2. 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
-let count = 0; 
 window.onscroll = function(e) {
 	// 리뷰 탭 눌렀을 때만 스크롤링 실행되게 하기
 	if (!$("#review-tab").hasClass("active")) {
@@ -791,17 +846,18 @@ window.onscroll = function(e) {
 	
 	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
 	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
+	// 탭 버튼에 대한 클릭 이벤트핸들러 함수에 리뷰를 끝까지 보기 전에 다른 탭을 누르면, footer를 보여주도록 되어있다. 
 	$("#footer").addClass("d-none");
-	if (reviewArray.length == count) {
+	if (reviewArray.length == 0) {
 		$("#footer").removeClass("d-none");
 		return false;
 	}
 	
 	// 임시 콘텐츠(리뷰정보) 추가하기
-	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 꺼내 콘텐츠를 추가시킨다.
+	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 가장 앞에 있는 값을 꺼내 콘텐츠를 추가시킨다.
+	// 화면에 제공한 콘텐츠는 배열에서 삭제된다.
 	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-		let addContent = reviewArray[count];
-		count++;
+		let addContent = reviewArray.shift();
 		$("#review-tab-pane").append(addContent);
 	}
 };

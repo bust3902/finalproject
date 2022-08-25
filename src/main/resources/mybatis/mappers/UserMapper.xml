@@ -11,8 +11,8 @@
 		values
 			(user_seq.nextval, #{id}, #{password}, #{nickname}, #{name}, #{email}, #{tel}, #{address}, #{loginType})
 	</insert>
-	
-	<select id="getUserById" parameterType="string" resultType="kr.co.nc.vo.User">
+		
+	<select id="getUserByNo" parameterType="int" resultType="User">
 		select 
 			user_no as no,
 			user_id as id,
@@ -26,6 +26,26 @@
 			user_updated_date updatedDate,
 			user_created_date createdDate
 		from 
+			users
+		where
+			user_no = #{value}	
+	</select>
+	
+	<select id="getUserById" parameterType="string" resultType="kr.co.nc.vo.User">
+		select 
+			user_no as no,
+			user_id as id,
+			user_password password,
+			user_nickname nickname,
+			user_name name,
+			user_email email,
+			user_tel tel,
+			user_login_type loginType,
+			user_disabled disabled,
+			user_updated_date updatedDate,
+			user_created_date createdDate,
+			user_authority authority
+		from
 			users
 		where
 			user_id = #{value}
@@ -50,6 +70,25 @@
 			user_email = #{value}
 	</select>
 	
+	<select id="getUserByName" parameterType="string" resultType="kr.co.nc.vo.User">
+		select 
+			user_no as no,
+			user_id as id,
+			user_password password,
+			user_nickname nickname,
+			user_name name,
+			user_email email,
+			user_tel tel,
+			user_login_type loginType,
+			user_disabled disabled,
+			user_updated_date updatedDate,
+			user_created_date createdDate
+		from
+			users
+		where
+			user_name = #{value}
+	</select>
+	
 	<update id="update" parameterType="kr.co.nc.vo.User">
 		update
 			users
@@ -60,8 +99,39 @@
 			user_disabled = #{disabled},
 			user_updated_date = sysdate
 		where
-			user_no = #{no}
-	
+			user_no = #{no}	
 	</update>
 	
+	<!-- String findId(@Param("name") String name, @Param("email")String email); 
+       mapper 인터페이스에서 parameter 설정 parameterType 설정을 하지 않아도 된다.
+   -->
+   <select id="findId" resultType="string">
+      select user_id
+      from users
+      where user_name = #{name} 
+      and user_email = #{email}
+   </select>
+   
+   <!-- 아이디와 비밀번호를 정보를 받아서 회원탈퇴 -->
+	<delete id="withdraw" parameterType="string">
+		delete from users 
+		where user_id = #{id}
+		and user_password = #{password}
+	</delete>
+	
+	<!-- int finePwCheck(@Param("id") String id, @Param("email")String email); -->
+    <select id="finePwCheck" parameterType="String" resultType="int">
+       select count(user_id)
+       from users
+       where user_id = #{id}
+       and user_email =#{email}
+    </select>
+    
+    <!-- void updatePw(User user); -->
+    <update id="updatePw" parameterType="User">
+       update users
+       set 
+          user_password = #{password}
+       where user_email = #{email}
+    </update>
 </mapper>

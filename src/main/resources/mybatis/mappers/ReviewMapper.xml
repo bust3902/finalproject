@@ -5,9 +5,25 @@
 	<!-- void insertReview(Review review); -->
 	<insert id="insertReview" parameterType="Review">
 		insert into review
-		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_like_count, review_image, review_point)
+		(review_no, user_no, restaurant_no, acco_id, review_title, review_content, review_image, review_point,room_no)
 		values
-		(review_seq.nextval, #{user.no}, #{restaurant.no}, #{acco.id}, #{title}, #{content}, #{likeCount}, #{image} #{point})
+		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{accoId}, #{title}, #{content}, #{image}, #{point},#{roomNo})
+	</insert>
+	
+	<!-- void insertAccommodationReview(Review review); -->
+	<insert id="insertAccommodationReview" parameterType="Review">
+		insert into review
+		(review_no, user_no, acco_id, review_title, review_content, review_image, review_point,room_no)
+		values
+		(review_seq.nextval, #{user.no}, #{accoId}, #{title}, #{content}, #{image}, #{point},#{roomNo})
+	</insert>
+	
+	<!-- void insertRestaurantReview(Review review); -->
+	<insert id="insertRestaurantReview" parameterType="Review">
+		insert into review
+		(review_no, user_no, restaurant_no, review_title, review_content, review_image, review_point)
+		values
+		(review_seq.nextval, #{user.no}, #{restaurantNo}, #{title}, #{content}, #{image}, #{point})
 	</insert>
 	
 	<!-- void updateReview(Review review); -->
@@ -23,7 +39,7 @@
 		where
 			review_no = #{no}
 	</update>
-		
+	
 	<!-- void deleteReview(Review reivew); -->
 		<delete id="deleteReview" parameterType="Review">
 			delete from review
@@ -48,15 +64,21 @@
 		<result column="review_updated_date" property="updatedDate"/>
 		<result column="review_image" property="image"/>
 		<result column="review_point" property="point"/>
-		<result column="user_nickname" property="user.nickname"/>
+		<result column="acco_id" property="acco.id"/>
+		<result column="acco_name" property="acco.name"/>
 		<result column="room_name" property="room.name"/>
+		<association column="user_no" property="user" select="kr.co.nc.mapper.UserMapper.getUserByNo"></association>
+		<association column="restaurant_no" property="restaurant" select="kr.co.nc.mapper.RestaurantMapper.getRestaurantByNo"></association>
 		<collection column="restaurant_no" property="reviewRestaurantTags" select="getAllReviewTagsByRestaurantNo"></collection>
 	</resultMap>
 	
 	<!-- List<Review> getAllReviewsById(ReviewCriteria criteria); -->
 	<select id="getReviewsByCriteria" parameterType="kr.co.nc.criteria.ReviewCriteria" resultMap="reviewResultMap">
 		select *
-			from review rv, users u, restaurant rs
+			from review rv, users u
+			<if test="restaurantNo != 0">
+				, restaurant rs
+			</if>
 			<if test="accoId != 0">
 				, acco_rooms ar
 			</if>
@@ -83,9 +105,16 @@
 		from restaurant_tag
 		where restaurant_no = #{value}
 	</select>
-	
-	<!--  List<Map<String, Integer>> countReviewPointsByAccoId(int accoId); -->
-	<select id="countReviewPointsByAccoId" parameterType="int" resultType="hashmap">
+
+	<!-- List<String> getAllReviewTagsByRestaurantNo(String restaurantNo); -->
+	<select id="getAllReviewsByRestaurantNo" parameterType="int" resultType="Review">
+		select *
+		from review r, users u
+		where restaurant_no = #{value}
+		and r.user_no = u.user_no
+	</select>
+	<!-- List<Map<String, Integer>> countReviewPoints(ReviewCriteria criteria); -->
+	<select id="countReviewPoints" parameterType="kr.co.nc.criteria.ReviewCriteria" resultType="hashmap">
 		with points
 		as (select 1 as review_point from dual
 		    union all select 2 from dual
@@ -94,15 +123,67 @@
 		    union all select 5 from dual)
 		select p.review_point as point, nvl(x.cnt,0) as count
 		from points p,
-		    (select review_point, count(*) cnt from review where acco_id=#{value} group by review_point) x
+			<choose>
+				<when test="accoId != 0">
+				    (select review_point, count(*) cnt from review where acco_id=#{accoId} group by review_point) x
+				</when>
+				<otherwise>
+				    (select review_point, count(*) cnt from review where restaurant_no=#{restaurantNo} group by review_point) x
+				</otherwise>
+			</choose>
 		where x.review_point (+) = p.review_point
 		order by p.review_point
 	</select>
 	
+	<!-- List<Review> getLatestReviewsByAccos(List<Integer> accoIds); -->
+	<select id="getLatestReviewsByAccos" parameterType="list" resultMap="reviewResultMap">
+		select *
+		from (select r.review_title, r.review_content, a.acco_id, a.acco_name
+		    from review r, accommodations a, cities c
+		    where r.acco_id = a.acco_id
+		    and a.city_id = c.city_id
+		    and r.acco_id in
+				<foreach item="accoId" collection="list" open="(" close=")" separator=",">
+					#{accoId}
+				</foreach>
+		    order by r.review_created_date)
+		where rownum &lt;= 10
+	</select>
+	
+	<!-- List<Review> getLatestRestaurantReviews(); -->
+	<select id="getLatestRestaurantReviews" resultMap="reviewResultMap">
+		select *
+		from (select *
+		    from review
+		    where restaurant_no is not null
+		    	and acco_id is null
+		    order by review_created_date, restaurant_no desc)
+		where rownum &lt;=3
+	</select>
+
 	<!-- List<Review> getAllReviews(); -->
 	<select id="getAllReviews" resultType="Review">
 		select *
 		from review
 		where review_created_date desc
 	</select>
+	
+	<!-- List<Review> getAccommodationReviewsByUserNo(int userNo); -->
+	<select id="getAccommodationReviewsByUserNo" parameterType="int" resultMap="reviewResultMap">
+		select *
+		from review rv, accommodations a
+		where user_no = #{value}
+			and rv.acco_id = a.acco_id
+		order by rv.review_created_date, rv.review_no desc
+	</select>
+	
+	<!-- List<Review> getRestaurantReviewsByUserNo(int userNo); -->
+	<select id="getRestaurantReviewsByUserNo" parameterType="int" resultMap="reviewResultMap">
+		select *
+		from review rv, restaurant r
+		where user_no = #{value}
+			and rv.restaurant_no = r.restaurant_no
+		order by rv.review_created_date, rv.review_no desc
+	</select>
+	
 </mapper>

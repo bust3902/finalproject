@@ -39,21 +39,32 @@
 		select co_facility_id as id, co_facility_name as name, co_facility_icon_name as iconName
 		from common_facilities
 		where co_facility_id in (select co_facility_id from acco_type_cofa where acco_type_id = #{value})
+		order by co_facility_id
 	</select>
 	
 	<!-- List<RoomFacility> getAllRoomFacilities(); -->	
 	<select id="getAllRoomFacilities" resultType="RoomFacility">
 		select ro_facility_id as id, ro_facility_name as name, ro_facility_icon_name as iconName
 		from room_facilities
+		order by ro_facility_id
+	</select>
+	
+	<!-- List<String> getAllAccoTagsByAccoType(String typeId) -->
+	<select id="getAllAccoTagsByAccoType" parameterType="string" resultType="string">
+		select acco_tag
+		from acco_tags
+		where acco_id in (select acco_id from acco_types where acco_type_id = #{value}) 
 	</select>
 	
 	<!-- List<String> getAllAccoTags(); -->
 	<select id="getAllAccoTags" resultType="string">
 		select acco_tag
 		from acco_tags
+		order by acco_tag
 	</select>
 	
 	<!-- AccoResultMap, AccoDetailResultMap -->
+	<!-- 현재 update하기 위한 객체 획득 시에 AccoResultMap을 사용하므로 update 대상 컬럼은 모두 조회할 것 -->
 	<resultMap type="Accommodation" id="AccoResultMap">
 		<id column="acco_id" property="id"/>
 		<result column="acco_name" property="name"/>
@@ -64,19 +75,19 @@
 		<result column="acco_thumbnail_image" property="thumbnailImageName"/>
 		<result column="acco_review_rate" property="reviewRate"/>
 		<result column="acco_review_count" property="reviewCount"/>
+		<result column="acco_like_count" property="likeCount"/>
 		<result column="city_id" property="cityId"/>
+		<result column="acco_introduce_comment" property="introduceComment"/>
+		<result column="acco_detail_description" property="detailDescription"/>
+		<result column="acco_updated_date" property="updatedDate"/>
+		<result column="acco_deleted" property="deleted"/>
 		<result column="distance" property="currentDistance" />
 		<result column="minPrice" property="minPrice"/>
 	</resultMap>
 	
 	<resultMap type="Accommodation" id="AccoDetailResultMap" extends="AccoResultMap">
-		<result column="acco_introduce_comment" property="introduceComment"/>
-		<result column="acco_detail_description" property="detailDescription"/>
-		<result column="acco_like_count" property="likeCount"/>
-		<result column="acco_created_date" property="createdDate"/>
-		<result column="acco_updated_date" property="updatedDate"/>
-		<result column="acco_deleted" property="deleted"/>
 		<collection column="acco_id" property="commonFacilities" select="getCommonFacilitiesByAccoId"></collection>
+		<collection column="acco_id" property="roomFacilities" select="getRoomFacilitiesByAccoId"></collection>
 		<collection column="acco_id" property="tags" select="getAccoTagsByAccoId"></collection>
 		<collection column="acco_id" property="images" select="getImagesByAccoId"></collection>
 	</resultMap>
@@ -139,6 +150,14 @@
 								</foreach>
 								)
 			</if>
+			<if test="tags != null">
+				and a.acco_id in (select acco_id from acco_tags
+								where acco_tag in
+								<foreach item="tag" collection="tags" open="(" close=")" separator=",">
+									#{tag}
+								</foreach>
+								)
+			</if>
 		</where>
 		<choose>
 			<when test="sort == 'rate'">
@@ -156,6 +175,13 @@
 		</choose>
 	</select>
 	
+	<!-- Accommodation getAccommodationById(int accoId); -->
+	<select id="getAccommodationById" parameterType="int" resultMap="AccoResultMap">
+		select *
+		from accommodations
+		where acco_id = #{value}
+	</select>
+	
 	<!-- Accommodation getAccommodationdDetailById(int accoId); -->
 	<select id="getAccommodationdDetailById" parameterType="int" resultMap="AccoDetailResultMap">
 		select *
@@ -169,6 +195,16 @@
 		from acco_common_facilities a, common_facilities c
 		where a.co_facility_id = c.co_facility_id
 			and a.acco_id = #{value}
+		order by c.co_facility_id
+	</select>
+	
+	<!-- List<RoomFacility> getRoomFacilitiesByAccoId(int accoId); -->
+	<select id="getRoomFacilitiesByAccoId" parameterType="int" resultType="RoomFacility">
+		select distinct r.ro_facility_id as id, r.ro_facility_name as name, r.ro_facility_icon_name as iconName
+		from acco_room_facilities a, room_facilities r
+		where a.room_no in (select room_no from acco_rooms where acco_id = #{value})
+			and a.ro_facility_id = r.ro_facility_id
+		order by r.ro_facility_id
 	</select>
 	
 	<!-- List<String> getAccoTagsByAccoId(int accoId); -->
@@ -176,6 +212,7 @@
 		select acco_tag
 		from acco_tags
 		where acco_id = #{value}
+		order by acco_tag
 	</select>
 	
 	<!-- List<String> getImagesByAccoId(int accoId); -->
@@ -183,6 +220,7 @@
 		select image_file_name
 		from acco_detail_images
 		where acco_id = #{value}
+		order by image_file_name
 	</select>
 	
 	<!-- 객실 정보 관련 -->
@@ -200,9 +238,17 @@
 		<collection column="room_no" property="images" select="getImagesByRoomNo"></collection>
 	</resultMap>
 	
-	<!-- List<AccommodationRoom> getAllRoomsByAccoId(RoomCriteria criteria); -->
+	<!-- List<AccommodationRoom> getAllRoomsByAccoId(int accoId); -->
 	<select id="getAllRoomsByAccoId" parameterType="int" resultMap="RoomResultMap">
 		select *
+		from acco_rooms
+		where acco_id = #{value}
+		order by room_capacity asc
+	</select>
+	
+	<!-- List<Integer> getAllRoomCapacitiesByAccoId(int accoId); -->
+	<select id="getAllRoomCapacitiesByAccoId" parameterType="int" resultType="int">
+		select distinct room_capacity
 		from acco_rooms
 		where acco_id = #{value}
 		order by room_capacity asc
@@ -214,6 +260,7 @@
 		from acco_room_facilities a, room_facilities r
 		where a.room_no = #{value}
 			and a.ro_facility_id = r.ro_facility_id
+		order by r.ro_facility_id
 	</select>
 	
 	<!-- List<String> getImagesByRoomNo(int roomNo); -->
@@ -221,6 +268,7 @@
 		select room_image_file_name
 		from acco_room_detail_images
 		where room_no = #{value}
+		order by room_image_file_name
 	</select>
 	
 	<!-- int getAvailableRoomStock(RoomCriteria criteria); -->
@@ -255,11 +303,12 @@
 	
 	<!-- List<Accommodation> getAllLikedAccoByUserNo(int no); -->
 	<select id="getAllLikedAccoByUserNo" parameterType="int" resultMap="AccoResultMap">
-		select *
+		select a.acco_id, a.acco_name, a.acco_district, a.acco_latitude, a.acco_longitude, a.acco_thumbnail_image,
+		        a.acco_review_rate, a.acco_like_count
 		from user_accommodation_likes l, accommodations a
-		where l.user_no = #{value}
-			and a.acco_deleted = 'N'
+		where a.acco_deleted = 'N'
 			and l.acco_id = a.acco_id
+			and l.user_no = #{value}
 	</select>
 	
 	<!-- List<Accommodation> getBestAccommodations(int count); -->
@@ -267,22 +316,59 @@
 		select *
 		from (select *
 		    from accommodations
-		    order by acco_review_rate desc, acco_review_count desc)
+		    order by acco_review_rate desc, acco_like_count desc)
 		where rownum &lt;= #{value}
 	</select>
 	
-	<!-- int getTotalRowOfRoomsByAccoId(int accoId); -->
-	<select id="getTotalRowsOfRoomsByAccoId" parameterType="int" resultType="int">
+	<!-- 페이징 관련 -->
+	<!-- int getTotalRowOfRoomsByAccoId(RoomCriteria criteria); -->
+	<select id="getTotalRowsOfRoomsByAccoId" parameterType="kr.co.nc.criteria.RoomCriteria" resultType="int">
 		select count(*)
 		from acco_rooms
-		where acco_id = #{value}
+		where acco_id = #{accoId}
+		<if test="capacity != 0">
+			and room_capacity = #{capacity}
+		</if>
 	</select>
 	
-	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(Map<String, Object> param); -->
+	<!-- List<AccommodationRoom> getRoomsByAccoIdwithPagination(RoomCriteria criteria); -->
 	<select id="getRoomsByAccoIdwithPagination" parameterType="kr.co.nc.criteria.RoomCriteria" resultMap="RoomResultMap">
 		select *
-		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.* from acco_rooms a where acco_id = #{accoId})
+		from (select row_number() over(order by a.room_capacity, a.room_no) row_num, a.*
+				from acco_rooms a
+				<if test="onlyAvailable == 'yes'">
+					, (<include refid="getReservedCountByRoomNo" />) rc
+				</if>
+				where a.acco_id = #{accoId}
+				<if test="onlyAvailable == 'yes'">
+					and a.room_no = rc.room_no (+)
+					and (a.room_numbers - NVL(rc.cnt,0)) > 0
+				</if>
+				<if test="capacity != 0">
+					and a.room_capacity = #{capacity}
+				</if>)
 		where row_num between #{beginIndex} and #{endIndex}
 	</select>
+	
+	<!-- void updateAccommodation(Accommodation accommodation); -->
+	<update id="updateAccommodation" parameterType="Accommodation">
+		update accommodations
+		set
+			acco_name = #{name},
+			acco_district = #{district},
+			acco_address = #{address},
+			acco_latitude = #{latitude},
+			acco_longitude = #{longitude},
+			acco_introduce_comment = #{introduceComment},
+			acco_thumbnail_image = #{thumbnailImageName},
+			acco_detail_description = #{detailDescription},
+			acco_review_rate = #{reviewRate},
+			acco_review_count = #{reviewCount},
+			acco_like_count = #{likeCount},
+			acco_deleted = #{deleted},
+			city_id = #{cityId},
+			acco_updated_date = sysdate
+		where acco_id = #{id}
+	</update>
 	
 </mapper>

@@ -21,15 +21,15 @@ span.sub { color:#C0C0C0; font-size:14px; }
 				<div class="collapse" id="cat02">
 					<ul class="list-unstyled">
 						<li><a href="/admin/restaurant" class="text-decoration-none"><span class="sub">등록</span></a></li>
-						<li><a href="#" class="text-decoration-none"><span class="sub">관리</span></a></li>
+						<li><a href="/admin/restausearch" class="text-decoration-none"><span class="sub">관리</span></a></li>
 					</ul>
 				</div>
 			</li>
-		
+			<!-- 
 			<li class="mb-4">
 				<button type="button" onclick="location.href='#'" class="btn nav-link border-0 text-decoration-none"><span class="main">문의</span></button>
 			</li>
-			
+			 -->
 		</ul>
 	</div>
 </div>

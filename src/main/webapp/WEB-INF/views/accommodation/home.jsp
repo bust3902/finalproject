@@ -35,7 +35,7 @@
 </head>
 <body>
 <!-- 
-	요청 URL : localhost/acco/search?type= 또는 ?keyword=
+	요청 URL : localhost/acco?type= 또는 ?keyword=
 	1. 해당 페이지를 요청한 방식에 따라 카드의 상세조건 옵션 다르게 보이게 하기 : 각 태그 클래스에 EL 삼항연산자 적용함
 	* 요청 시 전달받는 Criteria를 통해 요청한 방식 판별, 숙소정보리스트와 요청한 방식에 따른 상세 옵션내용 출력(공용시설, 객실시설, 기타 태그)
 	2. 초기화 버튼을 누르면 사용자가 변경한 옵션을 모두 초기화시키기
@@ -46,7 +46,7 @@
  -->
 <%@ include file="../common/nav.jsp" %>
 <form id="form-search-accos">
-	<div class="row bg-secondary" style="height:13vh;">
+	<div class="row bg-secondary m-0" style="height:13vh;">
 		<input type="hidden" name="currentLat" value="" />
 		<input type="hidden" name="currentLong" value="" />
 		<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
@@ -90,7 +90,6 @@
 							<li class="list-group-item py-3">
 								<div class="fw-bold mt-3 mb-1 fs-5">날짜</div>
 								<div class="text-small mt-1 mb-3 text-muted">최대 7박까지 조회 가능</div>
-								<!-- TO DO : 현재보다 지난 날짜는 선택 못하게 하기 -->
 								<input type="text" id="datepicker" class="form-control" value="" />
 								<input type="hidden" name="startDate" value="" />
 								<input type="hidden" name="endDate" value="" />
@@ -106,7 +105,7 @@
 									</div>
 								</div>
 							</li>
-							<li class=" list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
+							<li class=" list-group-item py-3 border-bottom-0 text-muted">
 								<div class="row d-flex justify-content-center">
 									<div class="col-3 fw-bold text-muted my-auto">인원</div>
 									<!-- 인원 수 표시 input 대신 span 태그 사용, 이벤트 script에서 설정하는 것으로 변경 예정 -->
@@ -126,11 +125,19 @@
 								<div id="slider-range"></div>
 							</li>
 							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-								<div class="fw-bold mb-3">공용 시설</div>
-								<div class="row">
+								<div class="label-option fw-bold pb-3 border-bottom" style="cursor: pointer;">
+									공용 시설
+									<i class="bi bi-chevron-double-down float-end"></i>
+									<i class="bi bi-chevron-double-up float-end d-none"></i>
+								</div>
+								<div class="checks-option row d-none">
+									<div class="col-12 text-end my-3">
+										<label class="form-check-label small">전체 선택/해제</label>
+										<input id="toggle-cofa" class="form-check-input toggle" type="checkbox"/>
+									</div>
 									<!-- 선택한 숙소 유형에 맞는 공용시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 									<c:forEach var="facility" items="${cofacilities }">
-										<div class="col-6 mb-3">
+										<div class="col-6 mb-1">
 											<input class="form-check-input" type="checkbox" name="commonFacilities" value="${facility.id }">
 											<label class="form-check-label small">${facility.name }</label>
 										</div>
@@ -138,23 +145,39 @@
 								</div>
 							</li>
 							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-								<div class="fw-bold mb-3">객실 시설</div>
-								<div class="row">
+								<div class="label-option fw-bold pb-3 border-bottom" style="cursor: pointer;">
+									객실 시설
+									<i class="bi bi-chevron-double-down float-end"></i>
+									<i class="bi bi-chevron-double-up float-end d-none"></i>
+								</div>
+								<div class="checks-option row d-none">
+									<div class="col-12 text-end my-3">
+										<label class="form-check-label small">전체 선택/해제</label>
+										<input id="toggle-rofa" class="form-check-input toggle" type="checkbox"/>
+									</div>
 									<!-- 모든 객실시설 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 									<c:forEach var="facility" items="${rofacilities }">
-										<div class="col-6 mb-3">
+										<div class="col-6 mb-1">
 											<input class="form-check-input" type="checkbox" name="roomFacilities" value="${facility.id }">
 											<label class="form-check-label small">${facility.name }</label>
 										</div>
 									</c:forEach>
 								</div>
 							</li>
-							<li class="list-group-item py-3 border-bottom-0 text-muted ${empty param.type ? 'd-none' : '' }">
-								<div class="fw-bold mb-3">기타</div>
-								<div class="row">
+							<li class="list-group-item py-3 border-bottom-0 text-muted ${(empty param.type) or (empty tags) ? 'd-none' : '' }">
+								<div class="label-option fw-bold pb-3 border-bottom" style="cursor: pointer;">
+									태그
+									<i class="bi bi-chevron-double-down float-end"></i>
+									<i class="bi bi-chevron-double-up float-end d-none"></i>
+								</div>
+								<div class="checks-option row d-none">
+									<div class="col-12 text-end my-3">
+										<label class="form-check-label small">전체 선택/해제</label>
+										<input id="toggle-tag" class="form-check-input toggle" type="checkbox"/>
+									</div>
 									<!-- 모든 부가사항 옵션을 컨트롤러로부터 전달받아 반복문으로 출력한다. -->
 									<c:forEach var="tag" items="${tags }">
-										<div class="col-6 mb-3">
+										<div class="col-6 mb-1">
 											<input class="form-check-input" type="checkbox" name="tags" value="${tag }">
 											<label class="form-check-label small">${tag }</label>
 										</div>
@@ -184,13 +207,10 @@
 						<div id="btn-group-sort" class="btn-group flex-fill pe-2 my-auto" role="group" aria-label="Basic radio toggle button group">
 							<input type="radio" class="btn-check" id="btnradio1" name="sort" value="rate" checked>
 							<label class="btn btn-secondary" for="btnradio1">평점 순</label>
-			
 							<input type="radio" class="btn-check" id="btnradio2" name="sort" value="dist">
 							<label class="btn btn-secondary" for="btnradio2">거리 순</label>
-							
 							<input type="radio" class="btn-check" id="btnradio3" name="sort" value="lowprice">
 							<label class="btn btn-secondary" for="btnradio3">낮은 가격 순</label>
-							
 							<input type="radio" class="btn-check" id="btnradio4" name="sort" value="highprice">
 						  	<label class="btn btn-secondary" for="btnradio4">높은 가격 순</label>
 						</div>
@@ -203,17 +223,20 @@
 				</div>
 			</div>
 	</div>
-</form>
+	<div class="fixed-bottom d-flex justify-content-end">
+		<i class="bi bi-arrow-up-circle fs-2 p-5" onclick="javscript:(function(){window.scrollTo(0,0);})();" style="cursor: pointer;"></i>
+	</div>
+ </form>
 <%@ include file="../common/footer.jsp" %>
 
 <!-- 지도 조회 모달 -->
 <div id="modal-map" class="modal" tabindex="-1">
 	<div class="modal-dialog modal-dialog-centered modal-xl">
 		<div class="modal-content">
-			<div class="modal-header">
-				<small class="modal-title text-center">내 위치 : <strong id="modal-current-location-address"></strong></small>
-				<button type="button" class="btn-close" data-bs-dismiss="modal"
-					aria-label="Close"></button>
+			<div class="modal-header d-flex justify-content-between">
+				<span class="small me-auto"><strong id="modal-current-city"></strong></span>
+				<span class="small ms-auto">내 위치 : <strong id="modal-current-location-address"></strong></span>
+				<button type="button" class="btn-close ms-3" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
 			<div class="modal-body d-flex justify-content-center">
 				<!-- 지도 출력 :  -->
@@ -222,6 +245,7 @@
 		</div>
 	</div>
 </div>
+
 <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <script type="text/javascript">
 $(function () {
@@ -244,8 +268,6 @@ $(function () {
 		if (navigator.geolocation) {
 			navigator.geolocation.getCurrentPosition(function(position) {
 				// 성공 시 콜백함수
-				console.log(currentLat);
-				console.log(currentLong);
 		    	currentLat = position.coords.latitude;
 		    	currentLong = position.coords.longitude;
 				$(":hidden[name=currentLat]").val(currentLat);
@@ -315,6 +337,9 @@ $(function () {
 		map.relayout(); 
 		changeMapCenter(map);
 		myLocationMarker.setPosition(new kakao.maps.LatLng(currentLat, currentLong));
+		// 선택한 지역범위 출력
+		let cityValue = $("[name=city] :selected").text();
+		$("#modal-current-city").text(cityValue);
 	});
 
 /*
@@ -329,7 +354,7 @@ $(function () {
 	if ($("select[name=city] :selected").val() == "") {
 		map.setLevel(8);
 	} else {
-		map.setLevel(7);
+		map.setLevel(6);
 	}
 }
 
@@ -447,10 +472,13 @@ $(function () {
  	
  	// 마커에서 사용할 이미지 객체를 만든다.
  	let accoMarkerImage =  new kakao.maps.MarkerImage('/resources/images/markericons/geo-alt-fill.svg', new kakao.maps.Size(45,45));
+ 	// 스크롤링 시 컨텐츠를 꺼낼 배열을 정의한다.
+ 	let accoContents = [];
  	function searchAccos() {
 		let queryString = $("#form-search-accos").serialize();
-		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지운다.
+		// 기존에 화면에 출력된 숙소정보 컨텐츠를 모두 지우고, 배열을 비운다.
 		let $div = $("#accos-wrapper").empty();
+		accoContents = [];
 		// 기존에 지도에 표시된 마커를 모두 삭제하고, 배열을 비운다.
 		setMarker(null);
 		accoMarkers = [];
@@ -463,28 +491,34 @@ $(function () {
 				`;
 				$div.append(content);
 			} else {
+				let count = 0;
 				$.each(accos, function(index, acco) {
 					// 숙소 정보 html컨텐츠 생성
 					let content = '';
 					content += '<div id="card-acco-' + acco.id +'" class="card text-bg-light p-0 rounded-0">';
 					content += '	<img src="/resources/images/acco/thumbnail/' + acco.thumbnailImageName +'" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">';
-					content += '	<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
-					content += '		<div class="my-auto">';
-					content += '		<h5 class="fw-semibold">' + acco.name + '</h5>';
-					content += '			<p class="text-warning">';
-					content += '				<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
-					content += '			</p>';
-					content += '			<small>' + acco.district + '</small>';
+					content += '	<a href="acco/detail?id=' + acco.id + '">';
+					content += '		<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">';
+					content += '			<div class="my-auto">';
+					content += '				<h5 class="fw-semibold">' + acco.name + '</h5>';
+					content += '				<p class="text-warning">';
+					content += '					<span class="badge bg-warning">' + acco.reviewRate.toFixed(1) + '</span><strong class="ms-2">' + acco.reviewRateKeyword +' (' + acco.reviewCount  +')</strong>';
+					content += '				</p>';
+					content += '				<small>' + acco.district + '</small>';
+					content += '			</div>';
+					content += '			<p class="text-end fs-4 fw-semibold mt-auto">' + acco.minPrice.toLocaleString() + '<span class="fs-5"> 원 ~</span></p>';
 					content += '		</div>';
-					content += '		<p class="text-end fs-4 fw-semibold mt-auto">' + acco.minPrice.toLocaleString() + '<span class="fs-5"> 원 ~</span></p>';
-					content += '	</div>';
+					content += '	</a>';
 					content += '</div>';
+					count ++;
 					
 					// 숙소 정보 html컨텐츠를 tbody에 추가
-					$div.append(content);
-					$("#card-acco-"+acco.id).click(function() {
-						location.href = "acco/detail?id=" + acco.id;
-					});
+					// 7번째 컨텐츠 부터는 화면에 바로 출력하지 않고 스크롤링 시 사용하는 배열 accoContents에 담는다.
+					if (count < 7) {
+						$div.append(content);
+					} else {
+						accoContents.push(content);
+					}
 					
 					// 지도에 표시할 마커 객체 생성
 					let markerPosition = new kakao.maps.LatLng(acco.latitude, acco.longitude);
@@ -531,18 +565,82 @@ $(function () {
 				// 배열에 새로 담긴 마커 객체를 모두 지도에 표시한다.
 				setMarker(map);
 			}
+			
 		});
 	}
+ 	
+/**
+ * 화면을 아래로 스크롤하면 검색결과를 추가로 더 보여주는 스크롤링 기능 
+ */
+ // 스크롤 바닥 감지 했을 때에 대한 이벤트핸들러 등록
+ window.onscroll = function(e) {
+ 	// 배열에 있는 정보를 다 꺼내면, 콘텐츠 추가를 수행하지 않고, footer를 보여준다.
+ 	// 배열에 있는 정보가 아직 남아있으면 footer를 d-none상태로 유지한다.
+ 	$("#footer").addClass("d-none");
+ 	if (accoContents.length == 0) {
+ 		$("#footer").removeClass("d-none");
+ 		return false;
+ 	}
+ 	
+ 	// 숙소 콘텐츠 추가하기
+	// window의 높이와 현재 스크롤 위치 값을 더했을 때 문서의 높이보다 크거나 같으면 리뷰정보 배열에서 가장 앞에 있는 값을 꺼내 콘텐츠를 추가시킨다.
+	// 화면에 제공한 콘텐츠는 배열에서 삭제된다.
+ 	if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+ 		console.log(window.scrollY);
+ 		let addContent = accoContents.shift();
+ 		$("#accos-wrapper").append(addContent);
+ 	}
+ };
 	
 /*
  * 엘리먼트에 대한 사용자 상호작용 이벤트 등록
  */
 	// 날짜를 변경했을 때 숙소 재검색 후 화면 갱신 : daterangepicker 생성 코드에서 설정함
 	// 상세조건 적용 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
-	//		TO DO: 적용 버튼의 필요 유무? 다른 거 눌러도 다 현 상태로 폼 제출되는데
 	$("#btn-apply").click(function() {
 		searchAccos();
 	});
+ 	// 상세조건 중 공용시설/객실시설/태그 란에서 전체선택/해제를 눌렀을 때 체크박스 토글
+ 	$(".toggle").change(function() {
+ 		let toggleId = $(this).attr("id");
+ 		let isToggleChecked = $(this).prop("checked");
+ 		
+ 		let $target = '';
+ 		if (toggleId === "toggle-cofa") {
+ 			$target = $("input[name=commonFacilities]");
+ 		} else if (toggleId === "toggle-rofa") {
+ 			$target = $("input[name=roomFacilities]");
+ 		} else if (toggleId === "toggle-tag") {
+ 			$target = $("input[name=tags]");
+ 		}
+ 		$target.prop("checked", function() {
+ 			return isToggleChecked;
+ 		});
+ 	});
+ 	$("input[name=commonFacilities]").change(function(){
+ 		let checkedItemsLength = $("input[name=commonFacilities]:checked").length;
+ 		if (checkedItemsLength == 0) {
+	 		$("#toggle-cofa").prop("checked", false);
+ 		} else {
+	 		$("#toggle-cofa").prop("checked", true);
+ 		}
+ 	});
+ 	$("input[name=roomFacilities]").change(function(){
+ 		let checkedItemsLength = $("input[name=roomFacilities]:checked").length;
+ 		if (checkedItemsLength == 0) {
+	 		$("#toggle-rofa").prop("checked", false);
+ 		} else {
+	 		$("#toggle-rofa").prop("checked", true);
+ 		}
+ 	});
+ 	$("input[name=tags]").change(function(){
+ 		let checkedItemsLength = $("input[name=tags]:checked").length;
+ 		if (checkedItemsLength == 0) {
+	 		$("#toggle-tag").prop("checked", false);
+ 		} else {
+	 		$("#toggle-tag").prop("checked", true);
+ 		}
+ 	});
 	// 정렬 버튼을 눌렀을 때 숙소 재검색 후 화면 갱신
 	// 		TO DO : 적용 버튼 누르지 않은 내용은 반영 안 시킬 수 있나?
 	$("input[name=sort]").click(function() {
@@ -553,7 +651,7 @@ $(function () {
 		searchAccos();
 		changeMapCenter(map);
 	});
-	// 초기화 버튼을 눌렀을 때 상세조건을 모두 초기화
+	// 초기화 버튼을 눌렀을 때 상세조건을 모두 초기화 후 검색(적용)
 	$("#btn-reset").click(function() {
 		// 인원
 		$("input[name=capacity]").val("1");
@@ -568,6 +666,14 @@ $(function () {
 		$(":checkbox[name=roomFacilities]").prop("checked", false);
 		// 기타
 		$(":checkbox[name=tags]").prop("checked", false);
+		// 토글체크박스
+		$(".toggle").prop("checked", false);
+		searchAccos();
+	});
+	// 상세조건 공용시설, 객실시설, 태그 옵션 열고 닫기, 아이콘 토글
+	$(".label-option").click(function() {
+		$(this).next().toggleClass("d-none");
+		$(this).find(".bi").toggleClass("d-none");
 	});
 	// 나침반 아이콘을 눌렀을 때 내 위치 정보를 다시 조회하고, 검색결과도 갱신
 	$("#icon-refresh-location").click(function(){

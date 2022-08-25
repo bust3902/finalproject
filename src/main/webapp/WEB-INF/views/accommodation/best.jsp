@@ -28,50 +28,57 @@
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
-<div class="row bg-secondary" style="height:13vh;">
-	<div class="px-3 pt-5 pb-3 mx-auto" style="min-width:992px; max-width:992px;">
-		<h3 class="text-white ps-0 mb-3">지금 가장 핫한 숙소</h3>
+<div class="row bg-secondary m-0" style="height:13vh;">
+	<div class="px-3 pt-5 pb-3 mx-auto my-auto" style="min-width:992px; max-width:992px;">
+		<h3 class="text-white ps-0 mb-3 my-auto">지금 가장 핫한 숙소</h3>
 	</div>
 </div>
 <div class="container my-3" style="min-width:992px; max-width:992px;">
-	<div class="row px-0 pt-5 pb-3">
-		<h3></h3>
-	</div>
 	<!-- 검색결과 조회 리스트 -->
-	<div id="accos-wrapper" class="row px-3 my-5">
-		<!-- TODO: 검색결과, 지역 관련 통계 -->
-		<div class="row mb-3">
-			<h5 class="fw-bold">통계</h5>
-		</div>
+	<div id="accos-wrapper" class="row px-3">
 		<!-- 숙소 검색결과 -->
-		<c:forEach var="acco" items="${bests }">
-			<div data-acco-id="${acco.id }" class="card-acco card text-bg-light p-0 rounded-0">
-				<img src="/resources/images/acco/thumbnail/${acco.thumbnailImageName }" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">
-				<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">
-					<div class="my-auto">
-						<h5 class="fw-semibold"> ${acco.name } </h5>
-						<p class="text-warning">
-							<span class="badge bg-warning"><fmt:formatNumber value="${acco.reviewRate }" pattern=".0" /></span><strong class="ms-2">${acco.reviewRateKeyword }(${acco.reviewCount })</strong>
-						</p>
-						<small>${acco.district }</small>
-						<!-- TODO: 대표 리뷰 출력? -->
-					</div>
+		<div class="row mb-5">
+			<c:forEach var="acco" items="${bests }">
+				<div class="card-acco card text-bg-light p-0 rounded-0">
+					<a href="detail?id=${acco.id }">
+						<img src="/resources/images/acco/thumbnail/${acco.thumbnailImageName }" class="list-thumbnail card-img img-fluid rounded-0" alt="accommodation thumbnail">
+						<div class="list-overlay card-img-overlay p-3 rounded-0 text-light d-flex justify-content-between">
+							<div class="my-auto">
+								<h5 class="fw-semibold"> ${acco.name } </h5>
+								<p class="text-warning">
+									<span class="badge bg-warning"><fmt:formatNumber value="${acco.reviewRate }" pattern=".0" /></span><strong class="ms-2">${acco.reviewRateKeyword }(${acco.reviewCount })</strong>
+								</p>
+								<small>${acco.district }</small>
+								<!-- TODO: 대표 리뷰 출력? -->
+							</div>
+						</div>
+					</a>
 				</div>
-			</div>
-		</c:forEach>
+			</c:forEach>
+		</div>
+		<div class="row mb-3 my-auto">
+			<!-- 화면에 출력된 인기숙소의 리뷰 최신 상위 5건 조회 -->
+			<table class="table table-sm small">
+				<colgroup>
+					<col width="25%">
+					<col width="45%">
+					<col width="*">
+				</colgroup>
+				<tbody>
+					<c:forEach var="review" items="${reviews }">
+						<tr onclick="location.href='detail?id=${review.acco.id}'" style="cursor: pointer;">
+							<td class="text-center">${fn:substring(review.title,0,9)} ${fn:length(review.title) gt 10 ? '...' : '' }</td>
+							<td>${fn:substring(review.content,0,34) } ${fn:length(review.content) gt 35 ? '...' : '' }</td>
+							<td class="text-end ">${review.acco.name }</td>
+						</tr>
+					</c:forEach>
+				</tbody>
+			</table>
+		</div>
 	</div>
 </div>
 <%@ include file="../common/footer.jsp" %>
-<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=258075821638bd633c20115d42be0584"></script>
 <script type="text/javascript">
-$(function () {
-	
-	// 카드에 클릭이벤트 연결
-	$(".card-acco").click(function() {
-		location.href = "detail?id=" + $(this).attr("data-acco-id");
-	});
-	
-});
 </script>
 </body>
 </html>

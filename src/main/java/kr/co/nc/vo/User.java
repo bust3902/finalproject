@@ -37,4 +37,7 @@ public class User {
 		private Date updatedDate;
 		private Date createdDate;
 		
+		// 권한(사용자 or 관리자)
+		private String authority;
+		
 }

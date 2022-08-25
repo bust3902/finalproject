@@ -3,29 +3,25 @@
 <mapper namespace="kr.co.nc.mapper.PaymentMapper">
 
 <!-- void updatePaymentStatuts(Payment payment); 결제 상태변경하기 (결제대기 / 결제완료)-->
-<update id="updatePaymentStatuts" parameterType="kr.co.nc.vo.Payment">
-
+<update id="updatePaymentStatuts"  parameterType="kr.co.nc.vo.Payment">
 	update
 		payment
 	set
-		paymnet_Type = #{paymentType}
-		payment_Status = #{paymentStatus},
-		payment_date = #{paymentDate},
-		payment_total_price = #{paymentTotalPrice}
+		payment_Status = '예약취소'
 	where 
-		payment_id = #{paymentId}
+		reservation_id = #{reservationNo}
 </update>
 <!-- 예약완료 리스트가져오기 -->
-<select id="getPaymentInfo" parameterType="int" resultType="Payment">
+<select id="getAllPaymentInfo" parameterType="int" resultType="Payment">
 select
     p.payment_id as paymentId,
     p.payment_status as paymentStatus,
-    p.payment_total_price as amount,
+    p.payment_total_price as paymentTotalPrice,
     r.reservation_check_in as "reservation.checkIn",
-		r.reservation_check_out as "reservation.checkOut",
-    r.reservation_id as "reservation.reservationId",
-    a.acco_id as "reservation.Accommodation.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+	r.reservation_check_out as "reservation.checkOut",
+    r.reservation_id as "reservation.reservationNo",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
     a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
@@ -33,30 +29,57 @@ from reservation r, payment p, users u, ACCOMMODATIONS a
 where p.reservation_Id = r.reservation_id
 and r.acco_id = a.acco_id
 and u.user_no = r.user_no
-and r.user_no = ${value}
+and r.user_no = #{value}
+order by r.reservation_check_in desc
 </select>
 
+<select id="getPaymentInfo" parameterType="string" resultType="Payment">
+select
+    p.payment_id as paymentId,
+    p.payment_status as paymentStatus,
+    p.PAYMENT_TOTAL_PRICE as paymentTotalPrice,
+    r.reservation_check_in as "reservation.checkIn",
+	r.reservation_check_out as "reservation.checkOut",
+    r.reservation_id as "reservation.reservationNo",
+    r.reservation_tel as "reservation.reserTel",
+    r.reservation_name as "reservation.reserName",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
+    u.user_name as "reservation.users.name",
+    a.acco_name as "reservation.acco.name",
+    AR.room_name as "reservation.room.name",
+    a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
+from reservation r, payment p, users u, ACCOMMODATIONS a, ACCO_ROOMS AR
+where p.reservation_Id = r.reservation_id
+and r.room_no = AR.room_no
+and r.acco_id = a.acco_id
+and u.user_no = r.user_no
+and r.reservation_id = #{value}
+order by r.reservation_check_in desc
+</select>
 	<!-- 예약완료된 예약정보가져오기-->
 <select id="getReadytoReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Payment" >
 	
 select
     p.payment_id as paymentId,
     p.payment_status as paymentStatus,
-    p.payment_total_price as amount,
+    p.payment_total_price as paymentTotalPrice,
     r.reservation_check_in as "reservation.checkIn",
-		r.reservation_check_out as "reservation.checkOut",
+	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationId",
-    a.acco_id as "reservation.Accommodation.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
+    r.reservation_id as "reservation.reservationNo",
     a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
 from reservation r, payment p, users u, ACCOMMODATIONS a
 where p.reservation_Id = r.reservation_id
 and r.acco_id = a.acco_id
 and u.user_no = r.user_no
 and p.payment_status = '예약완료'
-and r.user_no = ${value}
+and r.user_no = #{value}
+order by r.reservation_check_in desc
 </select>
 	<!-- 예약취소된 예약정보 가져오기-->
 <select id="getRefundReserveInfoByReserveId" parameterType="int" resultType="kr.co.nc.vo.Payment" >
@@ -64,28 +87,30 @@ and r.user_no = ${value}
 select
     p.payment_id as paymentId,
     p.payment_status as paymentStatus,
-    p.payment_total_price as amount,
+    p.payment_total_price as paymentTotalPrice,
     r.reservation_check_in as "reservation.checkIn",
-		r.reservation_check_out as "reservation.checkOut",
+	r.reservation_check_out as "reservation.checkOut",
     r.reservation_id as "reservation.reservationId",
-    a.acco_id as "reservation.Accommodation.id",
-    r.room_no as "reservation.AccommodationRoom.no",
+    a.acco_id as "reservation.acco.id",
+    r.room_no as "reservation.room.no",
     u.user_name as "reservation.users.name",
     a.acco_name as "reservation.acco.name",
+    r.reservation_id as "reservation.reservationNo",
     a.ACCO_THUMBNAIL_IMAGE as "reservation.acco.thumbnailImageName"
 from reservation r, payment p, users u, ACCOMMODATIONS a
 where p.reservation_Id = r.reservation_id
 and r.acco_id = a.acco_id
 and u.user_no = r.user_no
 and p.payment_status = '예약취소'
-and r.user_no = ${value}	
+and r.user_no = #{value}
+order by r.reservation_check_in	desc
 </select>
 	
 <insert id="insertPayment" parameterType="kr.co.nc.vo.Payment">
 	insert into payment
-		(PAYMENT_ID, payment_status,payment_total_price,reservation_id)
+		(PAYMENT_ID, payment_total_price,reservation_id)
 	values
-		( #{paymentId}, #{paymentStatus}, #{paymentTotalPrice}, #{reservationNo})
+		( #{paymentId}, #{paymentTotalPrice}, #{reservationNo})
 </insert>
 
 </mapper>
