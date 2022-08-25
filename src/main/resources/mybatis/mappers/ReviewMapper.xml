@@ -98,7 +98,7 @@
 				</when>
 			</choose>
 		</where>
-		order by rv.review_created_date desc
+		order by rv.review_updated_date desc
 	</select>
 	
 	<!-- List<String> getAllReviewTagsByRestaurantNo(int no); -->
@@ -148,7 +148,7 @@
 				<foreach item="accoId" collection="list" open="(" close=")" separator=",">
 					#{accoId}
 				</foreach>
-		    order by r.review_created_date desc)
+		    order by r.review_updated_date desc)
 		where rownum &lt;= 10
 	</select>
 	
@@ -159,7 +159,7 @@
 		    from review
 		    where restaurant_no is not null
 		    	and acco_id is null
-		    order by review_created_date desc)
+		    order by review_updated_date desc)
 		where rownum &lt;=3
 	</select>
 
@@ -167,7 +167,7 @@
 	<select id="getAllReviews" resultType="Review">
 		select *
 		from review
-		where review_created_date desc
+		where review_updated_date desc
 	</select>
 	
 	<!-- List<Review> getAccommodationReviewsByUserNo(int userNo); -->
@@ -176,7 +176,7 @@
 		from review rv, accommodations a
 		where user_no = #{value}
 			and rv.acco_id = a.acco_id
-		order by rv.review_created_date desc
+		order by rv.review_updated_date desc
 	</select>
 	
 	<!-- List<Review> getRestaurantReviewsByUserNo(int userNo); -->
@@ -185,7 +185,7 @@
 		from review rv, restaurant r
 		where user_no = #{value}
 			and rv.restaurant_no = r.restaurant_no
-		order by rv.review_created_date desc
+		order by rv.review_updated_date desc
 	</select>
 	
 	<!-- Review getReviewByNo(int no); -->

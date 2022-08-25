@@ -128,8 +128,8 @@
 				    	${review.content }
 				    </p>
 				    <div class="elapsedTime small text-end">
- 				    	<fmt:formatDate value="${review.createdDate }" var="createdDate" pattern="yyyy-MM-dd HH:mm:ss"/>
-				    	${createdDate } 
+ 				    	<fmt:formatDate value="${review.updatedDate }" var="updatedDate" pattern="yyyy-MM-dd HH:mm:ss"/>
+				    	${updatedDate } 
 			    	</div>
 			    	<c:if test="${not empty review.reviewRestaurantTags }">
 					    <div class="mt-3">
@@ -155,8 +155,8 @@ $(function(){
 	
 	// 실시간 리뷰 정보의 작성일을 이용해 경과시간으로 바꿔준다.
 	$(".elapsedTime").each(function(){
-		let createdDate = $(this).text();
-		$(this).text(getElapsedTime(createdDate));
+		let updatedDate = $(this).text();
+		$(this).text(getElapsedTime(updatedDate));
 	});
 });
 
@@ -414,8 +414,8 @@ function toggleRestaurantLike(no) {
  function getElapsedTime(value) {
 	let now = moment();
 	// 경과시간 정보
-	let createdDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
-	let duration = moment.duration(now.diff(createdDate));
+	let updatedDate = moment(new Date(value)).format('YYYY-MM-DD HH:mm:ss');
+	let duration = moment.duration(now.diff(updatedDate));
 	// 경과시간에 대해 문자열로 표시할 단위 옵션
 	let durationOptions = [
 		{"dur" : duration.asYears(), "option" : "년 전"},
