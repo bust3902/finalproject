@@ -21,17 +21,18 @@
 <%@ include file="../common/nav.jsp" %>
 <div id="review" class="container my-3">
 	<div class="row mb-6">
-		<div class="col-8">
+		<div class="col">
 			<form action="/reviewcomplete" method="post" enctype="multipart/form-data">
 				<div class="my-3">
 					<h4 class="text-center"><strong>리뷰 작성하기</strong></h4>
 				</div>
 				<div class="my-3">
 					<c:if test="${not empty param.restaurantNo }">
-						${restaurantName }
+						<h5><strong>음식점 : ${restaurantName }</strong></h4>
+						
 					</c:if>
 					<c:if test="${not empty param.accoId }">
-						${roomName.accoName } / ${roomName.name }
+						<h5><strong>숙소 : ${roomName.accoName } / ${roomName.name }</strong></h4>
 					</c:if>
 				</div>
 				<div class="my-3">
@@ -78,7 +79,7 @@
 				</div>
 				<div class="my-3">
 					<label type="text-field" class="form-label">내용</label>
-					<textarea class="form-control" rows="13" name="content" placeholder="내용을 5자 이상 작성해주세요." style="width:800px;" minlengh="5"></textarea>
+					<textarea class="form-control" rows="13" name="content" placeholder="내용을 5자 이상 작성해주세요." style="width:800px;" minlength="5"></textarea>
 				</div>
 				<div class="text-end">
 					<a href="/" class="btn btn-secondary px-3">취소</a>
