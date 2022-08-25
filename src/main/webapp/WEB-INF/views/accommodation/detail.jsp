@@ -243,7 +243,7 @@
 								</c:if>
 								<c:if test="${not empty detail.tags }">
 									<div class="mb-3 small fw-bold ps-3">태그</div>
-									<div id="tags-wrapper" class="d-flex flex-wrap">
+									<div id="tags-wrapper" class="d-flex flex-wrap px-3">
 										<c:forEach var="tag" items="${detail.tags }">
 											<span class="mx-1 badge bg-primary">${tag }</span>
 										</c:forEach>
