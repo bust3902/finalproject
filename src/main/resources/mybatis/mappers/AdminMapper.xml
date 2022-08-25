@@ -291,6 +291,17 @@
 		select room_image_file_name as image
 		from acco_room_detail_images
 		where room_no = #{value}
+	</select>	
+	
+	<!-- 
+		List<CommonFacilitiesDTO> getCheckedFacilities(int id);
+		체크된 공용시설 정보 확인
+	 -->
+	<select id="getCheckedFacilities" parameterType="int" resultType="kr.co.nc.dto.CommonFacilitiesDTO">
+		select cf.co_facility_id as id, cf.co_facility_name as name, nvl2(acf.co_facility_id, 'y', 'n') checked
+		from common_facilities cf, acco_common_facilities acf
+		where cf.co_facility_id(+) = acf.co_facility_id
+		and acf.acco_id = #{value}
 	</select>
   
 	<!-- 
@@ -360,10 +371,12 @@
 		select r.reservation_id as reservationId, r.reservation_check_in as checkIn,
 			   r.user_no as userNo, r.room_no as roomNo, r.acco_id as accoId, r.reservation_name as reservationName,
     		   r.reservation_tel as reservationTel, a.acco_name as accoName, u.user_name as userName
-		from reservation r, accommodations a, users u
+		from reservation r, accommodations a, users u, payment p
 		where r.acco_id = a.acco_id
 		and r.user_no = u.user_no
-		and r.reservation_check_in &gt; TO_CHAR(sysdate, 'YY/MM/DD')
+        and r.reservation_id = p.reservation_id
+        and p.payment_status like '%' || '예약완료' || '%'
+		and r.reservation_check_in &gt;= TO_CHAR(sysdate, 'YY/MM/DD')
 		order by r.reservation_check_in asc
 	</select>
 	<!-- 
@@ -515,6 +528,19 @@
 		    qa_answer_status = 'Y'
 		where
 			qa_no = #{value}
+	</update>
+	
+	<!-- 
+		사용자 ID로 검색하여 PAYMENT_STATUS 값 '예약취소'로 수정
+		void deleteReservationByAdmin(String reservationId);
+	 -->
+	<update id="deleteReservationByAdmin" parameterType="Payment">
+		update
+			payment
+		set
+		    payment_status = '예약취소'
+		where
+			reservation_id = #{reservationNo}
 	</update>
 
 	<!--  

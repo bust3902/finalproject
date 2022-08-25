@@ -4,13 +4,14 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Mapper;
 
-
+import kr.co.nc.dto.CommonFacilitiesDTO;
 import kr.co.nc.dto.QaDto;
 import kr.co.nc.dto.ReservationDto;
 
 import kr.co.nc.vo.Accommodation;
 import kr.co.nc.vo.AccommodationRoom;
 import kr.co.nc.vo.CommonFacility;
+import kr.co.nc.vo.Payment;
 import kr.co.nc.vo.QaAnswer;
 import kr.co.nc.vo.Restaurant;
 import kr.co.nc.vo.RestaurantMenu;
@@ -84,7 +85,8 @@ public interface AdminMapper {
 	List<String> getAccommodationTypesById(int id);
 	// 숙소 타입으로 숙소 공용시설 정보 검색
 	List<CommonFacility> getCommonFacilitiesByAccommodationTypes(List<String> types);
-	
+	// 숙소아이디로 체크된 공용시설 정보 검색
+	List<CommonFacilitiesDTO> getCheckedFacilities(int id);
 	
 	// 숙소아이디로 객실 검색
 	List<AccommodationRoom> getAccommodationRoomByaccoId(int id);
@@ -126,9 +128,18 @@ public interface AdminMapper {
 	void updateAccommodationCommonFacilities(AccoCommonFacilityRegisterForm accoCommonFacilityRegisterForm);
 	// 숙소 상세정보 수정
 	void updateAccommodationDetailImages(AccoDetailImageNamesRegisterForm accoDetailImageNamesRegisterForm);
-
+	// 음식점 수정
+	void updateRestaurant(Restaurant restaurant);
+	// 객실 수정
+	void updateAccoRoom(AccommodationRoom accommodationRoom);
+	// 객실 시설 수정
+	void updateAccoRoomFacilities(AccoRoomFacilitiesRegisterForm accoRoomFacilitiesRegisterForm);
+	// 객실 상세 이미지 수정
+	void updateAccoRoomDetailImages(AccoRoomDetailImageNamesRegisterForm accoRoomDetailImageNamesRegisterForm);
 	// 문의글 답변여부 수정용
 	void updateQa(int qaNo);
+	// 사용자 ID로 검색하여 PAYMENT_STATUS 값 '예약취소'로 수정
+	void deleteReservationByAdmin(Payment payment);
 	
 	// 숙소 상세이미지 삭제
 	void deleteAccommodationDetailImages(AccommodationDeleteImageNameForm accommodationDeleteImageNameForm);
@@ -143,20 +154,10 @@ public interface AdminMapper {
 	// 객실 시설 삭제
 	void deleteRoomCommonFacilitiesById(int id);
 	
-	// 객실 수정
-	void updateAccoRoom(AccommodationRoom accommodationRoom);
-	// 객실 시설 수정
-	void updateAccoRoomFacilities(AccoRoomFacilitiesRegisterForm accoRoomFacilitiesRegisterForm);
-	// 객실 상세 이미지 수정
-	void updateAccoRoomDetailImages(AccoRoomDetailImageNamesRegisterForm accoRoomDetailImageNamesRegisterForm);
-	
 	// 음식점 태그 삭제
 	void deleteRestaurantTags(RestaurantDeleteTagForm restaurantDeleteTagForm);
 	// 음식점 메뉴 삭제
 	void deleteRestaurantMenus(RestaurantDeleteMenuForm restaurantDeleteMenuForm);
-	
-	// 음식점 수정
-	void updateRestaurant(Restaurant restaurant);
 
 
 }

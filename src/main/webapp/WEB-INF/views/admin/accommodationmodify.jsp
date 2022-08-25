@@ -313,7 +313,7 @@
 		}
 		// 페이지 로드시 저장된 공용시설 체크박스 체크해주는 스크립트
 		let accoId = $("input[name=id]").val();
-	  	$.getJSON("/admin/searchChecked", {id:accoId}).done(function(cofacilitiesChecked) {
+	  	$.getJSON("/admin/searchFacilitiesChecked", {id:accoId}).done(function(cofacilitiesChecked) {
 	  		console.log("체크된 것", cofacilitiesChecked);
 	  		alert();
 	  		$.each(cofacilitiesChecked, function(index, cofacilityChecked) {
@@ -592,6 +592,13 @@
             }
         };
         detailImagesPreview(this, detailImagePreview);
+    });
+    
+    // 인풋 텍스트 서밋 방지
+    $('input[type="text"]').keydown(function() {
+    	if (event.keyCode === 13) {
+    		event.preventDefault();
+    	};
     });
 </script>
 </body>

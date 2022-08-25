@@ -212,6 +212,24 @@ $("#btn-add-tag").click(function() {
 	}		
 });
 
+// 인풋 텍스트 서밋 방지
+$('input[type="text"]').keydown(function() {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+	};
+});
+
+$(function() {
+	$("#form-restaurant").submit(function() {
+		// 주소가 입력되었는지 확인하기
+		let addressValue = $("#address").val();
+		if (addressValue === "") {
+			alert("주소를 입력해주세요.");
+			return false;
+		}
+	})
+})
+		
 </script>
 </body>
 </html>

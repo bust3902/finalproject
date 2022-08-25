@@ -48,15 +48,15 @@
 					</div>
 					<div class="col-6 mb-3">
 						<label class="form-label">총 객실 수</label>
-						<input class="form-control" type="text" name="numbers" value="${accommodationRoom.numbers}">
+						<input class="form-control" type="text" name="numbers" value="${accommodationRoom.numbers}" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="form-label">최대 숙박 인원</label>
-						<input class="form-control" type="text" name="capacity" value="${accommodationRoom.capacity}">
+						<input class="form-control" type="text" name="capacity" value="${accommodationRoom.capacity}" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 					</div>
 					<div class="col-6 mb-3">
 						<label class="form-label">1박 기본 요금</label>
-						<input class="form-control" type="text" name="dayPrice" value="${accommodationRoom.dayPrice}">
+						<input class="form-control" type="text" name="dayPrice" value="${accommodationRoom.dayPrice}" onKeyup="this.value=this.value.replace(/[^0-9]/g,'');">
 					</div>
 					<div class="mb-3">
 						<label class="form-label">객실 소개</label>
@@ -137,7 +137,7 @@
 				
 				<!-- submit -->
 				<div class="text-end mt-5">
-					<button type="submit" class="btn btn-secondary px-5">입력 완료</button>
+					<button type="submit" class="btn btn-secondary px-5" id="btn-modify-room">입력 완료</button>
 				</div>
 				
 			</form>
@@ -220,6 +220,53 @@
         detailImagesPreview(this, detailImagePreview);
     });
 
+    
+    // 인풋 텍스트 서밋 방지
+    $('input[type="text"]').keydown(function() {
+    	if (event.keyCode === 13) {
+    		event.preventDefault();
+    	};
+    });
+
+ // 객실 추가 버튼
+ $("#btn-modify-room").click(function() {
+ 	// 객실수 필드에 값이 있는지 체크하기
+ 	let numbersValue = $.trim( $(":input[name=numbers]").val() );
+ 	if (numbersValue === "") {
+ 		alert("객실수를 입력해주세요.");
+ 		return false;
+ 	}
+ 	if (numbersValue > 500) {
+ 		alert("500호실 이상 입력하실 수 없습니다.");
+ 		return false;
+ 	}
+ 	
+ 	// 최대 숙박 인원 필드에 값이 있는지 체크하기
+ 	let capacityCommentValue = $.trim( $(":input[name=capacity]").val() );
+ 	if (capacityCommentValue === "") {
+ 		alert("최대 숙박 가능 인원을 입력해주세요.");
+ 		return false;
+ 	}
+ 	if (capacityCommentValue > 20) {
+ 		alert("20인 이상 입력하실 수 없습니다.");
+ 		return false;
+ 	}
+ 	
+ 	// 1박 기본 요금 필드에 값이 있는지 체크하기
+ 	let dayPriceCommentValue = $.trim( $(":input[name=dayPrice]").val() );
+ 	if (dayPriceCommentValue === "") {
+ 		alert("1일 기본 요금을 입력해주세요.");
+ 		return false;
+ 	}
+ 	
+ 	// 객실 시설정보가 체크되었는지 확인하기
+ 	let checkedRoomFacilities = document.querySelectorAll('input[name=roomFacilities]:checked').length;
+ 	if (checkedRoomFacilities < 1) {
+ 		alert("객실 시설 정보를 1개 이상 선택해주세요.");
+ 		return false;
+ 	}
+ 	
+ });
 </script>
 </body>
 </html>

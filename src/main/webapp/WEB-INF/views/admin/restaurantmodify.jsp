@@ -520,6 +520,12 @@ $('#main-photo-add').on('change', function() {
     imagesPreview(this, ImagePreview);
 });
 
+// 인풋 텍스트 서밋 방지
+$('input[type="text"]').keydown(function() {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+	};
+});
 </script>
 </body>
 </html>

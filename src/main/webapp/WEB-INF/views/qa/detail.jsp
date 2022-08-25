@@ -12,24 +12,43 @@
 <title>서울어때</title>
 </head>
 <body>
-<div class="container my-4">
-	<div class="col-5 mb-3">
-		<div>
-			<img src="/resources/images/review/${review.image }" class="img-thumbnail rounded-0"/>
-		</div>
-		<div>
-			<h4>${review.title }</h4>
-			<p>${review.user.nikname }</p>
-			<p>
-				<i class="bi ${review.likeCount gt 0 ? 'bi-star-fill' : 'bi-star' }"></i>
-				<i class="bi ${review.likeCount gt 1 ? 'bi-star-fill' : 'bi-star' }"></i>
-				<i class="bi ${review.likeCount gt 2 ? 'bi-star-fill' : 'bi-star' }"></i>
-				<i class="bi ${review.likeCount gt 3 ? 'bi-star-fill' : 'bi-star' }"></i>
-				<i class="bi ${review.likeCount gt 4 ? 'bi-star-fill' : 'bi-star' }"></i>
-				(${review.likeCount })
-			</p>
-		</div>
+<%@ include file="../common/nav.jsp" %>
+<div class="row bg-secondary">
+	<div class="container" style="min-width:992px; max-width:992px; height:10vh;">
+		<h1 class="fs-3 text-white p-2">문의내역</h1>
 	</div>
 </div>
+<div class="container" style="min-width:992px; max-width:992px;">
+	<div class="row mt-5">
+				
+		<!-- 오늘의 예약 현황 출력 -->
+		<div class="col-2"></div>
+		<div class="col-8">
+			<div class="card mb-2">
+				<div class="card-header bg-secondary text-center">
+		           	<span class="text-light">문의내역</span>
+				</div>
+				<div class="card-body p-2">
+					<div class="row">
+						<ul class="list-group list-group-flush">
+							<li class="list-group-item text-center fw-bold"><span>제목</span></li>
+							<li class="list-group-item">${qas.title }</li>
+							<li class="list-group-item text-center fw-bold">내역</li>
+							<li class="list-group-item">${qas.content }</li>
+							<li class="list-group-item text-center fw-bold">작성일</li>
+							<li class="list-group-item text-center">${qas.createdDate }</li>
+							<li class="list-group-item"><img src="/resources/images/qa/${qas.image }" style="weight:auto; height:200px;"></li>
+						</ul>
+					</div>
+				</div>
+				<div class="text-end">
+					<a type="button" href="/qa" class="btn btn-secondary m-3" id="btn-return-main">돌아가기</a>
+				</div>
+			</div>
+		</div>
+		<div class="col-2"></div>
+	</div>
+</div>
+				
 </body>
 </html>

@@ -32,7 +32,7 @@
 		<div class="col-9 p-0">
 			<div class="row g-3 align-items-center mb-5">
 				<div class="col-9">
-					<input type="text" name="search-keyword" class="form-control" placeholder="검색하실 음식점명을 입력해주세요" onkeypress="SubmitBtnClick()">
+					<input type="text" name="search-keyword" class="form-control" placeholder="검색하실 음식점명을 입력해주세요" id="enter-search">
 				</div>
 				<div class="col-3">
 					<button type="submit" name="submit-keyword" class="btn btn-secondary">검색</button>
@@ -48,10 +48,12 @@
 </body>
 <script type="text/javascript">
 
-// 숙소 검색 스크립트
-function SubmitBtnClick(){
-	$("button[name=submit-keyword]").click();
-}
+// 엔터키 입력시 음식점 검색 버튼 클릭 이벤트
+$('#enter-search').keydown(function( event ) {
+	if (event.keyCode === 13) {
+		$("button[name=submit-keyword]").trigger("click");
+	}
+});
 
 $(document).ready(function(){
     $("button[name=submit-keyword]").click(function(){
@@ -66,7 +68,7 @@ $(document).ready(function(){
 			return false;
 		}
 	
-		// 숙소정보 검색
+		// 음식점정보 검색
 		$.getJSON("/admin/searchRestaurant", {keyword:queryString}).done(function(restaurants) {
 			if (restaurants.length === 0) {
 				let content = `
@@ -79,11 +81,11 @@ $(document).ready(function(){
 				$.each(restaurants, function(index, restaurant) {
 					let content = '';
 					content += '<div class="card text-white p-0 rounded-0" style="height:200px">';
-					content += '	<img src="/resources/images/acco/thumbnail/'+restaurant.imgname+'" class="card-img rounded-0">';
+					content += '	<img src="/resources/images/restaurant/thumbnail/'+restaurant.imgname+'" class="card-img rounded-0">';
 					content += '	<div class="card-img-overlay text-end">';
 					content += '		<p class="card-title fs-3 fw-bold">'+restaurant.name+'</p>';
 					// content += '		<p class="card-text fw-bold">'+restaurant.deleted+'</p>';
-					content += '		<p class="card-text fw-bold">'+restaurant.address+'</p>';
+					content += '		<p class="card-text fw-bold">'+restaurant.location+'</p>';
 					content += '		<a class="btn btn-outline-light" href="/admin/modifyRestaurant?no='+restaurant.no+' ">수정</a>';
 					// content += '		<a class="btn btn-outline-light" href="/admin/delete?id='+accommodation.id+' ">삭제</a>';
 					content += '	</div>';

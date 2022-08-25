@@ -66,11 +66,11 @@
 				<div class="row">
 					<div class="mb-3 col-6">
 						<label class="form-label">음식점명</label>
-						<input class="form-control " type="text" name="name">
+						<input class="form-control" type="text" name="name">
 					</div>
 					<div class="mb-3 col-6">
 						<label class="form-label">전화번호</label>
-						<input class="form-control " type="text" name="tel">
+						<input class="form-control" type="text" name="tel">
 					</div>
 				</div>
 				<div class="row">
@@ -149,18 +149,18 @@ $(function() {
 		
 		// 전화번호 필드에 값이 있는지 체크하기
 		let telValue = $.trim( $(":input[name=tel]").val() );
-		if (telValue === "") {
-			alert("전화번호를 입력해주세요.");
+		var regPhone = /^01([0|1|6|7|8|9])-?([0-9]{3,4})-?([0-9]{4})$/;
+		if (regPhone.test(telValue) === false) {
+			alert("휴대폰 번호 형식에 맞춰 입력해주세요.");
 			return false;
 		}
-		
+
 		// 개점시간 필드에 값이 있는지 체크하기
 		let openingValue = $.trim( $(":input[name=openTime]").val() );
 		if (openingValue === "") {
 			alert("개점시간을 입력해주세요.");
 			return false;
 		}
-		
 		// 브레이크타임 필드에 값이 있는지 체크하기
 		// let breakTimeValue = $.trim( $(":input[name=breakTime]").val() );
 		// if (breakTimeValue === "") {
@@ -234,6 +234,12 @@ $('.breaktimepicker').timepicker({
     scrollbar: true
 });
 
+// 인풋 텍스트 서밋 방지
+$('input[type="text"]').keydown(function() {
+	if (event.keyCode === 13) {
+		event.preventDefault();
+	};
+});
 </script>
 </body>
 </html>
