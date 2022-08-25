@@ -46,6 +46,22 @@
 		where user_no = #{value}
 		order by qa_created_date desc
 	</select>
+		
+	<!-- List<QaDto> getUserQaByQaNo(String userNo);  -->
+	<select id="getUserQaByQaNo" parameterType="int" resultType="kr.co.nc.dto.QaDto">
+		select q.qa_no as no,
+			   q.user_no,
+			   q.qa_content as content,
+			   q.qa_title as title,
+			   q.qa_created_date as createdDate,
+			   q.qa_image as image,
+			   q.qa_answer_status as answerStatus,
+               a.qa_content as answerContent
+		from qa q, qa_answer a
+		where q.qa_no = #{value}
+        and q.qa_no = a.qa_no
+		order by q.qa_created_date desc
+	</select>
 	
 	<!-- List<QaDto> getQaByNo(int no);  -->
 	<select id="getQaByNo" parameterType="int" resultType="kr.co.nc.dto.QaDto">

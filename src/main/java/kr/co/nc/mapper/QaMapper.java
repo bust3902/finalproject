@@ -17,5 +17,6 @@ public interface QaMapper {
 	List<QaCategory> getAllQaCategories(); 				// 모든 문의사항 카테고리
 	List<QaType> getAllQaTypes();						// 모든 문의사항 유형
 	List<QaDto> getUserQa(int userNo);					// 사용자의 문의사항 검색
-	QaDto getQaByNo(int no);						// 상세페이지 출력을 위해 글번호로 글 조회
+	QaDto getQaByNo(int no);							// 상세페이지 출력을 위해 글번호로 글 조회
+	QaDto getUserQaByQaNo(int no);						// 상세페이지 출력을 위해 글번호로 글 조회
 }

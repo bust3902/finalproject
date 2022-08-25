@@ -162,7 +162,7 @@
 			from dual
 		</selectKey>
 		insert into qa_answer
-			(qa_no, qa_answer_no, content)
+			(qa_no, qa_answer_no, qa_content)
 		values
 			(#{qaNo}, #{answerNo}, #{content})
 	</insert>
@@ -400,7 +400,7 @@
 	 -->
 	<select id="getWeeklyChartData" resultType="kr.co.nc.web.form.WeeklySalesDataForm">
 		with dates as
-		(select to_char(sysdate - level, 'dd') day
+		(select to_char(sysdate - (level-1), 'dd') day
 		 from dual
 		 connect by level  &lt;= 7)
 		select Y.day as salesDate , nvl(X.price, 0) as salesprice
@@ -418,7 +418,7 @@
 	 -->
 	<select id="getMonthlyChartData" resultType="kr.co.nc.web.form.MonthlySalesDataForm">
 		with dates as
-		(select to_char(sysdate - level, 'mm/dd') day
+		(select to_char(sysdate - (level-1), 'mm/dd') day
 		 from dual
 		 connect by level &lt;= 30)
 		select Y.day as salesDate , nvl(X.price, 0) as salesprice
@@ -436,7 +436,7 @@
 	 -->
 	<select id="getYearlyChartData" resultType="kr.co.nc.web.form.YearlySalesDataForm">
 		with months as
-		(select to_char(add_months(sysdate, - level), 'yy/mm') month
+		(select to_char(add_months(sysdate, - (level-1)), 'yy/mm') month
 		 from dual
 		 connect by level  &lt;= 12)
 		select Y.month as salesMonth , nvl(X.price, 0) as salesprice

@@ -154,7 +154,7 @@ $("#btn-add-room").click(function() {
 	}
 	
 	// 객실 시설정보가 체크되었는지 확인하기
-	let checkedRoomFacilities = document.querySelectorAll('input[name=roomFacilities]:checked').length;
+	let checkedRoomFacilities = document.querySelectorAll('input[name=stringRoomFacilities]:checked').length;
 	if (checkedRoomFacilities < 1) {
 		alert("객실 시설 정보를 1개 이상 선택해주세요.");
 		return false;

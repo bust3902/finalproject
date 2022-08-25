@@ -23,4 +23,6 @@ public class QaDto {
 	private String answerStatus;		// 답변 상태
 	private String userNickName;		// 사용자 닉네임
 	private String userName;			// 사용자 이름
+
+	private String answerContent;			// 답글
 }

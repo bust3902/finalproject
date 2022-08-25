@@ -32,12 +32,17 @@
 					<div class="row">
 						<ul class="list-group list-group-flush">
 							<li class="list-group-item text-center fw-bold"><span>제목</span></li>
-							<li class="list-group-item">${qas.title }</li>
+							<li class="list-group-item">${qasByQaNo.title }</li>
 							<li class="list-group-item text-center fw-bold">내역</li>
-							<li class="list-group-item">${qas.content }</li>
+							<li class="list-group-item">${qasByQaNo.content }</li>
 							<li class="list-group-item text-center fw-bold">작성일</li>
-							<li class="list-group-item text-center">${qas.createdDate }</li>
-							<li class="list-group-item"><img src="/resources/images/qa/${qas.image }" style="weight:auto; height:200px;"></li>
+							<li class="list-group-item text-center">${qasByQaNo.createdDate }</li>
+							<li class="list-group-item"><img src="/resources/images/qa/${qasByQaNo.image }" style="weight:auto; height:200px;"></li>
+							<li></li>
+							<c:if test="${not empty qasByQaNo.answerContent}">
+								<li class="list-group-item text-center fw-bold">답글</li>
+								<li class="list-group-item text-center">${qasByQaNo.answerContent }</li>
+							</c:if>
 						</ul>
 					</div>
 				</div>
