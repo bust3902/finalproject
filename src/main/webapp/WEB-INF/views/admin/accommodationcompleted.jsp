@@ -11,15 +11,17 @@
 </head>
 <body>
 <%@ include file="../common/nav.jsp" %>
-<div class="container mt-3">
-	<div class="row mb-3">
+<div class="container d-flex justify-content-center align-items-center" style="height: 60vh;">
+	<div class="row">
 		<div class="col">
-			<div class="border p-5 bg-light">
-				<h1 class="display-3 mb-5">입력이 완료되었습니다.</h1>
-				<a href="/admin" class="btn btn-primary btn-lg">홈으로</a>
+			<div class="p-5 text-center">
+				<i class="bi bi-check-circle fs-1"></i>
+				<h3 class="my-5">입력이 완료되었습니다.</h3>
+				<a href="/admin" class="btn btn-primary">홈으로</a>
 			</div>
 		</div>
 	</div>
 </div>
+<%@ include file="../common/footer.jsp" %>
 </body>
 </html>

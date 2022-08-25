@@ -49,7 +49,7 @@
 			<li class="nav-item dropdown" style="width:90px;height:auto">
    			<a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="" role="button" aria-expanded="false">더보기</a>
    				<ul class="dropdown-menu">
-    				<li><a class="dropdown-item" href="/qa">1:1 문의</a></li>
+    				<li><a class="dropdown-item" href="/qaform">1:1 문의</a></li>
      				<li><a class="dropdown-item" href="/acco/best">핫한 숙소</a></li>
      				<li><a class="dropdown-item" href="/restaurant">인기 맛집</a></li>
    				</ul>

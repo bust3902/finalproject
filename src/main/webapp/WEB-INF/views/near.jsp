@@ -225,6 +225,8 @@ function search(currentPage) {
 					alert("다시 시도해주세요.")
 					return;
 				}
+				
+				console.log(place.name, place.reviewRateIcon);
 				content += '	<div class="row p-3 border-bottom">';
 				content += '		<p class="mb-1">';
 				content += '			<span id="place-name-' + place.id + '" class="fw-light text-muted" style="cursor: pointer;">' + place.name + '</span>';

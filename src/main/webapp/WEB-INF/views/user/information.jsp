@@ -366,8 +366,8 @@
 								<col width="15%">
 								<col width="*">
 								<col width="20%">
-								<col width="12%">
-								<col width="12%">
+								<col width="14%">
+								<col width="14%">
 								<col width="10%">
 							</colgroup>
 							<tbody>
@@ -377,8 +377,8 @@
 											<th class="p-3 align-middle">장소명</th>
 											<th class="p-3 align-middle">리뷰 제목</th>
 											<th class="p-3 align-middle">평점</th>
-											<th class="p-3 align-middle">작성일</th>
-											<th class="p-3 align-middle">수정일</th>
+											<th class="p-3 align-middle">등록일</th>
+											<th class="p-3 align-middle">최종작성일</th>
 											<th></th>
 										</tr>
 										<c:forEach var="item" items="${accommodationReviews }">
@@ -410,7 +410,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td colspan="3" class="p-5 border-bottom-0 align-middle text-center">리뷰 정보가 없습니다.</td>
+										<td colspan="6" class="p-5 border-bottom-0 align-middle text-center">리뷰 정보가 없습니다.</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -425,8 +425,8 @@
 								<col width="15%">
 								<col width="*">
 								<col width="20%">
-								<col width="12%">
-								<col width="12%">
+								<col width="14%">
+								<col width="14%">
 								<col width="10%">
 							</colgroup>
 							<tbody>
@@ -436,8 +436,8 @@
 											<th class="p-3 align-middle">장소명</th>
 											<th class="p-3 align-middle">리뷰 제목</th>
 											<th class="p-3 align-middle">평점</th>
-											<th class="p-3 align-middle">작성일</th>
-											<th class="p-3 align-middle">수정일</th>
+											<th class="p-3 align-middle">등록일</th>
+											<th class="p-3 align-middle">최종작성일</th>
 											<th></th>
 										</tr>
 										<c:forEach var="item" items="${restaurantReviews }">
@@ -469,7 +469,7 @@
 								</c:when>
 								<c:otherwise>
 									<tr>
-										<td colspan="3" class="p-5 border-bottom-0 align-middle text-center">리뷰 정보가 없습니다.</td>
+										<td colspan="6" class="p-5 border-bottom-0 align-middle text-center">리뷰 정보가 없습니다.</td>
 									</tr>
 								</c:otherwise>
 							</c:choose>
@@ -509,9 +509,9 @@ $("#form-nickname").submit(function() {
 		return false;
 	}
 
-	var nicknameRe = /^[가-힣]{2,4}$/;
+	var nicknameRe = /^[가-힣]{2,6}$/;
     if( !nicknameRe.test( $("#form-nickname input[name='nickname']").val())) {
-        alert("닉네임은 한글로 2글자 이상만 허용됩니다.");
+        alert("닉네임은 한글로 2글자 이상 7글자 미만까지 허용됩니다.");
         return false;
     }
 	return true;
@@ -523,9 +523,9 @@ $("#form-name").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
-	var nameRe = /^[가-힣]{2,4}$/;
+	var nameRe = /^[가-힣]{2,6}$/;
     if( !nameRe.test( $("#form-name input[name='name']").val())) {
-        alert("이름은 한글로 2글자 이상만 허용됩니다.");
+        alert("이름은 한글로 2글자 이상 7글자 미만까지 허용됩니다.");
         return false;
     }
 	return true;
