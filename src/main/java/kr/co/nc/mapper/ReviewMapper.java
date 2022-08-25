@@ -16,7 +16,6 @@ public interface ReviewMapper {
 	void insertAccommodationReview(Review review);
 	void insertRestaurantReview(Review review);
 	void updateReview(Review review);
-	void deleteReview(Review reivew);
 	void insertReviewCategory(ReviewCategory reviewCategory);		// 리뷰 카테고리를 저장한다.
 	
 	// 리뷰 조회

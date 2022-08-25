@@ -403,7 +403,7 @@
 													<fmt:formatDate value="${item.updatedDate }" pattern="YYYY.MM.dd"/>
 												</td>
 												<td class="p-3 align-middle text-end">
-													<button class="btn btn-sm btn-secondary">삭제</button>
+													<a href="/reviewdelete?no=${item.no }" class="btn btn-sm btn-secondary">삭제</a>
 												</td>
 											</tr>
 										</c:forEach>
@@ -440,29 +440,29 @@
 											<th class="p-3 align-middle">수정일</th>
 											<th></th>
 										</tr>
-										<c:forEach var="review" items="${restaurantReviews }">
+										<c:forEach var="item" items="${restaurantReviews }">
 											<tr>
 												<td class="p-3 align-middle">
-													<a class="text-muted" href="/restaurant/detail?no=${review.restaurant.no }" style="word-break: keep-all; ">${review.restaurant.name }</a>
+													<a class="text-muted" href="/restaurant/detail?no=${item.restaurant.no }" style="word-break: keep-all; ">${item.restaurant.name }</a>
 												</td>
 												<td class="p-3 align-middle">
-													<a class="text-muted" href="/reviewmodify?no=${review.no}">${review.title }</a>
+													<a class="text-muted" href="/reviewmodify?no=${item.no}">${item.title }</a>
 												</td>
 												<td class="p-3 align-middle text-warning">
-													<i class="${review.pointIcon.star1 }"></i>
-													<i class="${review.pointIcon.star2 }"></i>
-													<i class="${review.pointIcon.star3 }"></i>
-													<i class="${review.pointIcon.star4 }"></i>
-													<i class="${review.pointIcon.star5 }"></i>
+													<i class="${item.pointIcon.star1 }"></i>
+													<i class="${item.pointIcon.star2 }"></i>
+													<i class="${item.pointIcon.star3 }"></i>
+													<i class="${item.pointIcon.star4 }"></i>
+													<i class="${item.pointIcon.star5 }"></i>
 												</td>
 												<td class="p-3 align-middle">
-													<fmt:formatDate value="${review.createdDate }" pattern="YYYY.MM.dd"/>
+													<fmt:formatDate value="${item.createdDate }" pattern="YYYY.MM.dd"/>
 												</td>
 												<td class="p-3 align-middle">
-													<fmt:formatDate value="${review.updatedDate }" pattern="YYYY.MM.dd"/>
+													<fmt:formatDate value="${item.updatedDate }" pattern="YYYY.MM.dd"/>
 												</td>
 												<td class="p-3 align-middle text-end">
-													<button class="btn btn-sm btn-secondary">삭제</button>
+													<a href="/reviewdelete?no=${item.no }" class="btn btn-sm btn-secondary">삭제</a>
 												</td>
 											</tr>
 										</c:forEach>
