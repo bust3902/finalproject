@@ -90,6 +90,45 @@ public class ReviewService {
 		}
 		
 	}
+	
+	@Transactional
+	public void modifyReview(int userNo, ReviewRegisterForm form) {
+		// 기존 리뷰 획득
+		Review review = getReviewByNo(form.getNo());
+		double originalPoint = review.getPoint();
+		
+		review.setTitle(form.getTitle());
+		review.setContent(form.getContent());
+		review.setLikeCount(form.getLikeCount());
+		review.setPoint(form.getPoint());
+		User user = new User();
+		user.setNo(userNo);
+		review.setUser(user);
+		// 이미지파일명은 존재할 경우에만 저장
+		if (form.getImage() != null) {
+			review.setImage(form.getImage());
+		}
+		reviewMapper.updateReview(review);
+		
+		// 정상적으로 update되면 해당 장소의 리뷰평점을 변경시킨다.
+		if (review.getAcco() != null) {
+			Accommodation accommodation = accommodationMapper.getAccommodationById(review.getAcco().getId());
+			double originalTotalReviewRate = accommodation.getReviewRate();
+			double changedPoint = form.getPoint();
+			double changedAmount = originalPoint - changedPoint;
+			double changedTotalReviewRate = (originalTotalReviewRate*(accommodation.getReviewCount()) - changedAmount)/accommodation.getReviewCount();
+			accommodation.setReviewRate(changedTotalReviewRate);
+			accommodationMapper.updateAccommodation(accommodation);
+		} else if (review.getRestaurant() != null) {
+			Restaurant restaurant = restaurantMapper.getRestaurantByNo(review.getRestaurant().getNo());
+			double originalTotalReviewRate = restaurant.getReviewPoint();
+			double changedPoint = form.getPoint();
+			double changedAmount = originalPoint - changedPoint;
+			double changedTotalReviewRate = (originalTotalReviewRate*(restaurant.getReviewCount()) - changedAmount)/restaurant.getReviewCount();
+			restaurant.setReviewPoint(changedTotalReviewRate);
+			restaurantMapper.updateRestaurant(restaurant);
+		}
+	}
 		
 	/**
 	 * 숙소 또는 식당 리뷰를 반환 (원하는 대상에 따라 criteria의 값을 set해서 전달할 것)
@@ -143,4 +182,9 @@ public class ReviewService {
 	public List<Review> getMyRestaurantReviews(int userNo) {
 		return reviewMapper.getRestaurantReviewsByUserNo(userNo);
 	}
+
+	public Review getReviewByNo(int no) {
+		return reviewMapper.getReviewByNo(no);
+	}
+
 }

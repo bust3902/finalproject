@@ -73,6 +73,16 @@ public class AccommodationService {
 		return accommodation;
 	}
 	
+	// 해당 고유번호를 가진 객실의 상세정보를 반환
+	public AccommodationRoom getRoomByNo(int roomNo) {
+		return accommodationMapper.getRoomByNo(roomNo);
+	}
+	
+	// 해당 객실번호를 가진 숙소, 객실의 이름을 객실 객체에 담아 반환
+	public AccommodationRoom getNamesByRoomNo(int roomNo) {
+		return accommodationMapper.getNamesByRoomNo(roomNo);
+	}
+	
 	/**
 	 * 숙소 번호에 따른 모든 객실정보 조회 (예약 가능 여부 포함)
 	 * @param criteria

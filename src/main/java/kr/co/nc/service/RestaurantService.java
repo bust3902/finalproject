@@ -160,4 +160,8 @@ public class RestaurantService {
 	public List<Accommodation> getAllLikedItemsByUser(int userNo) {
 		return restaurantMapper.getAllLikedRestaurantByUserNo(userNo);
 	}
+
+	public String getNameByNo(int restaurantNo) {
+		return restaurantMapper.getNameByNo(restaurantNo);
+	}
 }

@@ -49,6 +49,11 @@ public interface AccommodationMapper {
 	// 숙소번호에 따른 이미지(파일명) 조회
 	List<String> getImagesByAccoId(int accoId);
 	
+	// 해당 객실번호에 따른 객실 정보 조회
+	AccommodationRoom getRoomByNo(int roomNo);
+	// 해당 객실번호에 따른 숙소이름, 객실이름 조회
+	AccommodationRoom getNamesByRoomNo(int roomNo);
+
 	// 숙소번호에 따른 모든 객실정보 조회 (예약 가능 여부 제외)
 	List<AccommodationRoom> getAllRoomsByAccoId(int accoId);
 	// 숙소번호에 따른 모든 객실정원 정보 조회

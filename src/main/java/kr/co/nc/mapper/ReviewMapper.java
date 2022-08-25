@@ -40,5 +40,8 @@ public interface ReviewMapper {
 	// 사용자가 작성한 식당리뷰를 조회한다.
 	List<Review> getAccommodationReviewsByUserNo(int userNo);
 	List<Review> getRestaurantReviewsByUserNo(int userNo);
+	
+	// 특정 번호의 리뷰 정보를 반환
+	Review getReviewByNo(int no);
 
 }

@@ -254,4 +254,12 @@
 			restaurant_district = #{district}
 		where restaurant_no = #{no}
 	</update>
+	
+	<!-- String getNameByNo(int restaurantNo); -->
+	<select id="getNameByNo" parameterType="int" resultType="string">
+		select restaurant_name
+		from restaurant
+		where restaurant_no = #{value}
+	</select>
+	
 </mapper>

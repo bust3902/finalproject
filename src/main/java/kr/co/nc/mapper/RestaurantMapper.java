@@ -57,5 +57,8 @@ public interface RestaurantMapper {
 	
 	// 식당정보 업데이트
 	void updateRestaurant(Restaurant restaurant);
+
+	// 해당고유번호로 식당명만 반환
+	String getNameByNo(int restaurantNo);
 	
 }
