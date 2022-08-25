@@ -509,9 +509,9 @@ $("#form-nickname").submit(function() {
 		return false;
 	}
 
-	var nicknameRe = /^[가-힣]{2,4}$/;
+	var nicknameRe = /^[가-힣]{2,6}$/;
     if( !nicknameRe.test( $("#form-nickname input[name='nickname']").val())) {
-        alert("닉네임은 한글로 2글자 이상만 허용됩니다.");
+        alert("닉네임은 한글로 2글자 이상 7글자 미만까지 허용됩니다.");
         return false;
     }
 	return true;
@@ -523,9 +523,9 @@ $("#form-name").submit(function() {
 		alert("2자 이상 입력하세요.");
 		return false;
 	}
-	var nameRe = /^[가-힣]{2,4}$/;
+	var nameRe = /^[가-힣]{2,6}$/;
     if( !nameRe.test( $("#form-name input[name='name']").val())) {
-        alert("이름은 한글로 2글자 이상만 허용됩니다.");
+        alert("이름은 한글로 2글자 이상 7글자 미만까지 허용됩니다.");
         return false;
     }
 	return true;
