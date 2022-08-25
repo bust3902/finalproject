@@ -98,7 +98,7 @@
 				<!-- 숙소 이미지 - 미리보기 swiper : 첫번째 이미지는 썸네일 이미지, 나머지 상세 이미지 반복문으로 출력 -->
 				<div class="swiper mySwiper">
 					<div class="swiper-wrapper">
-						<!-- 이미지 미리보기 : 이미지 중 3장이 첫 화면 가장 먼저 보인다. -->
+						<!-- 이미지 미리보기 : 이미지 중 4장이 첫 화면 가장 먼저 보인다. -->
 						<c:forEach var="image" items="${detail.images }">
 							<div class="swiper-slide">
 								<img class="img-fluid" alt="accommodation image" src="/resources/images/acco/detail/${image }" style="cursor: pointer;">
@@ -106,7 +106,7 @@
 						</c:forEach>
 						<!-- 이미지 정보가 3개 미만일 경우, 미리 보기에는 부족한 개수만큼 로고 이미지 출력  -->
 						<c:if test="${fn:length(detail.images) < 4 }">
-							<c:forEach begin="0" end="${2 - fn:length(detail.images) }">
+							<c:forEach begin="0" end="${3 - fn:length(detail.images) }">
 								<div class="swiper-slide">
 									<img class="img-fluid" alt="accommodation image" src="/resources/images/logo.png" style="cursor: pointer;">
 								</div>
