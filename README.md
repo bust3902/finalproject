@@ -29,4 +29,4 @@
 <li>백엔드 : Spring Boot, mybatis, JSP, JSTL, EL </li>
 
 <h2>DB설계</h4>
-![NC (1)](https://user-images.githubusercontent.com/96417665/188564845-7d57baac-f443-439c-9e43-ba0043076f04.png)
+<img src=""/>
