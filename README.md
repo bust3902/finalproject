@@ -28,5 +28,5 @@
 <li>프론트엔드 : HTML,CSS,JavaScript with BootStrap, jQuery, Ajax </li>
 <li>백엔드 : Spring Boot, mybatis, JSP, JSTL, EL </li>
 
-<h2>DB설계</h4>
-<img src=""/>
+<h2>DB설계- ERD </h4>
+<img src="https://github.com/SijinAn/SeoulChoise-NewChallenge/blob/master/NC.png?raw=true"/>
