@@ -8,7 +8,7 @@
 
 <h2>프로젝트 개요<h4>
 <p>여름철 휴가와 관련하여 사용량이 많은 숙박 웹사이트 여기어때를 기반으로 숙박 예약서비스와 부가적으로 음식점 정보를 제공 </p>
-
+ 
 <h3>프로젝트 기간</h3>
 <p>2022.07.27 ~ 2022.08.25</p>
 
@@ -17,16 +17,26 @@
 3. 담당 화면 구현 및 기능 구현
 4. 테스트 및 오류 수정
 
-<h4>개발 환경<h4>
-<li>운영체제 : Window 10 64bit</li>
-<li>프레임워크 : Spring Boot</li>
-<li>빌더 : Maven</li>
-<li>개발언어 : Java 17, JavaScript, SQL </li>
-<li>서버 : Apache Tomcat 9.0 </li>
-<li>데이터베이스 : Oracle 21c EE</li>
-<li>버전관리 : Git, GitHub
-<li>프론트엔드 : HTML,CSS,JavaScript with BootStrap, jQuery, Ajax </li>
-<li>백엔드 : Spring Boot, mybatis, JSP, JSTL, EL </li>
+<h4>개발 환경</h4>
+  <li>운영체제 : Window 10 64bit</li>
+  <li>프레임워크 : 전자정부 프레임워크 / Spring Boot</li>
+  <li>빌더 : Maven</li>
+  <li>개발언어 : Java 17, JavaScript, SQL </li>
+  <li>서버 : Apache Tomcat 9.0 </li>
+  <li>데이터베이스 : Oracle 21c EE</li>
+  <li>버전관리 : Git, GitHub
+  <li>프론트엔드 : HTML,CSS,JavaScript with BootStrap, jQuery, Ajax </li>
+  <li>백엔드 : Spring Boot, mybatis, JSP, JSTL, EL </li>
 
 <h2>DB설계- ERD </h4>
 <img src="https://github.com/SijinAn/SeoulChoise-NewChallenge/blob/master/NC.png?raw=true"/>
+
+<h2>파트 분담</h2>
+
+  <ul>
+    <li>김주완 : 관리자 기능</li>
+    <li>이예석 : 사용자 기능</li>
+    <li>안재용 : 숙소 예약 및 결제 기능</li>
+    <li>유도영 : 숙소 및 음식점 검색 기능</li>
+    <li>이형진 : 문의 및 리뷰 관련 기능</li>
+  </ul>
