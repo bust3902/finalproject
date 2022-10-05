@@ -53,14 +53,22 @@ public class ReservationController {
 		
 		return "reservation/reservation";
 	}
-	
+	/*
+	 * 예약페이지 예약성공처리 요청
+	 * 요청URI : /reservation/complete
+	 * 뷰 페이지 : /WEB-INF/views/reservation?reservationNo={reservationNo}
+	 */
 	@PostMapping("/reservation/complete")
 	public String paymentinfo(PaymentRequest paymentRequest, @LoginUser User user) throws IamportResponseException, IOException{
 		reservationService.insertReservate(paymentRequest, user);
 		
 		return "redirect:/user/information?cat=CAT_002";
 	}
-	
+	/*
+	 * 예약페이지 환불 및 취소처리 요청
+	 * 요청URI : /reservation/refund
+	 * 뷰 페이지 : /WEB-INF/views/myreservation?reservationNo={reservationNo}
+	 */
 	@GetMapping("/reservation/refund")
 	public String reservationRefund(@LoginUser User user, @RequestParam(name="reservationNo") String reservationNo) {
 		reservationService.updatePaymentStatus(reservationNo);
