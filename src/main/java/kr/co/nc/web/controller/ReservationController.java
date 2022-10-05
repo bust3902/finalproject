@@ -32,7 +32,7 @@ public class ReservationController {
 	@Autowired
 	AccommodationService accommodationService;
 	/*
-	 * 예약페이지 요청처리 
+	 * 예약페이지 요청처리 / 상세예약페이지에서 요청처리 옴과 동시의 데이터베이스에서 예약상태를 '결제대기'상태로 변경할것
 	 * 요청URI : /reservation
 	 * 뷰 페이지 : /WEB-INF/views/home.jsp
 	 */
@@ -53,22 +53,14 @@ public class ReservationController {
 		
 		return "reservation/reservation";
 	}
-	/*
-	 * 예약페이지 예약성공처리 요청
-	 * 요청URI : /reservation/complete
-	 * 뷰 페이지 : /WEB-INF/views/reservation?reservationNo={reservationNo}
-	 */
+	
 	@PostMapping("/reservation/complete")
 	public String paymentinfo(PaymentRequest paymentRequest, @LoginUser User user) throws IamportResponseException, IOException{
 		reservationService.insertReservate(paymentRequest, user);
 		
 		return "redirect:/user/information?cat=CAT_002";
 	}
-	/*
-	 * 예약페이지 환불 및 취소처리 요청
-	 * 요청URI : /reservation/refund
-	 * 뷰 페이지 : /WEB-INF/views/myreservation?reservationNo={reservationNo}
-	 */
+	
 	@GetMapping("/reservation/refund")
 	public String reservationRefund(@LoginUser User user, @RequestParam(name="reservationNo") String reservationNo) {
 		reservationService.updatePaymentStatus(reservationNo);
